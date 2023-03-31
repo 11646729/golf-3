@@ -1,0 +1,38 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Added by BDS 31-03-23
+# /backend
+# /backend/node_modules
+/frontend/node_modules
+
+# Added by BDS 31-03-23
+# /backend/gtfs data/Dublin TFI/shapes.txt
+# /backend/gtfs data/Dublin TFI/stop_times.txt
+# /backend/sqlite3 data/general.db
+# /backend/gtfs data/
+# /backend/gtfs data/Hamilton Ontario Street Railway/gtfs.db
+# /backend/gtfs data/Dublin TFI/gtfs.db
+# /backend/geojson/
+
