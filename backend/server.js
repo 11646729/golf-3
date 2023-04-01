@@ -6,6 +6,8 @@ import { createServer } from "http"
 import { Server } from "socket.io"
 // - import { switchOnRealtimeData } from "./enableRealtimeData.js"
 
+// Test
+
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
 const app = express()
