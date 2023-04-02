@@ -25,14 +25,8 @@ yarn-error.log*
 # Added by BDS 31-03-23
 /backend/node_modules
 /frontend/node_modules
-
-# Added by BDS 31-03-23
-# /backend/gtfs data/Dublin TFI/shapes.txt
-# /backend/gtfs data/Dublin TFI/stop_times.txt
 /backend/sqlite3_data
-/backend/rawData
-/backend/gtfs data/
-# /backend/gtfs data/Hamilton Ontario Street Railway/gtfs.db
-# /backend/gtfs data/Dublin TFI/gtfs.db
+/backend/raw_data
+/backend/gtfs_data/
 
 

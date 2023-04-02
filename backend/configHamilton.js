@@ -7,7 +7,7 @@ var config = {
   ],
   verbose: true,
   sqlitePath:
-    "/Users/briansmith/Documents/GTD/golf-2/backend/gtfs data/Hamilton Ontario Street Railway/gtfs.db",
+    "/Users/briansmith/Documents/GTD/golf-2/backend/gtfs_data/Hamilton Ontario Street Railway/gtfs.db",
 }
 
 export default config
