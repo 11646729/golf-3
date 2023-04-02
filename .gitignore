@@ -33,5 +33,5 @@ yarn-error.log*
 # /backend/gtfs data/
 # /backend/gtfs data/Hamilton Ontario Street Railway/gtfs.db
 # /backend/gtfs data/Dublin TFI/gtfs.db
-# /backend/geojson/
+
 
