@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-// - import { switchOnRealtimeData } from "./enableRealtimeData.js"
+// import { switchOnRealtimeData } from "./enableRealtimeData.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -15,10 +15,10 @@ const io = new Server(httpServer, { cors: { origin: "*" } })
 const __dirname = path.resolve()
 
 // Routers use Controllers as per Express Tutorial
-// - import golfRouter from "./routes/golfRouteCatalog.js"
-// - import weatherRouter from "./routes/weatherRouteCatalog.js"
-// - import cruiseRouter from "./routes/cruiseRouteCatalog.js"
-// - import busRouter from "./routes/busRouteCatalog.js"
+import golfRouter from "./routes/golfRouteCatalog.js"
+import weatherRouter from "./routes/weatherRouteCatalog.js"
+import cruiseRouter from "./routes/cruiseRouteCatalog.js"
+import busRouter from "./routes/busRouteCatalog.js"
 // import realtimeRouter from "./routes/realtimeRouteCatalog.js"
 
 dotenv.config()
@@ -40,10 +40,10 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
-// - app.use("/api/golf", golfRouter)
-// - app.use("/api/weather", weatherRouter)
-// - app.use("/api/cruise", cruiseRouter)
-// - app.use("/api/bus", busRouter)
+app.use("/api/golf", golfRouter)
+app.use("/api/weather", weatherRouter)
+app.use("/api/cruise", cruiseRouter)
+app.use("/api/bus", busRouter)
 
 // Added on 23-10-2022
 // This returns a default response for any other request
