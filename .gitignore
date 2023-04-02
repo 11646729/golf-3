@@ -31,7 +31,7 @@ yarn-error.log*
 # /backend/gtfs data/Dublin TFI/stop_times.txt
 /backend/sqlite3_data
 /backend/rawData
-# /backend/gtfs data/
+/backend/gtfs data/
 # /backend/gtfs data/Hamilton Ontario Street Railway/gtfs.db
 # /backend/gtfs data/Dublin TFI/gtfs.db
 
