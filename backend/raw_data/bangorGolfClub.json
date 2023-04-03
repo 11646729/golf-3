@@ -1,0 +1,543 @@
+{
+    "fileHeader": {
+        "filename": "bangorGolfClub.json",
+        "id": 1234,
+        "version": 1,
+        "creationDate": "2016-06-12T20:13:43.511Z"
+    },
+    "golfClub": {
+        "name": "Bangor Golf Club",
+        "phoneNumber": "028 9127 0922",
+        "logoImage": "",
+        "numberOfGolfCourses": 1,
+        "type": "FeatureCollection",
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+            }
+        },
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -5.654729, 54.659859 ]
+                },
+                "properties": {
+                    "name": "clubHouse"
+                }
+            }
+        ],
+        "courses": [
+            {
+                "name": "Bangor Golf Course",
+                "courseDetails": [
+                    {
+                        "type": "medal",
+                        "teeColour": "white",
+                        "outPar": 35,
+                        "inPar": 34,
+                        "totalPar": 69,
+                        "standardScratchScore": 0,
+                        "outDistance": 3275,
+                        "inDistance": 2952,
+                        "totalDistance": 6227
+                    },
+                    {
+                        "type": "gents",
+                        "teeColour": "green",
+                        "outPar": 35,
+                        "inPar": 34,
+                        "totalPar": 69,
+                        "standardScratchScore": 0,
+                        "outDistance": 3153,
+                        "inDistance": 2844,
+                        "totalDistance": 5997
+                    },
+                    {
+                        "type": "ladies",
+                        "teeColour": "red",
+                        "outPar": 36,
+                        "inPar": 36,
+                        "totalPar": 72,
+                        "standardScratchScore": 0,
+                        "outDistance": 2994,
+                        "inDistance": 2656,
+                        "totalDistance": 5650
+                    }
+                ],
+                "holeDetails": [
+                    {
+                        "number": 1,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 448,
+                                "par": 4,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 430,
+                                "par": 4,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 409,
+                                "par": 5,
+                                "strokeIndex": 13
+                            }
+                        ]
+                    },
+                    {
+                        "number": 2,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 399,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 386,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 377,
+                                "par": 4,
+                                "strokeIndex": 9
+                            }
+                        ]
+                    },
+                    {
+                        "number": 3,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 410,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 398,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 368,
+                                "par": 4,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 4,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 194,
+                                "par": 3,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 169,
+                                "par": 3,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 154,
+                                "par": 3,
+                                "strokeIndex": 17
+                            }
+                        ]
+                    },
+                    {
+                        "number": 5,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 395,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 387,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 364,
+                                "par": 4,
+                                "strokeIndex": 3
+                            }
+                        ]
+                    },
+                    {
+                        "number": 6,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 393,
+                                "par": 4,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 388,
+                                "par": 4,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 381,
+                                "par": 4,
+                                "strokeIndex": 1
+                            }
+                        ]
+                    },
+                    {
+                        "number": 7,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 491,
+                                "par": 5,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 478,
+                                "par": 5,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 465,
+                                "par": 5,
+                                "strokeIndex": 11
+                            }
+                        ]
+                    },
+                    {
+                        "number": 8,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 159,
+                                "par": 3,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 143,
+                                "par": 3,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 128,
+                                "par": 3,
+                                "strokeIndex": 15
+                            }
+                        ]
+                    },
+                    {
+                        "number": 9,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 386,
+                                "par": 4,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 374,
+                                "par": 4,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 348,
+                                "par": 4,
+                                "strokeIndex": 7
+                            }
+                        ]
+                    },
+                    {
+                        "number": 10,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 362,
+                                "par": 4,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 349,
+                                "par": 4,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 343,
+                                "par": 4,
+                                "strokeIndex": 4
+                            }
+                        ]
+                    },
+                    {
+                        "number": 11,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 157,
+                                "par": 3,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 144,
+                                "par": 3,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 128,
+                                "par": 3,
+                                "strokeIndex": 14
+                            }
+                        ]
+                    },
+                    {
+                        "number": 12,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 419,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 407,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 396,
+                                "par": 5,
+                                "strokeIndex": 8
+                            }
+                        ]
+                    },
+                    {
+                        "number": 13,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 192,
+                                "par": 3,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 174,
+                                "par": 3,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 166,
+                                "par": 3,
+                                "strokeIndex": 16
+                            }
+                        ]
+                    },
+                    {
+                        "number": 14,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 170,
+                                "par": 3,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 160,
+                                "par": 3,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 139,
+                                "par": 3,
+                                "strokeIndex": 18
+                            }
+                        ]
+                    },
+                    {
+                        "number": 15,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 338,
+                                "par": 4,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 329,
+                                "par": 4,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 284,
+                                "par": 4,
+                                "strokeIndex": 2
+                            }
+                        ]
+                    },
+                    {
+                        "number": 16,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 528,
+                                "par": 5,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 517,
+                                "par": 5,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 457,
+                                "par": 5,
+                                "strokeIndex": 6
+                            }
+                        ]
+                    },
+                    {
+                        "number": 17,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 344,
+                                "par": 4,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 335,
+                                "par": 4,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 324,
+                                "par": 4,
+                                "strokeIndex": 12
+                            }
+                        ]
+                    },
+                    {
+                        "number": 18,
+                        "name": "",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 442,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 429,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 419,
+                                "par": 5,
+                                "strokeIndex": 10
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

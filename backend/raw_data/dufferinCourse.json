@@ -1,0 +1,563 @@
+{
+  "filename": "dufferinCourse.json",
+  "id": 1234,
+  "version": 1,
+  "creationDate": "2016-04-08T20:13:43.511Z",
+  "name": "Dufferin Course",
+  "courseDescription": "",
+  "rules": "winter",
+  "qualifying": "Y",
+  "units": "yards",
+  "courseDetails": [
+    {
+      "tees": "blue",
+      "type": "championship",
+      "outPar": 35,
+      "inPar": 36,
+      "totalPar": 71,
+      "standardScratchScore": 72,
+      "outDistance": 3334,
+      "inDistance": 3408,
+      "totalDistance": 6742
+    },
+    {
+      "tees": "white",
+      "type": "medal",
+      "outPar": 35,
+      "inPar": 36,
+      "totalPar": 71,
+      "standardScratchScore": 72,
+      "outDistance": 3263,
+      "inDistance": 3287,
+      "totalDistance": 6550
+    },
+    {
+      "tees": "green",
+      "type": "society",
+      "outPar": 35,
+      "inPar": 36,
+      "totalPar": 71,
+      "standardScratchScore": 71,
+      "outDistance": 3151,
+      "inDistance": 3161,
+      "totalDistance": 6312
+    },
+    {
+      "tees": "red",
+      "type": "ladies",
+      "outPar": 36,
+      "inPar": 37,
+      "totalPar": 73,
+      "standardScratchScore": 73,
+      "outDistance": 2920,
+      "inDistance": 2850,
+      "totalDistance": 5770
+    }
+  ],
+  "holeDetails": [
+    {
+      "number": 1,
+      "name": "Castle Dunt",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 388,
+        "par": 4,
+        "strokeIndex": 9
+        },
+        {
+          "whiteTee": 378,
+          "par": 4,
+          "strokeIndex": 9
+        },
+        {
+          "greenTee": 369,
+          "par": 4,
+          "strokeIndex": 9
+        },
+        {
+          "redTee": 352,
+          "par": 4,
+          "strokeIndex": 9
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Wall",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 179,
+        "par": 3,
+        "strokeIndex": 5
+        },
+        {
+          "whiteTee": 172,
+          "par": 3,
+          "strokeIndex": 5
+        },
+        {
+          "greenTee": 162,
+          "par": 3,
+          "strokeIndex": 5
+        },
+        {
+          "redTee": 147,
+          "par": 3,
+          "strokeIndex": 13
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Abbotsford",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 420,
+        "par": 4,
+        "strokeIndex": 13
+        },
+        {
+          "whiteTee": 414,
+          "par": 4,
+          "strokeIndex": 13
+        },
+        {
+          "greenTee": 403,
+          "par": 4,
+          "strokeIndex": 13
+        },
+        {
+          "redTee": 382,
+          "par": 4,
+          "strokeIndex": 1
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Cairo",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 403,
+        "par": 4,
+        "strokeIndex": 1
+        },
+        {
+          "whiteTee": 392,
+          "par": 4,
+          "strokeIndex": 1
+        },
+        {
+          "greenTee": 378,
+          "par": 4,
+          "strokeIndex": 1
+        },
+        {
+          "redTee": 297,
+          "par": 4,
+          "strokeIndex": 5
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Coffey’s",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 190,
+        "par": 3,
+        "strokeIndex": 15
+        },
+        {
+          "whiteTee": 183,
+          "par": 3,
+          "strokeIndex": 15
+        },
+        {
+          "greenTee": 169,
+          "par": 3,
+          "strokeIndex": 15
+        },
+        {
+          "redTee": 149,
+          "par": 3,
+          "strokeIndex": 17
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "name": "Rathgill",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+         "blueTee": 520,
+        "par": 5,
+        "strokeIndex": 17
+        },
+        {
+          "whiteTee": 516,
+          "par": 5,
+          "strokeIndex": 17
+        },
+        {
+          "greenTee": 494,
+          "par": 5,
+          "strokeIndex": 17
+        },
+        {
+          "redTee": 480,
+          "par": 5,
+          "strokeIndex": 7
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "name": "Stile",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 370,
+        "par": 4,
+        "strokeIndex": 7
+        },
+        {
+          "whiteTee": 364,
+          "par": 4,
+          "strokeIndex": 7
+        },
+        {
+          "greenTee": 354,
+          "par": 4,
+          "strokeIndex": 7
+        },
+        {
+          "redTee": 327,
+          "par": 4,
+          "strokeIndex": 11
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "name": "Cinque Ports",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 455,
+        "par": 4,
+        "strokeIndex": 3
+        },
+        {
+          "whiteTee": 447,
+          "par": 4,
+          "strokeIndex": 3
+        },
+        {
+          "greenTee": 437,
+          "par": 4,
+          "strokeIndex": 3
+        },
+        {
+          "redTee": 422,
+          "par": 5,
+          "strokeIndex": 15
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Lisbane",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 409,
+        "par": 4,
+        "strokeIndex": 11
+        },
+        {
+          "whiteTee": 397,
+          "par": 4,
+          "strokeIndex": 11
+        },
+        {
+          "greenTee": 385,
+          "par": 4,
+          "strokeIndex": 11
+        },
+        {
+          "redTee": 364,
+          "par": 4,
+          "strokeIndex": 3
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "name": "Spurs & Roses",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+         "blueTee": 443,
+        "par": 4,
+        "strokeIndex": 4
+        },
+        {
+          "whiteTee": 415,
+          "par": 4,
+          "strokeIndex": 4
+        },
+        {
+          "greenTee": 402,
+          "par": 4,
+          "strokeIndex": 4
+        },
+        {
+          "redTee": 379,
+          "par": 4,
+          "strokeIndex": 2
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Stags Leap",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+         "blueTee": 153,
+        "par": 3,
+        "strokeIndex": 14
+        },
+        {
+          "whiteTee": 148,
+          "par": 3,
+          "strokeIndex": 14
+        },
+        {
+          "greenTee": 141,
+          "par": 3,
+          "strokeIndex": 14
+        },
+        {
+          "redTee": 131,
+          "par": 3,
+          "strokeIndex": 12
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "name": "Somerset Wood",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 517,
+        "par": 5,
+        "strokeIndex": 6
+        },
+        {
+          "whiteTee": 513,
+          "par": 5,
+          "strokeIndex": 6
+        },
+        {
+          "greenTee": 487,
+          "par": 5,
+          "strokeIndex": 6
+        },
+        {
+          "redTee": 468,
+          "par": 5,
+          "strokeIndex": 4
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "name": "Harriots",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 384,
+        "par": 4,
+        "strokeIndex": 12
+        },
+        {
+          "whiteTee": 360,
+          "par": 4,
+          "strokeIndex": 12
+        },
+        {
+          "greenTee": 350,
+          "par": 4,
+          "strokeIndex": 12
+        },
+        {
+          "redTee": 315,
+          "par": 4,
+          "strokeIndex": 6
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "name": "Ballyleidy",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 176,
+        "par": 3,
+        "strokeIndex": 8
+        },
+        {
+          "whiteTee": 166,
+          "par": 3,
+          "strokeIndex": 8
+        },
+        {
+          "greenTee": 148,
+          "par": 3,
+          "strokeIndex": 8
+        },
+        {
+          "redTee": 138,
+          "par": 3,
+          "strokeIndex": 14
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "name": "Maxwell’s Point",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 503,
+        "par": 5,
+        "strokeIndex": 16
+        },
+        {
+          "whiteTee": 495,
+          "par": 5,
+          "strokeIndex": 16
+        },
+        {
+          "greenTee": 483,
+          "par": 5,
+          "strokeIndex": 16
+        },
+        {
+          "redTee": 439,
+          "par": 5,
+          "strokeIndex": 8
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "name": "Runstone",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 424,
+        "par": 4,
+        "strokeIndex": 2
+        },
+        {
+          "whiteTee": 392,
+          "par": 4,
+          "strokeIndex": 2
+        },
+        {
+          "greenTee": 381,
+          "par": 4,
+          "strokeIndex": 2
+        },
+        {
+          "redTee": 291,
+          "par": 4,
+          "strokeIndex": 10
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "name": "Panorama",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 375,
+        "par": 4,
+        "strokeIndex": 18
+        },
+        {
+          "whiteTee": 370,
+          "par": 4,
+          "strokeIndex": 18
+        },
+        {
+          "greenTee": 351,
+          "par": 4,
+          "strokeIndex": 18
+        },
+        {
+          "redTee": 308,
+          "par": 4,
+          "strokeIndex": 16
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "name": "Rockies",
+      "description": "",
+      "image": "",
+      "distance": [
+        {
+        "blueTee": 433,
+        "par": 4,
+        "strokeIndex": 10
+        },
+        {
+          "whiteTee": 428,
+          "par": 4,
+          "strokeIndex": 10
+        },
+        {
+          "greenTee": 418,
+          "par": 4,
+          "strokeIndex": 10
+        },
+        {
+          "redTee": 381,
+          "par": 5,
+          "strokeIndex": 18
+        }
+      ]
+    }
+  ]
+}

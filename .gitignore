@@ -26,7 +26,7 @@ yarn-error.log*
 /backend/node_modules
 /frontend/node_modules
 # /backend/sqlite3_data
-/backend/raw_data
+# /backend/raw_data
 /backend/gtfs_data/
 
 

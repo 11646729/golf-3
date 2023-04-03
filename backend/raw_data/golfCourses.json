@@ -1,0 +1,1016 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.604549, 54.258716]
+      },
+      "properties": {
+        "name": "Ardglass Golf Club",
+        "phoneNumber": "028 44 841 219",
+        "photoTitle": "Ardglass Golf Club Photo",
+        "photoUrl": "static/images/ArdglassGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.469174, 54.414666]
+      },
+      "properties": {
+        "name": "Ardminnan Golf Club",
+        "phoneNumber": "028 4277 1321",
+        "photoTitle": "Ardminnan Golf Club Photo",
+        "photoUrl": "static/images/ArdminnanGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.968653, 54.565785]
+      },
+      "properties": {
+        "name": "Balmoral Golf Club",
+        "phoneNumber": "028 9038 1514",
+        "photoTitle": "Balmoral Golf Club Photo",
+        "photoUrl": "static/images/BalmoralGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.654729, 54.659859]
+      },
+      "properties": {
+        "name": "Bangor Golf Club",
+        "phoneNumber": "028 9127 0922",
+        "photoTitle": "Bangor Golf Club Photo",
+        "photoUrl": "static/images/BangorGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.914224, 54.561471]
+      },
+      "properties": {
+        "name": "Belvoir Park Golf Club",
+        "phoneNumber": "028 9049 1693",
+        "photoTitle": "Belvoir Park Golf Club Photo",
+        "photoUrl": "static/images/BelvoirParkGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.726133, 54.630849]
+      },
+      "properties": {
+        "name": "Blackwood Golf Centre",
+        "phoneNumber": "028 9185 2706",
+        "photoTitle": "Blackwood Golf Centre Photo",
+        "photoUrl": "static/images/BlackwoodGolfCentre.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.703048, 54.666202]
+      },
+      "properties": {
+        "name": "Carnlea Golf Club",
+        "phoneNumber": "028 9127 0368",
+        "photoTitle": "Carnalea Golf Club Photo",
+        "photoUrl": "static/images/CarnaleaGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.831853, 54.571461]
+      },
+      "properties": {
+        "name": "Castlereagh Hills Golf Club",
+        "phoneNumber": "028 9044 8477",
+        "photoTitle": "Castlereagh Hills Golf Club Photo",
+        "photoUrl": "static/images/CastlereaghHillsGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.784519, 55.165779]
+      },
+      "properties": {
+        "name": "Castlerock Golf Club",
+        "phoneNumber": "028 7084 8314",
+        "photoTitle": "Castlerock Golf Club Photo",
+        "photoUrl": "static/images/CastlerockGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.684562, 54.626163]
+      },
+      "properties": {
+        "name": "Clandeboye Golf Club",
+        "phoneNumber": "028 9127 1767",
+        "photoTitle": "Clandeboye Golf Club Photo",
+        "photoUrl": "static/images/ClandeboyeGolfClub.jpg",
+        "county": "Down",
+        "description": "Situated in the country surrounds of Lady Dufferins Estate, we offer two courses of international standing. The Dufferin Course is one of the Highest Rated Championship Courses in Ireland. The Ava Course is shorter but offers a real test of accuracy."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.953633, 54.625353]
+      },
+      "properties": {
+        "name": "Cliftonville Golf Club",
+        "phoneNumber": "028 9074 4158",
+        "photoTitle": "Cliftonville Golf Club Photo",
+        "photoUrl": "static/images/CliftonvilleGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.549328, 54.653172]
+      },
+      "properties": {
+        "name": "Donaghadee Golf Club",
+        "phoneNumber": "028 9188 3624",
+        "photoTitle": "Donaghadee Golf Club Photo",
+        "photoUrl": "static/images/DonaghadeeGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.983643, 54.545321]
+      },
+      "properties": {
+        "name": "Dunmurry Golf Club",
+        "phoneNumber": "028 9062 1314",
+        "photoTitle": "Dunmurry Golf Club Photo",
+        "photoUrl": "static/images/DunmurryGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.233941, 54.451971]
+      },
+      "properties": {
+        "name": "Edenmore Country Club",
+        "phoneNumber": "028 9261 9241",
+        "photoTitle": "Edenmore Country Club Photo",
+        "photoUrl": "static/images/EdenmoreCountryClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.312051, 54.855284]
+      },
+      "properties": {
+        "name": "Galgorm Castle Golf Club",
+        "phoneNumber": "028 2564 6161",
+        "photoTitle": "Galgorm Castle Golf Club Photo",
+        "photoUrl": "static/images/GalgormCastleGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.738059, 54.668818]
+      },
+      "properties": {
+        "name": "Helen's Bay Golf Course",
+        "phoneNumber": "028 9185 2815",
+        "photoTitle": "Helens Bay Golf Club Photo",
+        "photoUrl": "static/images/HelensBayGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.830112, 54.631174]
+      },
+      "properties": {
+        "name": "Holywood Golf Club",
+        "phoneNumber": "028 9042 3135",
+        "photoTitle": "Holywood Golf Club Photo",
+        "photoUrl": "static/images/HolywoodGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.472254, 54.440484]
+      },
+      "properties": {
+        "name": "Kirkistown Castle Golf Club",
+        "phoneNumber": "028 4277 1233",
+        "photoTitle": "Kirkistown Castle Golf Club Photo",
+        "photoUrl": "static/images/KirkistownCastleGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.819143, 54.595872]
+      },
+      "properties": {
+        "name": "Knock Golf Club",
+        "phoneNumber": "028 9048 3251",
+        "photoTitle": "Knock Golf Club Photo",
+        "photoUrl": "static/images/KnockGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.97205, 54.538048]
+      },
+      "properties": {
+        "name": "Malone Golf Club",
+        "phoneNumber": "028 9061 2758",
+        "photoTitle": "Malone Golf Club Photo",
+        "photoUrl": "static/images/MaloneGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.913676, 54.579967]
+      },
+      "properties": {
+        "name": "Ormeau Golf Club",
+        "phoneNumber": "028 9064 0700",
+        "photoTitle": "Ormeau Golf Club Photo",
+        "photoUrl": "static/images/OrmeauGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.724955, 55.171454]
+      },
+      "properties": {
+        "name": "Portstewart Golf Club",
+        "phoneNumber": "028 7083 2015",
+        "photoTitle": "Portstewart Golf Club Photo",
+        "photoUrl": "static/images/PortstewartGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.882425, 54.488131]
+      },
+      "properties": {
+        "name": "Rockmount Golf Club",
+        "phoneNumber": "028 9081 2279",
+        "photoTitle": "Rockmount Golf Club Photo",
+        "photoUrl": "static/images/RockmountGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.635313, 55.199731]
+      },
+      "properties": {
+        "name": "Royal Portrush Golf Club",
+        "phoneNumber": "028 7082 2311",
+        "photoTitle": "Royal Portrush Golf Club Photo",
+        "photoUrl": "static/images/RoyalPortrushGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.719557, 54.577895]
+      },
+      "properties": {
+        "name": "Scrabo Golf Club",
+        "phoneNumber": "028 9181 2355",
+        "photoTitle": "Scrabo Golf Club Photo",
+        "photoUrl": "static/images/ScraboGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.855763, 54.583079]
+      },
+      "properties": {
+        "name": "Shandon Park Golf Club",
+        "phoneNumber": "028 9080 5030",
+        "photoTitle": "Shandon Park Golf Club Photo",
+        "photoUrl": "static/images/ShandonParkGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.906807, 54.465682]
+      },
+      "properties": {
+        "name": "Temple Golf & Country Club",
+        "phoneNumber": "028 9263 9213",
+        "photoTitle": "Temple Golf & Country Club Photo",
+        "photoUrl": "static/images/TempleGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.783817, 54.661631]
+      },
+      "properties": {
+        "name": "The Royal Belfast Golf Club",
+        "phoneNumber": "028 9042 8165",
+        "photoTitle": "Royal Belfast Golf Club Photo",
+        "photoUrl": "static/images/RoyalBelfastGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.883267, 54.21792]
+      },
+      "properties": {
+        "name": "The Royal County Down Golf Club",
+        "phoneNumber": "028 4372 3314",
+        "photoTitle": "Royal County Down Golf Club Photo",
+        "photoUrl": "static/images/RoyalCountyDownGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.264594, 54.108301]
+      },
+      "properties": {
+        "name": "Warrenpoint Golf Club",
+        "phoneNumber": "028 4175 3695",
+        "photoTitle": "Warrenpoint Golf Club Photo",
+        "photoUrl": "static/images/WarrenpointGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.67828, 54.33838]
+      },
+      "properties": {
+        "name": "St. Patricks Golf Club",
+        "phoneNumber": "028 4461 5947",
+        "photoTitle": "St. Patricks Golf Club Photo",
+        "photoUrl": "static/images/StPatricksGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.91171, 54.39499]
+      },
+      "properties": {
+        "name": "Spa Golf Club",
+        "phoneNumber": "028 9756 2365",
+        "photoTitle": "Spa Golf Club Photo",
+        "photoUrl": "static/images/SpaGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.239458, 54.19414]
+      },
+      "properties": {
+        "name": "Mayobridge Golf Club",
+        "phoneNumber": "028 3085 0295",
+        "photoTitle": "Mayobridge Golf Club Photo",
+        "photoUrl": "static/images/MayobridgeGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.045188, 54.078019]
+      },
+      "properties": {
+        "name": "Kilkeel Golf Club",
+        "phoneNumber": "028 4176 5095",
+        "photoTitle": "Kilkeel Golf Club Photo",
+        "photoUrl": "static/images/KilkeelGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-5.686714, 54.275819]
+      },
+      "properties": {
+        "name": "Bright Castle Golf Club",
+        "phoneNumber": "028 4484 1319",
+        "photoTitle": "Bright Castle Golf Club Photo",
+        "photoUrl": "static/images/BrightCastleGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.279381, 54.360636]
+      },
+      "properties": {
+        "name": "Banbridge Golf Club",
+        "phoneNumber": "028 4066 2211",
+        "photoTitle": "Banbridge Golf Club Photo",
+        "photoUrl": "static/images/BanbridgeGolfClub.jpg",
+        "county": "Down",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.983191872633398, 54.43248025381644]
+      },
+      "properties": {
+        "name": "Aughnacloy Golf Club",
+        "phoneNumber": "028 8555 7050",
+        "photoTitle": "Aughnacloy Golf Club Photo",
+        "photoUrl": "static/images/AughnacloyGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.334693572603746, 54.36765263411943]
+      },
+      "properties": {
+        "name": "Clogher Valley Golf Club",
+        "phoneNumber": "028 8952 1739",
+        "photoTitle": "Clogher Valley Golf Club Photo",
+        "photoUrl": "static/images/ClogherValleyGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.78304, 54.51839]
+      },
+      "properties": {
+        "name": "Dungannon Golf Club",
+        "phoneNumber": "028 8772 2098",
+        "photoTitle": "Dungannon Golf Club Photo",
+        "photoUrl": "static/images/DungannonGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.31500428684998, 54.495336367587925]
+      },
+      "properties": {
+        "name": "Fintona Golf Club",
+        "phoneNumber": "028 8284 1480",
+        "photoTitle": "Fintona Golf Club Photo",
+        "photoUrl": "static/images/FintonaGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.721628860918972, 54.63543051325273]
+      },
+      "properties": {
+        "name": "Kilymoon Golf Club",
+        "phoneNumber": "028 8676 3762",
+        "photoTitle": "Kilymoon Golf Club Photo",
+        "photoUrl": "static/images/KilymoonGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.419494333425449, 54.705061003229964]
+      },
+      "properties": {
+        "name": "Newtownstewart Golf Club",
+        "phoneNumber": "028 8166 1466",
+        "photoTitle": "Newtownstewart Golf Club Photo",
+        "photoUrl": "static/images/NewtownstewartGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.291891848219793, 54.59475793627723]
+      },
+      "properties": {
+        "name": "Omagh Golf Club",
+        "phoneNumber": "028 8224 3160",
+        "photoTitle": "Omagh Golf Club Photo",
+        "photoUrl": "static/images/OmaghGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.463716564110354, 54.8145339705608]
+      },
+      "properties": {
+        "name": "Strabane Golf Club",
+        "phoneNumber": "028 7138 2271",
+        "photoTitle": "Strabane Golf Club Photo",
+        "photoUrl": "static/images/StrabaneGolfClub.jpg",
+        "county": "Tyrone",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.691285612878256, 54.39423567735139]
+      },
+      "properties": {
+        "name": "Castlehume Golf Club",
+        "phoneNumber": "028 6632 7077",
+        "photoTitle": "Castlehume Golf Club Photo",
+        "photoUrl": "static/images/CastlehumeGolfClub.jpg",
+        "county": "Fermanagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.61312323287734, 54.338598061284664]
+      },
+      "properties": {
+        "name": "Enniskillen Golf Club",
+        "phoneNumber": "028 6632 5250",
+        "photoTitle": "Enniskillen Golf Club Photo",
+        "photoUrl": "static/images/EnniskillenGolfClub.jpg",
+        "county": "Fermanagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.6901296186311034, 54.398589834567716]
+      },
+      "properties": {
+        "name": "Lough Erne Golf Club",
+        "phoneNumber": "028 6632 3230",
+        "photoTitle": "Lough Erne Golf Club Photo",
+        "photoUrl": "static/images/LoughErneGolfClub.jpg",
+        "county": "Fermanagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.677383993699045, 55.19734903584852]
+      },
+      "properties": {
+        "name": "Ballyreagh Golf Club",
+        "phoneNumber": "028 7082 2028",
+        "photoTitle": "Ballyreagh Golf Club Photo",
+        "photoUrl": "static/images/BallyreaghGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.871139048305521, 55.162498055775586]
+      },
+      "properties": {
+        "name": "Benone Golf Club",
+        "phoneNumber": "028 7775 0555",
+        "photoTitle": "Benone Golf Club Photo",
+        "photoUrl": "static/images/BenoneGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.599812818631104, 55.03776900977935]
+      },
+      "properties": {
+        "name": "Brown Trout Golf Club",
+        "phoneNumber": "028 7086 8209",
+        "photoTitle": "Brown Trout Golf Club Photo",
+        "photoUrl": "static/images/BrownTroutGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.346160226576385, 54.972196297640345]
+      },
+      "properties": {
+        "name": "City of Derry Golf Club",
+        "phoneNumber": "028 7134 6369",
+        "photoTitle": "City of Derry Golf Club Photo",
+        "photoUrl": "static/images/CityofDerryGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.245901048767901, 55.02128753780968]
+      },
+      "properties": {
+        "name": "Faughan Valley Golf Club",
+        "phoneNumber": "028 7186 0707",
+        "photoTitle": "Faughan Valley Golf Club Photo",
+        "photoUrl": "static/images/FaughanValleyGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-7.2838139197273195, 55.041202245937086]
+      },
+      "properties": {
+        "name": "Foyle International Golf Centre",
+        "phoneNumber": "028 7135 2222",
+        "photoTitle": "Foyle International Golf Centre Photo",
+        "photoUrl": "static/images/FoyleInternationalGolfCentre.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.549838271507528, 54.94488220841804]
+      },
+      "properties": {
+        "name": "Kilrea Golf Club",
+        "phoneNumber": "028 2954 0044",
+        "photoTitle": "Kilrea Golf Club Photo",
+        "photoUrl": "static/images/KilreaGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.547362764658464, 54.95372490944649]
+      },
+      "properties": {
+        "name": "Manor Golf Club",
+        "phoneNumber": "028 2954 0205",
+        "photoTitle": "Manor Golf Club Photo",
+        "photoUrl": "static/images/ManorGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.565871673151853, 54.7846850725667]
+      },
+      "properties": {
+        "name": "Moyola Park Golf Club",
+        "phoneNumber": "028 7946 8468",
+        "photoTitle": "Moyola Park Golf Club Photo",
+        "photoUrl": "static/images/MoyolaParkGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.953096794795263, 55.038754703147106]
+      },
+      "properties": {
+        "name": "Roe Park Golf Club",
+        "phoneNumber": "028 7772 2222",
+        "photoTitle": "Roe Park Golf Club Photo",
+        "photoUrl": "static/images/RoeParkGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.524989056165075, 54.72420139403844]
+      },
+      "properties": {
+        "name": "Traad Ponds Golf Club",
+        "phoneNumber": "028 7941 8942",
+        "photoTitle": "Traad Ponds Golf Club Photo",
+        "photoUrl": "static/images/TraadPondsGolfClub.jpg",
+        "county": "Derry",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.574488180549026, 54.112016953027535]
+      },
+      "properties": {
+        "name": "Ashfield Golf Course",
+        "phoneNumber": "028 3086 8180",
+        "photoTitle": "Ashfield Golf Course Photo",
+        "photoUrl": "static/images/AshfieldGolfCourse.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.4872796043848675, 54.104849119053284]
+      },
+      "properties": {
+        "name": "Cloverhill Golf Club",
+        "phoneNumber": "028 3088 9374",
+        "photoTitle": "Cloverhill Golf Club Photo",
+        "photoUrl": "static/images/CloverhillGolfClub.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.645618694247154, 54.34526116452986]
+      },
+      "properties": {
+        "name": "County Armagh Golf Club",
+        "phoneNumber": "028 3752 5861",
+        "photoTitle": "County Armagh Golf Club Photo",
+        "photoUrl": "static/images/CountyArmaghGolfClub.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.59928240383676, 54.40872994834995]
+      },
+      "properties": {
+        "name": "Loughgall Country Park & Golf Course",
+        "phoneNumber": "028 3889 2900",
+        "photoTitle": "Loughgall Country Park & Golf Course Photo",
+        "photoUrl": "static/images/LoughgallCountryParkGolfCourse.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.322935932877341, 54.4690544315884]
+      },
+      "properties": {
+        "name": "Lurgan Golf Club",
+        "phoneNumber": "028 3832 2087",
+        "photoTitle": "Lurgan Golf Club Photo",
+        "photoUrl": "static/images/LurganGolfClub.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.40750734931601, 54.40544940833581]
+      },
+      "properties": {
+        "name": "Portadown Golf Club",
+        "phoneNumber": "028 3835 5356",
+        "photoTitle": "Portadown Golf Club Photo",
+        "photoUrl": "static/images/PortadownGolfClub.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.357027202740542, 54.475862778530825]
+      },
+      "properties": {
+        "name": "Silverwood Golf Centre",
+        "phoneNumber": "028 3832 5380",
+        "photoTitle": "Silverwood Golf Centre Photo",
+        "photoUrl": "static/images/SilverwoodGolfCentre.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.415715171507528, 54.349913521107034]
+      },
+      "properties": {
+        "name": "Tandragee Golf Centre",
+        "phoneNumber": "028 3884 1272",
+        "photoTitle": "Tandragee Golf Centre Photo",
+        "photoUrl": "static/images/TandrageeGolfCentre.jpg",
+        "county": "Armagh",
+        "description": "TODO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-6.2454561641103545, 54.726153488286684]
+      },
+      "properties": {
+        "name": "Antrim Golf Club",
+        "phoneNumber": "028 94429001",
+        "photoTitle": "Antrim Golf Club Photo",
+        "photoUrl": "static/images/AntrimGolfClub.jpg",
+        "county": "Antrim",
+        "description": "TODO"
+      }
+    }
+  ]
+}

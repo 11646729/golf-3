@@ -1,0 +1,1200 @@
+{
+    "fileHeader": {
+        "filename": "clandeboyeGolfClub.json",
+        "id": 1234,
+        "version": 1,
+        "creationDate": "2015-11-23T18:25:43.511Z"
+    },
+    "golfClub": {
+        "name": "Clandeboye Golf Club",
+        "phoneNumber": "028 9127 1767",
+        "logoImage": "",
+        "numberOfGolfCourses": 2,
+        "type": "FeatureCollection",
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+            }
+        },
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [ -5.604549, 54.258716 ]
+                },
+                "properties": {
+                    "name": "clubHouse"
+                }
+            }
+        ],
+        "courses": [
+            {
+                "name": "Ava Golf Course",
+                "courseDescription": "",
+                "units": "yards",
+                "type": "FeatureCollection",
+                "crs": {
+                    "type": "name",
+                    "properties": {
+                        "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+                    }
+                },
+                "features": [
+                     {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                            [
+                                [100.0, 0.0],
+                                [101.0, 0.0],
+                                [101.0, 1.0],
+                                [100.0, 1.0],
+                                [100.0, 0.0] ]
+                            ]
+                        },
+                        "properties": {
+                            "name": "firstGreen"
+                        }            
+                    }
+                ],
+                "courseDetails": [
+                    {
+                        "teeType": "medal",
+                        "teeColour": "white",
+                        "outPar": 36,
+                        "inPar": 34,
+                        "totalPar": 70,
+                        "standardScratchScore": 67,
+                        "outDistance": 3011,
+                        "inDistance": 2744,
+                        "totalDistance": 5755
+                    },
+                    {
+                        "teeType": "society",
+                        "teeColour": "green",
+                        "outPar": 36,
+                        "inPar": 34,
+                        "totalPar": 70,
+                        "standardScratchScore": 66,
+                        "outDistance": 2832,
+                        "inDistance": 2625,
+                        "totalDistance": 5457
+                    },
+                    {
+                        "teeType": "ladies",
+                        "teeColour": "red",
+                        "outPar": 36,
+                        "inPar": 34,
+                        "totalPar": 70,
+                        "standardScratchScore": 70,
+                        "outDistance": 2666,
+                        "inDistance": 2363,
+                        "totalDistance": 5029
+                    }
+                ],
+                "holeDetails": [
+                    {
+                        "number": 1,
+                        "name": "Furrest",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 346,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 335,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 328,
+                                "par": 4,
+                                "strokeIndex": 11
+                            }
+                        ]
+                    },
+                    {
+                        "number": 2,
+                        "name": "Tower Gap",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 3,
+                        "name": "Purple Alley",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 4,
+                        "name": "Summit",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 5,
+                        "name": "Dumps",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 6,
+                        "name": "The Dam",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 7,
+                        "name": "Hells Bells",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 8,
+                        "name": "Paradise",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 9,
+                        "name": "High Latitude",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 10,
+                        "name": "Hollow Kearney",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 11,
+                        "name": "Fred Daly's Drive",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 12,
+                        "name": "Allen Burn's Pitch",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 13,
+                        "name": "Copelands",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 14,
+                        "name": "Tempest Gap",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 15,
+                        "name": "Pheasant Rise",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 16,
+                        "name": "Fairy Thorn",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 17,
+                        "name": "Deer Park",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 18,
+                        "name": "Tinker's Green",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 524,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 506,
+                                "par": 5,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 417,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Dufferin Golf Course",
+                "courseDescription": "",
+                "units": "yards",
+                "courseDetails": [
+                    {
+                        "teeType": "championship",
+                        "teeColour": "blue",
+                        "outPar": 35,
+                        "inPar": 36,
+                        "totalPar": 71,
+                        "standardScratchScore": 72,
+                        "outDistance": 3334,
+                        "inDistance": 3408,
+                        "totalDistance": 6742
+                    },
+                    {
+                        "teeType": "medal",
+                        "teeColour": "white",
+                        "outPar": 35,
+                        "inPar": 36,
+                        "totalPar": 71,
+                        "standardScratchScore": 72,
+                        "outDistance": 3263,
+                        "inDistance": 3287,
+                        "totalDistance": 6550
+                    },
+                    {
+                        "teeType": "society",
+                        "teeColour": "green",
+                        "outPar": 35,
+                        "inPar": 36,
+                        "totalPar": 71,
+                        "standardScratchScore": 71,
+                        "outDistance": 3151,
+                        "inDistance": 3161,
+                        "totalDistance": 6312
+                    },
+                    {
+                        "teeType": "ladies",
+                        "teeColour": "red",
+                        "outPar": 36,
+                        "inPar": 37,
+                        "totalPar": 73,
+                        "standardScratchScore": 73,
+                        "outDistance": 2920,
+                        "inDistance": 2850,
+                        "totalDistance": 5770
+                    }
+                ],
+                "holeDetails": [
+                    {
+                        "number": 1,
+                        "name": "Castle Dunt",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 388,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 378,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 369,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 352,
+                                "par": 4,
+                                "strokeIndex": 9
+                            }
+                        ]
+                    },
+                    {
+                        "number": 2,
+                        "name": "Wall",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 179,
+                                "par": 3,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 172,
+                                "par": 3,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 162,
+                                "par": 3,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 147,
+                                "par": 3,
+                                "strokeIndex": 13
+                            }
+                        ]
+                    },
+                    {
+                        "number": 3,
+                        "name": "Abbotsford",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 420,
+                                "par": 4,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 414,
+                                "par": 4,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 403,
+                                "par": 4,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 382,
+                                "par": 4,
+                                "strokeIndex": 1
+                            }
+                        ]
+                    },
+                    {
+                        "number": 4,
+                        "name": "Cairo",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 403,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 392,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 378,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 297,
+                                "par": 4,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 5,
+                        "name": "Coffey’s",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 190,
+                                "par": 3,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 183,
+                                "par": 3,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 169,
+                                "par": 3,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 149,
+                                "par": 3,
+                                "strokeIndex": 17
+                            }
+                        ]
+                    },
+                    {
+                        "number": 6,
+                        "name": "Rathgill",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 520,
+                                "par": 5,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 516,
+                                "par": 5,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 494,
+                                "par": 5,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 480,
+                                "par": 5,
+                                "strokeIndex": 7
+                            }
+                        ]
+                    },
+                    {
+                        "number": 7,
+                        "name": "Stile",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 370,
+                                "par": 4,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 364,
+                                "par": 4,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 354,
+                                "par": 4,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 327,
+                                "par": 4,
+                                "strokeIndex": 11
+                            }
+                        ]
+                    },
+                    {
+                        "number": 8,
+                        "name": "Cinque Ports",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 455,
+                                "par": 4,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 447,
+                                "par": 4,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 437,
+                                "par": 4,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 422,
+                                "par": 5,
+                                "strokeIndex": 15
+                            }
+                        ]
+                    },
+                    {
+                        "number": 9,
+                        "name": "Lisbane",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 409,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 397,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 385,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 364,
+                                "par": 4,
+                                "strokeIndex": 3
+                            }
+                        ]
+                    },
+                    {
+                        "number": 10,
+                        "name": "Spurs & Roses",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 443,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 415,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 402,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 379,
+                                "par": 4,
+                                "strokeIndex": 2
+                            }
+                        ]
+                    },
+                    {
+                        "number": 11,
+                        "name": "Stags Leap",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 153,
+                                "par": 3,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 148,
+                                "par": 3,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 141,
+                                "par": 3,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 131,
+                                "par": 3,
+                                "strokeIndex": 12
+                            }
+                        ]
+                    },
+                    {
+                        "number": 12,
+                        "name": "Somerset Wood",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 517,
+                                "par": 5,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 513,
+                                "par": 5,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 487,
+                                "par": 5,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 468,
+                                "par": 5,
+                                "strokeIndex": 4
+                            }
+                        ]
+                        },
+                    {
+                        "number": 13,
+                        "name": "Harriots",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 384,
+                                "par": 4,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 360,
+                                "par": 4,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 350,
+                                "par": 4,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 315,
+                                "par": 4,
+                                "strokeIndex": 6
+                            }
+                        ]
+                    },
+                    {
+                        "number": 14,
+                        "name": "Ballyleidy",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 176,
+                                "par": 3,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 166,
+                                "par": 3,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 148,
+                                "par": 3,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 138,
+                                "par": 3,
+                                "strokeIndex": 14
+                            }
+                        ]
+                    },
+                    {
+                        "number": 15,
+                        "name": "Maxwell’s Point",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 503,
+                                "par": 5,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 495,
+                                "par": 5,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 483,
+                                "par": 5,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 439,
+                                "par": 5,
+                                "strokeIndex": 8
+                            }
+                        ]
+                    },
+                    {
+                        "number": 16,
+                        "name": "Runstone",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 424,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 392,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 381,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 291,
+                                "par": 4,
+                                "strokeIndex": 10
+                            }
+                        ]
+                    },
+                    {
+                        "number": 17,
+                        "name": "Panorama",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 375,
+                                "par": 4,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 370,
+                                "par": 4,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 351,
+                                "par": 4,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 308,
+                                "par": 4,
+                                "strokeIndex": 16
+                            }
+                        ]
+                    },
+                    {
+                        "number": 18,
+                        "name": "Rockies",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "championship",
+                                "distance": 433,
+                                "par": 4,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "medal",
+                                "distance": 428,
+                                "par": 4,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "society",
+                                "distance": 418,
+                                "par": 4,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 381,
+                                "par": 5,
+                                "strokeIndex": 18
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,546 @@
+{
+    "fileHeader": {
+        "filename": "ardglassGolfClub.json",
+        "id": 1234,
+        "version": 1,
+        "creationDate": "2016-06-12T20:13:43.511Z"
+    },
+    "golfClub": {
+        "name": "Ardglass Golf Club",
+        "phoneNumber": "028 44 841 219",
+        "logoImage": "",
+        "numberOfGolfCourses": 1,
+        "type": "FeatureCollection",
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+            }
+        },
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -5.604549,
+                        54.258716
+                    ]
+                },
+                "properties": {
+                    "name": "clubHouse"
+                }
+            }
+        ],
+        "courses": [
+            {
+                "name": "Ardglass Golf Course",
+                "courseDetails": [
+                    {
+                        "type": "medal",
+                        "teeColour": "white",
+                        "outPar": 34,
+                        "inPar": 36,
+                        "totalPar": 70,
+                        "standardScratchScore": 0,
+                        "outDistance": 2961,
+                        "inDistance": 3307,
+                        "totalDistance": 6268
+                    },
+                    {
+                        "type": "mens",
+                        "teeColour": "green",
+                        "outPar": 34,
+                        "inPar": 36,
+                        "totalPar": 70,
+                        "standardScratchScore": 0,
+                        "outDistance": 2739,
+                        "inDistance": 3075,
+                        "totalDistance": 5814
+                    },
+                    {
+                        "type": "ladies",
+                        "teeColour": "red",
+                        "outPar": 34,
+                        "inPar": 36,
+                        "totalPar": 70,
+                        "standardScratchScore": 0,
+                        "outDistance": 2477,
+                        "inDistance": 2867,
+                        "totalDistance": 5344
+                    }
+                ],
+                "holeDetails": [
+                    {
+                        "number": 1,
+                        "name": "Lambs Lough",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 335,
+                                "par": 4,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 292,
+                                "par": 4,
+                                "strokeIndex": 10
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 242,
+                                "par": 4,
+                                "strokeIndex": 10
+                            }
+                        ]
+                    },
+                    {
+                        "number": 2,
+                        "name": "Howd's Hole",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 167,
+                                "par": 3,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 160,
+                                "par": 3,
+                                "strokeIndex": 14
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 143,
+                                "par": 3,
+                                "strokeIndex": 16
+                            }
+                        ]
+                    },
+                    {
+                        "number": 3,
+                        "name": "Compass Hill",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 334,
+                                "par": 4,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 269,
+                                "par": 4,
+                                "strokeIndex": 16
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 293,
+                                "par": 4,
+                                "strokeIndex": 14
+                            }
+                        ]
+                    },
+                    {
+                        "number": 4,
+                        "name": "The Warren",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 375,
+                                "par": 4,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 351,
+                                "par": 4,
+                                "strokeIndex": 6
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 326,
+                                "par": 4,
+                                "strokeIndex": 6
+                            }
+                        ]
+                    },
+                    {
+                        "number": 5,
+                        "name": "Black Rock",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 151,
+                                "par": 3,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 135,
+                                "par": 3,
+                                "strokeIndex": 18
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 138,
+                                "par": 3,
+                                "strokeIndex": 12
+                            }
+                        ]
+                    },
+                    {
+                        "number": 6,
+                        "name": "Donard",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 414,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 394,
+                                "par": 4,
+                                "strokeIndex": 4
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 325,
+                                "par": 4,
+                                "strokeIndex": 8
+                            }
+                        ]
+                    },
+                    {
+                        "number": 7,
+                        "name": "The Cottage",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 219,
+                                "par": 3,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 205,
+                                "par": 3,
+                                "strokeIndex": 12
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 180,
+                                "par": 3,
+                                "strokeIndex": 18
+                            }
+                        ]
+                    },
+                    {
+                        "number": 8,
+                        "name": "Red Braes",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 439,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 430,
+                                "par": 4,
+                                "strokeIndex": 2
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 395,
+                                "par": 4,
+                                "strokeIndex": 4
+                            }
+                        ]
+                    },
+                    {
+                        "number": 9,
+                        "name": "Isabella Tower",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 527,
+                                "par": 5,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 503,
+                                "par": 5,
+                                "strokeIndex": 8
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 435,
+                                "par": 5,
+                                "strokeIndex": 2
+                            }
+                        ]
+                    },
+                    {
+                        "number": 10,
+                        "name": "The Island",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 205,
+                                "par": 3,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 181,
+                                "par": 3,
+                                "strokeIndex": 13
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 157,
+                                "par": 3,
+                                "strokeIndex": 17
+                            }
+                        ]
+                    },
+                    {
+                        "number": 11,
+                        "name": "St John's",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 488,
+                                "par": 5,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 465,
+                                "par": 5,
+                                "strokeIndex": 3
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 424,
+                                "par": 5,
+                                "strokeIndex": 5
+                            }
+                        ]
+                    },
+                    {
+                        "number": 12,
+                        "name": "Cathlin",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 198,
+                                "par": 3,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 187,
+                                "par": 3,
+                                "strokeIndex": 7
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 128,
+                                "par": 3,
+                                "strokeIndex": 15
+                            }
+                        ]
+                    },
+                    {
+                        "number": 13,
+                        "name": "Ringfad",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 397,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 333,
+                                "par": 4,
+                                "strokeIndex": 1
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 333,
+                                "par": 4,
+                                "strokeIndex": 9
+                            }
+                        ]
+                    },
+                    {
+                        "number": 14,
+                        "name": "Coney",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 400,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 385,
+                                "par": 4,
+                                "strokeIndex": 11
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 372,
+                                "par": 4,
+                                "strokeIndex": 1
+                            }
+                        ]
+                    },
+                    {
+                        "number": 15,
+                        "name": "The Pillar",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 491,
+                                "par": 5,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 480,
+                                "par": 5,
+                                "strokeIndex": 15
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 467,
+                                "par": 5,
+                                "strokeIndex": 7
+                            }
+                        ]
+                    },
+                    {
+                        "number": 16,
+                        "name": "The Orchard",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 422,
+                                "par": 4,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 384,
+                                "par": 4,
+                                "strokeIndex": 5
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 309,
+                                "par": 4,
+                                "strokeIndex": 11
+                            }
+                        ]
+                    },
+                    {
+                        "number": 17,
+                        "name": "Loughans",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 361,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 356,
+                                "par": 4,
+                                "strokeIndex": 9
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 356,
+                                "par": 4,
+                                "strokeIndex": 3
+                            }
+                        ]
+                    },
+                    {
+                        "number": 18,
+                        "name": "Cowd's Castle",
+                        "description": "",
+                        "image": "",
+                        "distances": [
+                            {
+                                "teeType": "medal",
+                                "distance": 345,
+                                "par": 4,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "mens",
+                                "distance": 304,
+                                "par": 4,
+                                "strokeIndex": 17
+                            },
+                            {
+                                "teeType": "ladies",
+                                "distance": 321,
+                                "par": 4,
+                                "strokeIndex": 13
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
