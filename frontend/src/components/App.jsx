@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 
 // import Album from "./Album"
-// import TopBar from "./TopBar"
+import TopBar from "./TopBar"
 // import RawDataPage from "../pages/RawDataPage"
 // import WeatherPage from "../pages/WeatherPage"
 // import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -15,6 +15,8 @@ import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 function App() {
   return (
     <div>
+      <TopBar />
+
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <Text text="Some text on canvas" fontSize={15} />
@@ -40,8 +42,6 @@ function App() {
           />
         </Layer>
       </Stage>
-
-      {/* <TopBar /> */}
 
       <Router>
         <Routes>
