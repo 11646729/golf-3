@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react"
 import styled from "styled-components"
 import { NotificationsNone, Language, Settings } from "@mui/icons-material"
-// import StatusIcon from "./StatusIcon"
+import StatusIcon from "./StatusIcon"
 
 const Container = styled.div`
   width: 100%;
@@ -67,8 +67,8 @@ const TopAvatar = styled.img`
 `
 
 const TopBar = () => {
-  // const [isActiveStatus1, setIsActiveStatus1] = useState(true)
-  // const [isActiveStatus2, setIsActiveStatus2] = useState(false)
+  const [isActiveStatus1, setIsActiveStatus1] = useState(true)
+  const [isActiveStatus2, setIsActiveStatus2] = useState(false)
 
   return (
     <Container>
@@ -80,7 +80,7 @@ const TopBar = () => {
             <TopIconBadge>1</TopIconBadge>
           </TopBarIconContainer>
           <TopBarIconContainer>
-            {/* <StatusIcon
+            <StatusIcon
               size={5}
               status={isActiveStatus1}
               onShow={() => setIsActiveStatus1(!isActiveStatus1)}
@@ -89,7 +89,7 @@ const TopBar = () => {
               size={5}
               status={isActiveStatus2}
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
-            /> */}
+            />
             <Language />
             <TopIconBadge>2</TopIconBadge>
           </TopBarIconContainer>
