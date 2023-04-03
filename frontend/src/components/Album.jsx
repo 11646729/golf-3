@@ -1,20 +1,14 @@
 import React, { memo } from "react"
-import {
-  Button,
-  Grid,
-  Typography,
-  Container,
-  makeStyles,
-} from "@material-ui/core"
+import { Button, Grid, Typography, Container, makeStyles } from "@mui/material"
 
 import CopyRight from "./CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
-import WeatherCard from "../cards/WeatherCard"
-import GolfCoursesCard from "../cards/GolfCoursesCard"
-import NearbyCrimesCard from "../cards/NearbyCrimesCard"
-import CruiseCard from "../cards/CruiseCard"
-import BusRoutesCard from "../cards/BusRoutesCard"
-import CanvasTestCard from "../cards/CanvasTestCard"
+// import WeatherCard from "../cards/WeatherCard"
+// import GolfCoursesCard from "../cards/GolfCoursesCard"
+// import NearbyCrimesCard from "../cards/NearbyCrimesCard"
+// import CruiseCard from "../cards/CruiseCard"
+// import BusRoutesCard from "../cards/BusRoutesCard"
+// import CanvasTestCard from "../cards/CanvasTestCard"
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -106,22 +100,22 @@ const Album = () => {
               <RawDataLoadCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <WeatherCard />
+              {/* <WeatherCard /> */}
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <GolfCoursesCard />
+              {/* <GolfCoursesCard /> */}
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <NearbyCrimesCard />
+              {/* <NearbyCrimesCard /> */}
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <CruiseCard />
+              {/* <CruiseCard /> */}
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <BusRoutesCard />
+              {/* <BusRoutesCard /> */}
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              <CanvasTestCard />
+              {/* <CanvasTestCard /> */}
             </Grid>
           </Grid>
         </Container>

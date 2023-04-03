@@ -1,8 +1,8 @@
 import React, { memo } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
+// import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 
-// import Album from "./Album"
+import Album from "./Album"
 import TopBar from "./TopBar"
 // import RawDataPage from "../pages/RawDataPage"
 // import WeatherPage from "../pages/WeatherPage"
@@ -17,7 +17,7 @@ function App() {
     <div>
       <TopBar />
 
-      <Stage width={window.innerWidth} height={window.innerHeight}>
+      {/* <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <Text text="Some text on canvas" fontSize={15} />
           <Rect
@@ -41,7 +41,7 @@ function App() {
             fillLinearGradientColorStops={[0, "red", 1, "yellow"]}
           />
         </Layer>
-      </Stage>
+      </Stage> */}
 
       <Router>
         <Routes>
@@ -61,7 +61,7 @@ function App() {
 }
 
 function Home() {
-  // return <Album />
+  return <Album />
 }
 
 function RawDataPageLink() {
