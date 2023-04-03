@@ -1,5 +1,6 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
+// import SocketTest from "./components/SocketTest"
 import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 
 const App = () => {
@@ -34,4 +35,7 @@ const App = () => {
 
 const container = document.getElementById("root")
 const root = createRoot(container)
-root.render(<App />)
+root.render(
+  <App />
+  // <SocketTest />
+)
