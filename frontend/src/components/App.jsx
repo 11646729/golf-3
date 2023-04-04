@@ -5,7 +5,7 @@ import Album from "./Album"
 import TopBar from "./TopBar"
 // import RawDataPage from "../pages/RawDataPage"
 // import WeatherPage from "../pages/WeatherPage"
-// import GolfCoursesPage from "../pages/GolfCoursesPage"
+import GolfCoursesPage from "../pages/GolfCoursesPage"
 // import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 // import CruisesPage from "../pages/CruisesPage"
 // import BusRoutesPage from "../pages/BusRoutesPage"
@@ -46,7 +46,7 @@ function WeatherPageLink() {
 }
 
 function GolfCoursesPageLink() {
-  // return <GolfCoursesPage />
+  return <GolfCoursesPage />
 }
 
 function CruisesPageLink() {
