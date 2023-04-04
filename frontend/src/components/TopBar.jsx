@@ -73,7 +73,7 @@ const TopBar = () => {
   return (
     <Container>
       <TopBarWrapper>
-        <Logo>My Website</Logo>
+        <Logo>My Dashboard</Logo>
         <TopRight>
           <TopBarIconContainer>
             <NotificationsNone />

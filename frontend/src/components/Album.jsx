@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { Button, Grid, Typography, Container } from "@mui/material"
+import { Grid, Container } from "@mui/material"
 
 import CopyRight from "./CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
@@ -55,8 +55,8 @@ const Album = () => {
   return (
     <div>
       <main>
-        {/* Hero unit */}
-        <div>
+        {/* Hero Unit */}
+        {/* <div>
           <Container maxWidth="sm">
             <Typography
               component="h1"
@@ -75,53 +75,42 @@ const Album = () => {
             >
               Something short and leading about ...
             </Typography>
-            <div>
-              <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
           </Container>
-        </div>
-        {/* End hero unit */}
+        </div> */}
+        {/* End Hero Unit */}
 
+        {/* Main Area */}
         <Container maxWidth="xl">
           <Grid container>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <RawDataLoadCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <WeatherCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <GolfCoursesCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <NearbyCrimesCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <CruiseCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <BusRoutesCard />
             </Grid>
-            <Grid item sm={4} style={{ padding: 20 }}>
+            <Grid item sm={3} style={{ padding: 20 }}>
               <CanvasTestCard />
             </Grid>
           </Grid>
         </Container>
+        {/* End Main Area */}
       </main>
+
       {/* Footer */}
       <footer>
-        <Typography variant="h6" align="center" gutterBottom>
+        {/* <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>
         <Typography
@@ -131,7 +120,7 @@ const Album = () => {
           component="p"
         >
           Something here to give the footer a purpose!
-        </Typography>
+        </Typography> */}
         <CopyRight />
       </footer>
     </div>
