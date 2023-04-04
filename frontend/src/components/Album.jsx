@@ -5,9 +5,9 @@ import CopyRight from "./CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
 import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
-// import NearbyCrimesCard from "../cards/NearbyCrimesCard"
-// import CruiseCard from "../cards/CruiseCard"
-// import BusRoutesCard from "../cards/BusRoutesCard"
+import NearbyCrimesCard from "../cards/NearbyCrimesCard"
+import CruiseCard from "../cards/CruiseCard"
+import BusRoutesCard from "../cards/BusRoutesCard"
 // import CanvasTestCard from "../cards/CanvasTestCard"
 
 // const useStyles = makeStyles((theme) => ({
@@ -93,22 +93,6 @@ const Album = () => {
         </div>
         {/* End hero unit */}
 
-        {/* import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-
-export default function SimpleContainer() {
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <Container maxWidth="sm">
-        <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} />
-      </Container>
-    </React.Fragment>
-  );
-} */}
-
         <Container maxWidth="xl">
           <Grid container>
             <Grid item sm={4} style={{ padding: 20 }}>
@@ -121,13 +105,13 @@ export default function SimpleContainer() {
               <GolfCoursesCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              {/* <NearbyCrimesCard /> */}
+              <NearbyCrimesCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              {/* <CruiseCard /> */}
+              <CruiseCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              {/* <BusRoutesCard /> */}
+              <BusRoutesCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
               {/* <CanvasTestCard /> */}

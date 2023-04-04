@@ -7,38 +7,23 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  makeStyles,
-} from "@material-ui/core"
-
-const useStyles = makeStyles((theme) => ({
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  cardMedia: {
-    paddingTop: "56.25%", // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-}))
+} from "@mui/material"
 
 const CruiseCard = () => {
-  const classes = useStyles()
-
   return (
-    <Card className={classes.card}>
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <CardMedia
-        className={classes.cardMedia}
+        sx={{ paddingTop: "56.25%" }}
         image="/static/images/CruiseShips.jpg"
         title="Cruise Ship in Belfast Lough"
       />
-      <CardContent className={classes.cardContent}>
+      <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
           Cruise Ship Arrivals
         </Typography>
