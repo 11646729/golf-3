@@ -4,7 +4,7 @@ import { Button, Grid, Typography, Container } from "@mui/material"
 import CopyRight from "./CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
 import WeatherCard from "../cards/WeatherCard"
-// import GolfCoursesCard from "../cards/GolfCoursesCard"
+import GolfCoursesCard from "../cards/GolfCoursesCard"
 // import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 // import CruiseCard from "../cards/CruiseCard"
 // import BusRoutesCard from "../cards/BusRoutesCard"
@@ -118,7 +118,7 @@ export default function SimpleContainer() {
               <WeatherCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
-              {/* <GolfCoursesCard /> */}
+              <GolfCoursesCard />
             </Grid>
             <Grid item sm={4} style={{ padding: 20 }}>
               {/* <NearbyCrimesCard /> */}
