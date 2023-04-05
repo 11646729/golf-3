@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Album from "./Album"
 import TopBar from "./TopBar"
 // import RawDataPage from "../pages/RawDataPage"
-// import WeatherPage from "../pages/WeatherPage"
+import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
 // import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
@@ -42,7 +42,7 @@ function RawDataPageLink() {
 }
 
 function WeatherPageLink() {
-  // return <WeatherPage />
+  return <WeatherPage />
 }
 
 function GolfCoursesPageLink() {
