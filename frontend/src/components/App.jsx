@@ -6,9 +6,9 @@ import TopBar from "./TopBar"
 // import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
-// import NearbyCrimesPage from "../pages/NearbyCrimesPage"
+import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
-import BusRoutesPage from "../pages/BusRoutesPage"
+// import BusRoutesPage from "../pages/BusRoutesPage"
 import CanvasTestPage from "../pages/CanvasTestPage"
 
 function App() {
@@ -54,11 +54,11 @@ function CruisesPageLink() {
 }
 
 function NearbyCrimesPageLink() {
-  // return <NearbyCrimesPage />
+  return <NearbyCrimesPage />
 }
 
 function BusRoutesPageLink() {
-  return <BusRoutesPage />
+  // return <BusRoutesPage />
 }
 
 function CanvasTestPageLink() {
