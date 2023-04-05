@@ -41,10 +41,13 @@ const CruisesMap = (props) => {
 
   const mapZoom = parseInt(process.env.REACT_APP_MAP_DEFAULT_ZOOM, 10)
 
-  const mapCenter = {
-    lat: parseFloat(process.env.REACT_APP_BELFAST_PORT_LATITUDE),
-    lng: parseFloat(process.env.REACT_APP_BELFAST_PORT_LONGITUDE),
-  }
+  const mapCenter = useMemo(
+    () => ({
+      lat: parseFloat(process.env.REACT_APP_BELFAST_PORT_LATITUDE),
+      lng: parseFloat(process.env.REACT_APP_BELFAST_PORT_LONGITUDE),
+    }),
+    []
+  )
 
   const mapContainerStyle = {
     height: "450px",
