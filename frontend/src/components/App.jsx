@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import Album from "./Album"
 import TopBar from "./TopBar"
-// import RawDataPage from "../pages/RawDataPage"
+import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
@@ -38,7 +38,7 @@ function Home() {
 }
 
 function RawDataPageLink() {
-  // return <RawDataPage />
+  return <RawDataPage />
 }
 
 function WeatherPageLink() {
