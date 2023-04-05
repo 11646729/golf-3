@@ -7,7 +7,7 @@ import TopBar from "./TopBar"
 // import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
 // import NearbyCrimesPage from "../pages/NearbyCrimesPage"
-// import CruisesPage from "../pages/CruisesPage"
+import CruisesPage from "../pages/CruisesPage"
 // import BusRoutesPage from "../pages/BusRoutesPage"
 import CanvasTestPage from "../pages/CanvasTestPage"
 
@@ -50,7 +50,7 @@ function GolfCoursesPageLink() {
 }
 
 function CruisesPageLink() {
-  // return <CruisesPage />
+  return <CruisesPage />
 }
 
 function NearbyCrimesPageLink() {
