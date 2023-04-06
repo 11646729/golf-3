@@ -11,6 +11,8 @@ import {
   // getDisplayData,
 } from "../functionHandlers/loadBusTransportDataHandler"
 
+console.log("Here")
+
 const BusRoutesContainer = styled.div`
   display: flex;
 `
