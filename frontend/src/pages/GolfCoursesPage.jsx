@@ -30,7 +30,6 @@ const GolfCoursesPage = () => {
   const [golfCourses, setGolfCoursesData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // build golfData Url
   const golfDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
 
   useEffect(() => {
