@@ -2,9 +2,9 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 
 import { createTheme, ThemeProvider } from "@mui/material"
-import { blue } from "@mui/material"
+import { blue } from "@mui/material/colors"
 
-import CustomCheckbox from "./CustomCheckbox"
+// import CustomCheckbox from "./CustomCheckbox"
 
 const theme = createTheme({
   status: {
@@ -13,7 +13,7 @@ const theme = createTheme({
 })
 
 const BandCheckbox = (props) => {
-  const { checked } = props
+  // const { checked } = props
 
   BandCheckbox.propTypes = {
     checked: PropTypes.bool,
@@ -21,7 +21,7 @@ const BandCheckbox = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CustomCheckbox checked={checked} />
+      {/* <CustomCheckbox checked={checked} /> */}
     </ThemeProvider>
   )
 }

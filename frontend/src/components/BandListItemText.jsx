@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { makeStyles, ListItemText, Typography } from "@material-ui/core"
+import { makeStyles, ListItemText, Typography } from "@mui/material"
 
 const useStyles = makeStyles({
   routeName: () => ({

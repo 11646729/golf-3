@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import Checkbox from "@mui/material"
-import { createTheme, makeStyles } from "@mui/material/styles"
+import Checkbox from "@mui/material/Checkbox"
+import { createTheme, makeStyles } from "@mui/styles"
 import { blue } from "@mui/material/colors"
 
 import styled from "styled-components"

@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Button, makeStyles } from "@mui/material"
+import { Button } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles({
   button: (props) => ({
