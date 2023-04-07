@@ -11,6 +11,11 @@ const GolfCourseTableContainer = styled.div`
   margin-left: 20px;
   margin-right: 10px;
   margin-bottom: 20px;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 `
 
 const GolfCourseTableTitleContainer = styled.div`

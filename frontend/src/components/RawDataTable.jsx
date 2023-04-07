@@ -33,7 +33,11 @@ const RawDataTableStyle = styled.table`
   border-spacing: 20px;
   border: 1px solid lightgray;
   border-collapse: collapse;
-  font-size: 13px;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 `
 
 const RawDataTableHeader = styled.thead`
