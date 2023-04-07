@@ -46,6 +46,7 @@ const CruisesPage = () => {
   useEffect(() => {
     getPortArrivalsData(portArrivalsDataUrl)
       .then((returnedData) => {
+        // DOES NOT WORK
         // Sort by date becaause returnedData is not always in timestamp order
         // returnedData.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
 
