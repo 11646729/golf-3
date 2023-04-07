@@ -1,17 +1,24 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-import {
-  // Container,
-  Grid,
-  // styled,
-} from "@mui/material"
 
 import Title from "./Title"
 
 const NearbyCrimesPanelTitle = "Nearby Crimes"
 const HomeCheckboxLabel = "Home Location"
 const LatestCheckboxLabel = "Latest Available Data"
+
+const NearbyCrimesTableContainer = styled.div`
+  min-width: 200px;
+  margin-left: 20px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+`
 
 const NearbyCrimesTitleContainer = styled.div`
   margin-top: 35px;
@@ -36,8 +43,7 @@ const NearbyCrimesInputPanel = (props) => {
       <NearbyCrimesTitleContainer>
         <Title>{NearbyCrimesPanelTitle}</Title>
       </NearbyCrimesTitleContainer>
-
-      <Grid item xs={12} sm={12} style={{ marginTop: 50 }}>
+      <NearbyCrimesTableContainer>
         <input
           type="checkbox"
           name="homeCheckbox"
@@ -96,7 +102,7 @@ const NearbyCrimesInputPanel = (props) => {
           }}
         />
       </MuiPickersUtilsProvider> */}
-      </Grid>
+      </NearbyCrimesTableContainer>
     </div>
   )
 }
