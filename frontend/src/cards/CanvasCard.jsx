@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const CanvasTestCard = () => {
+const CanvasCard = () => {
   return (
     <Card
       sx={{
@@ -30,12 +30,7 @@ const CanvasTestCard = () => {
         <Typography>This is an Html Canvas Test</Typography>
       </CardContent>
       <CardActions>
-        <Button
-          size="small"
-          color="primary"
-          component={Link}
-          to="/canvastestpage"
-        >
+        <Button size="small" color="primary" component={Link} to="/canvaspage">
           View
         </Button>
       </CardActions>
@@ -43,4 +38,4 @@ const CanvasTestCard = () => {
   )
 }
 
-export default memo(CanvasTestCard)
+export default memo(CanvasCard)

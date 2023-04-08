@@ -1,10 +1,9 @@
 import React, { memo } from "react"
 import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
+import styled from "styled-components"
+// import PropTypes from "prop-types"
 
 import Title from "./Title"
-
-// import PropTypes from "prop-types"
-import styled from "styled-components"
 
 const CanvasDiagramContainer = styled.div`
   min-width: 200px;

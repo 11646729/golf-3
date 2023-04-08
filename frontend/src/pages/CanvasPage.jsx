@@ -29,7 +29,6 @@ const CanvasPage = () => {
     <CanvasContainer>
       <CanvasTableContainer>
         <Title>{CanvasTableTitle}</Title>
-        {/* <GolfCoursesTable golfCourses={golfCourses} /> */}
       </CanvasTableContainer>
       <CanvasDiagramContainer>
         <CanvasDiagram />

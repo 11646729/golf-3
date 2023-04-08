@@ -9,7 +9,7 @@ import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
-import CanvasTestPage from "../pages/CanvasTestPage"
+import CanvasPage from "../pages/CanvasPage"
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route path="nearbycrimespage" element={<NearbyCrimesPageLink />} />
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
-          <Route path="canvastestpage" element={<CanvasTestPageLink />} />
+          <Route path="canvaspage" element={<CanvasPageLink />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
@@ -61,8 +61,8 @@ function BusRoutesPageLink() {
   return <BusRoutesPage />
 }
 
-function CanvasTestPageLink() {
-  return <CanvasTestPage />
+function CanvasPageLink() {
+  return <CanvasPage />
 }
 
 function NotFound() {
