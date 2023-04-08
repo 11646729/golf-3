@@ -2,8 +2,12 @@ import React, { memo } from "react"
 import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 
 const CanvasTestPage = () => {
+  var canvasWidth = window.innerWidth
+  var canvasHeight = window.innerHeight
+  console.log(canvasHeight)
+
   return (
-    <Stage width={window.innerWidth} height={window.innerHeight}>
+    <Stage width={canvasWidth} height={canvasHeight}>
       <Layer>
         <Text text="Some text on canvas" fontSize={15} />
         <Rect
@@ -13,6 +17,12 @@ const CanvasTestPage = () => {
           height={100}
           fill="red"
           shadowBlur={10}
+        />
+        <Circle
+          x={canvasWidth / 2}
+          y={canvasHeight / 2}
+          radius={canvasHeight * 0.4}
+          fill="lightgrey"
         />
         <Circle x={200} y={100} radius={50} fill="green" />
         <Line
