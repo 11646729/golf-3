@@ -1,34 +1,23 @@
 import React, { memo } from "react"
 import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
 import styled from "styled-components"
-// import PropTypes from "prop-types"
 
 import Title from "./Title"
 
 const CanvasDiagramContainer = styled.div`
-  min-width: 200px;
-  margin-left: 20px;
-  margin-right: 10px;
-  margin-bottom: 20px;
-  font-weight: normal;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-top: 30px;
 `
 
 const CanvasDiagramTitle = "Canvas Diagram"
 
 const CanvasDiagram = (props) => {
-  var canvasWidth = window.innerWidth
+  var canvasWidth = window.innerWidth / 2
   var canvasHeight = window.innerHeight
-  console.log(canvasHeight)
-
-  // const { golfCourses } = props
-
-  CanvasDiagram.propTypes = {
-    // golfCourses: PropTypes.array,
-  }
+  console.log("Canvas Height: " + canvasHeight)
+  console.log("Canvas Width: " + canvasWidth)
 
   return (
     <div>
@@ -47,9 +36,10 @@ const CanvasDiagram = (props) => {
             />
             <Circle
               x={canvasWidth / 2}
-              y={canvasHeight / 2}
+              y={canvasHeight / 2.5}
               radius={canvasHeight * 0.4}
               fill="lightgrey"
+              stroke="black"
             />
             <Circle x={200} y={100} radius={50} fill="green" />
             <Line
