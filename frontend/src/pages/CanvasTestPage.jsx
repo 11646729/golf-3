@@ -1,44 +1,41 @@
 import React, { memo } from "react"
-import { Stage, Layer, Rect, Text, Circle, Line } from "react-konva"
+import styled from "styled-components"
+import CanvasDiagram from "../components/CanvasDiagram"
 
-const CanvasTestPage = () => {
-  var canvasWidth = window.innerWidth
-  var canvasHeight = window.innerHeight
-  console.log(canvasHeight)
+import Title from "../components/Title"
 
+const CanvasTableTitle = "Canvas Diagram"
+
+const CanvasContainer = styled.div`
+  display: flex;
+`
+
+const CanvasTableContainer = styled.div`
+  flex: 2;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  min-height: 500px;
+`
+
+const CanvasDiagramContainer = styled.div`
+  flex: 2;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  min-height: 800px;
+`
+
+const CanvasPage = () => {
   return (
-    <Stage width={canvasWidth} height={canvasHeight}>
-      <Layer>
-        <Text text="Some text on canvas" fontSize={15} />
-        <Rect
-          x={20}
-          y={50}
-          width={100}
-          height={100}
-          fill="red"
-          shadowBlur={10}
-        />
-        <Circle
-          x={canvasWidth / 2}
-          y={canvasHeight / 2}
-          radius={canvasHeight * 0.4}
-          fill="lightgrey"
-        />
-        <Circle x={200} y={100} radius={50} fill="green" />
-        <Line
-          x={20}
-          y={200}
-          points={[0, 0, 100, 0, 100, 100]}
-          tension={0.5}
-          closed
-          stroke="black"
-          fillLinearGradientStartPoint={{ x: -50, y: -50 }}
-          fillLinearGradientEndPoint={{ x: 50, y: 50 }}
-          fillLinearGradientColorStops={[0, "red", 1, "yellow"]}
-        />
-      </Layer>
-    </Stage>
+    <CanvasContainer>
+      <CanvasTableContainer>
+        <Title>{CanvasTableTitle}</Title>
+        {/* <GolfCoursesTable golfCourses={golfCourses} /> */}
+      </CanvasTableContainer>
+      <CanvasDiagramContainer>
+        <CanvasDiagram />
+      </CanvasDiagramContainer>
+    </CanvasContainer>
   )
 }
 
-export default memo(CanvasTestPage)
+export default memo(CanvasPage)
