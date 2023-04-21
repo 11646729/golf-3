@@ -25,9 +25,9 @@ const CanvasCard = () => {
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          Canvas Test
+          GridTestProg Canvas Test
         </Typography>
-        <Typography>This is an Html Canvas Test</Typography>
+        <Typography>This is the GridTest Canvas Test</Typography>
       </CardContent>
       <CardActions>
         <Button size="small" color="primary" component={Link} to="/canvaspage">

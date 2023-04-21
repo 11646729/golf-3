@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import Album from "./Album"
-import TopBar from "./TopBar"
+// import TopBar from "./TopBar"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -14,7 +14,7 @@ import CanvasPage from "../pages/CanvasPage"
 function App() {
   return (
     <div>
-      <TopBar />
+      {/* <TopBar /> */}
 
       <Router>
         <Routes>
