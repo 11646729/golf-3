@@ -26,6 +26,8 @@ const CanvasDiagram = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [])
 
+  console.log(rect)
+
   const rectangleYPosition = rect.height * (topMarginPercentage / 100)
   const chartXPosition = rect.width / 2
   const chartYPosition = rect.height / 2
@@ -36,27 +38,25 @@ const CanvasDiagram = () => {
   const rectangleXPosition = (rect.width - circleRadius * 2) / 2
 
   return (
-    <div>
-      <Stage width={rect.width} height={rect.height} margin={0}>
-        <Layer>
-          <Rect
-            x={rectangleXPosition}
-            y={rectangleYPosition}
-            width={circleRadius * 2}
-            height={circleRadius * 2}
-            stroke={shapesOutlineColor}
-            strokeWidth={shapesOutlineWidth}
-          />
-          <Circle
-            x={chartXPosition}
-            y={chartYPosition}
-            radius={circleRadius}
-            stroke={shapesOutlineColor}
-            strokeWidth={shapesOutlineWidth}
-          />
-        </Layer>
-      </Stage>
-    </div>
+    <Stage width={rect.width} height={rect.height} margin={0}>
+      <Layer>
+        <Rect
+          x={rectangleXPosition}
+          y={rectangleYPosition}
+          width={circleRadius * 2}
+          height={circleRadius * 2}
+          stroke={shapesOutlineColor}
+          strokeWidth={shapesOutlineWidth}
+        />
+        <Circle
+          x={chartXPosition}
+          y={chartYPosition}
+          radius={circleRadius}
+          stroke={shapesOutlineColor}
+          strokeWidth={shapesOutlineWidth}
+        />
+      </Layer>
+    </Stage>
   )
 }
 
