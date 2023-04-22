@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from "react"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Text } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
 
 const CanvasDiagram = () => {
@@ -29,6 +29,14 @@ const CanvasDiagram = () => {
   return (
     <Stage width={rect.width} height={rect.height} margin={0}>
       <Layer>
+        <Text
+          text="Omnidirectional Radial Array Response Plot"
+          fontSize={20}
+          align="center"
+          verticalAlign="middle"
+          width={window.innerWidth}
+          height={50}
+        />
         <DrawChartBox rect={rect} />
       </Layer>
     </Stage>
