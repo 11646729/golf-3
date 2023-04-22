@@ -30,7 +30,7 @@ const CanvasDiagram = () => {
     <Stage width={rect.width} height={rect.height} margin={0}>
       <Layer>
         <Text
-          text="Omnidirectional Radial Array Response Plot"
+          text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
           fontSize={20}
           align="center"
           verticalAlign="middle"
