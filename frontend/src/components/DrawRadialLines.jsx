@@ -8,7 +8,7 @@ const DrawRadialLines = (props) => {
   if (!rect) return
 
   DrawRadialLines.propTypes = {
-    rect: PropTypes.array,
+    rect: PropTypes.object,
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Circle, Rect } from "react-konva"
+import { Circle, Group, Rect } from "react-konva"
 
 const DrawChartBox = (props) => {
   const { rect } = props
@@ -8,7 +8,7 @@ const DrawChartBox = (props) => {
   if (!rect) return
 
   DrawChartBox.propTypes = {
-    rect: PropTypes.array,
+    rect: PropTypes.object,
   }
 
   const rectangleYPosition =
@@ -25,7 +25,7 @@ const DrawChartBox = (props) => {
   const rectangleXPosition = (rect.width - circleRadius * 2) / 2
 
   return (
-    <div>
+    <Group>
       <Rect
         x={rectangleXPosition}
         y={rectangleYPosition}
@@ -47,7 +47,7 @@ const DrawChartBox = (props) => {
           10
         )}
       />
-    </div>
+    </Group>
   )
 }
 

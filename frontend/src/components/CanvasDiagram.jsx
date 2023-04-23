@@ -27,6 +27,8 @@ const CanvasDiagram = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [])
 
+  console.log(screenRect)
+
   return (
     <Stage width={screenRect.width} height={screenRect.height} margin={0}>
       <Layer>
