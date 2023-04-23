@@ -4,33 +4,39 @@ import DrawChartBox from "./DrawChartBox"
 import DrawRadialLines from "./DrawRadialLines"
 
 const CanvasDiagram = () => {
-  const [screenRect, setDimensions] = useState({
-    width:
+  // Hook is initialised with width & height values
+  const [screenRect, setScreenRect] = useState({
+    iLeft: 0,
+    iTop: 0,
+    iWidth:
       window.innerWidth * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
-    height:
+    iHeight:
       window.innerHeight * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
   })
 
   useEffect(() => {
     const checkSize = () => {
-      setDimensions({
-        width:
+      setScreenRect({
+        iLeft: 0,
+        iTop: 0,
+        iWidth:
           window.innerWidth *
           process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
-        height:
+        iHeight:
           window.innerHeight *
           process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
       })
+      //   setScreenWithMarginsRect({})
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
   }, [])
 
-  console.log(screenRect)
+  // Prepare rectangles for titles, axes & legend
 
   return (
-    <Stage width={screenRect.width} height={screenRect.height} margin={0}>
+    <Stage width={screenRect.iWidth} height={screenRect.iHeight} margin={0}>
       <Layer>
         <Text
           text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}

@@ -12,17 +12,17 @@ const DrawChartBox = (props) => {
   }
 
   const rectangleYPosition =
-    rect.height *
+    rect.iHeight *
     (process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100)
-  const chartXPosition = rect.width / 2
-  const chartYPosition = rect.height / 2
+  const chartXPosition = rect.iWidth / 2
+  const chartYPosition = rect.iHeight / 2
   const circleRadius =
-    (rect.height *
+    (rect.iHeight *
       (1 -
         process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100 -
         process.env.REACT_APP_GEOPHONEARRAY_BOTTOMMARGINPERCENTAGE / 100)) /
     2
-  const rectangleXPosition = (rect.width - circleRadius * 2) / 2
+  const rectangleXPosition = (rect.iWidth - circleRadius * 2) / 2
 
   return (
     <Group>
