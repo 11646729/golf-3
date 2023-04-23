@@ -5,6 +5,8 @@ import { Circle, Rect } from "react-konva"
 const DrawChartBox = (props) => {
   const { rect } = props
 
+  if (!rect) return
+
   DrawChartBox.propTypes = {
     rect: PropTypes.array,
   }
@@ -30,14 +32,20 @@ const DrawChartBox = (props) => {
         width={circleRadius * 2}
         height={circleRadius * 2}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
-        strokeWidth={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH}
+        strokeWidth={parseInt(
+          process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
+          10
+        )}
       />
       <Circle
         x={chartXPosition}
         y={chartYPosition}
         radius={circleRadius}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
-        strokeWidth={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH}
+        strokeWidth={parseInt(
+          process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
+          10
+        )}
       />
     </div>
   )

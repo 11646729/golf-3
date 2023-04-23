@@ -1,9 +1,10 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer, Text } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
+import DrawRadialLines from "./DrawRadialLines"
 
 const CanvasDiagram = () => {
-  const [rect, setDimensions] = useState({
+  const [screenRect, setDimensions] = useState({
     width:
       window.innerWidth * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
     height:
@@ -27,7 +28,7 @@ const CanvasDiagram = () => {
   }, [])
 
   return (
-    <Stage width={rect.width} height={rect.height} margin={0}>
+    <Stage width={screenRect.width} height={screenRect.height} margin={0}>
       <Layer>
         <Text
           text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
@@ -37,7 +38,8 @@ const CanvasDiagram = () => {
           width={window.innerWidth}
           height={50}
         />
-        <DrawChartBox rect={rect} />
+        <DrawChartBox rect={screenRect} />
+        <DrawRadialLines rect={screenRect} />
       </Layer>
     </Stage>
   )
