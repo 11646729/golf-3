@@ -11,33 +11,33 @@ const DrawChartBox = (props) => {
     rect: PropTypes.object,
   }
 
-  const rectangleYPosition =
-    rect.iHeight *
-    (process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100)
-  const chartXPosition = rect.iWidth / 2
-  const chartYPosition = rect.iHeight / 2
-  const circleRadius =
-    (rect.iHeight *
-      (1 -
-        process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100 -
-        process.env.REACT_APP_GEOPHONEARRAY_BOTTOMMARGINPERCENTAGE / 100)) /
-    2
-  const rectangleXPosition = (rect.iWidth - circleRadius * 2) / 2
+  // const rectangleYPosition =
+  //   rect.iHeight *
+  //   (process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100)
+  // const chartXPosition = rect.iWidth / 2
+  // const chartYPosition = rect.iHeight / 2
+  // const circleRadius =
+  //   (rect.iHeight *
+  //     (1 -
+  //       process.env.REACT_APP_GEOPHONEARRAY_TOPMARGINPERCENTAGE / 100 -
+  //       process.env.REACT_APP_GEOPHONEARRAY_BOTTOMMARGINPERCENTAGE / 100)) /
+  //   2
+  // const rectangleXPosition = (rect.iWidth - circleRadius * 2) / 2
 
   return (
     <Group>
       <Rect
-        x={rectangleXPosition}
-        y={rectangleYPosition}
-        width={circleRadius * 2}
-        height={circleRadius * 2}
+        x={rect.left}
+        y={rect.top}
+        width={rect.right - rect.left}
+        height={rect.bottom - rect.top}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
           10
         )}
       />
-      <Circle
+      {/* <Circle
         x={chartXPosition}
         y={chartYPosition}
         radius={circleRadius}
@@ -46,7 +46,7 @@ const DrawChartBox = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
           10
         )}
-      />
+      /> */}
     </Group>
   )
 }

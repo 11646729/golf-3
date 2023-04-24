@@ -6,37 +6,70 @@ import DrawRadialLines from "./DrawRadialLines"
 const CanvasDiagram = () => {
   // Hook is initialised with width & height values
   const [screenRect, setScreenRect] = useState({
-    iLeft: 0,
-    iTop: 0,
-    iWidth:
-      window.innerWidth * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
-    iHeight:
-      window.innerHeight * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
+    left: 0,
+    top: 0,
+    right: Math.round(
+      window.innerWidth * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
+    ),
+    bottom: Math.round(
+      window.innerHeight * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
+    ),
+  })
+  const [insideMarginsRect, setInsideMarginsRect] = useState({
+    left:
+      screenRect.left +
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+    top:
+      screenRect.top +
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+    right:
+      screenRect.right -
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+    bottom:
+      screenRect.bottom -
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
   })
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect({
-        iLeft: 0,
-        iTop: 0,
-        iWidth:
-          window.innerWidth *
-          process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
-        iHeight:
+        left: 0,
+        top: 0,
+        right: Math.round(
+          window.innerWidth * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
+        ),
+        bottom: Math.round(
           window.innerHeight *
-          process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT,
+            process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
+        ),
       })
-      //   setScreenWithMarginsRect({})
+      setInsideMarginsRect({
+        left:
+          screenRect.left +
+          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+        top:
+          screenRect.top +
+          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+        right:
+          screenRect.right -
+          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+        bottom:
+          screenRect.bottom -
+          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+      })
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [])
+  }, [screenRect])
+
+  console.log(screenRect)
+  console.log(insideMarginsRect)
 
   // Prepare rectangles for titles, axes & legend
 
   return (
-    <Stage width={screenRect.iWidth} height={screenRect.iHeight} margin={0}>
+    <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
       <Layer>
         <Text
           text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
@@ -46,8 +79,8 @@ const CanvasDiagram = () => {
           width={window.innerWidth}
           height={50}
         />
-        <DrawChartBox rect={screenRect} />
-        <DrawRadialLines rect={screenRect} />
+        <DrawChartBox rect={insideMarginsRect} />
+        {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>
   )
