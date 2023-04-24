@@ -1,6 +1,7 @@
 import React, { useEffect, useState, memo } from "react"
-import { Stage, Layer, Text } from "react-konva"
+import { Stage, Layer } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
+import DrawPlotTitleBox from "./DrawPlotTitleBox"
 import DrawRadialLines from "./DrawRadialLines"
 
 const CanvasDiagram = () => {
@@ -71,15 +72,8 @@ const CanvasDiagram = () => {
   return (
     <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
       <Layer>
-        <Text
-          text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
-          fontSize={20}
-          align="center"
-          verticalAlign="middle"
-          width={window.innerWidth}
-          height={50}
-        />
         <DrawChartBox rect={insideMarginsRect} />
+        <DrawPlotTitleBox rect={insideMarginsRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>
