@@ -11,12 +11,25 @@ const DrawPlotTitle = (props) => {
     rect: PropTypes.object,
   }
 
-  const plotTitleRect = {
-    left: rect.left,
-    top: rect.top,
-    right: rect.right,
-    bottom:
-      rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
+  let plotTitleRect = null
+  const MainPlotTitleHeight = parseInt(
+    process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH
+  )
+
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWPLOTTITLE) {
+    plotTitleRect = {
+      left: rect.left,
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.top + MainPlotTitleHeight,
+    }
+  } else {
+    plotTitleRect = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    }
   }
 
   // console.log(rect)

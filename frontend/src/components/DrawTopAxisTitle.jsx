@@ -11,15 +11,26 @@ const DrawTopAxisTitle = (props) => {
     rect: PropTypes.object,
   }
 
-  const topAxisTitleRect = {
-    left: rect.left,
-    top:
-      rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
-    right: rect.right,
-    bottom:
-      rect.top +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH) +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_AXISTITLEWIDTH),
+  let topAxisTitleRect = null
+
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXISTITLE) {
+    topAxisTitleRect = {
+      left: rect.left,
+      top:
+        rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
+      right: rect.right,
+      bottom:
+        rect.top +
+        parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH) +
+        parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISTITLEWIDTH),
+    }
+  } else {
+    topAxisTitleRect = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    }
   }
 
   console.log(rect)
@@ -40,7 +51,7 @@ const DrawTopAxisTitle = (props) => {
         fill="lightyellow"
       />
       {/* <Text
-        text={process.env.REACT_APP_GEOPHONEARRAY_AXISTITLETEXT}
+        text={process.env.REACT_APP_GEOPHONEARRAY_TOPAXISTITLETEXT}
         fontSize={20}
         align="center"
         verticalAlign="middle"

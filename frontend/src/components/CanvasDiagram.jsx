@@ -3,7 +3,8 @@ import { Stage, Layer } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
 import DrawTopAxisTitle from "./DrawTopAxisTitle"
-import DrawRadialLines from "./DrawRadialLines"
+// import DrawRadialLines from "./DrawRadialLines"
+import computeInsideMarginsRect from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
   // Hook is initialised with width & height values
@@ -17,20 +18,9 @@ const CanvasDiagram = () => {
       window.innerHeight * process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
     ),
   })
-  const [insideMarginsRect, setInsideMarginsRect] = useState({
-    left:
-      screenRect.left +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-    top:
-      screenRect.top +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-    right:
-      screenRect.right -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-    bottom:
-      screenRect.bottom -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-  })
+  const [insideMarginsRect, setInsideMarginsRect] = useState(
+    computeInsideMarginsRect(screenRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
@@ -45,20 +35,7 @@ const CanvasDiagram = () => {
             process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
         ),
       })
-      setInsideMarginsRect({
-        left:
-          screenRect.left +
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-        top:
-          screenRect.top +
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-        right:
-          screenRect.right -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-        bottom:
-          screenRect.bottom -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
-      })
+      setInsideMarginsRect(computeInsideMarginsRect(screenRect))
     }
 
     window.addEventListener("resize", checkSize)
@@ -66,7 +43,7 @@ const CanvasDiagram = () => {
   }, [screenRect])
 
   // console.log(screenRect)
-  // console.log(insideMarginsRect)
+  // console.log(computeInsideMarginsRect(screenRect))
 
   // Prepare rectangles for titles, axes & legend
 
