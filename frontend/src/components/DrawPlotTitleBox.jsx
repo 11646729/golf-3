@@ -15,7 +15,8 @@ const DrawPlotTitleBox = (props) => {
     left: rect.left,
     top: rect.top,
     right: rect.right,
-    bottom: rect.top + 30,
+    bottom:
+      rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
   }
 
   return (
@@ -30,6 +31,7 @@ const DrawPlotTitleBox = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
           10
         )}
+        fill="lightgreen"
       />
       <Text
         text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
