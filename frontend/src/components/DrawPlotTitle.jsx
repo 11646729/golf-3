@@ -2,12 +2,12 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Group, Text, Rect } from "react-konva"
 
-const DrawPlotTitleBox = (props) => {
+const DrawPlotTitle = (props) => {
   const { rect } = props
 
   if (!rect) return
 
-  DrawPlotTitleBox.propTypes = {
+  DrawPlotTitle.propTypes = {
     rect: PropTypes.object,
   }
 
@@ -19,17 +19,19 @@ const DrawPlotTitleBox = (props) => {
       rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
   }
 
+  // console.log(rect)
+  // console.log(plotTitleRect)
+
   return (
     <Group>
       <Rect
         x={plotTitleRect.left}
         y={plotTitleRect.top}
         width={plotTitleRect.right}
-        height={plotTitleRect.bottom}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
+        height={plotTitleRect.bottom - plotTitleRect.top}
+        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
-          10
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
         fill="lightgreen"
       />
@@ -45,4 +47,4 @@ const DrawPlotTitleBox = (props) => {
   )
 }
 
-export default memo(DrawPlotTitleBox)
+export default memo(DrawPlotTitle)

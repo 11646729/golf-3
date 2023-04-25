@@ -19,9 +19,9 @@ const DrawRadialLines = (props) => {
         rect.iWidth,
         rect.iHeight / 2,
       ]}
-      stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
+      stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
       strokeWidth={parseInt(
-        process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
+        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
         10
       )}
     />

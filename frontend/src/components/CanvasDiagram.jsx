@@ -1,7 +1,8 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
-import DrawPlotTitleBox from "./DrawPlotTitleBox"
+import DrawPlotTitle from "./DrawPlotTitle"
+import DrawTopAxisTitle from "./DrawTopAxisTitle"
 import DrawRadialLines from "./DrawRadialLines"
 
 const CanvasDiagram = () => {
@@ -64,8 +65,8 @@ const CanvasDiagram = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [screenRect])
 
-  console.log(screenRect)
-  console.log(insideMarginsRect)
+  // console.log(screenRect)
+  // console.log(insideMarginsRect)
 
   // Prepare rectangles for titles, axes & legend
 
@@ -73,7 +74,8 @@ const CanvasDiagram = () => {
     <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
       <Layer>
         <DrawChartBox rect={insideMarginsRect} />
-        <DrawPlotTitleBox rect={insideMarginsRect} />
+        <DrawPlotTitle rect={insideMarginsRect} />
+        <DrawTopAxisTitle rect={insideMarginsRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>

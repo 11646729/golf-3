@@ -31,10 +31,9 @@ const DrawChartBox = (props) => {
         y={rect.top}
         width={rect.right}
         height={rect.bottom}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINECOLOR}
+        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_SHAPESOUTLINEWIDTH,
-          10
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
       />
       {/* <Circle
