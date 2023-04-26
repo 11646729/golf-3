@@ -8,6 +8,7 @@ import DrawTopAxisTitle from "./DrawTopAxisTitle"
 import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
+  computePlotTitlesRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -20,23 +21,27 @@ const CanvasDiagram = () => {
   const [insideMarginsRect, setInsideMarginsRect] = useState(
     computeInsideMarginsRect(screenRect)
   )
+  const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
+    computePlotTitlesRect(insideMarginsRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenRect))
+      setInsidePlotTitleRect(computePlotTitlesRect(insideMarginsRect))
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenRect])
+  }, [screenRect, insideMarginsRect])
 
   return (
     <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
       <Layer>
-        <DrawChartBox rect={screenRect} />
-        <DrawPlotTitle rect={insideMarginsRect} />
-        <DrawTopAxisTitle rect={insideMarginsRect} />
+        <DrawChartBox rect={insideMarginsRect} />
+        <DrawPlotTitle rect={insidePlotTitleRect} />
+        {/* <DrawTopAxisTitle rect={insideMarginsRect} /> */}
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>

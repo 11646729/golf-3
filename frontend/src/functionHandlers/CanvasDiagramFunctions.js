@@ -31,4 +31,24 @@ export const computeInsideMarginsRect = (ScreenEdge) => {
   return insideMarginsRect
 }
 
+// -------------------------------------------------------
+// Function to compute InsideMarginsRect - translated from C++ code
+// -------------------------------------------------------
+export const computePlotTitlesRect = (insideMarginsRect) => {
+  const MainTitleHeight = parseInt(
+    process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH
+  )
+
+  // const MainTitleHeight = 0
+
+  let insidePlotTitleRect = {
+    top: insideMarginsRect.top,
+    bottom: insideMarginsRect.top + MainTitleHeight,
+    left: insideMarginsRect.left,
+    right: insideMarginsRect.right,
+  }
+
+  return insidePlotTitleRect
+}
+
 export { computeInsideMarginsRect as default }

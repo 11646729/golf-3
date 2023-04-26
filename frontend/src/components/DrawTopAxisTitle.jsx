@@ -11,38 +11,37 @@ const DrawTopAxisTitle = (props) => {
     rect: PropTypes.object,
   }
 
-  let topAxisTitleRect = null
+  // let topAxisTitleRect = null
 
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXISTITLE) {
-    topAxisTitleRect = {
-      left: rect.left,
-      top:
-        rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
-      right: rect.right,
-      bottom:
-        rect.top +
-        parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH) +
-        parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISTITLEWIDTH),
-    }
-  } else {
-    topAxisTitleRect = {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-    }
-  }
+  // if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXISTITLE) {
+  //   topAxisTitleRect = {
+  //     left: rect.left,
+  //     top:
+  //       rect.top + parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH),
+  //     right: rect.right,
+  //     bottom:
+  //       rect.top +
+  //       parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH) +
+  //       parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISTITLEWIDTH),
+  //   }
+  // } else {
+  //   topAxisTitleRect = {
+  //     left: 0,
+  //     top: 0,
+  //     right: 0,
+  //     bottom: 0,
+  //   }
+  // }
 
   // console.log(rect)
-  // console.log(topAxisTitleRect)
 
   return (
     <Group>
       <Rect
-        x={topAxisTitleRect.left}
-        y={topAxisTitleRect.top}
-        width={topAxisTitleRect.right}
-        height={topAxisTitleRect.bottom - topAxisTitleRect.top}
+        x={rect.left}
+        y={rect.top}
+        width={rect.right}
+        height={rect.bottom - rect.top}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
