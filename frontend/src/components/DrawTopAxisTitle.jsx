@@ -33,8 +33,8 @@ const DrawTopAxisTitle = (props) => {
     }
   }
 
-  console.log(rect)
-  console.log(topAxisTitleRect)
+  // console.log(rect)
+  // console.log(topAxisTitleRect)
 
   return (
     <Group>

@@ -1,14 +1,31 @@
 // -------------------------------------------------------
-// Function to fetch all shape_ids
+// Function to compute ScreenEdgeRect - translated from C++ code
 // -------------------------------------------------------
-const computeInsideMarginsRect = (rect) => {
-  const MarginWidth = parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH)
+export const computeScreenEdgeRect = () => {
+  const screenSizeAdjustment =
+    process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT
+
+  let screenEdgeRect = {
+    top: 0,
+    bottom: Math.round(window.innerHeight * screenSizeAdjustment),
+    left: 0,
+    right: Math.round(window.innerWidth * screenSizeAdjustment),
+  }
+
+  return screenEdgeRect
+}
+
+// -------------------------------------------------------
+// Function to compute InsideMarginsRect - translated from C++ code
+// -------------------------------------------------------
+export const computeInsideMarginsRect = (ScreenEdge) => {
+  const marginWidth = parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH)
 
   let insideMarginsRect = {
-    top: rect.top + MarginWidth,
-    bottom: rect.bottom - MarginWidth,
-    left: rect.left + MarginWidth,
-    right: rect.right - MarginWidth,
+    top: ScreenEdge.top + marginWidth,
+    bottom: ScreenEdge.bottom - marginWidth,
+    left: ScreenEdge.left + marginWidth,
+    right: ScreenEdge.right - marginWidth,
   }
 
   return insideMarginsRect
