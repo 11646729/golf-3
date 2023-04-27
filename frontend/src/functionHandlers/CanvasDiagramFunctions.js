@@ -12,6 +12,8 @@ export const computeScreenEdgeRect = () => {
     right: Math.round(window.innerWidth * screenSizeAdjustment),
   }
 
+  // console.log(screenEdgeRect)
+
   return screenEdgeRect
 }
 
@@ -28,13 +30,15 @@ export const computeInsideMarginsRect = (ScreenEdge) => {
     right: ScreenEdge.right - marginWidth,
   }
 
+  // console.log(insideMarginsRect)
+
   return insideMarginsRect
 }
 
 // -------------------------------------------------------
-// Function to compute InsideMarginsRect - translated from C++ code
+// Function to compute InsidePlotTitlesRect - translated from C++ code
 // -------------------------------------------------------
-export const computePlotTitlesRect = (insideMarginsRect) => {
+export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
   const MainTitleHeight = parseInt(
     process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH
   )
@@ -48,7 +52,62 @@ export const computePlotTitlesRect = (insideMarginsRect) => {
     right: insideMarginsRect.right,
   }
 
+  // console.log(insidePlotTitleRect)
+
   return insidePlotTitleRect
+}
+
+// -------------------------------------------------------
+// Function to compute InsideTitlesRect - translated from C++ code
+// -------------------------------------------------------
+export const computeInsideTitlesRect = (insidePlotTitleRect) => {
+  const TopTitleHeight = 20
+  const BottomTitleHeight = 20
+  const LeftTitleHeight = 20
+  const RightTitleMargin = 20
+  const LegendWidth = 30
+
+  // const TopTitleHeight = 0
+  // const BottomTitleHeight = 0
+  // const LeftTitleHeight = 0
+  // const RightTitleMargin = 0
+  // const LegendWidth = 0
+
+  let insideTitlesRect = {
+    top: insidePlotTitleRect.bottom + TopTitleHeight,
+    bottom: insidePlotTitleRect.top - BottomTitleHeight,
+    left: insidePlotTitleRect.left + LeftTitleHeight,
+    right: insidePlotTitleRect.right - RightTitleMargin - LegendWidth,
+  }
+
+  // console.log(insideTitlesRect)
+
+  return insideTitlesRect
+}
+
+// -------------------------------------------------------
+// Function to compute TopTitlesRect - translated from C++ code
+// -------------------------------------------------------
+export const computeTopTitlesRect = (
+  insidePlotTitleRect,
+  insideMarginsRect
+) => {
+  const TopTitleHeight = 30
+  // const LegendWidth = 100
+
+  // const TopTitleHeight = 0
+  const LegendWidth = 0
+
+  let topTitlesRect = {
+    top: insidePlotTitleRect.bottom,
+    bottom: insidePlotTitleRect.bottom + TopTitleHeight,
+    left: insideMarginsRect.left,
+    right: insideMarginsRect.right - LegendWidth,
+  }
+
+  // console.log(topTitlesRect)
+
+  return topTitlesRect
 }
 
 export { computeInsideMarginsRect as default }

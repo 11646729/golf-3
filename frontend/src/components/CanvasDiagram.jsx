@@ -2,13 +2,15 @@ import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
-import DrawTopAxisTitle from "./DrawTopAxisTitle"
+import DrawTopTitle from "./DrawTopTitle"
 // import DrawRadialLines from "./DrawRadialLines"
 
 import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
-  computePlotTitlesRect,
+  computeInsidePlotTitlesRect,
+  // computeInsideTitlesRect,
+  computeTopTitlesRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -22,26 +24,36 @@ const CanvasDiagram = () => {
     computeInsideMarginsRect(screenRect)
   )
   const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
-    computePlotTitlesRect(insideMarginsRect)
+    computeInsidePlotTitlesRect(insideMarginsRect)
+  )
+  // const [insideTitlesRect, setInsideTitlesRect] = useState(
+  //   computeInsidePlotTitlesRect(insidePlotTitleRect)
+  // )
+  const [topTitlesRect, setTopTitlesRect] = useState(
+    computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenRect))
-      setInsidePlotTitleRect(computePlotTitlesRect(insideMarginsRect))
+      setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
+      // setInsideTitlesRect(computeInsideTitlesRect(insidePlotTitleRect))
+      setTopTitlesRect(
+        computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
+      )
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenRect, insideMarginsRect])
+  }, [screenRect, insideMarginsRect, insidePlotTitleRect])
 
   return (
     <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
       <Layer>
         <DrawChartBox rect={insideMarginsRect} />
         <DrawPlotTitle rect={insidePlotTitleRect} />
-        {/* <DrawTopAxisTitle rect={insideMarginsRect} /> */}
+        <DrawTopTitle rect={topTitlesRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>
