@@ -3,6 +3,7 @@ import { Stage, Layer } from "react-konva"
 import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
 import DrawTopTitle from "./DrawTopTitle"
+import DrawBottomTitle from "./DrawBottomTitle"
 // import DrawRadialLines from "./DrawRadialLines"
 
 import {
@@ -11,6 +12,7 @@ import {
   computeInsidePlotTitlesRect,
   // computeInsideTitlesRect,
   computeTopTitlesRect,
+  computeBottomTitlesRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -29,8 +31,11 @@ const CanvasDiagram = () => {
   // const [insideTitlesRect, setInsideTitlesRect] = useState(
   //   computeInsidePlotTitlesRect(insidePlotTitleRect)
   // )
-  const [topTitlesRect, setTopTitlesRect] = useState(
+  const [topTitleRect, setTopTitleRect] = useState(
     computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
+  )
+  const [bottomTitleRect, setBottomTitleRect] = useState(
+    computeBottomTitlesRect(insideMarginsRect)
   )
 
   useEffect(() => {
@@ -39,9 +44,10 @@ const CanvasDiagram = () => {
       setInsideMarginsRect(computeInsideMarginsRect(screenRect))
       setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
       // setInsideTitlesRect(computeInsideTitlesRect(insidePlotTitleRect))
-      setTopTitlesRect(
+      setTopTitleRect(
         computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
+      setBottomTitleRect(computeBottomTitlesRect(insideMarginsRect))
     }
 
     window.addEventListener("resize", checkSize)
@@ -53,7 +59,8 @@ const CanvasDiagram = () => {
       <Layer>
         <DrawChartBox rect={insideMarginsRect} />
         <DrawPlotTitle rect={insidePlotTitleRect} />
-        <DrawTopTitle rect={topTitlesRect} />
+        <DrawTopTitle rect={topTitleRect} />
+        <DrawBottomTitle rect={bottomTitleRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>

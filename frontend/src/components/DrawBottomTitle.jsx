@@ -2,14 +2,16 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Group, Rect } from "react-konva"
 
-const DrawPlotTitle = (props) => {
+const DrawBottomTitle = (props) => {
   const { rect } = props
 
   if (!rect) return
 
-  DrawPlotTitle.propTypes = {
+  DrawBottomTitle.propTypes = {
     rect: PropTypes.object,
   }
+
+  console.log(rect)
 
   return (
     <Group>
@@ -20,12 +22,13 @@ const DrawPlotTitle = (props) => {
         height={rect.bottom - rect.top}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          10
         )}
-        fill="lightgreen"
+        fill="orange"
       />
     </Group>
   )
 }
 
-export default memo(DrawPlotTitle)
+export default memo(DrawBottomTitle)
