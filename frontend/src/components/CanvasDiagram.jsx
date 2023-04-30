@@ -4,6 +4,8 @@ import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
 import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
+import DrawLeftTitle from "./DrawLeftTitle"
+import DrawRightTitle from "./DrawRightTitle"
 // import DrawRadialLines from "./DrawRadialLines"
 
 import {
@@ -14,8 +16,8 @@ import {
   computeTopTitlesRect,
   computeBottomTitlesRect,
   computeLeftTitlesRect,
+  computeRightTitlesRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
-import DrawLeftTitle from "./DrawLeftTitle"
 
 const CanvasDiagram = () => {
   // -------------------------------------------------------
@@ -40,7 +42,10 @@ const CanvasDiagram = () => {
     computeBottomTitlesRect(insideMarginsRect)
   )
   const [leftTitleRect, setLeftTitleRect] = useState(
-    computeLeftTitlesRect(insideMarginsRect)
+    computeLeftTitlesRect(insidePlotTitleRect, insideMarginsRect)
+  )
+  const [rightTitleRect, setRightTitleRect] = useState(
+    computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
 
   useEffect(() => {
@@ -52,8 +57,15 @@ const CanvasDiagram = () => {
       setTopTitleRect(
         computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
-      setBottomTitleRect(computeBottomTitlesRect(insideMarginsRect))
-      setLeftTitleRect(computeLeftTitlesRect(insideMarginsRect))
+      setBottomTitleRect(
+        computeBottomTitlesRect(insidePlotTitleRect, insideMarginsRect)
+      )
+      setLeftTitleRect(
+        computeLeftTitlesRect(insidePlotTitleRect, insideMarginsRect)
+      )
+      setRightTitleRect(
+        computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
+      )
     }
 
     window.addEventListener("resize", checkSize)
@@ -70,6 +82,7 @@ const CanvasDiagram = () => {
         <DrawTopTitle rect={topTitleRect} />
         <DrawBottomTitle rect={bottomTitleRect} />
         <DrawLeftTitle rect={leftTitleRect} />
+        <DrawRightTitle rect={rightTitleRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>

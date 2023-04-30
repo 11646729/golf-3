@@ -152,7 +152,10 @@ export const computeBottomTitlesRect = (insideMarginsRect) => {
 // -------------------------------------------------------
 // Function to compute LeftTitlesRect - translated from C++ code
 // -------------------------------------------------------
-export const computeLeftTitlesRect = (insideMarginsRect) => {
+export const computeLeftTitlesRect = (
+  insidePlotTitleRect,
+  insideMarginsRect
+) => {
   let LeftTitleWidth = 0
   if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE) {
     LeftTitleWidth = parseInt(
@@ -161,18 +164,37 @@ export const computeLeftTitlesRect = (insideMarginsRect) => {
   }
 
   let leftTitlesRect = {
-    // top: insideMarginsRect.bottom - LeftTitleWidth,
-    // bottom: insideMarginsRect.bottom,
-    // left: insideMarginsRect.left,
-    // right: insideMarginsRect.right,
-
-    top: insideMarginsRect.top,
+    top: insidePlotTitleRect.bottom,
     bottom: insideMarginsRect.bottom,
     left: insideMarginsRect.left,
     right: insideMarginsRect.left + LeftTitleWidth,
   }
 
   return leftTitlesRect
+}
+
+// -------------------------------------------------------
+// Function to compute RightTitlesRect - translated from C++ code
+// -------------------------------------------------------
+export const computeRightTitlesRect = (
+  insidePlotTitleRect,
+  insideMarginsRect
+) => {
+  let RightTitleWidth = 0
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE) {
+    RightTitleWidth = parseInt(
+      process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH
+    )
+  }
+
+  let rightTitlesRect = {
+    top: insidePlotTitleRect.bottom,
+    bottom: insideMarginsRect.bottom,
+    left: insideMarginsRect.right - RightTitleWidth,
+    right: insideMarginsRect.right,
+  }
+
+  return rightTitlesRect
 }
 
 export { computeInsideMarginsRect as default }
