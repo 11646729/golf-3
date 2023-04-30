@@ -10,10 +10,12 @@ import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
   computeInsidePlotTitlesRect,
-  // computeInsideTitlesRect,
+  computeInsideTitlesRect,
   computeTopTitlesRect,
   computeBottomTitlesRect,
+  computeLeftTitlesRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
+import DrawLeftTitle from "./DrawLeftTitle"
 
 const CanvasDiagram = () => {
   // -------------------------------------------------------
@@ -21,46 +23,53 @@ const CanvasDiagram = () => {
   // -------------------------------------------------------
 
   // Hook is initialised with width & height values
-  const [screenRect, setScreenRect] = useState(computeScreenEdgeRect())
+  const [screenEdgeRect, setScreenRect] = useState(computeScreenEdgeRect())
   const [insideMarginsRect, setInsideMarginsRect] = useState(
-    computeInsideMarginsRect(screenRect)
+    computeInsideMarginsRect(screenEdgeRect)
   )
   const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
     computeInsidePlotTitlesRect(insideMarginsRect)
   )
-  // const [insideTitlesRect, setInsideTitlesRect] = useState(
-  //   computeInsidePlotTitlesRect(insidePlotTitleRect)
-  // )
+  const [insideTitlesRect, setInsideTitlesRect] = useState(
+    computeInsidePlotTitlesRect(insidePlotTitleRect)
+  )
   const [topTitleRect, setTopTitleRect] = useState(
     computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
   const [bottomTitleRect, setBottomTitleRect] = useState(
     computeBottomTitlesRect(insideMarginsRect)
   )
+  const [leftTitleRect, setLeftTitleRect] = useState(
+    computeLeftTitlesRect(insideMarginsRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect(computeScreenEdgeRect())
-      setInsideMarginsRect(computeInsideMarginsRect(screenRect))
+      setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
       setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
-      // setInsideTitlesRect(computeInsideTitlesRect(insidePlotTitleRect))
+      setInsideTitlesRect(computeInsideTitlesRect(insidePlotTitleRect))
       setTopTitleRect(
         computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
       setBottomTitleRect(computeBottomTitlesRect(insideMarginsRect))
+      setLeftTitleRect(computeLeftTitlesRect(insideMarginsRect))
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenRect, insideMarginsRect, insidePlotTitleRect])
+  }, [screenEdgeRect, insideMarginsRect, insidePlotTitleRect])
+
+  // console.log(insideMarginsRect)
 
   return (
-    <Stage width={screenRect.right} height={screenRect.bottom} margin={0}>
+    <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
       <Layer>
         <DrawChartBox rect={insideMarginsRect} />
         <DrawPlotTitle rect={insidePlotTitleRect} />
         <DrawTopTitle rect={topTitleRect} />
         <DrawBottomTitle rect={bottomTitleRect} />
+        <DrawLeftTitle rect={leftTitleRect} />
         {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>

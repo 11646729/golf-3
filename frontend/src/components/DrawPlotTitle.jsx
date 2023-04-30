@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Group, Rect } from "react-konva"
+import { Rect } from "react-konva"
 
 const DrawPlotTitle = (props) => {
   const { rect } = props
@@ -12,19 +12,17 @@ const DrawPlotTitle = (props) => {
   }
 
   return (
-    <Group>
-      <Rect
-        x={rect.left}
-        y={rect.top}
-        width={rect.right}
-        height={rect.bottom - rect.top}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
-        )}
-        fill="lightgreen"
-      />
-    </Group>
+    <Rect
+      x={rect.left}
+      y={rect.top}
+      width={rect.right - rect.left}
+      height={rect.bottom - rect.top}
+      stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+      strokeWidth={parseInt(
+        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+      )}
+      fill="lightgreen"
+    />
   )
 }
 

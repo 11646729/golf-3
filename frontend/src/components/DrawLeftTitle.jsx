@@ -2,16 +2,16 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Rect } from "react-konva"
 
-const DrawChartBox = (props) => {
+const DrawLeftTitle = (props) => {
   const { rect } = props
 
   if (!rect) return
 
-  DrawChartBox.propTypes = {
+  DrawLeftTitle.propTypes = {
     rect: PropTypes.object,
   }
 
-  // console.log(rect) // This is insideMarginsRect
+  // console.log(rect)
 
   return (
     <Rect
@@ -21,10 +21,12 @@ const DrawChartBox = (props) => {
       height={rect.bottom - rect.top}
       stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
       strokeWidth={parseInt(
-        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+        10
       )}
+      fill="lightblue"
     />
   )
 }
 
-export default memo(DrawChartBox)
+export default memo(DrawLeftTitle)
