@@ -13,8 +13,6 @@ export const computeScreenEdgeRect = () => {
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT),
   }
 
-  // console.log(screenEdgeRect)
-
   return screenEdgeRect
 }
 
@@ -37,8 +35,6 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
   }
 
-  // console.log(insideMarginsRect)
-
   return insideMarginsRect
 }
 
@@ -46,12 +42,10 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
 // Function to compute InsidePlotTitlesRect - translated from C++ code
 // -------------------------------------------------------
 export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
-  let MainTitleWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWPLOTTITLE) {
-    MainTitleWidth = parseInt(
-      process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH
-    )
-  }
+  const MainTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWPLOTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH)
+      : 0
 
   let insidePlotTitleRect = {
     top: insideMarginsRect.top,
@@ -60,8 +54,6 @@ export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
     right: insideMarginsRect.right,
   }
 
-  // console.log(insidePlotTitleRect)
-
   return insidePlotTitleRect
 }
 
@@ -69,21 +61,30 @@ export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
 // Function to compute InsideTitlesRect - translated from C++ code
 // -------------------------------------------------------
 export const computeInsideTitlesRect = (insidePlotTitleRect) => {
-  const TopTitleWidth = parseInt(
-    process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH
-  )
-  const BottomTitleWidth = parseInt(
-    process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH
-  )
-  const LeftTitleWidth = 30
-  const RightTitleWidth = 30
-  const LegendWidth = 100
+  const TopTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+      : 0
 
-  // const TopTitleWidth = 0
-  // const BottomTitleWidth = 0
-  // const LeftTitleWidth = 0
-  // const RightTitleWidth = 0
-  // const LegendWidth = 0
+  const BottomTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+      : 0
+
+  const LeftTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
+      : 0
+
+  const RightTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
+      : 0
+
+  const LegendWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+      : 0
 
   let insideTitlesRect = {
     top: insidePlotTitleRect.bottom + TopTitleWidth,
@@ -91,8 +92,6 @@ export const computeInsideTitlesRect = (insidePlotTitleRect) => {
     left: insidePlotTitleRect.left + LeftTitleWidth,
     right: insidePlotTitleRect.right - RightTitleWidth - LegendWidth,
   }
-
-  // console.log(insideTitlesRect)
 
   return insideTitlesRect
 }
@@ -104,15 +103,15 @@ export const computeTopTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  let TopTitleWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE) {
-    TopTitleWidth = parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-  }
+  const TopTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+      : 0
 
-  let LegendWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND) {
-    LegendWidth = parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-  }
+  const LegendWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+      : 0
 
   let topTitlesRect = {
     top: insidePlotTitleRect.bottom,
@@ -121,8 +120,6 @@ export const computeTopTitlesRect = (
     right: insideMarginsRect.right - LegendWidth,
   }
 
-  // console.log(topTitlesRect)
-
   return topTitlesRect
 }
 
@@ -130,17 +127,15 @@ export const computeTopTitlesRect = (
 // Function to compute BottomTitlesRect - translated from C++ code
 // -------------------------------------------------------
 export const computeBottomTitlesRect = (insideMarginsRect) => {
-  let BottomTitleWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE) {
-    BottomTitleWidth = parseInt(
-      process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH
-    )
-  }
+  const BottomTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+      : 0
 
-  let LegendWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND) {
-    LegendWidth = parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-  }
+  const LegendWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+      : 0
 
   let bottomTitlesRect = {
     top: insideMarginsRect.bottom - BottomTitleWidth,
@@ -159,12 +154,10 @@ export const computeLeftTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  let LeftTitleWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE) {
-    LeftTitleWidth = parseInt(
-      process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH
-    )
-  }
+  const LeftTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
+      : 0
 
   let leftTitlesRect = {
     top: insidePlotTitleRect.bottom,
@@ -183,12 +176,10 @@ export const computeRightTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  let RightTitleWidth = 0
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE) {
-    RightTitleWidth = parseInt(
-      process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH
-    )
-  }
+  const RightTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
+      : 0
 
   let rightTitlesRect = {
     top: insidePlotTitleRect.bottom,
