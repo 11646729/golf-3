@@ -154,14 +154,24 @@ export const computeLeftTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
+  const TopTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+      : 0
+
+  const BottomTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+      : 0
+
   const LeftTitleWidth =
     process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
       ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
       : 0
 
   let leftTitlesRect = {
-    top: insidePlotTitleRect.bottom,
-    bottom: insideMarginsRect.bottom,
+    top: insidePlotTitleRect.bottom + TopTitleWidth,
+    bottom: insideMarginsRect.bottom - BottomTitleWidth,
     left: insideMarginsRect.left,
     right: insideMarginsRect.left + LeftTitleWidth,
   }
@@ -176,14 +186,24 @@ export const computeRightTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
+  const TopTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+      : 0
+
+  const BottomTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+      : 0
+
   const RightTitleWidth =
     process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
       ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
       : 0
 
   let rightTitlesRect = {
-    top: insidePlotTitleRect.bottom,
-    bottom: insideMarginsRect.bottom,
+    top: insidePlotTitleRect.bottom + TopTitleWidth,
+    bottom: insideMarginsRect.bottom - BottomTitleWidth,
     left: insideMarginsRect.right - RightTitleWidth,
     right: insideMarginsRect.right,
   }
