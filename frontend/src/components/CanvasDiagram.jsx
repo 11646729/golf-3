@@ -6,13 +6,11 @@ import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
-// import DrawRadialLines from "./DrawRadialLines"
 
 import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
   computeInsidePlotTitlesRect,
-  computeInsideTitlesRect,
   computeTopTitlesRect,
   computeBottomTitlesRect,
   computeLeftTitlesRect,
@@ -32,9 +30,6 @@ const CanvasDiagram = () => {
   const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
     computeInsidePlotTitlesRect(insideMarginsRect)
   )
-  const [insideTitlesRect, setInsideTitlesRect] = useState(
-    computeInsidePlotTitlesRect(insidePlotTitleRect)
-  )
   const [topTitleRect, setTopTitleRect] = useState(
     computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
@@ -53,7 +48,6 @@ const CanvasDiagram = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
       setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
-      setInsideTitlesRect(computeInsideTitlesRect(insidePlotTitleRect))
       setTopTitleRect(
         computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
@@ -72,8 +66,6 @@ const CanvasDiagram = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [screenEdgeRect, insideMarginsRect, insidePlotTitleRect])
 
-  // console.log(insideMarginsRect)
-
   return (
     <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
       <Layer>
@@ -83,7 +75,6 @@ const CanvasDiagram = () => {
         <DrawBottomTitle rect={bottomTitleRect} />
         <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
-        {/* <DrawRadialLines rect={screenRect} /> */}
       </Layer>
     </Stage>
   )
