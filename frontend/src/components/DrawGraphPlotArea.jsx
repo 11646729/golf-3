@@ -21,6 +21,7 @@ const DrawGraphPlotArea = (props) => {
       strokeWidth={parseInt(
         process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
+      fill="lightgrey"
     />
   )
 }
