@@ -2,12 +2,12 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Rect } from "react-konva"
 
-const DrawChartBox = (props) => {
+const DrawGraphPlotArea = (props) => {
   const { rect } = props
 
   if (!rect) return
 
-  DrawChartBox.propTypes = {
+  DrawGraphPlotArea.propTypes = {
     rect: PropTypes.object,
   }
 
@@ -25,4 +25,4 @@ const DrawChartBox = (props) => {
   )
 }
 
-export default memo(DrawChartBox)
+export default memo(DrawGraphPlotArea)

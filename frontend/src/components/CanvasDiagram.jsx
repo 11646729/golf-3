@@ -6,6 +6,7 @@ import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
+import DrawGraphPlotArea from "./DrawGraphPlotArea"
 
 import {
   computeScreenEdgeRect,
@@ -15,6 +16,7 @@ import {
   computeBottomTitlesRect,
   computeLeftTitlesRect,
   computeRightTitlesRect,
+  computeGraphPlotAreaRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -42,6 +44,9 @@ const CanvasDiagram = () => {
   const [rightTitleRect, setRightTitleRect] = useState(
     computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
+  const [graphPlotAreaRect, setgraphPlotAreaRect] = useState(
+    computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
@@ -60,6 +65,9 @@ const CanvasDiagram = () => {
       setRightTitleRect(
         computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
+      setgraphPlotAreaRect(
+        computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
+      )
     }
 
     window.addEventListener("resize", checkSize)
@@ -75,6 +83,7 @@ const CanvasDiagram = () => {
         <DrawBottomTitle rect={bottomTitleRect} />
         <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
+        <DrawGraphPlotArea rect={graphPlotAreaRect} />
       </Layer>
     </Stage>
   )

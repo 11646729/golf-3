@@ -248,4 +248,78 @@ export const computeRightTitlesRect = (
   return rightTitlesRect
 }
 
+// -------------------------------------------------------
+// Function to compute GraphPlotAreaRect - translated from C++ code
+// -------------------------------------------------------
+export const computeGraphPlotAreaRect = (
+  insidePlotTitleRect,
+  insideMarginsRect
+) => {
+  const TopTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+      : 0
+
+  const BottomTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+      : 0
+
+  const LeftTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
+      : 0
+
+  const RightTitleWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
+      : 0
+
+  const LegendWidth =
+    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+      : 0
+
+  const tempHeight =
+    insideMarginsRect.bottom -
+    BottomTitleWidth -
+    parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
+    insidePlotTitleRect.bottom +
+    TopTitleWidth +
+    parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
+
+  const tempWidth =
+    insideMarginsRect.right -
+    RightTitleWidth -
+    LegendWidth -
+    parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
+    (insideMarginsRect.left +
+      LeftTitleWidth +
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
+
+  let graphPlotAreaRect = {
+    top:
+      insidePlotTitleRect.bottom +
+      TopTitleWidth +
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH),
+    bottom:
+      insideMarginsRect.bottom -
+      BottomTitleWidth -
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH),
+    left:
+      insideMarginsRect.left +
+      LeftTitleWidth +
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH) +
+      (tempWidth - tempHeight) / 2,
+    right:
+      insideMarginsRect.right -
+      RightTitleWidth -
+      LegendWidth -
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
+      (tempWidth - tempHeight) / 2,
+  }
+
+  return graphPlotAreaRect
+}
+
 export { computeInsideMarginsRect as default }
