@@ -7,6 +7,7 @@ import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
+import DrawLegendArea from "./DrawLegendArea"
 
 import {
   computeScreenEdgeRect,
@@ -17,6 +18,7 @@ import {
   computeLeftTitlesRect,
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
+  computeLegendAreaRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -44,8 +46,11 @@ const CanvasDiagram = () => {
   const [rightTitleRect, setRightTitleRect] = useState(
     computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
   )
-  const [graphPlotAreaRect, setgraphPlotAreaRect] = useState(
+  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
     computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
+  )
+  const [legendAreaRect, setLegendAreaRect] = useState(
+    computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
   )
 
   useEffect(() => {
@@ -65,8 +70,11 @@ const CanvasDiagram = () => {
       setRightTitleRect(
         computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
-      setgraphPlotAreaRect(
+      setGraphPlotAreaRect(
         computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
+      )
+      setLegendAreaRect(
+        computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
       )
     }
 
@@ -84,6 +92,7 @@ const CanvasDiagram = () => {
         <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
         <DrawGraphPlotArea rect={graphPlotAreaRect} />
+        <DrawLegendArea rect={legendAreaRect} />
       </Layer>
     </Stage>
   )
