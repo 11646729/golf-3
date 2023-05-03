@@ -158,13 +158,12 @@ export const computeLeftTitlesRect = (
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
   let leftTitlesRect = {
-    top: insidePlotTitleRect.bottom,
-    bottom: insideMarginsRect.bottom,
+    top: insidePlotTitleRect.bottom + TopTitleWidth,
+    bottom: insideMarginsRect.bottom - BottomTitleWidth,
     left: insideMarginsRect.left + (tempWidth - tempHeight) / 2,
-    right: insideMarginsRect.left + (tempWidth - tempHeight) / 2,
+    right:
+      insideMarginsRect.left + LeftTitleWidth + (tempWidth - tempHeight) / 2,
   }
-
-  console.log(leftTitlesRect)
 
   return leftTitlesRect
 }
@@ -201,6 +200,12 @@ export const computeRightTitlesRect = (
       ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
       : 0
 
+  // LegendWidth is ok
+  // TopTitleWidth is ok
+  // BottomTitleWidth is ok
+  // LeftTitleWidth is ok
+  // RightTitleWidth is ok
+
   const tempHeight =
     insideMarginsRect.bottom -
     BottomTitleWidth -
@@ -208,6 +213,11 @@ export const computeRightTitlesRect = (
     insidePlotTitleRect.bottom +
     TopTitleWidth +
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
+
+  // int tempheight = ((InsideTitles.bottom - BottomAxisHeight) - (InsideTitles.top + TopAxisHeight))
+  // InsideTitles.bottom = InsideMargins.bottom - BottomTitleHeight
+  // InsideTitles.top = InsidePlotTitle.bottom + TopTitleHeight
+  // InsideTitles.left = InsideMargins.left + LeftTitleWidth
 
   const tempWidth =
     insideMarginsRect.right -
@@ -218,12 +228,22 @@ export const computeRightTitlesRect = (
       LeftTitleWidth +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
+  // int tempwidth = ((InsideTitles.right - RightAxisWidth) - (InsideTitles.left + LeftAxisWidth))
+  // InsideTitles.right = InsideMargins.right - RightTitleWidth - LegendWidth
+  // InsideTitles.left = InsideMargins.left + LeftTitleWidth
+
   let rightTitlesRect = {
-    top: insidePlotTitleRect.bottom,
-    bottom: insideMarginsRect.bottom,
-    left: insideMarginsRect.right - (tempWidth - tempHeight) / 2,
+    top: insidePlotTitleRect.bottom + TopTitleWidth,
+    bottom: insideMarginsRect.bottom - BottomTitleWidth,
+    left:
+      insideMarginsRect.right -
+      RightTitleWidth -
+      LegendWidth -
+      (tempWidth - tempHeight) / 2,
     right: insideMarginsRect.right - LegendWidth - (tempWidth - tempHeight) / 2,
   }
+
+  console.log(rightTitlesRect)
 
   return rightTitlesRect
 }
