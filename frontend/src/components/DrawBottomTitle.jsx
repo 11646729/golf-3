@@ -23,7 +23,7 @@ const DrawBottomTitle = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
-        fill="orange"
+        // fill="orange"
       />
       <Text
         fontSize={16}

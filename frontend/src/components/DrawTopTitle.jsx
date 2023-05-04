@@ -23,7 +23,7 @@ const DrawTopTitle = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
-        fill="lightyellow"
+        // fill="lightyellow"
       />
       <Text
         fontSize={16}
