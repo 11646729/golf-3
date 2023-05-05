@@ -49,12 +49,42 @@ const getTopTitleWidth = () => {
     ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
     : 0
 }
+const getBottomTitleWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
+    : 0
+}
+
+const getLeftTitleWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
+    : 0
+}
+
+const getRightTitleWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
+    : 0
+}
 
 const getLegendWidth = () => {
   return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
     ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
     : 0
 }
+
+// NOT WORKING
+// ----------------
+// const getTempHeight = (insideMarginsRect, insidePlotTitleRect) => {
+//   return (
+//     insideMarginsRect.bottom -
+//     getBottomTitleWidth() -
+//     parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
+//     insidePlotTitleRect.bottom +
+//     getTopTitleWidth() +
+//     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
+//   )
+// }
 
 // -------------------------------------------------------
 // Function to compute InsidePlotTitlesRect - translated from C++ code & refactored
@@ -84,304 +114,173 @@ export const computeTopTitlesRect = (
 }
 
 // -------------------------------------------------------
-// Function to compute BottomTitlesRect - translated from C++ code
+// Function to compute BottomTitlesRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeBottomTitlesRect = (insideMarginsRect) => {
-  const BottomTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
-  let bottomTitlesRect = {
-    top: insideMarginsRect.bottom - BottomTitleWidth,
+  return {
+    top: insideMarginsRect.bottom - getBottomTitleWidth(),
     bottom: insideMarginsRect.bottom,
     left: insideMarginsRect.left,
-    right: insideMarginsRect.right - LegendWidth,
+    right: insideMarginsRect.right - getLegendWidth(),
   }
-
-  return bottomTitlesRect
 }
 
 // -------------------------------------------------------
-// Function to compute LeftTitlesRect - translated from C++ code
+// Function to compute LeftTitlesRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeLeftTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  const TopTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-      : 0
-
-  const BottomTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
-      : 0
-
-  const LeftTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
-      : 0
-
-  const RightTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
   const tempHeight =
     insideMarginsRect.bottom -
-    BottomTitleWidth -
+    getBottomTitleWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
     insidePlotTitleRect.bottom +
-    TopTitleWidth +
+    getTopTitleWidth() +
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
 
   const tempWidth =
     insideMarginsRect.right -
-    RightTitleWidth -
-    LegendWidth -
+    getRightTitleWidth() -
+    getLegendWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
     (insideMarginsRect.left +
-      LeftTitleWidth +
+      getLeftTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
-  let leftTitlesRect = {
-    top: insidePlotTitleRect.bottom + TopTitleWidth,
-    bottom: insideMarginsRect.bottom - BottomTitleWidth,
+  return {
+    top: insidePlotTitleRect.bottom + getTopTitleWidth(),
+    bottom: insideMarginsRect.bottom - getBottomTitleWidth(),
     left: insideMarginsRect.left + (tempWidth - tempHeight) / 2,
     right:
-      insideMarginsRect.left + LeftTitleWidth + (tempWidth - tempHeight) / 2,
+      insideMarginsRect.left +
+      getLeftTitleWidth() +
+      (tempWidth - tempHeight) / 2,
   }
-
-  return leftTitlesRect
 }
 
 // -------------------------------------------------------
-// Function to compute RightTitlesRect - translated from C++ code
+// Function to compute RightTitlesRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeRightTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  const TopTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-      : 0
-
-  const BottomTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
-      : 0
-
-  const LeftTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
-      : 0
-
-  const RightTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
-  // LegendWidth is ok
-  // TopTitleWidth is ok
-  // BottomTitleWidth is ok
-  // LeftTitleWidth is ok
-  // RightTitleWidth is ok
-
   const tempHeight =
     insideMarginsRect.bottom -
-    BottomTitleWidth -
+    getBottomTitleWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
     insidePlotTitleRect.bottom +
-    TopTitleWidth +
+    getTopTitleWidth() +
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
-
-  // int tempheight = ((InsideTitles.bottom - BottomAxisHeight) - (InsideTitles.top + TopAxisHeight))
-  // InsideTitles.bottom = InsideMargins.bottom - BottomTitleHeight
-  // InsideTitles.top = InsidePlotTitle.bottom + TopTitleHeight
-  // InsideTitles.left = InsideMargins.left + LeftTitleWidth
 
   const tempWidth =
     insideMarginsRect.right -
-    RightTitleWidth -
-    LegendWidth -
+    getRightTitleWidth() -
+    getLegendWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
     (insideMarginsRect.left +
-      LeftTitleWidth +
+      getLeftTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
-  // int tempwidth = ((InsideTitles.right - RightAxisWidth) - (InsideTitles.left + LeftAxisWidth))
-  // InsideTitles.right = InsideMargins.right - RightTitleWidth - LegendWidth
-  // InsideTitles.left = InsideMargins.left + LeftTitleWidth
-
-  let rightTitlesRect = {
-    top: insidePlotTitleRect.bottom + TopTitleWidth,
-    bottom: insideMarginsRect.bottom - BottomTitleWidth,
+  return {
+    top: insidePlotTitleRect.bottom + getTopTitleWidth(),
+    bottom: insideMarginsRect.bottom - getBottomTitleWidth(),
     left:
       insideMarginsRect.right -
-      RightTitleWidth -
-      LegendWidth -
+      getRightTitleWidth() -
+      getLegendWidth() -
       (tempWidth - tempHeight) / 2,
-    right: insideMarginsRect.right - LegendWidth - (tempWidth - tempHeight) / 2,
+    right:
+      insideMarginsRect.right - getLegendWidth() - (tempWidth - tempHeight) / 2,
   }
-
-  return rightTitlesRect
 }
 
 // -------------------------------------------------------
-// Function to compute GraphPlotAreaRect - translated from C++ code
+// Function to compute GraphPlotAreaRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeGraphPlotAreaRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  const TopTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-      : 0
-
-  const BottomTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
-      : 0
-
-  const LeftTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
-      : 0
-
-  const RightTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
   const tempHeight =
     insideMarginsRect.bottom -
-    BottomTitleWidth -
+    getBottomTitleWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
     insidePlotTitleRect.bottom +
-    TopTitleWidth +
+    getTopTitleWidth() +
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
 
   const tempWidth =
     insideMarginsRect.right -
-    RightTitleWidth -
-    LegendWidth -
+    getRightTitleWidth() -
+    getLegendWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
     (insideMarginsRect.left +
-      LeftTitleWidth +
+      getLeftTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
-  let graphPlotAreaRect = {
+  return {
     top:
       insidePlotTitleRect.bottom +
-      TopTitleWidth +
+      getTopTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH),
     bottom:
       insideMarginsRect.bottom -
-      BottomTitleWidth -
+      getBottomTitleWidth() -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH),
     left:
       insideMarginsRect.left +
-      LeftTitleWidth +
+      getLeftTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH) +
       (tempWidth - tempHeight) / 2,
     right:
       insideMarginsRect.right -
-      RightTitleWidth -
-      LegendWidth -
+      getRightTitleWidth() -
+      getLegendWidth() -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
       (tempWidth - tempHeight) / 2,
   }
-
-  return graphPlotAreaRect
 }
 
 // -------------------------------------------------------
-// Function to compute LegendAreaRect - translated from C++ code
+// Function to compute LegendAreaRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeLegendAreaRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  const TopTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-      : 0
-
-  const BottomTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMTITLEWIDTH)
-      : 0
-
-  const LeftTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTTITLEWIDTH)
-      : 0
-
-  const RightTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
   const tempHeight =
     insideMarginsRect.bottom -
-    BottomTitleWidth -
+    getBottomTitleWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
     insidePlotTitleRect.bottom +
-    TopTitleWidth +
+    getTopTitleWidth() +
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
 
   const tempWidth =
     insideMarginsRect.right -
-    RightTitleWidth -
-    LegendWidth -
+    getRightTitleWidth() -
+    getLegendWidth() -
     parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
     (insideMarginsRect.left +
-      LeftTitleWidth +
+      getLeftTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
 
-  let legendAreaRect = {
+  return {
     top:
       insidePlotTitleRect.bottom +
-      TopTitleWidth +
+      getTopTitleWidth() +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH),
     bottom:
       insideMarginsRect.bottom -
-      BottomTitleWidth -
+      getBottomTitleWidth() -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH),
-    left: insideMarginsRect.right - LegendWidth - (tempWidth - tempHeight) / 2,
+    left:
+      insideMarginsRect.right - getLegendWidth() - (tempWidth - tempHeight) / 2,
     right: insideMarginsRect.right,
   }
-
-  return legendAreaRect
 }
 
 export { computeInsideMarginsRect as default }
