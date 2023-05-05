@@ -75,7 +75,7 @@ const getLegendWidth = () => {
 
 // NOT WORKING
 // ----------------
-// const getTempHeight = (insideMarginsRect, insidePlotTitleRect) => {
+// export const computeTempHeight = (insidePlotTitleRect, insideMarginsRect) => {
 //   return (
 //     insideMarginsRect.bottom -
 //     getBottomTitleWidth() -

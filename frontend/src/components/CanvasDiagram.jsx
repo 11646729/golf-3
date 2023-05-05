@@ -19,6 +19,7 @@ import {
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
   computeLegendAreaRect,
+  computeTempHeight,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
