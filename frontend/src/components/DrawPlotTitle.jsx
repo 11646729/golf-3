@@ -25,6 +25,8 @@ const DrawPlotTitle = (props) => {
         // fill="lightgreen"
       />
       <Text
+        fontFamily="Arial"
+        fontStyle="normal"
         fontSize={18}
         text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
         stroke="black"
