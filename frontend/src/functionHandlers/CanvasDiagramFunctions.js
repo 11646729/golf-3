@@ -38,50 +38,49 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
   return insideMarginsRect
 }
 
-// -------------------------------------------------------
-// Function to compute InsidePlotTitlesRect - translated from C++ code
-// -------------------------------------------------------
-export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
-  const MainTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWPLOTTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH)
-      : 0
+const getMainTitleWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWPLOTTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLEWIDTH)
+    : 0
+}
 
-  let insidePlotTitleRect = {
-    top: insideMarginsRect.top,
-    bottom: insideMarginsRect.top + MainTitleWidth,
-    left: insideMarginsRect.left,
-    right: insideMarginsRect.right,
-  }
+const getTopTitleWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
+    : 0
+}
 
-  return insidePlotTitleRect
+const getLegendWidth = () => {
+  return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+    : 0
 }
 
 // -------------------------------------------------------
-// Function to compute TopTitlesRect - translated from C++ code
+// Function to compute InsidePlotTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
+  return {
+    top: insideMarginsRect.top,
+    bottom: insideMarginsRect.top + getMainTitleWidth(),
+    left: insideMarginsRect.left,
+    right: insideMarginsRect.right,
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute TopTitlesRect - translated from C++ code & refactored
 // -------------------------------------------------------
 export const computeTopTitlesRect = (
   insidePlotTitleRect,
   insideMarginsRect
 ) => {
-  const TopTitleWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)
-      : 0
-
-  const LegendWidth =
-    process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-      ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
-      : 0
-
-  let topTitlesRect = {
+  return {
     top: insidePlotTitleRect.bottom,
-    bottom: insidePlotTitleRect.bottom + TopTitleWidth,
+    bottom: insidePlotTitleRect.bottom + getTopTitleWidth(),
     left: insideMarginsRect.left,
-    right: insideMarginsRect.right - LegendWidth,
+    right: insideMarginsRect.right - getLegendWidth(),
   }
-
-  return topTitlesRect
 }
 
 // -------------------------------------------------------

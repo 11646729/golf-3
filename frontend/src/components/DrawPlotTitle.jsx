@@ -23,6 +23,7 @@ const DrawPlotTitle = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
         // fill="lightgreen"
+        // opacity={0.3}
       />
       <Text
         fontFamily="Arial"
