@@ -19,7 +19,6 @@ import {
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
   computeLegendAreaRect,
-  computeTempHeight,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -36,7 +35,7 @@ const CanvasDiagram = () => {
     computeInsidePlotTitlesRect(insideMarginsRect)
   )
   const [topTitleRect, setTopTitleRect] = useState(
-    computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
+    computeTopTitlesRect(insideMarginsRect)
   )
   const [bottomTitleRect, setBottomTitleRect] = useState(
     computeBottomTitlesRect(insideMarginsRect)
@@ -59,9 +58,7 @@ const CanvasDiagram = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
       setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
-      setTopTitleRect(
-        computeTopTitlesRect(insidePlotTitleRect, insideMarginsRect)
-      )
+      setTopTitleRect(computeTopTitlesRect(insideMarginsRect))
       setBottomTitleRect(
         computeBottomTitlesRect(insidePlotTitleRect, insideMarginsRect)
       )
@@ -90,10 +87,10 @@ const CanvasDiagram = () => {
         <DrawPlotTitle rect={insidePlotTitleRect} />
         <DrawTopTitle rect={topTitleRect} />
         <DrawBottomTitle rect={bottomTitleRect} />
-        <DrawLeftTitle rect={leftTitleRect} />
+        {/* <DrawLeftTitle rect={leftTitleRect} /> */}
         <DrawRightTitle rect={rightTitleRect} />
         <DrawGraphPlotArea rect={graphPlotAreaRect} />
-        <DrawLegendArea rect={legendAreaRect} />
+        {/* <DrawLegendArea rect={legendAreaRect} /> */}
       </Layer>
     </Stage>
   )
