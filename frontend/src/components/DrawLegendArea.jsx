@@ -21,7 +21,7 @@ const DrawLegendArea = (props) => {
       strokeWidth={parseInt(
         process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
-      fill="darkgrey"
+      fill="lightcyan"
     />
   )
 }

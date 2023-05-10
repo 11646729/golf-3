@@ -265,40 +265,20 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
 // -------------------------------------------------------
 // Function to compute LegendAreaRect - translated from C++ code & refactored
 // -------------------------------------------------------
-export const computeLegendAreaRect = (
-  insidePlotTitleRect,
-  insideMarginsRect
-) => {
-  const tempHeight =
-    insideMarginsRect.bottom -
-    getBottomTitleWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
-    insidePlotTitleRect.bottom +
-    getTopTitleWidth() +
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
-
-  const tempWidth =
-    insideMarginsRect.right -
-    getRightTitleWidth() -
-    getLegendWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
-    (insideMarginsRect.left +
-      getLeftTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
-
-  return {
-    top:
-      insidePlotTitleRect.bottom +
-      getTopTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH),
-    bottom:
-      insideMarginsRect.bottom -
-      getBottomTitleWidth() -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH),
+export const computeLegendAreaRect = (insideMarginsRect, rightTitleRect) => {
+  let legendRect = {
+    top: rightTitleRect.top,
+    bottom: rightTitleRect.bottom,
     left:
-      insideMarginsRect.right - getLegendWidth() - (tempWidth - tempHeight) / 2,
-    right: insideMarginsRect.right,
+      rightTitleRect.right +
+      (insideMarginsRect.right - rightTitleRect.right - getLegendWidth()) / 2,
+    right:
+      rightTitleRect.right +
+      (insideMarginsRect.right - rightTitleRect.right + getLegendWidth()) / 2,
   }
+
+  console.log(getLegendWidth())
+  return legendRect
 }
 
 export { computeInsideMarginsRect as default }

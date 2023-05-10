@@ -7,7 +7,7 @@ import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
-// import DrawLegendArea from "./DrawLegendArea"
+import DrawLegendArea from "./DrawLegendArea"
 
 import {
   computeScreenEdgeRect,
@@ -18,7 +18,7 @@ import {
   computeLeftTitlesRect,
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
-  // computeLegendAreaRect,
+  computeLegendAreaRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
@@ -48,9 +48,9 @@ const CanvasDiagram = () => {
   const [rightTitleRect, setRightTitleRect] = useState(
     computeRightTitlesRect(graphPlotAreaRect)
   )
-  // const [legendAreaRect, setLegendAreaRect] = useState(
-  //   computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
-  // )
+  const [legendAreaRect, setLegendAreaRect] = useState(
+    computeLegendAreaRect(insideMarginsRect, rightTitleRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
@@ -64,14 +64,14 @@ const CanvasDiagram = () => {
       setBottomTitleRect(computeBottomTitlesRect(graphPlotAreaRect))
       setLeftTitleRect(computeLeftTitlesRect(graphPlotAreaRect))
       setRightTitleRect(computeRightTitlesRect(graphPlotAreaRect))
-      // setLegendAreaRect(
-      //   computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
-      // )
+      setLegendAreaRect(
+        computeLegendAreaRect(insideMarginsRect, rightTitleRect)
+      )
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect])
+  }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect, rightTitleRect])
 
   return (
     <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
@@ -83,7 +83,7 @@ const CanvasDiagram = () => {
         <DrawBottomTitle rect={bottomTitleRect} />
         <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
-        {/* <DrawLegendArea rect={legendAreaRect} /> */}
+        <DrawLegendArea rect={legendAreaRect} />
       </Layer>
     </Stage>
   )
