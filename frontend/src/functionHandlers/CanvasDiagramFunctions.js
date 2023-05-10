@@ -2,7 +2,6 @@
 // Function to compute ScreenEdgeRect - translated from C++ code
 // -------------------------------------------------------
 export const computeScreenEdgeRect = () => {
-  // let screenEdgeRect = {
   return {
     top: 0,
     bottom:
@@ -13,15 +12,13 @@ export const computeScreenEdgeRect = () => {
       window.innerWidth -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT),
   }
-
-  // return screenEdgeRect
 }
 
 // -------------------------------------------------------
 // Function to compute InsideMarginsRect - translated from C++ code
 // -------------------------------------------------------
 export const computeInsideMarginsRect = (ScreenEdgeRect) => {
-  let insideMarginsRect = {
+  return {
     top:
       ScreenEdgeRect.top +
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
@@ -35,10 +32,6 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
       ScreenEdgeRect.right -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
   }
-
-  getGraphPlotRect(insideMarginsRect)
-
-  return insideMarginsRect
 }
 
 // -------------------------------------------------------
@@ -104,9 +97,7 @@ const getLegendWidth = () => {
     : 0
 }
 
-const getGraphPlotRect = (insideMarginsRect) => {
-  // Firstly compute GraphPlot Height & Width
-
+const getScreenOrientation = (insideMarginsRect) => {
   const tempGraphPlotHeight =
     insideMarginsRect.bottom -
     insideMarginsRect.top -
@@ -125,15 +116,106 @@ const getGraphPlotRect = (insideMarginsRect) => {
     getLeftAxisWidth() -
     getLegendWidth()
 
-  const tempGraphPlotTop =
-    insideMarginsRect.top +
-    getPlotTitleWidth() +
-    getTopTitleWidth() +
+  let ScreenOrientation = "Landscape"
+
+  if (tempGraphPlotHeight > tempGraphPlotWidth) {
+    ScreenOrientation = "Portrait"
+  }
+
+  return ScreenOrientation
+}
+
+// -------------------------------------------------------
+// Function to compute InsidePlotTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
+  return {
+    top: insideMarginsRect.top,
+    bottom: insideMarginsRect.top + getPlotTitleWidth(),
+    left: insideMarginsRect.left,
+    right: insideMarginsRect.right,
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute TopTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeTopTitlesRect = (graphPlotAreaRect) => {
+  return {
+    top: graphPlotAreaRect.top - getTopAxisWidth() - getTopTitleWidth(),
+    bottom: graphPlotAreaRect.top - getTopAxisWidth(),
+    left: graphPlotAreaRect.left,
+    right: graphPlotAreaRect.right,
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute BottomTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeBottomTitlesRect = (graphPlotAreaRect) => {
+  return {
+    top: graphPlotAreaRect.bottom + getBottomAxisWidth(),
+    bottom:
+      graphPlotAreaRect.bottom + getBottomAxisWidth() + getBottomTitleWidth(),
+    left: graphPlotAreaRect.left,
+    right: graphPlotAreaRect.right,
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute LeftTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeLeftTitlesRect = (graphPlotAreaRect) => {
+  return {
+    top: graphPlotAreaRect.top,
+    bottom: graphPlotAreaRect.bottom,
+    left: graphPlotAreaRect.left - getLeftAxisWidth() - getLeftTitleWidth(),
+    right: graphPlotAreaRect.left - getLeftAxisWidth(),
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute RightTitlesRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeRightTitlesRect = (graphPlotAreaRect) => {
+  return {
+    top: graphPlotAreaRect.top,
+    bottom: graphPlotAreaRect.bottom,
+    left: graphPlotAreaRect.right + getRightAxisWidth() + getRightTitleWidth(),
+    right: graphPlotAreaRect.right + getRightAxisWidth(),
+  }
+}
+
+// -------------------------------------------------------
+// Function to compute GraphPlotAreaRect - translated from C++ code & refactored
+// -------------------------------------------------------
+export const computeGraphPlotAreaRect = (insideMarginsRect) => {
+  // Firstly compute GraphPlot Height & Width
+  const tempGraphPlotHeight =
+    insideMarginsRect.bottom -
+    insideMarginsRect.top -
+    getPlotTitleWidth() -
+    getBottomTitleWidth() -
+    getTopTitleWidth() -
+    getBottomAxisWidth() -
     getTopAxisWidth()
+
+  const tempGraphPlotWidth =
+    insideMarginsRect.right -
+    insideMarginsRect.left -
+    getRightTitleWidth() -
+    getLeftTitleWidth() -
+    getRightAxisWidth() -
+    getLeftAxisWidth() -
+    getLegendWidth()
+
+  let screenOrientation = getScreenOrientation(insideMarginsRect)
 
   let insideGraphPlotRect = null
 
-  if (tempGraphPlotHeight <= tempGraphPlotWidth) {
+  // if (tempGraphPlotHeight <= tempGraphPlotWidth) {
+
+  if (screenOrientation === "Landscape") {
     const spaceBeforeTitles = Math.round(
       (insideMarginsRect.right -
         insideMarginsRect.left -
@@ -147,7 +229,11 @@ const getGraphPlotRect = (insideMarginsRect) => {
 
     // Portrait mode
     insideGraphPlotRect = {
-      top: tempGraphPlotTop,
+      top:
+        insideMarginsRect.top +
+        getPlotTitleWidth() +
+        getTopTitleWidth() +
+        getTopAxisWidth(),
       bottom:
         insideMarginsRect.bottom - getBottomTitleWidth() - getBottomAxisWidth(),
       left: Math.round(
@@ -173,162 +259,9 @@ const getGraphPlotRect = (insideMarginsRect) => {
     }
   }
 
+  console.log(insideGraphPlotRect)
+
   return insideGraphPlotRect
-}
-
-// -------------------------------------------------------
-// Function to compute InsidePlotTitlesRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeInsidePlotTitlesRect = (insideMarginsRect) => {
-  return {
-    top: insideMarginsRect.top,
-    bottom: insideMarginsRect.top + getPlotTitleWidth(),
-    left: insideMarginsRect.left,
-    right: insideMarginsRect.right,
-  }
-}
-
-// -------------------------------------------------------
-// Function to compute TopTitlesRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeTopTitlesRect = (insideMarginsRect) => {
-  return {
-    top: insideMarginsRect.top + getPlotTitleWidth(),
-    bottom: insideMarginsRect.top + getPlotTitleWidth() + getTopTitleWidth(),
-    left: insideMarginsRect.left,
-    right: insideMarginsRect.right - getLegendWidth(),
-  }
-}
-
-// -------------------------------------------------------
-// Function to compute BottomTitlesRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeBottomTitlesRect = (insideMarginsRect) => {
-  return {
-    top: insideMarginsRect.bottom - getBottomTitleWidth(),
-    bottom: insideMarginsRect.bottom,
-    left: insideMarginsRect.left,
-    right: insideMarginsRect.right - getLegendWidth(),
-  }
-}
-
-// -------------------------------------------------------
-// Function to compute LeftTitlesRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeLeftTitlesRect = (
-  insidePlotTitleRect,
-  insideMarginsRect
-) => {
-  const tempHeight =
-    insideMarginsRect.bottom -
-    getBottomTitleWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
-    (insidePlotTitleRect.bottom +
-      getTopTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH))
-
-  const tempWidth =
-    insideMarginsRect.right -
-    getRightTitleWidth() -
-    getLegendWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
-    (insideMarginsRect.left +
-      getLeftTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
-
-  return {
-    top: insidePlotTitleRect.bottom + getTopTitleWidth(),
-    bottom: insideMarginsRect.bottom - getBottomTitleWidth(),
-    left: insideMarginsRect.left + (tempWidth - tempHeight) / 2,
-    right:
-      insideMarginsRect.left +
-      getLeftTitleWidth() +
-      (tempWidth - tempHeight) / 2,
-  }
-}
-
-// -------------------------------------------------------
-// Function to compute RightTitlesRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeRightTitlesRect = (
-  insidePlotTitleRect,
-  insideMarginsRect
-) => {
-  const tempHeight =
-    insideMarginsRect.bottom -
-    getBottomTitleWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
-    insidePlotTitleRect.bottom +
-    getTopTitleWidth() +
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
-
-  const tempWidth =
-    insideMarginsRect.right -
-    getRightTitleWidth() -
-    getLegendWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
-    (insideMarginsRect.left +
-      getLeftTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
-
-  return {
-    top: insidePlotTitleRect.bottom + getTopTitleWidth(),
-    bottom: insideMarginsRect.bottom - getBottomTitleWidth(),
-    left:
-      insideMarginsRect.right -
-      getRightTitleWidth() -
-      getLegendWidth() -
-      (tempWidth - tempHeight) / 2,
-    right:
-      insideMarginsRect.right - getLegendWidth() - (tempWidth - tempHeight) / 2,
-  }
-}
-
-// -------------------------------------------------------
-// Function to compute GraphPlotAreaRect - translated from C++ code & refactored
-// -------------------------------------------------------
-export const computeGraphPlotAreaRect = (
-  insidePlotTitleRect,
-  insideMarginsRect
-) => {
-  const tempHeight =
-    insideMarginsRect.bottom -
-    getBottomTitleWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH) -
-    insidePlotTitleRect.bottom +
-    getTopTitleWidth() +
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
-
-  const tempWidth =
-    insideMarginsRect.right -
-    getRightTitleWidth() -
-    getLegendWidth() -
-    parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
-    (insideMarginsRect.left +
-      getLeftTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH))
-
-  return {
-    top:
-      insidePlotTitleRect.bottom +
-      getTopTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH),
-    bottom:
-      insideMarginsRect.bottom -
-      getBottomTitleWidth() -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH),
-    left:
-      insideMarginsRect.left +
-      getLeftTitleWidth() +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH) +
-      (tempWidth - tempHeight) / 2,
-    right:
-      insideMarginsRect.right -
-      getRightTitleWidth() -
-      getLegendWidth() -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH) -
-      (tempWidth - tempHeight) / 2,
-  }
 }
 
 // -------------------------------------------------------

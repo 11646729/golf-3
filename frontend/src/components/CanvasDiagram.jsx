@@ -7,7 +7,7 @@ import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
-import DrawLegendArea from "./DrawLegendArea"
+// import DrawLegendArea from "./DrawLegendArea"
 
 import {
   computeScreenEdgeRect,
@@ -18,14 +18,13 @@ import {
   computeLeftTitlesRect,
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
-  computeLegendAreaRect,
+  // computeLegendAreaRect,
 } from "../functionHandlers/CanvasDiagramFunctions"
 
 const CanvasDiagram = () => {
   // -------------------------------------------------------
   // Prepare rectangles for titles, axes & legend
   // -------------------------------------------------------
-
   // Hook is initialised with width & height values
   const [screenEdgeRect, setScreenRect] = useState(computeScreenEdgeRect())
   const [insideMarginsRect, setInsideMarginsRect] = useState(
@@ -34,62 +33,61 @@ const CanvasDiagram = () => {
   const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
     computeInsidePlotTitlesRect(insideMarginsRect)
   )
+  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
+    computeGraphPlotAreaRect(insideMarginsRect)
+  )
   const [topTitleRect, setTopTitleRect] = useState(
-    computeTopTitlesRect(insideMarginsRect)
+    computeTopTitlesRect(graphPlotAreaRect)
   )
   const [bottomTitleRect, setBottomTitleRect] = useState(
-    computeBottomTitlesRect(insideMarginsRect)
+    computeBottomTitlesRect(graphPlotAreaRect)
   )
   const [leftTitleRect, setLeftTitleRect] = useState(
-    computeLeftTitlesRect(insidePlotTitleRect, insideMarginsRect)
+    computeLeftTitlesRect(graphPlotAreaRect)
   )
   const [rightTitleRect, setRightTitleRect] = useState(
-    computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
+    computeRightTitlesRect(graphPlotAreaRect)
   )
-  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
-    computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
-  )
-  const [legendAreaRect, setLegendAreaRect] = useState(
-    computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
-  )
+  // const [legendAreaRect, setLegendAreaRect] = useState(
+  //   computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
+  // )
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
-      setInsidePlotTitleRect(computeInsidePlotTitlesRect(insideMarginsRect))
-      setTopTitleRect(computeTopTitlesRect(insideMarginsRect))
-      setBottomTitleRect(
-        computeBottomTitlesRect(insidePlotTitleRect, insideMarginsRect)
+      setGraphPlotAreaRect(computeGraphPlotAreaRect(insideMarginsRect))
+      setInsidePlotTitleRect(
+        computeInsidePlotTitlesRect(insideMarginsRect, graphPlotAreaRect)
       )
-      setLeftTitleRect(
-        computeLeftTitlesRect(insidePlotTitleRect, insideMarginsRect)
-      )
-      setRightTitleRect(
-        computeRightTitlesRect(insidePlotTitleRect, insideMarginsRect)
-      )
-      setGraphPlotAreaRect(
-        computeGraphPlotAreaRect(insidePlotTitleRect, insideMarginsRect)
-      )
-      setLegendAreaRect(
-        computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
-      )
+      setTopTitleRect(computeTopTitlesRect(graphPlotAreaRect))
+      setBottomTitleRect(computeBottomTitlesRect(graphPlotAreaRect))
+      setLeftTitleRect(computeLeftTitlesRect(graphPlotAreaRect))
+      setRightTitleRect(computeRightTitlesRect(graphPlotAreaRect))
+      // setLegendAreaRect(
+      //   computeLegendAreaRect(insidePlotTitleRect, insideMarginsRect)
+      // )
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenEdgeRect, insideMarginsRect, insidePlotTitleRect])
+  }, [
+    screenEdgeRect,
+    insideMarginsRect,
+    insidePlotTitleRect,
+    graphPlotAreaRect,
+  ])
 
   return (
     <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
       <Layer>
         <DrawChartBox rect={insideMarginsRect} />
         <DrawPlotTitle rect={insidePlotTitleRect} />
+        <DrawGraphPlotArea rect={graphPlotAreaRect} />
         <DrawTopTitle rect={topTitleRect} />
         <DrawBottomTitle rect={bottomTitleRect} />
-        {/* <DrawLeftTitle rect={leftTitleRect} /> */}
+        <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
-        <DrawGraphPlotArea rect={graphPlotAreaRect} />
         {/* <DrawLegendArea rect={legendAreaRect} /> */}
       </Layer>
     </Stage>
