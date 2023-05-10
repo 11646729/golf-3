@@ -181,8 +181,8 @@ export const computeRightTitlesRect = (graphPlotAreaRect) => {
   return {
     top: graphPlotAreaRect.top,
     bottom: graphPlotAreaRect.bottom,
-    left: graphPlotAreaRect.right + getRightAxisWidth() + getRightTitleWidth(),
-    right: graphPlotAreaRect.right + getRightAxisWidth(),
+    left: graphPlotAreaRect.right + getRightAxisWidth(),
+    right: graphPlotAreaRect.right + getRightAxisWidth() + getRightTitleWidth(),
   }
 }
 
@@ -258,8 +258,6 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
       right: 0,
     }
   }
-
-  console.log(insideGraphPlotRect)
 
   return insideGraphPlotRect
 }

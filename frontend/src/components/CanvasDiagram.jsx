@@ -71,12 +71,7 @@ const CanvasDiagram = () => {
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [
-    screenEdgeRect,
-    insideMarginsRect,
-    insidePlotTitleRect,
-    graphPlotAreaRect,
-  ])
+  }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect])
 
   return (
     <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
