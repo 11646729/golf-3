@@ -277,7 +277,6 @@ export const computeLegendAreaRect = (insideMarginsRect, rightTitleRect) => {
       (insideMarginsRect.right - rightTitleRect.right + getLegendWidth()) / 2,
   }
 
-  console.log(getLegendWidth())
   return legendRect
 }
 

@@ -5,7 +5,10 @@ import { Rect, Text } from "react-konva"
 const DrawBottomTitle = (props) => {
   const { rect } = props
 
+  // If rect is null then do not draw the Rectangle
   if (!rect) return
+  // If rect height = 0 then do not draw the Rectangle
+  if (rect.bottom - rect.top === 0) return
 
   DrawBottomTitle.propTypes = {
     rect: PropTypes.object,

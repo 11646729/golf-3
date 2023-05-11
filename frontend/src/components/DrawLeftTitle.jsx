@@ -5,7 +5,10 @@ import { Rect, Text } from "react-konva"
 const DrawLeftTitle = (props) => {
   const { rect } = props
 
+  // If rect is null then do not draw the Rectangle
   if (!rect) return
+  // If rect width = 0 then do not draw the Rectangle
+  if (rect.right - rect.left === 0) return
 
   DrawLeftTitle.propTypes = {
     rect: PropTypes.object,
