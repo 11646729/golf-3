@@ -200,14 +200,14 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
     getBottomAxisWidth() -
     getTopAxisWidth()
 
-  const tempGraphPlotWidth =
-    insideMarginsRect.right -
-    insideMarginsRect.left -
-    getRightTitleWidth() -
-    getLeftTitleWidth() -
-    getRightAxisWidth() -
-    getLeftAxisWidth() -
-    getLegendWidth()
+  // const tempGraphPlotWidth =
+  //   insideMarginsRect.right -
+  //   insideMarginsRect.left -
+  //   getRightTitleWidth() -
+  //   getLeftTitleWidth() -
+  //   getRightAxisWidth() -
+  //   getLeftAxisWidth() -
+  //   getLegendWidth()
 
   let screenOrientation = getScreenOrientation(insideMarginsRect)
 
