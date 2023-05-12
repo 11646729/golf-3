@@ -14,8 +14,6 @@ const DrawTopTitle = (props) => {
     rect: PropTypes.object,
   }
 
-  console.log(rect)
-
   return (
     <>
       <Rect
@@ -28,7 +26,7 @@ const DrawTopTitle = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
-        // fill="lightyellow"
+        fill="lightyellow"
       />
       <Text
         fontSize={16}

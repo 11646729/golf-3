@@ -8,6 +8,7 @@ import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
 import DrawLegendArea from "./DrawLegendArea"
+import DrawTopAxis from "./DrawTopAxis"
 
 import {
   computeScreenEdgeRect,
@@ -83,6 +84,7 @@ const CanvasDiagram = () => {
         <DrawBottomTitle rect={bottomTitleRect} />
         <DrawLeftTitle rect={leftTitleRect} />
         <DrawRightTitle rect={rightTitleRect} />
+        <DrawTopAxis rect={graphPlotAreaRect} />
         <DrawLegendArea rect={legendAreaRect} />
       </Layer>
     </Stage>
