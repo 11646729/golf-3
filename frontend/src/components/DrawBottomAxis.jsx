@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line } from "react-konva"
 
-const DrawTopAxis = (props) => {
+const DrawBottomAxis = (props) => {
   const { rect } = props
 
   // If rect is null then do not draw the Rectangle
@@ -10,7 +10,7 @@ const DrawTopAxis = (props) => {
   // If rect height = 0 then do not draw the Rectangle
   if (rect.bottom - rect.top === 0) return
 
-  DrawTopAxis.propTypes = {
+  DrawBottomAxis.propTypes = {
     rect: PropTypes.object,
   }
 
@@ -42,8 +42,8 @@ const DrawTopAxis = (props) => {
     i++
   ) {
     const x = rect.left + i * ScaleHorizontal
-    const y1 = rect.top
-    const y2 = rect.top - lineLength
+    const y1 = rect.bottom
+    const y2 = rect.bottom + lineLength
 
     lines.push(
       <Line key={i} points={[x, y1, x, y2]} stroke="red" strokeWidth={1} />
@@ -53,4 +53,4 @@ const DrawTopAxis = (props) => {
   return <>{lines}</>
 }
 
-export default memo(DrawTopAxis)
+export default memo(DrawBottomAxis)
