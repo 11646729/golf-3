@@ -5,6 +5,8 @@ import { Rect, Text } from "react-konva"
 const DrawTopTitle = (props) => {
   const { rect } = props
 
+  // If DrawTopTitle !== true then return
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPTITLE !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
   // If rect height = 0 then do not draw the Rectangle
