@@ -2,15 +2,15 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line } from "react-konva"
 
-const DrawTopAxis = (props) => {
+const DrawRightAxis = (props) => {
   const { rect } = props
 
-  // If DrawTopAxis !== true then return
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXIS !== "true") return
+  // If DrawRightAxis !== true then return
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTAXIS !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
 
-  DrawTopAxis.propTypes = {
+  DrawRightAxis.propTypes = {
     rect: PropTypes.object,
   }
 
@@ -40,14 +40,14 @@ const DrawTopAxis = (props) => {
     i <= (MaxWaveNumber - MinWaveNumber) / WaveNumberInterval;
     i++
   ) {
-    const x = rect.left + i * ScaleHorizontal
-    const y1 = rect.top
-    const y2 = rect.top - lineLength
+    const y = rect.top + i * ScaleHorizontal
+    const x1 = rect.right
+    const x2 = rect.right + lineLength
 
     lines.push(
       <Line
         key={i}
-        points={[x, y1, x, y2]}
+        points={[x1, y, x2, y]}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
@@ -60,4 +60,4 @@ const DrawTopAxis = (props) => {
   return <>{lines}</>
 }
 
-export default memo(DrawTopAxis)
+export default memo(DrawRightAxis)

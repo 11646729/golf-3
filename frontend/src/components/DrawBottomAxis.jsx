@@ -5,10 +5,10 @@ import { Line } from "react-konva"
 const DrawBottomAxis = (props) => {
   const { rect } = props
 
+  // If DrawBottomAxis !== true then return
+  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMAXIS !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
-  // If rect height = 0 then do not draw the Rectangle
-  if (rect.bottom - rect.top === 0) return
 
   DrawBottomAxis.propTypes = {
     rect: PropTypes.object,
@@ -31,7 +31,6 @@ const DrawBottomAxis = (props) => {
     (rect.right - rect.left) /
     ((MaxWaveNumber - MinWaveNumber) / WaveNumberInterval)
 
-  // const lineSpacing = 30
   const lineLength = 10
 
   const lines = []
@@ -46,7 +45,15 @@ const DrawBottomAxis = (props) => {
     const y2 = rect.bottom + lineLength
 
     lines.push(
-      <Line key={i} points={[x, y1, x, y2]} stroke="red" strokeWidth={1} />
+      <Line
+        key={i}
+        points={[x, y1, x, y2]}
+        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        strokeWidth={parseInt(
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          10
+        )}
+      />
     )
   }
 
