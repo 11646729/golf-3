@@ -45,7 +45,7 @@ const DrawTopAxis = (props) => {
     const y1 = rect.top
     const y2 = rect.top - lineLength
 
-    let AxisValue = (parseFloat(MinWaveNumber) + i * 0.02).toFixed(2)
+    let AxisValue = (parseFloat(MaxWaveNumber) - i * 0.02).toFixed(2)
 
     lines.push(
       <>
