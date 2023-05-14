@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Line } from "react-konva"
+import { Line, Text } from "react-konva"
 
 const DrawRightAxis = (props) => {
   const { rect } = props
@@ -45,16 +45,30 @@ const DrawRightAxis = (props) => {
     const x1 = rect.right
     const x2 = rect.right + lineLength
 
+    let AxisValue = (parseFloat(MinWaveNumber) + i * 0.02).toFixed(2)
+
     lines.push(
-      <Line
-        key={i}
-        points={[x1, y, x2, y]}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-          10
-        )}
-      />
+      <>
+        <Line
+          key={i}
+          points={[x1, y, x2, y]}
+          stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+          strokeWidth={parseInt(
+            process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+            10
+          )}
+        />
+        <Text
+          fontSize={8}
+          text={AxisValue}
+          stroke="grey"
+          strokeWidth={0.5}
+          x={x2 + 5}
+          y={y - 4}
+          align="center"
+          verticalAlign="middle"
+        />
+      </>
     )
   }
 
