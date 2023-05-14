@@ -29,13 +29,13 @@ const DrawRightTitle = (props) => {
         text={process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLETEXT}
         stroke="grey"
         strokeWidth={0.5}
-        x={rect.left}
+        x={rect.right}
         y={rect.top}
-        width={rect.right - rect.left}
-        height={rect.bottom - rect.top}
-        align="right"
-        verticalAlign="middle"
-        // rotation={90}
+        width={rect.bottom - rect.top}
+        height={rect.right - rect.left}
+        align="center"
+        verticalAlign="top"
+        rotation={90}
       />
     </>
   )
