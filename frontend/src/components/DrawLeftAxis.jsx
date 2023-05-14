@@ -31,8 +31,8 @@ const DrawTopAxis = (props) => {
     (rect.right - rect.left) /
     ((MaxWaveNumber - MinWaveNumber) / WaveNumberInterval)
 
-  // TODO - scale this to screensize
-  const lineLength = 10
+  // Scale the lineLength to screensize
+  const lineLength = (rect.bottom - rect.top) / 60
 
   const lines = []
 
