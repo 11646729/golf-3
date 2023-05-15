@@ -23,7 +23,7 @@ import {
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
   computeLegendAreaRect,
-} from "../functionHandlers/CanvasDiagramFunctions"
+} from "../functionHandlers/canvasDiagramFunctions"
 
 const CanvasDiagram = () => {
   // -------------------------------------------------------
