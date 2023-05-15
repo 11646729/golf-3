@@ -23,19 +23,24 @@ const DrawLeftTitle = (props) => {
         y={rect.top}
         width={rect.right - rect.left}
         height={rect.bottom - rect.top}
+        // stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        // strokeWidth={parseInt(
+        //   process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+        //   10
+        // )}
       />
       <Text
         fontSize={16}
         text={process.env.REACT_APP_GEOPHONEARRAY_TOPTITLETEXT}
         stroke="grey"
         strokeWidth={0.5}
-        x={rect.left + 20}
-        y={rect.top}
+        x={rect.left}
+        y={rect.bottom}
         width={rect.bottom - rect.top}
         height={rect.right - rect.left}
         align="center"
-        verticalAlign="top"
-        rotation={90}
+        verticalAlign="center"
+        rotation={270}
       />
     </>
   )
