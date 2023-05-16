@@ -16,6 +16,28 @@ const DrawLegendArea = (props) => {
     rect: PropTypes.object,
   }
 
+  // Read Amplitude Values - Min, Max & Interval Values
+  var MaxAmplitude = parseFloat(
+    process.env.REACT_APP_GEOPHONEARRAY_MAXIMUMAMPLITUDE
+  ).toFixed(2)
+
+  var MinAmplitude = parseFloat(
+    process.env.REACT_APP_GEOPHONEARRAY_MINIMUMAMPLITUDE
+  ).toFixed(2)
+
+  var NoOfAmplitudeBands = parseInt(
+    process.env.REACT_APP_GEOPHONEARRAY_NUMBEROFAMPLITUDEBANDS
+  ).toFixed(0)
+
+  // const lines = []
+
+  // for (
+  //   let i = 0;
+  //   i <= (MaxWaveNumber - MinWaveNumber) / NoOfAmplitudeBands;
+  //   i++
+  // ) {
+  // }
+
   return (
     <>
       {/* Outline Rectangle for Legend */}
