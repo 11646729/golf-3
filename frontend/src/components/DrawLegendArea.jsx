@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Rect, Text } from "react-konva"
+import DrawLegendAxisLabels from "./DrawLegendAxisLabels"
 
 const DrawLegendArea = (props) => {
   const { rect } = props
@@ -16,28 +17,6 @@ const DrawLegendArea = (props) => {
     rect: PropTypes.object,
   }
 
-  // Read Amplitude Values - Min, Max & Interval Values
-  var MaxAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MAXIMUMAMPLITUDE
-  ).toFixed(2)
-
-  var MinAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MINIMUMAMPLITUDE
-  ).toFixed(2)
-
-  var NoOfAmplitudeBands = parseInt(
-    process.env.REACT_APP_GEOPHONEARRAY_NUMBEROFAMPLITUDEBANDS
-  ).toFixed(0)
-
-  // const lines = []
-
-  // for (
-  //   let i = 0;
-  //   i <= (MaxWaveNumber - MinWaveNumber) / NoOfAmplitudeBands;
-  //   i++
-  // ) {
-  // }
-
   return (
     <>
       {/* Outline Rectangle for Legend */}
@@ -51,20 +30,7 @@ const DrawLegendArea = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
-        // fill="lightcyan"
-      />
-      {/* Legend Title */}
-      <Text
-        fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_LEGENDTEXT}
-        stroke="grey"
-        strokeWidth={0.5}
-        x={rect.left}
-        y={rect.top}
-        width={rect.right - rect.left}
-        height={rect.bottom - rect.top}
-        align="center"
-        verticalAlign="top"
+        fill="lightcyan"
       />
       {/* Legend Dimension Label */}
       <Text
@@ -79,6 +45,7 @@ const DrawLegendArea = (props) => {
         align="left"
         verticalAlign="middle"
       />
+      <DrawLegendAxisLabels rect={rect} />
     </>
   )
 }
