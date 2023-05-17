@@ -30,7 +30,7 @@ const DrawLegendArea = (props) => {
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
-        fill="lightcyan"
+        // fill="lightcyan"
       />
       {/* Legend Dimension Label */}
       <Text
@@ -38,7 +38,7 @@ const DrawLegendArea = (props) => {
         text={process.env.REACT_APP_GEOPHONEARRAY_LEGENDVALUESTEXT}
         stroke="grey"
         strokeWidth={0.5}
-        x={rect.left}
+        x={rect.left + 10}
         y={rect.top}
         width={rect.right - rect.left}
         height={rect.bottom - rect.top}

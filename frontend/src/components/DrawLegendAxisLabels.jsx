@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Text } from "react-konva"
+import { Text, Rect } from "react-konva"
 
 const DrawLegendAxisLabels = (props) => {
   const { rect } = props
@@ -31,17 +31,18 @@ const DrawLegendAxisLabels = (props) => {
     process.env.REACT_APP_GEOPHONEARRAY_NUMBEROFAMPLITUDEBANDS
   ).toFixed(0)
 
-  const ScaleVertical = (rect.bottom - rect.top) / NoOfAmplitudeIntervalBands
-  // ((MaxAmplitude - MinAmplitude) / NoOfAmplitudeIntervalBands)
+  const ScaleValue = (MaxAmplitude - MinAmplitude) / NoOfAmplitudeIntervalBands
+  const VerticalInterval = (rect.bottom - rect.top) / NoOfAmplitudeIntervalBands
+
+  console.log((MaxAmplitude - MinAmplitude) / NoOfAmplitudeIntervalBands)
 
   const values = []
 
-  for (let i = 0; i <= NoOfAmplitudeIntervalBands; i++) {
-    const y = i * ScaleVertical
-    //   const x1 = rect.left
-    //   const x2 = rect.left - lineLength
+  for (let i = 0; i < NoOfAmplitudeIntervalBands; i++) {
+    const y = rect.top + i * VerticalInterval
+    const x = rect.right - 30
 
-    let AxisValue = MaxAmplitude - i * 8
+    let AxisValue = MaxAmplitude - i * ScaleValue
 
     values.push(
       <>
@@ -50,10 +51,21 @@ const DrawLegendAxisLabels = (props) => {
           text={AxisValue}
           stroke="grey"
           strokeWidth={0.5}
-          x={rect.left + 40}
-          y={rect.top + y}
-          align="left"
-          verticalAlign="middle"
+          x={rect.right - 50}
+          y={y}
+          align="right"
+          verticalAlign="top"
+        />
+        <Rect
+          x={x}
+          y={y}
+          width={rect.right - x}
+          height={VerticalInterval}
+          stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+          strokeWidth={parseInt(
+            process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+          )}
+          fill="lightyellow"
         />
       </>
     )
