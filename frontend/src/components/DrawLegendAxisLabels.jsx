@@ -39,10 +39,35 @@ const DrawLegendAxisLabels = (props) => {
   )
 
   const values = []
-  const colorRects = []
+  const legendRects = []
+  const legendRectColors = []
+
+  legendRectColors[1] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND1
+  legendRectColors[2] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND2
+  legendRectColors[3] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND3
+  legendRectColors[4] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND4
+  legendRectColors[5] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND5
+  legendRectColors[6] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND6
+  legendRectColors[7] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND7
+  legendRectColors[8] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND8
+  legendRectColors[9] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND9
+  legendRectColors[10] =
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND10
+  legendRectColors[11] =
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND11
+  legendRectColors[12] =
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
+
+  // for (let h = 1; h <= NoOfAmplitudeIntervalBands; h++) {
+  //   const text = "process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND"
+  //   let result = text.concat(h)
+  //   legendRectColors[h] = result
+
+  //   console.log(legendRectColors[h])
+  // }
 
   for (let i = 0; i <= NoOfAmplitudeIntervalBands; i++) {
-    const y = rect.top + i * VerticalInterval
+    const y = parseInt(rect.top + i * VerticalInterval)
     const x = rect.right - 50
 
     let AxisValue = MaxAmplitude - i * ScaleValue
@@ -62,10 +87,11 @@ const DrawLegendAxisLabels = (props) => {
   }
 
   for (let j = 0; j < NoOfAmplitudeIntervalBands; j++) {
-    const y = rect.top + j * VerticalInterval
+    const y = parseInt(rect.top + j * VerticalInterval)
     const x = rect.right - 30
+    const z = legendRectColors[j + 1]
 
-    colorRects.push(
+    legendRects.push(
       <Rect
         x={x}
         y={y}
@@ -75,7 +101,7 @@ const DrawLegendAxisLabels = (props) => {
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
-        fill="lightyellow"
+        fill={z}
       />
     )
   }
@@ -83,7 +109,7 @@ const DrawLegendAxisLabels = (props) => {
   return (
     <>
       {values}
-      {colorRects}
+      {legendRects}
     </>
   )
 }
