@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line, Text } from "react-konva"
 
-const DrawTopAxis = (props) => {
+const DrawLeftAxis = (props) => {
   const { rect } = props
 
   // If DrawLeftAxis !== true then return
@@ -10,7 +10,7 @@ const DrawTopAxis = (props) => {
   // If rect is null then do not draw the Rectangle
   if (!rect) return
 
-  DrawTopAxis.propTypes = {
+  DrawLeftAxis.propTypes = {
     rect: PropTypes.object,
   }
 
@@ -35,6 +35,7 @@ const DrawTopAxis = (props) => {
   const lineLength = (rect.bottom - rect.top) / 80
 
   const lines = []
+  const labels = []
 
   for (
     let i = 0;
@@ -45,34 +46,50 @@ const DrawTopAxis = (props) => {
     const x1 = rect.left
     const x2 = rect.left - lineLength
 
-    let AxisValue = (parseFloat(MaxWaveNumber) - i * 0.02).toFixed(2)
-
     lines.push(
-      <>
-        <Line
-          key={i}
-          points={[x1, y, x2, y]}
-          stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-          strokeWidth={parseInt(
-            process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-            10
-          )}
-        />
-        <Text
-          fontSize={8}
-          text={AxisValue}
-          stroke="grey"
-          strokeWidth={0.5}
-          x={x2 - 20}
-          y={y - 4}
-          align="left"
-          verticalAlign="middle"
-        />
-      </>
+      <Line
+        key={i}
+        points={[x1, y, x2, y]}
+        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        strokeWidth={parseInt(
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          10
+        )}
+      />
     )
   }
 
-  return <>{lines}</>
+  for (
+    let j = 0;
+    j <= (MaxWaveNumber - MinWaveNumber) / WaveNumberInterval;
+    j++
+  ) {
+    const y = rect.top + j * ScaleHorizontal
+    const x2 = rect.left - lineLength
+
+    let AxisValue = (parseFloat(MaxWaveNumber) - j * 0.02).toFixed(2)
+
+    labels.push(
+      <Text
+        key={j}
+        fontSize={8}
+        text={AxisValue}
+        stroke="grey"
+        strokeWidth={0.5}
+        x={x2 - 20}
+        y={y - 4}
+        align="left"
+        verticalAlign="middle"
+      />
+    )
+  }
+
+  return (
+    <>
+      {lines}
+      {labels}
+    </>
+  )
 }
 
-export default memo(DrawTopAxis)
+export default memo(DrawLeftAxis)

@@ -35,6 +35,7 @@ const DrawBottomAxis = (props) => {
   const lineLength = (rect.bottom - rect.top) / 60
 
   const lines = []
+  const labels = []
 
   for (
     let i = 0;
@@ -45,34 +46,50 @@ const DrawBottomAxis = (props) => {
     const y1 = rect.bottom
     const y2 = rect.bottom + lineLength
 
-    let AxisValue = (parseFloat(MaxWaveNumber) - i * 0.02).toFixed(2)
-
     lines.push(
-      <>
-        <Line
-          key={i}
-          points={[x, y1, x, y2]}
-          stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-          strokeWidth={parseInt(
-            process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-            10
-          )}
-        />
-        <Text
-          fontSize={8}
-          text={AxisValue}
-          stroke="grey"
-          strokeWidth={0.5}
-          x={x - 6}
-          y={y1 + 15}
-          align="center"
-          verticalAlign="middle"
-        />
-      </>
+      <Line
+        key={i}
+        points={[x, y1, x, y2]}
+        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        strokeWidth={parseInt(
+          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          10
+        )}
+      />
     )
   }
 
-  return <>{lines}</>
+  for (
+    let j = 0;
+    j <= (MaxWaveNumber - MinWaveNumber) / WaveNumberInterval;
+    j++
+  ) {
+    const x = rect.left + j * ScaleHorizontal
+    const y1 = rect.bottom
+
+    let AxisValue = (parseFloat(MaxWaveNumber) - j * 0.02).toFixed(2)
+
+    labels.push(
+      <Text
+        key={j}
+        fontSize={8}
+        text={AxisValue}
+        stroke="grey"
+        strokeWidth={0.5}
+        x={x - 6}
+        y={y1 + 15}
+        align="center"
+        verticalAlign="middle"
+      />
+    )
+  }
+
+  return (
+    <>
+      {lines}
+      {labels}
+    </>
+  )
 }
 
 export default memo(DrawBottomAxis)

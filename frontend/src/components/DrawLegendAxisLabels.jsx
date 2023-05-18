@@ -14,10 +14,6 @@ const DrawLegendAxisLabels = (props) => {
     rect: PropTypes.object,
   }
 
-  // REACT_APP_GEOPHONEARRAY_MAXIMUMAMPLITUDE = "0.00"
-  // REACT_APP_GEOPHONEARRAY_MINIMUMAMPLITUDE = "-96.00"
-  // REACT_APP_GEOPHONEARRAY_NUMBEROFAMPLITUDEBANDS = "12"
-
   // Read Amplitude Values - Min, Max & Interval Values
   var MinAmplitude = parseFloat(
     process.env.REACT_APP_GEOPHONEARRAY_MINIMUMAMPLITUDE
@@ -74,6 +70,7 @@ const DrawLegendAxisLabels = (props) => {
 
     values.push(
       <Text
+        key={i}
         fontSize={8}
         text={AxisValue}
         stroke="grey"
@@ -93,6 +90,7 @@ const DrawLegendAxisLabels = (props) => {
 
     legendRects.push(
       <Rect
+        key={j}
         x={x}
         y={y}
         width={rect.right - x}
