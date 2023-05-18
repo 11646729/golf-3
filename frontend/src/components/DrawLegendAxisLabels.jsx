@@ -30,9 +30,9 @@ const DrawLegendAxisLabels = (props) => {
   const ScaleValue = parseInt(
     (MaxAmplitude - MinAmplitude) / NoOfAmplitudeIntervalBands
   )
-  const VerticalInterval = parseInt(
-    (rect.bottom - rect.top) / NoOfAmplitudeIntervalBands
-  )
+  const VerticalInterval = (rect.bottom - rect.top) / NoOfAmplitudeIntervalBands
+
+  console.log(VerticalInterval)
 
   const values = []
   const legendRects = []
