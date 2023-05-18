@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Rect, Text } from "react-konva"
+import { Text } from "react-konva"
 import DrawLegendAxisLabels from "./DrawLegendAxisLabels"
 
 const DrawLegendArea = (props) => {
@@ -20,7 +20,7 @@ const DrawLegendArea = (props) => {
   return (
     <>
       {/* Outline Rectangle for Legend */}
-      <Rect
+      {/* <Rect
         x={rect.left}
         y={rect.top}
         width={rect.right - rect.left}
@@ -31,7 +31,7 @@ const DrawLegendArea = (props) => {
           10
         )}
         // fill="lightcyan"
-      />
+      /> */}
       {/* Legend Dimension Label */}
       <Text
         fontSize={16}

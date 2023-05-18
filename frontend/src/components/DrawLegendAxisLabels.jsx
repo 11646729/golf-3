@@ -83,10 +83,9 @@ const DrawLegendAxisLabels = (props) => {
     )
   }
 
-  for (let j = 0; j < NoOfAmplitudeIntervalBands; j++) {
-    const y = parseInt(rect.top + j * VerticalInterval)
+  for (let j = 1; j <= NoOfAmplitudeIntervalBands; j++) {
+    const y = parseInt(rect.top + (j - 1) * VerticalInterval)
     const x = rect.right - 30
-    const z = legendRectColors[j + 1]
 
     legendRects.push(
       <Rect
@@ -99,7 +98,7 @@ const DrawLegendAxisLabels = (props) => {
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
-        fill={z}
+        fill={legendRectColors[j]}
       />
     )
   }
