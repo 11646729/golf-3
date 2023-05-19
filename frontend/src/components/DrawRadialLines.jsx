@@ -11,18 +11,17 @@ const DrawRadialLines = (props) => {
     rect: PropTypes.object,
   }
 
+  const y1 = rect.top
+  const x1 = rect.left + (rect.right - rect.left) / 2
+  const y2 = rect.top + (rect.bottom - rect.top) / 2
+  const x2 = rect.left + (rect.right - rect.left) / 2
+
   return (
     <Line
-      points={[
-        rect.iWidth / 2,
-        rect.iHeight / 2,
-        rect.iWidth,
-        rect.iHeight / 2,
-      ]}
+      points={[x1, y1, x2, y2]}
       stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
       strokeWidth={parseInt(
-        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-        10
+        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
     />
   )
