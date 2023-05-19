@@ -32,11 +32,9 @@ const DrawLegendAxisLabels = (props) => {
   )
   const VerticalInterval = (rect.bottom - rect.top) / NoOfAmplitudeIntervalBands
 
-  console.log(VerticalInterval)
-
+  const legendRectColors = []
   const values = []
   const legendRects = []
-  const legendRectColors = []
 
   legendRectColors[1] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND1
   legendRectColors[2] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND2
@@ -53,14 +51,6 @@ const DrawLegendAxisLabels = (props) => {
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND11
   legendRectColors[12] =
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
-
-  // for (let h = 1; h <= NoOfAmplitudeIntervalBands; h++) {
-  //   const text = "process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND"
-  //   let result = text.concat(h)
-  //   legendRectColors[h] = result
-
-  //   console.log(legendRectColors[h])
-  // }
 
   for (let i = 0; i <= NoOfAmplitudeIntervalBands; i++) {
     const y = parseInt(rect.top + i * VerticalInterval)

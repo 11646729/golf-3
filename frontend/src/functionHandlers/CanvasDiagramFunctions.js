@@ -227,7 +227,7 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
         2
     )
 
-    // Portrait mode
+    // Landscape mode
     insideGraphPlotRect = {
       top:
         insideMarginsRect.top +
@@ -249,7 +249,7 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
         getRightAxisWidth(),
     }
   } else {
-    // Landscape mode
+    // Portrait mode
     // TODO
     insideGraphPlotRect = {
       top: 0,
