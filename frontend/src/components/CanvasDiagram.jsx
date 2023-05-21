@@ -13,7 +13,7 @@ import DrawBottomAxis from "./DrawBottomAxis"
 import DrawLeftAxis from "./DrawLeftAxis"
 import DrawRightAxis from "./DrawRightAxis"
 import DrawLegendTitle from "./DrawLegendTitle"
-import DrawRadialLines from "./DrawRadialLines"
+import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
 
 import {
   computeScreenEdgeRect,
@@ -95,7 +95,7 @@ const CanvasDiagram = () => {
         <DrawRightAxis rect={graphPlotAreaRect} />
         <DrawLegendTitle rect={legendAreaRect} />
         <DrawLegendArea rect={legendAreaRect} />
-        <DrawRadialLines rect={graphPlotAreaRect} />
+        <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
       </Layer>
     </Stage>
   )
