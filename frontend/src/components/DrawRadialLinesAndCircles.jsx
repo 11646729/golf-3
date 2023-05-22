@@ -82,11 +82,11 @@ const DrawRadialLinesAndCircles = (props) => {
           labelValue = k * (360 / NoOfAngles) + 270
         }
 
-        if (k < NoOfAngles * 0.5 && k > (360 / NoOfAngles) * 0.25) {
+        if (k < NoOfAngles * 0.5 && k > NoOfAngles * 0.25) {
           labelValue = k * (360 / NoOfAngles) - 90
         }
 
-        if (k <= NoOfAngles * 0.75 && k < (360 / NoOfAngles) * 0.5) {
+        if (k <= NoOfAngles * 0.75 && k >= NoOfAngles * 0.5) {
           labelValue = k * (360 / NoOfAngles) - 90
         }
 
