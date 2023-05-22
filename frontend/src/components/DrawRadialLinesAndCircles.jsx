@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import { Circle, Line } from "react-konva"
+import { Circle, Line, Text } from "react-konva"
 
 const DrawRadialLinesAndCircles = (props) => {
   const { rect } = props
@@ -19,6 +19,7 @@ const DrawRadialLinesAndCircles = (props) => {
   const mcentrey = (rect.bottom - rect.top) / 2
   const lines = []
   const circles = []
+  const labels = []
 
   // DRAW CIRCLES
   const NoOfCircles =
@@ -69,10 +70,51 @@ const DrawRadialLinesAndCircles = (props) => {
       )
     }
 
+    // DRAW LABELS
+    if (process.env.REACT_APP_GEOPHONEARRAY_M3DDISPLAYRADIALLABLES === "true") {
+      for (let k = 1; k <= NoOfAngles; k++) {
+        const dOffx = mcentrey * Math.sin((360 / NoOfAngles) * pi_rad * k)
+        const dOffy = 0 - mcentrey * Math.cos((360 / NoOfAngles) * pi_rad * k)
+
+        let labelValue = "0.0"
+
+        if (k < NoOfAngles * 0.25) {
+          labelValue = k * (360 / NoOfAngles) + 270
+        }
+
+        if (k < NoOfAngles * 0.5 && k > (360 / NoOfAngles) * 0.25) {
+          labelValue = k * (360 / NoOfAngles) - 90
+        }
+
+        if (k <= NoOfAngles * 0.75 && k < (360 / NoOfAngles) * 0.5) {
+          labelValue = k * (360 / NoOfAngles) - 90
+        }
+
+        if (k <= NoOfAngles && k > NoOfAngles * 0.75) {
+          labelValue = k * (360 / NoOfAngles) - 90
+        }
+
+        labels.push(
+          <Text
+            key={k}
+            fontSize={8}
+            text={labelValue}
+            stroke="grey"
+            strokeWidth={0.5}
+            x={rect.left + mcentrex + dOffx}
+            y={rect.top + mcentrey + dOffy}
+            align="center"
+            verticalAlign="middle"
+          />
+        )
+      }
+    }
+
     return (
       <>
         {circles}
         {lines}
+        {labels}
       </>
     )
   }
