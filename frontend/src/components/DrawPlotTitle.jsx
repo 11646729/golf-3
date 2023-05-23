@@ -25,8 +25,21 @@ const DrawPlotTitle = (props) => {
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
-        // fill="lightgreen"
-        // opacity={0.3}
+      />
+      <Text
+        fontSize={12}
+        text={"Data Entry"}
+        stroke="blue"
+        strokeWidth={0.5}
+        x={rect.left + 20}
+        y={rect.top}
+        width={rect.right - rect.left}
+        height={rect.bottom - rect.top}
+        align="left"
+        verticalAlign="middle"
+        onClick={(event) => {
+          alert("Some text...")
+        }}
       />
       <Text
         fontFamily="Arial"

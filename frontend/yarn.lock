@@ -7946,6 +7946,24 @@ react-is@^18.0.0, react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-konva-utils@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-konva-utils/-/react-konva-utils-1.0.4.tgz#bce739a207f02fc5f0246f6ab16a0e295f5544af"
+  integrity sha512-K1J1K9MoVNGFrUxYt+dn7TUVqpppW3Y0fRcf42Ws1wzTQ2Od4qicCom9jnGxLiwh8zyhYaHAUn3hztgfTyYF7g==
+  dependencies:
+    react-konva "^18.0.0-0"
+    use-image "^1.1.0"
+
+react-konva@^18.0.0-0:
+  version "18.2.8"
+  resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-18.2.8.tgz#d282f3c734f20e66f60df76b632513853fc25184"
+  integrity sha512-SQBJoL6DrnmTKGrqa5NYy6CB+eAck/2D4lXHDfu4yjRynUwYPXYjtbXTobkpifme4mY8udhbA3EBcMUkWBnfIA==
+  dependencies:
+    "@types/react-reconciler" "^0.28.2"
+    its-fine "^1.0.6"
+    react-reconciler "~0.29.0"
+    scheduler "^0.23.0"
+
 react-konva@^18.2.5:
   version "18.2.5"
   resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-18.2.5.tgz#592692619c5f4a9c14726e146574ddc8bc468a7c"
@@ -9333,6 +9351,11 @@ url-parse@^1.5.3:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
+
+use-image@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/use-image/-/use-image-1.1.0.tgz#dc244c34506d3cf3a8177c1f0bbfb158b9beefe5"
+  integrity sha512-+cBHRR/44ZyMUS873O0vbVylgMM0AbdTunEplAWXvIQ2p69h2sIo2Qq74zeUsq6AMo+27e5lERQvXzd1crGiMg==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

@@ -9,9 +9,9 @@ import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
-// import CanvasPage from "../pages/CanvasPage"
+import CanvasPage from "../pages/CanvasPage"
 // import MiniDrawer from "../components/MiniDrawer"
-import Drawer from "../components/Drawer"
+// import Drawer from "../components/Drawer"
 
 function App() {
   return (
@@ -64,9 +64,9 @@ function BusRoutesPageLink() {
 }
 
 function CanvasPageLink() {
-  // return <CanvasPage />
+  return <CanvasPage />
   // return <MiniDrawer />
-  return <Drawer />
+  // return <Drawer />
 }
 
 function NotFound() {

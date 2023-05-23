@@ -27,13 +27,14 @@ const DrawRadialLinesAndCircles = (props) => {
       process.env.REACT_APP_GEOPHONEARRAY_MINIMUMWAVENUMBER) /
     (process.env.REACT_APP_GEOPHONEARRAY_WAVENUMBERINTERVAL * 2)
 
-  for (let temp = 1; temp <= NoOfCircles; temp++) {
+  for (let j = 1; j <= NoOfCircles; j++) {
     const circleRadius = Math.round(
-      ((rect.bottom - rect.top) / 2 / NoOfCircles) * temp
+      ((rect.bottom - rect.top) / 2 / NoOfCircles) * j
     )
 
     circles.push(
       <Circle
+        key={j}
         x={rect.left + mcentrex}
         y={rect.top + mcentrey}
         radius={circleRadius}

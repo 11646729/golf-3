@@ -87,24 +87,26 @@ const CanvasDiagram = () => {
   // Drawer for navigation between Charts & Data Input Panel
 
   return (
-    <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
-      <Layer>
-        <DrawChartBox rect={insideMarginsRect} />
-        <DrawPlotTitle rect={insidePlotTitleRect} />
-        <DrawGraphPlotArea rect={graphPlotAreaRect} />
-        <DrawTopTitle rect={topTitleRect} />
-        <DrawBottomTitle rect={bottomTitleRect} />
-        <DrawLeftTitle rect={leftTitleRect} />
-        <DrawRightTitle rect={rightTitleRect} />
-        <DrawTopAxis rect={graphPlotAreaRect} />
-        <DrawBottomAxis rect={graphPlotAreaRect} />
-        <DrawLeftAxis rect={graphPlotAreaRect} />
-        <DrawRightAxis rect={graphPlotAreaRect} />
-        <DrawLegendTitle rect={legendAreaRect} />
-        <DrawLegendArea rect={legendAreaRect} />
-        <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
-      </Layer>
-    </Stage>
+    <div>
+      <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
+        <Layer>
+          <DrawChartBox rect={insideMarginsRect} />
+          <DrawPlotTitle rect={insidePlotTitleRect} />
+          <DrawGraphPlotArea rect={graphPlotAreaRect} />
+          <DrawTopTitle rect={topTitleRect} />
+          <DrawBottomTitle rect={bottomTitleRect} />
+          <DrawLeftTitle rect={leftTitleRect} />
+          <DrawRightTitle rect={rightTitleRect} />
+          <DrawTopAxis rect={graphPlotAreaRect} />
+          <DrawBottomAxis rect={graphPlotAreaRect} />
+          <DrawLeftAxis rect={graphPlotAreaRect} />
+          <DrawRightAxis rect={graphPlotAreaRect} />
+          <DrawLegendTitle rect={legendAreaRect} />
+          <DrawLegendArea rect={legendAreaRect} />
+          <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
+        </Layer>
+      </Stage>
+    </div>
   )
 }
 

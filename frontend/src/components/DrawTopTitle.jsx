@@ -23,12 +23,6 @@ const DrawTopTitle = (props) => {
         y={rect.top}
         width={rect.right - rect.left}
         height={rect.bottom - rect.top}
-        // stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        // strokeWidth={parseInt(
-        //   process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-        //   10
-        // )}
-        // fill="lightyellow"
       />
       <Text
         fontSize={16}
