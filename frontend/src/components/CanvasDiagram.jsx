@@ -79,6 +79,13 @@ const CanvasDiagram = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect, rightTitleRect])
 
+  // TODO
+  // Check DrawRadialLinesAndCircles exact position for Labels
+  // Redo Axis & Title Widths to be a % of width & height
+  // Redo Font sizes to be a % of width & height
+  // Grey Scale on Legend
+  // Drawer for navigation between Charts & Data Input Panel
+
   return (
     <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
       <Layer>
