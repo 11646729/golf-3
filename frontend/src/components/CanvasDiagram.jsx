@@ -14,6 +14,7 @@ import DrawLeftAxis from "./DrawLeftAxis"
 import DrawRightAxis from "./DrawRightAxis"
 import DrawLegendTitle from "./DrawLegendTitle"
 import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
+import TestAppStars from "./TestAppStars"
 
 import {
   computeScreenEdgeRect,
@@ -104,6 +105,7 @@ const CanvasDiagram = () => {
           <DrawLegendTitle rect={legendAreaRect} />
           <DrawLegendArea rect={legendAreaRect} />
           <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
+          <TestAppStars />
         </Layer>
       </Stage>
     </div>
