@@ -14,7 +14,7 @@ import DrawLeftAxis from "./DrawLeftAxis"
 import DrawRightAxis from "./DrawRightAxis"
 import DrawLegendTitle from "./DrawLegendTitle"
 import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
-import TestAppStars from "./TestAppStars"
+import TemporaryDrawer from "../components/TemporaryDrawer"
 
 import {
   computeScreenEdgeRect,
@@ -89,6 +89,7 @@ const CanvasDiagram = () => {
 
   return (
     <div>
+      <TemporaryDrawer />
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
@@ -105,7 +106,6 @@ const CanvasDiagram = () => {
           <DrawLegendTitle rect={legendAreaRect} />
           <DrawLegendArea rect={legendAreaRect} />
           <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
-          <TestAppStars />
         </Layer>
       </Stage>
     </div>

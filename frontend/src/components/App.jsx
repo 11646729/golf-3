@@ -10,8 +10,6 @@ import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import CanvasPage from "../pages/CanvasPage"
-// import MiniDrawer from "../components/MiniDrawer"
-// import Drawer from "../components/Drawer"
 
 function App() {
   return (
@@ -65,8 +63,6 @@ function BusRoutesPageLink() {
 
 function CanvasPageLink() {
   return <CanvasPage />
-  // return <MiniDrawer />
-  // return <Drawer />
 }
 
 function NotFound() {
