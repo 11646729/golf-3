@@ -35,18 +35,30 @@ const TemporaryDrawer = () => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Pattern Entry", "2D Response", "3D Radial Response"].map(
-          (text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton component={Link} to="/drawpatternpage">
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
+        <ListItem key={"Pattern Entry"} disablePadding>
+          <ListItemButton component={Link} to="/drawpatternpage">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Pattern Entry"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={"2D Response"} disablePadding>
+          <ListItemButton component={Link} to="/drawpatternpage">
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={"2D Response"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={"3D Radial Response"} disablePadding>
+          <ListItemButton component={Link} to="/canvaspage">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"3D Radial Response"} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   )

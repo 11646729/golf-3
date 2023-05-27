@@ -1,31 +1,24 @@
 import React, { memo } from "react"
-import styled from "styled-components"
 import { Stage, Layer, Text } from "react-konva"
-
-const DrawPatternContainer = styled.div`
-  display: flex;
-`
-
-console.log("Here")
+import TemporaryDrawer from "../components/TemporaryDrawer"
 
 const DrawPatternPage = () => {
   return (
-    <DrawPatternContainer>
-      {/* <Stage>
-      <Layer>
-        <Text
-          fontSize={16}
-          text={"Hello"}
-          stroke="grey"
-          strokeWidth={0.5}
-          x={20}
-          y={20}
-          align="center"
-          verticalAlign="middle"
-        />
-      </Layer>
-    </Stage> */}
-    </DrawPatternContainer>
+    <div>
+      <TemporaryDrawer />
+      <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Layer>
+          <Text
+            fontSize={16}
+            text="Source & Receiver Patterns"
+            stroke="grey"
+            strokeWidth={0.5}
+            x={window.innerWidth / 2 - 50}
+            y={window.innerHeight / 2}
+          />
+        </Layer>
+      </Stage>
+    </div>
   )
 }
 
