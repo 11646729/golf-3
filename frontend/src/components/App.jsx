@@ -10,6 +10,7 @@ import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import CanvasPage from "../pages/CanvasPage"
+import DrawPatternPage from "../pages/DrawPatternPage"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
           <Route path="canvaspage" element={<CanvasPageLink />} />
+          <Route path="drawpatternpage" element={<DrawPatternLink />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
@@ -63,6 +65,10 @@ function BusRoutesPageLink() {
 
 function CanvasPageLink() {
   return <CanvasPage />
+}
+
+function DrawPatternLink() {
+  return <DrawPatternPage />
 }
 
 function NotFound() {

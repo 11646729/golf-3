@@ -38,7 +38,7 @@ const TemporaryDrawer = () => {
         {["Pattern Entry", "2D Response", "3D Radial Response"].map(
           (text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton component={Link} to="/cruisespage">
+              <ListItemButton component={Link} to="/drawpatternpage">
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
