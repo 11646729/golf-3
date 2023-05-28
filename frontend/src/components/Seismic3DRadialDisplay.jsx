@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
-import DrawChartBox from "./DrawChartBox"
+import DrawChartBox from "../components/DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
 import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
@@ -26,7 +26,7 @@ import {
   computeRightTitlesRect,
   computeGraphPlotAreaRect,
   computeLegendAreaRect,
-} from "../functionHandlers/canvasDiagramFunctions"
+} from "../functionHandlers/seismic3DRadialDisplayFunctions"
 
 const Seismic3DRadialDisplay = () => {
   // -------------------------------------------------------

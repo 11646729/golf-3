@@ -6,6 +6,7 @@ export const computeScreenEdgeRect = () => {
     top: 0,
     bottom:
       window.innerHeight -
+      parseInt(process.env.REACT_APP_GEOPHONEARRAY_DRAWERSIZEADJUSTMENT) -
       parseInt(process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT),
     left: 0,
     right:
