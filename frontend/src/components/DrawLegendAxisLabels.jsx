@@ -2,6 +2,24 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Text, Rect } from "react-konva"
 
+// -------------------------------------------------------
+// Function to convert from Colors to Grey Scale - translated from C++ code & refactored
+// -------------------------------------------------------
+const convertRGBToGreyScale = (red, green, blue) => {
+  /* remember: if you multiply a number by a decimal between 0
+  and 1, it will make the number smaller. That's why we don't
+  need to divide the result by three - unlike the previous
+  example - because it's already balanced. */
+
+  const r = red * 0.3 // ------> Red is low
+  const g = green * 0.59 // ---> Green is high
+  const b = blue * 0.11 // ----> Blue is very low
+
+  const gray = r + g + b
+
+  return [gray, gray, gray]
+}
+
 const DrawLegendAxisLabels = (props) => {
   const { rect } = props
 
@@ -51,6 +69,23 @@ const DrawLegendAxisLabels = (props) => {
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND11
   legendRectColors[12] =
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
+
+  // Code for grey scale on Legend
+  if (process.env.REACT_APP_GEOPHONEARRAY_GREYSCALE === "true") {
+    for (let j = 1; j <= NoOfAmplitudeIntervalBands; j++) {
+      var rgb = legendRectColors[j]
+      rgb = rgb.replace(/[^\d,]/g, "").split(",")
+      const gray = convertRGBToGreyScale(rgb[0], rgb[1], rgb[2])
+      legendRectColors[j] =
+        "RGB(" +
+        Math.round(gray[0], 0) +
+        "," +
+        Math.round(gray[1], 0) +
+        "," +
+        Math.round(gray[2], 0) +
+        ")"
+    }
+  }
 
   for (let i = 0; i <= NoOfAmplitudeIntervalBands; i++) {
     const y = parseInt(rect.top + i * VerticalInterval)

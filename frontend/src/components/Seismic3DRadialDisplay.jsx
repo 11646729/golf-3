@@ -84,7 +84,6 @@ const Seismic3DRadialDisplay = () => {
   // Check DrawRadialLinesAndCircles exact position for Labels
   // Redo Axis & Title Widths to be a % of width & height
   // Redo Font sizes to be a % of width & height
-  // Grey Scale on Legend
 
   return (
     <div>
