@@ -65,7 +65,7 @@ const SeismicDesignDrawer = () => {
 
   return (
     <div>
-      {["left"].map((anchor) => (
+      {["Change Screens"].map((anchor) => (
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
           <Drawer
