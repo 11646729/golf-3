@@ -10,7 +10,7 @@ import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import SeismicDesignPage from "../pages/SeismicDesignPage"
-import DrawPatternPage from "../pages/DrawPatternPage"
+import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 
 function App() {
   return (
@@ -27,7 +27,10 @@ function App() {
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
           <Route path="seismicdesignpage" element={<SeismicDesignPageLink />} />
-          <Route path="drawpatternpage" element={<DrawPatternLink />} />
+          <Route
+            path="seismicarraydesignpage"
+            element={<SeismicArrayDesignPageLink />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
@@ -67,8 +70,8 @@ function SeismicDesignPageLink() {
   return <SeismicDesignPage />
 }
 
-function DrawPatternLink() {
-  return <DrawPatternPage />
+function SeismicArrayDesignPageLink() {
+  return <SeismicArrayDesignPage />
 }
 
 function NotFound() {

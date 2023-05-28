@@ -34,7 +34,7 @@ const CanvasCard = () => {
           size="small"
           color="primary"
           component={Link}
-          to="drawpatternpage"
+          to="seismicarraydesignpage"
         >
           View
         </Button>

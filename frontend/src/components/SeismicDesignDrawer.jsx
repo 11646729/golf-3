@@ -11,7 +11,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox"
 import MailIcon from "@mui/icons-material/Mail"
 import Link from "@mui/material/Link"
 
-const TemporaryDrawer = () => {
+const SeismicDesignDrawer = () => {
   const [state, setState] = React.useState({
     left: false,
   })
@@ -36,7 +36,7 @@ const TemporaryDrawer = () => {
     >
       <List>
         <ListItem key={"Pattern Entry"} disablePadding>
-          <ListItemButton component={Link} to="/drawpatternpage">
+          <ListItemButton component={Link} to="/seismicarraydesignpage">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -44,7 +44,7 @@ const TemporaryDrawer = () => {
           </ListItemButton>
         </ListItem>
         <ListItem key={"2D Response"} disablePadding>
-          <ListItemButton component={Link} to="/drawpatternpage">
+          <ListItemButton component={Link} to="/seismicarraydesignpage">
             <ListItemIcon>
               <MailIcon />
             </ListItemIcon>
@@ -81,4 +81,4 @@ const TemporaryDrawer = () => {
   )
 }
 
-export default memo(TemporaryDrawer)
+export default memo(SeismicDesignDrawer)

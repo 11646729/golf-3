@@ -1,11 +1,11 @@
 import React, { memo } from "react"
 import { Stage, Layer, Text } from "react-konva"
-import TemporaryDrawer from "../components/TemporaryDrawer"
+import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
 
-const DrawPatternPage = () => {
+const SeismicArrayDesignPage = () => {
   return (
     <div>
-      <TemporaryDrawer />
+      <SeismicDesignDrawer />
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
           <Text
@@ -22,4 +22,4 @@ const DrawPatternPage = () => {
   )
 }
 
-export default memo(DrawPatternPage)
+export default memo(SeismicArrayDesignPage)

@@ -14,7 +14,7 @@ import DrawLeftAxis from "./DrawLeftAxis"
 import DrawRightAxis from "./DrawRightAxis"
 import DrawLegendTitle from "./DrawLegendTitle"
 import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
-import TemporaryDrawer from "./TemporaryDrawer"
+import SeismicDesignDrawer from "./SeismicDesignDrawer"
 
 import {
   computeScreenEdgeRect,
@@ -89,7 +89,7 @@ const SeismicDesign = () => {
 
   return (
     <div>
-      <TemporaryDrawer />
+      <SeismicDesignDrawer />
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
