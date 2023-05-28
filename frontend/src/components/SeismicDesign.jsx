@@ -14,7 +14,7 @@ import DrawLeftAxis from "./DrawLeftAxis"
 import DrawRightAxis from "./DrawRightAxis"
 import DrawLegendTitle from "./DrawLegendTitle"
 import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
-import TemporaryDrawer from "../components/TemporaryDrawer"
+import TemporaryDrawer from "./TemporaryDrawer"
 
 import {
   computeScreenEdgeRect,
@@ -28,7 +28,7 @@ import {
   computeLegendAreaRect,
 } from "../functionHandlers/canvasDiagramFunctions"
 
-const CanvasDiagram = () => {
+const SeismicDesign = () => {
   // -------------------------------------------------------
   // Prepare rectangles for titles, axes & legend
   // -------------------------------------------------------
@@ -112,4 +112,4 @@ const CanvasDiagram = () => {
   )
 }
 
-export default memo(CanvasDiagram)
+export default memo(SeismicDesign)

@@ -52,7 +52,7 @@ const TemporaryDrawer = () => {
           </ListItemButton>
         </ListItem>
         <ListItem key={"3D Radial Response"} disablePadding>
-          <ListItemButton component={Link} to="/canvaspage">
+          <ListItemButton component={Link} to="/seismicdesignpage">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>

@@ -9,7 +9,7 @@ import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
-import CanvasPage from "../pages/CanvasPage"
+import SeismicDesignPage from "../pages/SeismicDesignPage"
 import DrawPatternPage from "../pages/DrawPatternPage"
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
           <Route path="nearbycrimespage" element={<NearbyCrimesPageLink />} />
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
-          <Route path="canvaspage" element={<CanvasPageLink />} />
+          <Route path="seismicdesignpage" element={<SeismicDesignPageLink />} />
           <Route path="drawpatternpage" element={<DrawPatternLink />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -63,8 +63,8 @@ function BusRoutesPageLink() {
   return <BusRoutesPage />
 }
 
-function CanvasPageLink() {
-  return <CanvasPage />
+function SeismicDesignPageLink() {
+  return <SeismicDesignPage />
 }
 
 function DrawPatternLink() {

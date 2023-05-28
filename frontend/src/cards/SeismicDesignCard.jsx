@@ -20,17 +20,22 @@ const CanvasCard = () => {
     >
       <CardMedia
         sx={{ paddingTop: "56.25%" }}
-        image="/static/images/eSeismic Canvas Test.png"
-        title="Canvas Test"
+        image="/static/images/Seismic Design.png"
+        title="Seismic Design"
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          GridTestProg Canvas Test
+          Seismic Pattern Design
         </Typography>
-        <Typography>This is the GridTest Canvas Test</Typography>
+        <Typography>This is the GridTest program</Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color="primary" component={Link} to="/canvaspage">
+        <Button
+          size="small"
+          color="primary"
+          component={Link}
+          to="drawpatternpage"
+        >
           View
         </Button>
       </CardActions>

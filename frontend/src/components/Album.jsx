@@ -8,7 +8,7 @@ import GolfCoursesCard from "../cards/GolfCoursesCard"
 import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 import CruiseCard from "../cards/CruiseCard"
 import BusRoutesCard from "../cards/BusRoutesCard"
-import CanvasCard from "../cards/CanvasCard"
+import SeismicDesignCard from "../cards/SeismicDesignCard"
 
 // const useStyles = makeStyles((theme) => ({
 //   icon: {
@@ -101,7 +101,7 @@ const Album = () => {
               <BusRoutesCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
-              <CanvasCard />
+              <SeismicDesignCard />
             </Grid>
           </Grid>
         </Container>
