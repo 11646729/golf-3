@@ -85,7 +85,6 @@ const Seismic3DRadialDisplay = () => {
   // Redo Axis & Title Widths to be a % of width & height
   // Redo Font sizes to be a % of width & height
   // Grey Scale on Legend
-  // Drawer for navigation between Charts & Data Input Panel
 
   return (
     <div>
