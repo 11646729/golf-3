@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import styled from "styled-components"
-import SeismicDesign from "../components/SeismicDesign"
+import Seismic3DRadialDisplay from "../components/Seismic3DRadialDisplay"
 
 const SeismicDesignContainer = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ const SeismicDesignContainer = styled.div`
 const SeismicDesignPage = () => {
   return (
     <SeismicDesignContainer>
-      <SeismicDesign />
+      <Seismic3DRadialDisplay />
     </SeismicDesignContainer>
   )
 }

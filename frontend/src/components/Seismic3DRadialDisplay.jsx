@@ -28,7 +28,7 @@ import {
   computeLegendAreaRect,
 } from "../functionHandlers/canvasDiagramFunctions"
 
-const SeismicDesign = () => {
+const Seismic3DRadialDisplay = () => {
   // -------------------------------------------------------
   // Prepare rectangles for titles, axes & legend
   // -------------------------------------------------------
@@ -112,4 +112,4 @@ const SeismicDesign = () => {
   )
 }
 
-export default memo(SeismicDesign)
+export default memo(Seismic3DRadialDisplay)
