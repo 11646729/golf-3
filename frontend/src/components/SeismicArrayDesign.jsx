@@ -9,7 +9,7 @@ import {
   computeInsideMarginsRect,
   computeGraphPlotAreaRect,
   computeInsidePlotTitlesRect,
-} from "../functionHandlers/seismic3DRadialDisplayFunctions"
+} from "../functionHandlers/seismicDisplayFunctions"
 
 const SeismicArrayDesign = () => {
   // -------------------------------------------------------

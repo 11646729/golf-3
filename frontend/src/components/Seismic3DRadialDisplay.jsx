@@ -2,19 +2,19 @@ import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
 import DrawChartBox from "../components/DrawChartBox"
 import DrawPlotTitle from "../components/DrawPlotTitle"
-import DrawTopTitle from "./DrawTopTitle"
-import DrawBottomTitle from "./DrawBottomTitle"
-import DrawLeftTitle from "./DrawLeftTitle"
-import DrawRightTitle from "./DrawRightTitle"
-import DrawGraphPlotArea from "./DrawGraphPlotArea"
-import DrawLegendArea from "./DrawLegendArea"
-import DrawTopAxis from "./DrawTopAxis"
-import DrawBottomAxis from "./DrawBottomAxis"
-import DrawLeftAxis from "./DrawLeftAxis"
-import DrawRightAxis from "./DrawRightAxis"
-import DrawLegendTitle from "./DrawLegendTitle"
-import DrawRadialLinesAndCircles from "./DrawRadialLinesAndCircles"
-import SeismicDesignDrawer from "./SeismicDesignDrawer"
+import DrawTopTitle from "../components/DrawTopTitle"
+import DrawBottomTitle from "../components/DrawBottomTitle"
+import DrawLeftTitle from "../components/DrawLeftTitle"
+import DrawRightTitle from "../components/DrawRightTitle"
+import DrawGraphPlotArea from "../components/DrawGraphPlotArea"
+import DrawLegendArea from "../components/DrawLegendArea"
+import DrawTopAxis from "../components/DrawTopAxis"
+import DrawBottomAxis from "../components/DrawBottomAxis"
+import DrawLeftAxis from "../components/DrawLeftAxis"
+import DrawRightAxis from "../components/DrawRightAxis"
+import DrawLegendTitle from "../components/DrawLegendTitle"
+import DrawRadialLinesAndCircles from "../components/DrawRadialLinesAndCircles"
+import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
 
 import {
   computeScreenEdgeRect,
@@ -26,7 +26,7 @@ import {
   computeLeftTitlesRect,
   computeRightTitlesRect,
   computeLegendAreaRect,
-} from "../functionHandlers/seismic3DRadialDisplayFunctions"
+} from "../functionHandlers/seismicDisplayFunctions"
 
 const Seismic3DRadialDisplay = () => {
   // -------------------------------------------------------
