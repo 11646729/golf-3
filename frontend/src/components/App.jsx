@@ -26,7 +26,10 @@ function App() {
           <Route path="nearbycrimespage" element={<NearbyCrimesPageLink />} />
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
-          <Route path="seismicdesignpage" element={<SeismicDesignPageLink />} />
+          <Route
+            path="3darrayresponseplotpage"
+            element={<ThreeDArrayResponsePlotPageLink />}
+          />
           <Route
             path="seismicarraydesignpage"
             element={<SeismicArrayDesignPageLink />}
@@ -66,7 +69,7 @@ function BusRoutesPageLink() {
   return <BusRoutesPage />
 }
 
-function SeismicDesignPageLink() {
+function ThreeDArrayResponsePlotPageLink() {
   return <SeismicDesignPage />
 }
 
