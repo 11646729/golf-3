@@ -34,15 +34,15 @@ const DrawLegendAxisLabels = (props) => {
 
   // Read Amplitude Values - Min, Max & Interval Values
   var MinAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MINIMUMAMPLITUDE
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMAMPLITUDE
   ).toFixed(2)
 
   var MaxAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MAXIMUMAMPLITUDE
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMAMPLITUDE
   ).toFixed(2)
 
   var NoOfAmplitudeIntervalBands = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_NUMBEROFAMPLITUDEBANDS
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALNUMBEROFAMPLITUDEBANDS
   ).toFixed(0)
 
   const ScaleValue = parseInt(

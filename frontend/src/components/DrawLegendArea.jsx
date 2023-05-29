@@ -19,23 +19,9 @@ const DrawLegendArea = (props) => {
 
   return (
     <>
-      {/* Outline Rectangle for Legend */}
-      {/* <Rect
-        x={rect.left}
-        y={rect.top}
-        width={rect.right - rect.left}
-        height={rect.bottom - rect.top}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-          10
-        )}
-        // fill="lightcyan"
-      /> */}
-      {/* Legend Dimension Label */}
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_LEGENDVALUESTEXT}
+        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDVALUESTEXT}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.left + 10}

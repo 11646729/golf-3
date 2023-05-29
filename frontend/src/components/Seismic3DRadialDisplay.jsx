@@ -37,11 +37,11 @@ const Seismic3DRadialDisplay = () => {
   const [insideMarginsRect, setInsideMarginsRect] = useState(
     computeInsideMarginsRect(screenEdgeRect)
   )
-  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
-    computeGraphPlotAreaRect(insideMarginsRect)
-  )
   const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
     computeInsidePlotTitlesRect(insideMarginsRect)
+  )
+  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
+    computeGraphPlotAreaRect(insideMarginsRect)
   )
   const [topTitleRect, setTopTitleRect] = useState(
     computeTopTitlesRect(graphPlotAreaRect)

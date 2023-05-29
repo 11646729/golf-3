@@ -49,7 +49,7 @@ const SeismicArrayDesignPage = () => {
           <DrawChartBox rect={insideMarginsRect} />
           <DrawPlotTitle
             rect={insidePlotTitleRect}
-            titleText={process.env.REACT_APP_GEOPHONEARRAY_ADPLOTTITLE}
+            titleText={process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
           />
         </Layer>
       </Stage>

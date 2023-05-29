@@ -27,15 +27,10 @@ const DrawLegendTitle = (props) => {
         }
         width={rect.right - rect.left}
         height={parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPTITLEWIDTH)}
-        // stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        // strokeWidth={parseInt(
-        //   process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
-        // )}
-        // fill="lightyellow"
       />
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_LEGENDTEXT}
+        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDTEXT}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.left}

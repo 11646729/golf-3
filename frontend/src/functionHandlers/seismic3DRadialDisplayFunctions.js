@@ -94,7 +94,7 @@ const getRightAxisWidth = () => {
 
 const getLegendWidth = () => {
   return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEGENDWIDTH)
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDWIDTH)
     : 0
 }
 
