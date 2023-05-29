@@ -98,10 +98,30 @@ const Seismic3DRadialDisplay = () => {
             }
           />
           <DrawGraphPlotArea rect={graphPlotAreaRect} />
-          <DrawTopTitle rect={topTitleRect} />
-          <DrawBottomTitle rect={bottomTitleRect} />
-          <DrawLeftTitle rect={leftTitleRect} />
-          <DrawRightTitle rect={rightTitleRect} />
+          <DrawTopTitle
+            rect={topTitleRect}
+            titleText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT
+            }
+          />
+          <DrawBottomTitle
+            rect={bottomTitleRect}
+            titleText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMTITLETEXT
+            }
+          />
+          <DrawLeftTitle
+            rect={leftTitleRect}
+            titleText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT
+            }
+          />
+          <DrawRightTitle
+            rect={rightTitleRect}
+            titleText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLETEXT
+            }
+          />
           <DrawTopAxis rect={graphPlotAreaRect} />
           <DrawBottomAxis rect={graphPlotAreaRect} />
           <DrawLeftAxis rect={graphPlotAreaRect} />

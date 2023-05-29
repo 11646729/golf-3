@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Rect, Text } from "react-konva"
 
 const DrawBottomTitle = (props) => {
-  const { rect } = props
+  const { rect, titleText } = props
 
   // If DrawTopTitle !== true then return
   if (process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMTITLE !== "true") return
@@ -14,6 +14,7 @@ const DrawBottomTitle = (props) => {
 
   DrawBottomTitle.propTypes = {
     rect: PropTypes.object,
+    titleText: PropTypes.string,
   }
 
   return (
@@ -26,7 +27,7 @@ const DrawBottomTitle = (props) => {
       />
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT}
+        text={titleText}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.left}
