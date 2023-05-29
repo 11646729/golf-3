@@ -23,9 +23,9 @@ const DrawRadialLinesAndCircles = (props) => {
 
   // DRAW CIRCLES
   const NoOfCircles =
-    (process.env.REACT_APP_GEOPHONEARRAY_MAXIMUMWAVENUMBER -
-      process.env.REACT_APP_GEOPHONEARRAY_MINIMUMWAVENUMBER) /
-    (process.env.REACT_APP_GEOPHONEARRAY_WAVENUMBERINTERVAL * 2)
+    (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER -
+      process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER) /
+    (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL * 2)
 
   for (let j = 1; j <= NoOfCircles; j++) {
     const circleRadius = Math.round(

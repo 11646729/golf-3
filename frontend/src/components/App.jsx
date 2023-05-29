@@ -9,7 +9,7 @@ import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
-import SeismicDesignPage from "../pages/SeismicDesignPage"
+import Seismic3DArrayPlotPage from "../pages/Seismic3DArrayPlotPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 
 function App() {
@@ -70,7 +70,7 @@ function BusRoutesPageLink() {
 }
 
 function ThreeDArrayResponsePlotPageLink() {
-  return <SeismicDesignPage />
+  return <Seismic3DArrayPlotPage />
 }
 
 function SeismicArrayDesignPageLink() {

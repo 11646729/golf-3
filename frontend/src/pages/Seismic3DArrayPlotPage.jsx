@@ -6,7 +6,7 @@ const SeismicDesignContainer = styled.div`
   display: flex;
 `
 
-const SeismicDesignPage = () => {
+const Seismic3DArrayPlotPage = () => {
   return (
     <SeismicDesignContainer>
       <Seismic3DRadialDisplay />
@@ -14,4 +14,4 @@ const SeismicDesignPage = () => {
   )
 }
 
-export default memo(SeismicDesignPage)
+export default memo(Seismic3DArrayPlotPage)
