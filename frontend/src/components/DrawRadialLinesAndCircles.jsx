@@ -72,7 +72,7 @@ const DrawRadialLinesAndCircles = (props) => {
     }
 
     // DRAW LABELS
-    if (process.env.REACT_APP_GEOPHONEARRAY_M3DDISPLAYRADIALLABLES === "true") {
+    if (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDISPLAYLABELS === "true") {
       for (let k = 1; k <= NoOfAngles; k++) {
         const dOffx = mcentrey * Math.sin((360 / NoOfAngles) * pi_rad * k)
         const dOffy = 0 - mcentrey * Math.cos((360 / NoOfAngles) * pi_rad * k)

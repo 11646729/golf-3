@@ -1,11 +1,14 @@
 import React, { useEffect, useState, memo } from "react"
-import { Stage, Layer, Text } from "react-konva"
+import { Stage, Layer } from "react-konva"
 import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
 import DrawChartBox from "../components/DrawChartBox"
+import DrawPlotTitle from "../components/DrawPlotTitle"
 
 import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
+  computeGraphPlotAreaRect,
+  computeInsidePlotTitlesRect,
 } from "../functionHandlers/seismic3DRadialDisplayFunctions"
 
 const SeismicArrayDesignPage = () => {
@@ -17,16 +20,26 @@ const SeismicArrayDesignPage = () => {
   const [insideMarginsRect, setInsideMarginsRect] = useState(
     computeInsideMarginsRect(screenEdgeRect)
   )
+  const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
+    computeGraphPlotAreaRect(insideMarginsRect)
+  )
+  const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
+    computeInsidePlotTitlesRect(insideMarginsRect)
+  )
 
   useEffect(() => {
     const checkSize = () => {
       setScreenRect(computeScreenEdgeRect())
       setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
+      setGraphPlotAreaRect(computeGraphPlotAreaRect(insideMarginsRect))
+      setInsidePlotTitleRect(
+        computeInsidePlotTitlesRect(insideMarginsRect, graphPlotAreaRect)
+      )
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenEdgeRect])
+  }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect])
 
   return (
     <div>
@@ -34,15 +47,9 @@ const SeismicArrayDesignPage = () => {
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
-        </Layer>
-        <Layer>
-          <Text
-            fontSize={16}
-            text="Source & Receiver Patterns"
-            stroke="grey"
-            strokeWidth={0.5}
-            x={window.innerWidth / 2 - 50}
-            y={window.innerHeight / 2}
+          <DrawPlotTitle
+            rect={insidePlotTitleRect}
+            titleText={process.env.REACT_APP_GEOPHONEARRAY_ADPLOTTITLE}
           />
         </Layer>
       </Stage>

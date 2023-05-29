@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Rect, Text } from "react-konva"
 
 const DrawPlotTitle = (props) => {
-  const { rect } = props
+  const { rect, titleText } = props
 
   // If rect is null then do not draw the Rectangle
   if (!rect) return
@@ -12,6 +12,7 @@ const DrawPlotTitle = (props) => {
 
   DrawPlotTitle.propTypes = {
     rect: PropTypes.object,
+    titleText: PropTypes.string,
   }
 
   return (
@@ -30,7 +31,7 @@ const DrawPlotTitle = (props) => {
         fontFamily="Arial"
         fontStyle="normal"
         fontSize={18}
-        text={process.env.REACT_APP_GEOPHONEARRAY_PLOTTITLETEXT}
+        text={titleText}
         stroke="black"
         strokeWidth={1}
         x={rect.left}

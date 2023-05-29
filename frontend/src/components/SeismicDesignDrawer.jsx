@@ -35,28 +35,28 @@ const SeismicDesignDrawer = () => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem key={"Pattern Entry"} disablePadding>
+        <ListItem key={"Array Pattern Entry"} disablePadding>
           <ListItemButton component={Link} to="/seismicarraydesignpage">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"Pattern Entry"} />
+            <ListItemText primary={"Array Pattern Entry"} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={"2D Response"} disablePadding>
+        <ListItem key={"2D Array Response"} disablePadding>
           <ListItemButton component={Link} to="/seismicarraydesignpage">
             <ListItemIcon>
               <MailIcon />
             </ListItemIcon>
-            <ListItemText primary={"2D Response"} />
+            <ListItemText primary={"2D Array Response"} />
           </ListItemButton>
         </ListItem>
-        <ListItem key={"3D Radial Response"} disablePadding>
+        <ListItem key={"Omnidirectional Array Response"} disablePadding>
           <ListItemButton component={Link} to="/seismicdesignpage">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"3D Radial Response"} />
+            <ListItemText primary={"Omnidirectional Array Response"} />
           </ListItemButton>
         </ListItem>
       </List>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
 import DrawChartBox from "../components/DrawChartBox"
-import DrawPlotTitle from "./DrawPlotTitle"
+import DrawPlotTitle from "../components/DrawPlotTitle"
 import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
@@ -19,12 +19,12 @@ import SeismicDesignDrawer from "./SeismicDesignDrawer"
 import {
   computeScreenEdgeRect,
   computeInsideMarginsRect,
+  computeGraphPlotAreaRect,
   computeInsidePlotTitlesRect,
   computeTopTitlesRect,
   computeBottomTitlesRect,
   computeLeftTitlesRect,
   computeRightTitlesRect,
-  computeGraphPlotAreaRect,
   computeLegendAreaRect,
 } from "../functionHandlers/seismic3DRadialDisplayFunctions"
 
@@ -37,11 +37,11 @@ const Seismic3DRadialDisplay = () => {
   const [insideMarginsRect, setInsideMarginsRect] = useState(
     computeInsideMarginsRect(screenEdgeRect)
   )
-  const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
-    computeInsidePlotTitlesRect(insideMarginsRect)
-  )
   const [graphPlotAreaRect, setGraphPlotAreaRect] = useState(
     computeGraphPlotAreaRect(insideMarginsRect)
+  )
+  const [insidePlotTitleRect, setInsidePlotTitleRect] = useState(
+    computeInsidePlotTitlesRect(insideMarginsRect)
   )
   const [topTitleRect, setTopTitleRect] = useState(
     computeTopTitlesRect(graphPlotAreaRect)
@@ -91,7 +91,12 @@ const Seismic3DRadialDisplay = () => {
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
-          <DrawPlotTitle rect={insidePlotTitleRect} />
+          <DrawPlotTitle
+            rect={insidePlotTitleRect}
+            titleText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLETEXT
+            }
+          />
           <DrawGraphPlotArea rect={graphPlotAreaRect} />
           <DrawTopTitle rect={topTitleRect} />
           <DrawBottomTitle rect={bottomTitleRect} />

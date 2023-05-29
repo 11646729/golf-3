@@ -71,7 +71,7 @@ const DrawLegendAxisLabels = (props) => {
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
 
   // Code for grey scale on Legend
-  if (process.env.REACT_APP_GEOPHONEARRAY_GREYSCALE === "true") {
+  if (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALGREYSCALE === "true") {
     for (let j = 1; j <= NoOfAmplitudeIntervalBands; j++) {
       var rgb = legendRectColors[j]
       rgb = rgb.replace(/[^\d,]/g, "").split(",")
