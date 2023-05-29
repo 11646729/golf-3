@@ -30,7 +30,7 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <div>
-      <SeismicDesignDrawer />{" "}
+      <SeismicDesignDrawer />
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
