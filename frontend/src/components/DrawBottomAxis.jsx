@@ -16,15 +16,15 @@ const DrawBottomAxis = (props) => {
 
   // Read Axis Values - Min, Max & Interval Values
   var MinWaveNumber = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MINIMUMWAVENUMBER
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER
   ).toFixed(2)
 
   var MaxWaveNumber = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_MAXIMUMWAVENUMBER
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER
   ).toFixed(2)
 
   var WaveNumberInterval = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_WAVENUMBERINTERVAL
+    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL
   ).toFixed(2)
 
   const ScaleHorizontal =

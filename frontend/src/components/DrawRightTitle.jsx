@@ -26,7 +26,7 @@ const DrawRightTitle = (props) => {
       />
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_RIGHTTITLETEXT}
+        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLETEXT}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.right}

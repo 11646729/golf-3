@@ -23,15 +23,10 @@ const DrawLeftTitle = (props) => {
         y={rect.top}
         width={rect.right - rect.left}
         height={rect.bottom - rect.top}
-        // stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
-        // strokeWidth={parseInt(
-        //   process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
-        //   10
-        // )}
       />
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_TOPTITLETEXT}
+        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.left}
