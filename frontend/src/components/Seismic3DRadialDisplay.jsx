@@ -164,8 +164,17 @@ const Seismic3DRadialDisplay = () => {
               process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDTEXT
             }
           />
-          <DrawLegendArea rect={legendAreaRect} />
-          <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
+          <DrawLegendArea
+            rect={legendAreaRect}
+            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+            legendText={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDVALUESTEXT
+            }
+          />
+          <DrawRadialLinesAndCircles
+            rect={graphPlotAreaRect}
+            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+          />
         </Layer>
       </Stage>
     </div>

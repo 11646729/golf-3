@@ -4,10 +4,10 @@ import { Text } from "react-konva"
 import DrawLegendAxisLabels from "./DrawLegendAxisLabels"
 
 const DrawLegendArea = (props) => {
-  const { rect } = props
+  const { rect, legendDraw, legendText } = props
 
   // If DrawLegend !== true then return
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND !== "true") return
+  if (legendDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
   // If rect width = 0 then do not draw the Rectangle
@@ -15,13 +15,15 @@ const DrawLegendArea = (props) => {
 
   DrawLegendArea.propTypes = {
     rect: PropTypes.object,
+    legendDraw: PropTypes.string,
+    legendText: PropTypes.string,
   }
 
   return (
     <>
       <Text
         fontSize={16}
-        text={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDVALUESTEXT}
+        text={legendText}
         stroke="grey"
         strokeWidth={0.5}
         x={rect.left + 10}
@@ -31,7 +33,11 @@ const DrawLegendArea = (props) => {
         align="left"
         verticalAlign="middle"
       />
-      <DrawLegendAxisLabels rect={rect} />
+      <DrawLegendAxisLabels
+        rect={rect}
+        legendDraw={legendDraw}
+        greyScale={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALGREYSCALE}
+      />
     </>
   )
 }

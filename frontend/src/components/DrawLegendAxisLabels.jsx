@@ -21,15 +21,17 @@ const convertRGBToGreyScale = (red, green, blue) => {
 }
 
 const DrawLegendAxisLabels = (props) => {
-  const { rect } = props
+  const { rect, legendDraw, greyScale } = props
 
   // If DrawLeftAxis !== true then return
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTAXIS !== "true") return
+  if (legendDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
 
   DrawLegendAxisLabels.propTypes = {
     rect: PropTypes.object,
+    legendDraw: PropTypes.string,
+    greyScale: PropTypes.string,
   }
 
   // Read Amplitude Values - Min, Max & Interval Values
@@ -71,7 +73,7 @@ const DrawLegendAxisLabels = (props) => {
     process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
 
   // Code for grey scale on Legend
-  if (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALGREYSCALE === "true") {
+  if (greyScale === "true") {
     for (let j = 1; j <= NoOfAmplitudeIntervalBands; j++) {
       var rgb = legendRectColors[j]
       rgb = rgb.replace(/[^\d,]/g, "").split(",")
@@ -89,7 +91,7 @@ const DrawLegendAxisLabels = (props) => {
 
   for (let i = 0; i <= NoOfAmplitudeIntervalBands; i++) {
     const y = parseInt(rect.top + i * VerticalInterval)
-    const x = rect.right - 50
+    const x = rect.right + 10
 
     let AxisValue = MaxAmplitude - i * ScaleValue
 
