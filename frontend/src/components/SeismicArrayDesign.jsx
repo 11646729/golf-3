@@ -18,7 +18,7 @@ import {
   computeBottomTitlesRect,
   computeLeftTitlesRect,
   computeRightTitlesRect,
-} from "../functionHandlers/seismicDisplayFunctions"
+} from "../functionHandlers/seismicDesignFunctions"
 
 const SeismicArrayDesign = () => {
   // -------------------------------------------------------
@@ -79,24 +79,36 @@ const SeismicArrayDesign = () => {
           <DrawGraphPlotArea rect={graphPlotAreaRect} />
           <DrawTopTitle
             rect={topTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
+            }
             titleText={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT
             }
           />
           <DrawBottomTitle
             rect={bottomTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
+            }
             titleText={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNBOTTOMTITLETEXT
             }
           />
           <DrawLeftTitle
             rect={leftTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
+            }
             titleText={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT
             }
           />
           <DrawRightTitle
             rect={rightTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
+            }
             titleText={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLETEXT
             }

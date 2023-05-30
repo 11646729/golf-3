@@ -39,34 +39,38 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
 // Function to fetch Widths of various Title, AxisRect & Legend rectangles - translated from C++ code
 // -------------------------------------------------------
 const getPlotTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLEWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWPLOTTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLEWIDTH)
     : 0
 }
 
 const getTopTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPTITLEWIDTH)
     : 0
 }
 
 const getBottomTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMTITLEWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOTTOMTITLE ===
+    "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNBOTTOMTITLEWIDTH)
     : 0
 }
 
 const getLeftTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEFTTITLEWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWLEFTTITLE === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNLEFTTITLEWIDTH)
     : 0
 }
 
 const getRightTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLEWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWRIGHTTITLE ===
+    "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLEWIDTH)
     : 0
 }
+
+console.log(getRightTitleWidth())
 
 const getTopAxisWidth = () => {
   return process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXIS === "true"

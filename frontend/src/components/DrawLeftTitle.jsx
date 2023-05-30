@@ -3,10 +3,10 @@ import PropTypes from "prop-types"
 import { Rect, Text } from "react-konva"
 
 const DrawLeftTitle = (props) => {
-  const { rect, titleText } = props
+  const { rect, titleDraw, titleText } = props
 
   // If DrawTopTitle !== true then return
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTTITLE !== "true") return
+  if (titleDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
   // If rect width = 0 then do not draw the Rectangle
@@ -14,6 +14,7 @@ const DrawLeftTitle = (props) => {
 
   DrawLeftTitle.propTypes = {
     rect: PropTypes.object,
+    titleDraw: PropTypes.string,
     titleText: PropTypes.string,
   }
 
