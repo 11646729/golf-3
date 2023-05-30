@@ -93,6 +93,9 @@ const Seismic3DRadialDisplay = () => {
           <DrawChartBox rect={insideMarginsRect} />
           <DrawPlotTitle
             rect={insidePlotTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE
+            }
             titleText={
               process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLETEXT
             }

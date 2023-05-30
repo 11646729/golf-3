@@ -74,6 +74,9 @@ const SeismicArrayDesign = () => {
           <DrawChartBox rect={insideMarginsRect} />
           <DrawPlotTitle
             rect={insidePlotTitleRect}
+            titleDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWPLOTTITLE
+            }
             titleText={process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
           />
           <DrawGraphPlotArea rect={graphPlotAreaRect} />
