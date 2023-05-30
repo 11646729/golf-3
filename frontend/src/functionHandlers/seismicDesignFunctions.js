@@ -70,29 +70,28 @@ const getRightTitleWidth = () => {
     : 0
 }
 
-console.log(getRightTitleWidth())
-
 const getTopAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPAXISWIDTH)
     : 0
 }
 
 const getBottomAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOTTOMAXIS ===
+    "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNBOTTOMAXISWIDTH)
     : 0
 }
 
 const getLeftAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWLEFTAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNLEFTAXISWIDTH)
     : 0
 }
 
 const getRightAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWRIGHTAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTAXISWIDTH)
     : 0
 }
 

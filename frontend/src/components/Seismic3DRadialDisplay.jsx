@@ -137,11 +137,33 @@ const Seismic3DRadialDisplay = () => {
               process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLETEXT
             }
           />
-          <DrawTopAxis rect={graphPlotAreaRect} />
-          <DrawBottomAxis rect={graphPlotAreaRect} />
-          <DrawLeftAxis rect={graphPlotAreaRect} />
-          <DrawRightAxis rect={graphPlotAreaRect} />
-          <DrawLegendTitle rect={legendAreaRect} />
+          <DrawTopAxis
+            rect={graphPlotAreaRect}
+            axisDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS}
+          />
+          <DrawBottomAxis
+            rect={graphPlotAreaRect}
+            axisDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS
+            }
+          />
+          <DrawLeftAxis
+            rect={graphPlotAreaRect}
+            axisDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS}
+          />
+          <DrawRightAxis
+            rect={graphPlotAreaRect}
+            axisDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS
+            }
+          />
+          <DrawLegendTitle
+            rect={legendAreaRect}
+            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+            legendTitle={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDTEXT
+            }
+          />
           <DrawLegendArea rect={legendAreaRect} />
           <DrawRadialLinesAndCircles rect={graphPlotAreaRect} />
         </Layer>

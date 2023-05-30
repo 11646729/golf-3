@@ -69,31 +69,31 @@ const getRightTitleWidth = () => {
 }
 
 const getTopAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWTOPAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_TOPAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH)
     : 0
 }
 
 const getBottomAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWBOTTOMAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_BOTTOMAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMAXISWIDTH)
     : 0
 }
 
 const getLeftAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_LEFTAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEFTAXISWIDTH)
     : 0
 }
 
 const getRightAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWRIGHTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_RIGHTAXISWIDTH)
+  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS === "true"
+    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTAXISWIDTH)
     : 0
 }
 
 const getLegendWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_DRAWLEGEND === "true"
+  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND === "true"
     ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDWIDTH)
     : 0
 }

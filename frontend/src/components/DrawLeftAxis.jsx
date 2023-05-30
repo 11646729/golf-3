@@ -3,15 +3,16 @@ import PropTypes from "prop-types"
 import { Line, Text } from "react-konva"
 
 const DrawLeftAxis = (props) => {
-  const { rect } = props
+  const { rect, axisDraw } = props
 
   // If DrawLeftAxis !== true then return
-  if (process.env.REACT_APP_GEOPHONEARRAY_DRAWLEFTAXIS !== "true") return
+  if (axisDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
 
   DrawLeftAxis.propTypes = {
     rect: PropTypes.object,
+    axisDraw: PropTypes.string,
   }
 
   // Read Axis Values - Min, Max & Interval Values
