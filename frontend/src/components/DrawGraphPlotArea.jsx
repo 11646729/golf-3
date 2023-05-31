@@ -3,15 +3,21 @@ import PropTypes from "prop-types"
 import { Rect } from "react-konva"
 
 const DrawGraphPlotArea = (props) => {
-  const { rect } = props
+  const { rect, boundaryDraw } = props
+
+  // If Draw Boundary !== true then return
+  if (boundaryDraw !== "true") return
+  // If rect is null then do not draw the Rectangle
+  if (!rect) return
+  // If rect width = 0 then do not draw the Rectangle
+  if (rect.right - rect.left === 0) return
 
   if (!rect) return
 
   DrawGraphPlotArea.propTypes = {
     rect: PropTypes.object,
+    boundaryDraw: PropTypes.string,
   }
-
-  // console.log(rect)
 
   return (
     <Rect
@@ -23,7 +29,6 @@ const DrawGraphPlotArea = (props) => {
       strokeWidth={parseInt(
         process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
-      // fill="lightgrey"
     />
   )
 }

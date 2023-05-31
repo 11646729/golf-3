@@ -80,7 +80,12 @@ const SeismicArrayDesign = () => {
             }
             titleText={process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
           />
-          <DrawGraphPlotArea rect={graphPlotAreaRect} />
+          <DrawGraphPlotArea
+            rect={graphPlotAreaRect}
+            boundaryDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOUNDARY
+            }
+          />
           <DrawTopTitle
             rect={topTitleRect}
             titleDraw={
