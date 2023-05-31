@@ -10,8 +10,6 @@ const DrawGridLines = (props) => {
   // If rect width = 0 then do not draw the Rectangle
   if (rect.right - rect.left === 0) return
 
-  if (!rect) return
-
   DrawGridLines.propTypes = {
     rect: PropTypes.object,
   }
