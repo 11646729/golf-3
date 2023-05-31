@@ -1,13 +1,14 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
-import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
-import DrawChartBox from "../components/DrawChartBox"
-import DrawPlotTitle from "../components/DrawPlotTitle"
-import DrawTopTitle from "../components/DrawTopTitle"
-import DrawBottomTitle from "../components/DrawBottomTitle"
-import DrawLeftTitle from "../components/DrawLeftTitle"
-import DrawRightTitle from "../components/DrawRightTitle"
-import DrawGraphPlotArea from "../components/DrawGraphPlotArea"
+import SeismicDesignDrawer from "./SeismicDesignDrawer"
+import DrawChartBox from "./DrawChartBox"
+import DrawPlotTitle from "./DrawPlotTitle"
+import DrawTopTitle from "./DrawTopTitle"
+import DrawBottomTitle from "./DrawBottomTitle"
+import DrawLeftTitle from "./DrawLeftTitle"
+import DrawRightTitle from "./DrawRightTitle"
+import DrawGraphPlotArea from "./DrawGraphPlotArea"
+import DrawGridLines from "./DrawGridLines"
 
 import {
   computeScreenEdgeRect,
@@ -116,6 +117,7 @@ const SeismicArrayDesign = () => {
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLETEXT
             }
           />
+          <DrawGridLines rect={graphPlotAreaRect} />
         </Layer>
       </Stage>
     </div>
