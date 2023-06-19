@@ -14,10 +14,10 @@ const DrawGridLines = (props) => {
     rect: PropTypes.object,
   }
 
-  const VLineSpacing = 8.33
-  const HLineSpacing = 8.33
-  const NoVLines = 12
-  const NoHLines = 12
+  const VLineSpacing = 16.67
+  const HLineSpacing = 16.67
+  const NoVLines = 6
+  const NoHLines = 6
   const ScaleHorizontal =
     (rect.right - rect.left) / ((NoVLines - 1) * VLineSpacing)
   const ScaleVertical =
