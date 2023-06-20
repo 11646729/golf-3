@@ -18,10 +18,6 @@ const DrawLegendTitle = (props) => {
     legendTitle: PropTypes.string,
   }
 
-  console.log(rect)
-  console.log(legendDraw)
-  console.log(legendTitle)
-
   return (
     <>
       <Rect

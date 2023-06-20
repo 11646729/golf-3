@@ -100,7 +100,12 @@ const Seismic3DRadialDisplay = () => {
               process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLETEXT
             }
           />
-          <DrawGraphPlotArea rect={graphPlotAreaRect} />
+          <DrawGraphPlotArea
+            rect={graphPlotAreaRect}
+            boundaryDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWGRAPHAREABOUNDARY
+            }
+          />
           <DrawTopTitle
             rect={topTitleRect}
             titleDraw={
