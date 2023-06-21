@@ -17,6 +17,8 @@ const SeismicDesignDrawer = () => {
   })
 
   const toggleDrawer = (anchor, open) => (event) => {
+    console.log(anchor)
+
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -29,11 +31,24 @@ const SeismicDesignDrawer = () => {
 
   const list = (anchor) => (
     <Box
-      sx={250}
+      sx={{ display: "flex" }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      {/* <List>
+          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List> */}
+
       <List>
         <ListItem key={"Array Pattern Design"} disablePadding>
           <ListItemButton component={Link} to="/seismicarraydesignpage">
