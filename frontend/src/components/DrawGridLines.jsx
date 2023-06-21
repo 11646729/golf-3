@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Line } from "react-konva"
 
 const DrawGridLines = (props) => {
-  const { rect } = props
+  const { rect, NoVLines, NoHLines, VLineSpacing, HLineSpacing } = props
 
   // If rect is null then do not draw the Rectangle
   if (!rect) return
@@ -12,22 +12,25 @@ const DrawGridLines = (props) => {
 
   DrawGridLines.propTypes = {
     rect: PropTypes.object,
+    NoVLines: PropTypes.string,
+    NoHLines: PropTypes.string,
+    VLineSpacing: PropTypes.string,
+    HLineSpacing: PropTypes.string,
   }
 
-  const VLineSpacing = 16.67
-  const HLineSpacing = 16.67
-  const NoVLines = 6
-  const NoHLines = 6
   const ScaleHorizontal =
     (rect.right - rect.left) / ((NoVLines - 1) * VLineSpacing)
+
   const ScaleVertical =
     (rect.bottom - rect.top) / ((NoHLines - 1) * HLineSpacing)
+
+  // console.log(ScaleHorizontal)
 
   const lines = []
 
   // DRAW VERTICAL GRIDLINES FROM LEFT TO RIGHT
   if (process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
-    for (let line = 0; line < NoVLines; line++) {
+    for (let line = 0; line < parseInt(NoVLines); line++) {
       const x1 = rect.left + parseInt(VLineSpacing * line * ScaleHorizontal)
       const y1 = rect.top
       const x2 = rect.left + parseInt(VLineSpacing * line * ScaleHorizontal)
@@ -49,7 +52,7 @@ const DrawGridLines = (props) => {
     }
 
     // DRAW HORIZONTAL GRIDLINES FROM BOTTOM TO TOP - Line 1 is at bottom of screen
-    for (let row = 0; row < NoHLines; row++) {
+    for (let row = 0; row < parseInt(NoHLines); row++) {
       const x1 = rect.left
       const y1 = rect.bottom - parseInt(HLineSpacing * row * ScaleVertical)
       const x2 = rect.right
