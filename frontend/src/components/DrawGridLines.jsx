@@ -26,19 +26,20 @@ const DrawGridLines = (props) => {
 
   // console.log(ScaleHorizontal)
 
-  const lines = []
+  const vlines = []
+  const hlines = []
 
   // DRAW VERTICAL GRIDLINES FROM LEFT TO RIGHT
   if (process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
-    for (let line = 0; line < parseInt(NoVLines); line++) {
-      const x1 = rect.left + parseInt(VLineSpacing * line * ScaleHorizontal)
+    for (let vline = 0; vline < parseInt(NoVLines); vline++) {
+      const x1 = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
       const y1 = rect.top
-      const x2 = rect.left + parseInt(VLineSpacing * line * ScaleHorizontal)
+      const x2 = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
       const y2 = rect.bottom
 
-      lines.push(
+      vlines.push(
         <Line
-          key={line}
+          key={vline}
           points={[x1, y1, x2, y2]}
           stroke={
             process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
@@ -52,15 +53,15 @@ const DrawGridLines = (props) => {
     }
 
     // DRAW HORIZONTAL GRIDLINES FROM BOTTOM TO TOP - Line 1 is at bottom of screen
-    for (let row = 0; row < parseInt(NoHLines); row++) {
+    for (let hline = 0; hline < parseInt(NoHLines); hline++) {
       const x1 = rect.left
-      const y1 = rect.bottom - parseInt(HLineSpacing * row * ScaleVertical)
+      const y1 = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
       const x2 = rect.right
-      const y2 = rect.bottom - parseInt(HLineSpacing * row * ScaleVertical)
+      const y2 = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
 
-      lines.push(
+      hlines.push(
         <Line
-          key={row}
+          key={hline}
           points={[x1, y1, x2, y2]}
           stroke={
             process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
@@ -73,7 +74,12 @@ const DrawGridLines = (props) => {
       )
     }
 
-    return <>{lines}</>
+    return (
+      <>
+        {vlines}
+        {hlines}
+      </>
+    )
   }
 }
 
