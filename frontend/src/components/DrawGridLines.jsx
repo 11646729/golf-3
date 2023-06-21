@@ -24,8 +24,6 @@ const DrawGridLines = (props) => {
   const ScaleVertical =
     (rect.bottom - rect.top) / ((NoHLines - 1) * HLineSpacing)
 
-  // console.log(ScaleHorizontal)
-
   const vlines = []
   const hlines = []
 
