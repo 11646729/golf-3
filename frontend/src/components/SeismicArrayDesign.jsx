@@ -8,8 +8,8 @@ import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
-import DrawGridLines from "./DrawGridLines"
-import DrawArrayDesignTopAxis from "./DrawArrayDesignTopAxis"
+import ArrayDesignDrawGridLines from "./ArrayDesignDrawGridLines"
+import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
 
 import {
   computeScreenEdgeRect,
@@ -49,6 +49,11 @@ const SeismicArrayDesign = () => {
   const [rightTitleRect, setRightTitleRect] = useState(
     computeRightTitlesRect(graphPlotAreaRect)
   )
+
+  const NoVLines = "6"
+  const NoHLines = "6"
+  const VLineSpacing = "16.67"
+  const HLineSpacing = "16.67"
 
   useEffect(() => {
     const checkSize = () => {
@@ -123,18 +128,23 @@ const SeismicArrayDesign = () => {
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLETEXT
             }
           />
-          <DrawArrayDesignTopAxis
-            rect={graphPlotAreaRect}
+          <ArrayDesignDrawTopAxis
             axisDraw={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPAXIS
             }
-          />
-          <DrawGridLines
             rect={graphPlotAreaRect}
-            NoVLines={"6"}
-            NoHLines={"6"}
-            VLineSpacing={"16.67"}
-            HLineSpacing={"16.67"}
+            NoVLines={NoVLines}
+            VLineSpacing={VLineSpacing}
+          />
+          <ArrayDesignDrawGridLines
+            gridlinesDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES
+            }
+            rect={graphPlotAreaRect}
+            NoVLines={NoVLines}
+            NoHLines={NoHLines}
+            VLineSpacing={VLineSpacing}
+            HLineSpacing={HLineSpacing}
           />
         </Layer>
       </Stage>

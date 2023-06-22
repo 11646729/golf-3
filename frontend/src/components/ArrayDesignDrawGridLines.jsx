@@ -2,15 +2,25 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line } from "react-konva"
 
-const DrawGridLines = (props) => {
-  const { rect, NoVLines, NoHLines, VLineSpacing, HLineSpacing } = props
+const ArrayDesignDrawGridLines = (props) => {
+  const {
+    gridlinesDraw,
+    rect,
+    NoVLines,
+    NoHLines,
+    VLineSpacing,
+    HLineSpacing,
+  } = props
 
+  // If DrawGridLines !== true then return
+  if (gridlinesDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
   // If rect width = 0 then do not draw the Rectangle
   if (rect.right - rect.left === 0) return
 
-  DrawGridLines.propTypes = {
+  ArrayDesignDrawGridLines.propTypes = {
+    gridlinesDraw: PropTypes.string,
     rect: PropTypes.object,
     NoVLines: PropTypes.string,
     NoHLines: PropTypes.string,
@@ -30,15 +40,14 @@ const DrawGridLines = (props) => {
   // DRAW VERTICAL GRIDLINES FROM LEFT TO RIGHT
   if (process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
     for (let vline = 0; vline < parseInt(NoVLines); vline++) {
-      const x1 = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
+      const x = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
       const y1 = rect.top
-      const x2 = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
       const y2 = rect.bottom
 
       vlines.push(
         <Line
           key={vline}
-          points={[x1, y1, x2, y2]}
+          points={[x, y1, x, y2]}
           stroke={
             process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
           }
@@ -81,4 +90,4 @@ const DrawGridLines = (props) => {
   }
 }
 
-export default memo(DrawGridLines)
+export default memo(ArrayDesignDrawGridLines)
