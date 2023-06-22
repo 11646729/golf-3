@@ -62,14 +62,13 @@ const ArrayDesignDrawGridLines = (props) => {
     // DRAW HORIZONTAL GRIDLINES FROM BOTTOM TO TOP - Line 1 is at bottom of screen
     for (let hline = 0; hline < parseInt(NoHLines); hline++) {
       const x1 = rect.left
-      const y1 = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
+      const y = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
       const x2 = rect.right
-      const y2 = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
 
       hlines.push(
         <Line
           key={hline}
-          points={[x1, y1, x2, y2]}
+          points={[x1, y, x2, y]}
           stroke={
             process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
           }
