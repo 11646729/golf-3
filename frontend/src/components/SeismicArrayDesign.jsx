@@ -10,6 +10,7 @@ import DrawRightTitle from "./DrawRightTitle"
 import DrawGraphPlotArea from "./DrawGraphPlotArea"
 import ArrayDesignDrawGridLines from "./ArrayDesignDrawGridLines"
 import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
+import ArrayDesignDrawBottomAxis from "./ArrayDesignDrawBottomAxis"
 
 import {
   computeScreenEdgeRect,
@@ -131,6 +132,14 @@ const SeismicArrayDesign = () => {
           <ArrayDesignDrawTopAxis
             axisDraw={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPAXIS
+            }
+            rect={graphPlotAreaRect}
+            NoVLines={NoVLines}
+            VLineSpacing={VLineSpacing}
+          />
+          <ArrayDesignDrawBottomAxis
+            axisDraw={
+              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOTTOMAXIS
             }
             rect={graphPlotAreaRect}
             NoVLines={NoVLines}
