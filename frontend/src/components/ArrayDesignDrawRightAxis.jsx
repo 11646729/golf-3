@@ -2,23 +2,23 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line, Text } from "react-konva"
 
-const DrawArrayDesignTopAxis = (props) => {
-  const { axisDraw, rect, NoVLines, VLineSpacing } = props
+const DrawArrayDesignRightAxis = (props) => {
+  const { axisDraw, rect, NoHLines, HLineSpacing } = props
 
   // If axisDraw !== true then return
   if (axisDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
 
-  DrawArrayDesignTopAxis.propTypes = {
+  DrawArrayDesignRightAxis.propTypes = {
     axisDraw: PropTypes.string,
     rect: PropTypes.object,
-    NoVLines: PropTypes.string,
-    VLineSpacing: PropTypes.string,
+    NoHLines: PropTypes.string,
+    HLineSpacing: PropTypes.string,
   }
 
-  const ScaleHorizontal =
-    (rect.right - rect.left) / ((NoVLines - 1) * VLineSpacing)
+  const ScaleVertical =
+    (rect.bottom - rect.top) / ((NoHLines - 1) * HLineSpacing)
 
   // Scale the lineLength to screensize
   const lineLength = (rect.bottom - rect.top) / 60
@@ -26,15 +26,15 @@ const DrawArrayDesignTopAxis = (props) => {
   const lines = []
   const labels = []
 
-  for (let vline = 0; vline < parseInt(NoVLines); vline++) {
-    const x = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
-    const y1 = rect.top
-    const y2 = rect.top - lineLength
+  for (let hline = 0; hline < parseInt(NoHLines); hline++) {
+    const y = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
+    const x1 = rect.right
+    const x2 = rect.right + lineLength
 
     lines.push(
       <Line
-        key={vline}
-        points={[x, y1, x, y2]}
+        key={hline}
+        points={[x1, y, x2, y]}
         stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
           process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
@@ -44,21 +44,21 @@ const DrawArrayDesignTopAxis = (props) => {
     )
   }
 
-  for (let vdistance = 0; vdistance < parseInt(NoVLines); vdistance++) {
-    const x = rect.left + parseInt(VLineSpacing * vdistance * ScaleHorizontal)
-    const y1 = rect.top
+  for (let hdistance = 0; hdistance < parseInt(NoHLines); hdistance++) {
+    const x = rect.right
+    const y1 = rect.top + parseInt(HLineSpacing * hdistance * ScaleVertical)
 
-    let AxisValue = parseFloat(VLineSpacing * vdistance).toFixed(1)
+    let AxisValue = parseFloat(HLineSpacing * hdistance).toFixed(1)
 
     labels.push(
       <Text
-        key={vdistance}
+        key={hdistance}
         fontSize={8}
         text={AxisValue}
         stroke="grey"
         strokeWidth={0.5}
-        x={x - 9}
-        y={y1 - 23}
+        x={x + 30}
+        y={y1 - 3}
         align="center"
         verticalAlign="middle"
       />
@@ -73,4 +73,4 @@ const DrawArrayDesignTopAxis = (props) => {
   )
 }
 
-export default memo(DrawArrayDesignTopAxis)
+export default memo(DrawArrayDesignRightAxis)

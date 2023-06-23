@@ -5,7 +5,7 @@ import { Line, Text } from "react-konva"
 const DrawArrayDesignLeftAxis = (props) => {
   const { axisDraw, rect, NoHLines, HLineSpacing } = props
 
-  // If DrawTopAxis !== true then return
+  // If axisDraw !== true then return
   if (axisDraw !== "true") return
   // If rect is null then do not draw the Rectangle
   if (!rect) return
