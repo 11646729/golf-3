@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { memo, useState } from "react"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
@@ -19,8 +19,8 @@ const style = {
   p: 4,
 }
 
-export default function BasicModal() {
-  const [open, setOpen] = React.useState(false)
+const BasicModal = () => {
+  const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -61,3 +61,5 @@ export default function BasicModal() {
     </div>
   )
 }
+
+export default memo(BasicModal)
