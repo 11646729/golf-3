@@ -13,6 +13,7 @@ import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
 import ArrayDesignDrawBottomAxis from "./ArrayDesignDrawBottomAxis"
 import ArrayDesignDrawLeftAxis from "./ArrayDesignDrawLeftAxis"
 import ArrayDesignDrawRightAxis from "./ArrayDesignDrawRightAxis"
+import BasicModal from "./BasicModal"
 
 import {
   computeScreenEdgeRect,
@@ -79,6 +80,7 @@ const SeismicArrayDesign = () => {
   return (
     <div>
       <SeismicDesignDrawer />
+      <BasicModal />
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
