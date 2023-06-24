@@ -26,7 +26,7 @@ const BasicModal = () => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}>Display Parameters</Button>
       <Modal
         open={open}
         onClose={handleClose}

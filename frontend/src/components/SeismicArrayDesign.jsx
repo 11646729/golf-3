@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
+import Box from "@mui/material/Box"
 import SeismicDesignDrawer from "./SeismicDesignDrawer"
 import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
@@ -79,8 +80,17 @@ const SeismicArrayDesign = () => {
 
   return (
     <div>
-      <SeismicDesignDrawer />
-      <BasicModal />
+      <Box
+        component="span"
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          // p: 2,
+        }}
+      >
+        <SeismicDesignDrawer />
+        <BasicModal />
+      </Box>
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
