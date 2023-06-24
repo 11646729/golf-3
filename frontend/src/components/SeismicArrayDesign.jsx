@@ -81,11 +81,9 @@ const SeismicArrayDesign = () => {
   return (
     <div>
       <Box
-        component="span"
         sx={{
           display: "flex",
           flexDirection: "row",
-          // p: 2,
         }}
       >
         <SeismicDesignDrawer />
