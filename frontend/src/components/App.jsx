@@ -9,7 +9,6 @@ import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
-import Seismic3DArrayPlotPage from "../pages/Seismic3DArrayPlotPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 
 function App() {
@@ -26,10 +25,6 @@ function App() {
           <Route path="nearbycrimespage" element={<NearbyCrimesPageLink />} />
           <Route path="cruisespage" element={<CruisesPageLink />} />
           <Route path="busroutespage" element={<BusRoutesPageLink />} />
-          <Route
-            path="3darrayresponseplotpage"
-            element={<ThreeDArrayResponsePlotPageLink />}
-          />
           <Route
             path="seismicarraydesignpage"
             element={<SeismicArrayDesignPageLink />}
@@ -67,10 +62,6 @@ function NearbyCrimesPageLink() {
 
 function BusRoutesPageLink() {
   return <BusRoutesPage />
-}
-
-function ThreeDArrayResponsePlotPageLink() {
-  return <Seismic3DArrayPlotPage />
 }
 
 function SeismicArrayDesignPageLink() {
