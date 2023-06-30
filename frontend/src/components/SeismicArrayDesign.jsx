@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from "react"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Text } from "react-konva"
 import Box from "@mui/material/Box"
 import SeismicDesignDrawer from "./SeismicDesignDrawer"
 import DrawChartBox from "./DrawChartBox"
@@ -8,7 +8,7 @@ import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
-import DrawGraphPlotArea from "./DrawGraphPlotArea"
+import DrawGraphPlotArea from "../components/DrawGraphPlotArea"
 import ArrayDesignDrawGridLines from "./ArrayDesignDrawGridLines"
 import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
 import ArrayDesignDrawBottomAxis from "./ArrayDesignDrawBottomAxis"
@@ -78,6 +78,23 @@ const SeismicArrayDesign = () => {
     return () => window.removeEventListener("resize", checkSize)
   }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect, rightTitleRect])
 
+  const handleMouseDown = (e) => {
+    var stage = e.target.getStage()
+    let cursorpos = stage.getPointerPosition()
+
+    if (
+      cursorpos.x - graphPlotAreaRect.left >= 0 &&
+      cursorpos.x < graphPlotAreaRect.right
+    )
+      console.log(cursorpos.x - graphPlotAreaRect.left)
+
+    // console.log(graphPlotAreaRect.left)
+    // console.log(graphPlotAreaRect.right)
+    // y={rect.top}
+
+    // text = `Cursor position is: ${cursorpos.x}, ${cursorpos.y}`
+  }
+
   return (
     <div>
       <Box
@@ -89,7 +106,11 @@ const SeismicArrayDesign = () => {
         <SeismicDesignDrawer />
         <BasicModal />
       </Box>
-      <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
+      <Stage
+        width={screenEdgeRect.right}
+        height={screenEdgeRect.bottom}
+        onMouseDown={handleMouseDown}
+      >
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
           <DrawPlotTitle

@@ -11,10 +11,10 @@ const DrawChartBox = (props) => {
     rect: PropTypes.object,
   }
 
-  const handleClick = (e) => {
-    console.log(e.target.getStage())
-    console.log(e.target.getLayer())
-  }
+  // const handleClick = (e) => {
+  //   console.log(e.target.getStage())
+  //   console.log(e.target.getLayer())
+  // }
 
   return (
     <Rect
@@ -26,9 +26,9 @@ const DrawChartBox = (props) => {
       strokeWidth={parseInt(
         process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
-      onClick={(e) => {
-        handleClick(e)
-      }}
+      // onClick={(e) => {
+      //   handleClick(e)
+      // }}
     />
   )
 }

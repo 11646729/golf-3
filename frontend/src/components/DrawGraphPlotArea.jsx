@@ -12,8 +12,6 @@ const DrawGraphPlotArea = (props) => {
   // If rect width = 0 then do not draw the Rectangle
   if (rect.right - rect.left === 0) return
 
-  if (!rect) return
-
   DrawGraphPlotArea.propTypes = {
     rect: PropTypes.object,
     boundaryDraw: PropTypes.string,
@@ -29,6 +27,7 @@ const DrawGraphPlotArea = (props) => {
       strokeWidth={parseInt(
         process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
+      fill="lightyellow"
     />
   )
 }
