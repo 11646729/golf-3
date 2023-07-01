@@ -1,6 +1,10 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Line } from "react-konva"
+import {
+  ScaleHorizontal,
+  ScaleVertical,
+} from "../functionHandlers/seismicDesignFunctions"
 
 const ArrayDesignDrawGridLines = (props) => {
   const {
@@ -28,19 +32,17 @@ const ArrayDesignDrawGridLines = (props) => {
     HLineSpacing: PropTypes.string,
   }
 
-  const ScaleHorizontal =
-    (rect.right - rect.left) / ((NoVLines - 1) * VLineSpacing)
-
-  const ScaleVertical =
-    (rect.bottom - rect.top) / ((NoHLines - 1) * HLineSpacing)
-
   const vlines = []
   const hlines = []
 
   // DRAW VERTICAL GRIDLINES FROM LEFT TO RIGHT
   if (process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
     for (let vline = 0; vline < parseInt(NoVLines); vline++) {
-      const x = rect.left + parseInt(VLineSpacing * vline * ScaleHorizontal)
+      const x =
+        rect.left +
+        parseInt(
+          VLineSpacing * vline * ScaleHorizontal(rect, NoVLines, VLineSpacing)
+        )
       const y1 = rect.top
       const y2 = rect.bottom
 
@@ -62,7 +64,11 @@ const ArrayDesignDrawGridLines = (props) => {
     // DRAW HORIZONTAL GRIDLINES FROM BOTTOM TO TOP - Line 1 is at bottom of screen
     for (let hline = 0; hline < parseInt(NoHLines); hline++) {
       const x1 = rect.left
-      const y = rect.bottom - parseInt(HLineSpacing * hline * ScaleVertical)
+      const y =
+        rect.bottom -
+        parseInt(
+          HLineSpacing * hline * ScaleVertical(rect, NoHLines, HLineSpacing)
+        )
       const x2 = rect.right
 
       hlines.push(

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from "react"
-import { Stage, Layer, Text } from "react-konva"
+import { Stage, Layer } from "react-konva"
 import Box from "@mui/material/Box"
 import SeismicDesignDrawer from "./SeismicDesignDrawer"
 import DrawChartBox from "./DrawChartBox"
@@ -8,7 +8,7 @@ import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
-import DrawGraphPlotArea from "../components/DrawGraphPlotArea"
+import DrawGraphPlotArea from "./DrawGraphPlotArea"
 import ArrayDesignDrawGridLines from "./ArrayDesignDrawGridLines"
 import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
 import ArrayDesignDrawBottomAxis from "./ArrayDesignDrawBottomAxis"
@@ -25,6 +25,7 @@ import {
   computeBottomTitlesRect,
   computeLeftTitlesRect,
   computeRightTitlesRect,
+  snapToGridV,
 } from "../functionHandlers/seismicDesignFunctions"
 
 const SeismicArrayDesign = () => {
@@ -81,17 +82,17 @@ const SeismicArrayDesign = () => {
   const handleMouseDown = (e) => {
     var stage = e.target.getStage()
     let cursorpos = stage.getPointerPosition()
-
-    if (
-      cursorpos.x - graphPlotAreaRect.left >= 0 &&
-      cursorpos.x < graphPlotAreaRect.right
-    )
-      console.log(cursorpos.x - graphPlotAreaRect.left)
-
+    // if (
+    //   cursorpos.x - graphPlotAreaRect.left >= 0 &&
+    //   cursorpos.x < graphPlotAreaRect.right
+    // )
+    //   console.log(cursorpos.x - graphPlotAreaRect.left)
+    console.log(cursorpos.y)
+    let tempy = snapToGridV(cursorpos.y, parseFloat(HLineSpacing, 2))
+    console.log(tempy) // HERE
     // console.log(graphPlotAreaRect.left)
     // console.log(graphPlotAreaRect.right)
     // y={rect.top}
-
     // text = `Cursor position is: ${cursorpos.x}, ${cursorpos.y}`
   }
 
@@ -120,12 +121,12 @@ const SeismicArrayDesign = () => {
             }
             titleText={process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
           />
-          <DrawGraphPlotArea
+          {/* <DrawGraphPlotArea
             rect={graphPlotAreaRect}
             boundaryDraw={
               process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOUNDARY
             }
-          />
+          /> */}
           <DrawTopTitle
             rect={topTitleRect}
             titleDraw={

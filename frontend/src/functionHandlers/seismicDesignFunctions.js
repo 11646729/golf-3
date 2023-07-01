@@ -284,4 +284,45 @@ export const computeLegendAreaRect = (insideMarginsRect, rightTitleRect) => {
   return legendRect
 }
 
+// -------------------------------------------------------
+// Function to compute ScaleHorizontal - translated from C++ code & refactored - for Vertical Lines
+// -------------------------------------------------------
+export const ScaleHorizontal = (rect, NoVLines, VLineSpacing) => {
+  return (rect.right - rect.left) / ((NoVLines - 1) * VLineSpacing)
+}
+
+// -------------------------------------------------------
+// Function to compute ScaleVertical - translated from C++ code & refactored - for Vertical Lines
+// -------------------------------------------------------
+export const ScaleVertical = (rect, NoHLines, HLineSpacing) => {
+  return (rect.bottom - rect.top) / ((NoHLines - 1) * HLineSpacing)
+}
+
+// -------------------------------------------------------
+// Function to compute SnapToGridV - translated from C++ code & refactored - for Horizontal Lines
+// -------------------------------------------------------
+export const snapToGridV = (tempy, HLineSpacing) => {
+  let temp = tempy - HLineSpacing * parseInt(tempy / HLineSpacing)
+
+  // const y =
+  //   rect.bottom -
+  //   parseInt(HLineSpacing * hline * ScaleVertical(rect, NoHLines, HLineSpacing))
+
+  let test = 0
+
+  if (temp >= 0.5 * HLineSpacing) test = tempy + (HLineSpacing - temp)
+  else test = tempy - temp
+
+  console.log(test)
+}
+
+// -------------------------------------------------------
+// Function to compute SnapToGridH - translated from C++ code & refactored - for Vertical Lines
+// -------------------------------------------------------
+// export const snapToGridH = (tempy, VLineSpacing) => {
+//   let temp = tempy - VLineSpacing * parseInt(tempy / VLineSpacing)
+//   if (temp >= 0.5 * VLineSpacing) return tempy + (VLineSpacing - temp)
+//   else return tempy - temp
+// }
+
 export { computeInsideMarginsRect as default }
