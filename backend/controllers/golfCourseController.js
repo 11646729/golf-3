@@ -124,7 +124,7 @@ const deleteGolfCourses = (db) => {
 }
 
 // -------------------------------------------------------
-// Create Golf Courses Table in the SQLite Database
+// Import Golf Courses Table in the SQLite Database
 // Path: Function called in switchBoard
 // -------------------------------------------------------
 export const importGolfCoursesData = (req, res) => {

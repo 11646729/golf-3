@@ -19,6 +19,7 @@ import golfRouter from "./routes/golfRouteCatalog.js"
 import weatherRouter from "./routes/weatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
 import busRouter from "./routes/busRouteCatalog.js"
+import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
 // import realtimeRouter from "./routes/realtimeRouteCatalog.js"
 
 dotenv.config()
@@ -44,6 +45,7 @@ app.use("/api/golf", golfRouter)
 app.use("/api/weather", weatherRouter)
 app.use("/api/cruise", cruiseRouter)
 app.use("/api/bus", busRouter)
+app.use("/api/seismicdesigns", seismicDesignsRouter)
 
 // Added on 23-10-2022
 // This returns a default response for any other request

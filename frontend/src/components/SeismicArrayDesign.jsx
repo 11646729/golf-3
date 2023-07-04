@@ -88,6 +88,7 @@ const SeismicArrayDesign = () => {
     // )
     //   console.log(cursorpos.x - graphPlotAreaRect.left)
     console.log(cursorpos.y)
+    console.log(graphPlotAreaRect)
     let tempy = snapToGridV(cursorpos.y, parseFloat(HLineSpacing, 2))
     console.log(tempy) // HERE
     // console.log(graphPlotAreaRect.left)
