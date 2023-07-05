@@ -122,3 +122,41 @@ const deleteSeismicDesigns = (db) => {
     console.error("Error in deleteSeismicDesigns: ", err.message)
   }
 }
+
+// -------------------------------------------------------
+// Get all Seismic Designs from SQLite database
+// Path: localhost:4000/api/golf/getSeismicDesigns
+// -------------------------------------------------------
+export const getSeismicDesigns = (req, res) => {
+  let sql = "SELECT * FROM seismicdesigns ORDER BY courseid"
+  let params = []
+
+  // Open a Database Connection
+  let db = null
+  db = openSqlDbConnection(process.env.SQL_URI)
+
+  if (db !== null) {
+    try {
+      db.all(sql, params, (err, results) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        // res.json({
+        //   message: "success",
+        //   data: results,
+        // })
+        res.send(results)
+      })
+
+      // Close the Database Connection
+      closeSqlDbConnection(db)
+    } catch (e) {
+      console.error(e.message)
+    }
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+export default getSeismicDesigns
