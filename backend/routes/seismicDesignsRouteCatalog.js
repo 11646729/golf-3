@@ -2,7 +2,7 @@ import express from "express"
 import {
   index,
   prepareEmptySeismicDesignsTable,
-  // importGolfCoursesData,
+  // importSeismicDesignsData,
   getSeismicDesigns,
 } from "../controllers/seismicDesignsController.js"
 
@@ -20,10 +20,10 @@ seismicDesignsRouter.post(
   prepareEmptySeismicDesignsTable
 )
 
-// POST all Golf Courses data into the database
-// golfRouter.get("/importGolfCoursesData", importGolfCoursesData)
+// POST all Seismic Designs data into the database
+// golfRouter.get("/importSeismicDesignsData", importSeismicDesignsData)
 
-// GET all Golf Courses data from the database
+// GET all Seismic Designs data from the database
 golfRouter.get("/getSeismicDesigns", getGolfCourses)
 
 export default seismicDesignsRouter
