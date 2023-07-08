@@ -21,9 +21,9 @@ seismicDesignsRouter.post(
 )
 
 // POST all Seismic Designs data into the database
-// golfRouter.get("/importSeismicDesignsData", importSeismicDesignsData)
+// seismicDesignsRouter.get("/importSeismicDesignsData", importSeismicDesignsData)
 
 // GET all Seismic Designs data from the database
-golfRouter.get("/getSeismicDesigns", getGolfCourses)
+seismicDesignsRouter.get("/getSeismicDesigns", getSeismicDesigns)
 
 export default seismicDesignsRouter
