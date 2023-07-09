@@ -207,10 +207,10 @@ const populateSeismicDesigns = (courses) => {
 
 // -------------------------------------------------------
 // Get all Seismic Designs from SQLite database
-// Path: localhost:4000/api/golf/getSeismicDesigns
+// Path: localhost:4000/api/seismicdesigns/getSeismicDesigns
 // -------------------------------------------------------
 export const getSeismicDesigns = (req, res) => {
-  let sql = "SELECT * FROM seismicdesigns ORDER BY courseid"
+  let sql = "SELECT * FROM seismicdesigns ORDER BY seismicdesignsid"
   let params = []
 
   // Open a Database Connection
