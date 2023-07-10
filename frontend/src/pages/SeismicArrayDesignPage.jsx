@@ -34,7 +34,10 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <SeismicArrayDesignContainer>
-      <SeismicArrayDesign />
+      <SeismicArrayDesign
+        isLoading={isLoading}
+        seismicDesigns={seismicDesigns}
+      />
     </SeismicArrayDesignContainer>
   )
 }
