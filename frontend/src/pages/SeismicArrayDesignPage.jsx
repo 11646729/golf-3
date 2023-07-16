@@ -8,6 +8,23 @@ const SeismicArrayDesignContainer = styled.div`
   display: flex;
 `
 
+const SeismicMenuContainer = styled.div`
+  flex: 1;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  height: auto;
+  // min-width: 200px;
+  background-color: lightyellow;
+`
+
+const SeismicDisplayContainer = styled.div`
+  flex: 4;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  min-height: 500px;
+  background-color: lightgreen;
+`
+
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
@@ -34,10 +51,13 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <SeismicArrayDesignContainer>
-      <SeismicArrayDesign
-        isLoading={isLoading}
-        seismicDesigns={seismicDesigns}
-      />
+      <SeismicMenuContainer>{/* TODO */}</SeismicMenuContainer>
+      <SeismicDisplayContainer>
+        {/* <SeismicArrayDesign
+          isLoading={isLoading}
+          seismicDesigns={seismicDesigns}
+        /> */}
+      </SeismicDisplayContainer>
     </SeismicArrayDesignContainer>
   )
 }

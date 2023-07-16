@@ -1,5 +1,6 @@
 import React, { memo } from "react"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import Album from "./Album"
 // import TopBar from "./TopBar"
@@ -17,7 +18,7 @@ function App() {
     <div>
       {/* <TopBar /> */}
 
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="rawdatapage" element={<RawDataPageLink />} />
@@ -36,7 +37,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   )
 }
