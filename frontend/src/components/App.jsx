@@ -1,8 +1,8 @@
 import React, { memo } from "react"
-import { RouterProvider, createBrowserRouter } from "react-router-dom"
+import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
 import Album from "./Album"
-// import TopBar from "./TopBar"
+import TopBar from "./TopBar"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -13,55 +13,72 @@ import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 
 function App() {
-  // const Layout () => {
-
-  // }
+  const Layout = () => {
+    return (
+      <div className="main">
+        {/* <Navbar /> */}
+        <TopBar />
+        <div className="container">
+          <div className="menuContainer">{/* <Menu /> */}</div>
+          <div className="contentContainer">
+            <Outlet />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Album />,
-    },
-    {
-      path: "rawdatapage",
-      element: <RawDataPage />,
-    },
-    {
-      path: "weatherpage",
-      element: <WeatherPage />,
-    },
-    {
-      path: "golfcoursespage",
-      element: <GolfCoursesPage />,
-    },
-    {
-      path: "nearbycrimespage",
-      element: <NearbyCrimesPage />,
-    },
-    {
-      path: "cruisespage",
-      element: <CruisesPage />,
-    },
-    {
-      path: "busroutespage",
-      element: <BusRoutesPage />,
-    },
-    {
-      path: "seismicarraydesignpage",
-      element: <SeismicArrayDesignPage />,
-    },
-    {
-      path: "3darrayresponseplotpage",
-      element: <Seismic3DRadialDisplayPage />,
-    },
-    {
-      path: "*",
-      element: (
-        <div>
-          <h1>Not found!</h1>
-          <p>Sorry your page was not found!</p>
-        </div>
-      ),
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <Album />,
+        },
+        {
+          path: "rawdatapage",
+          element: <RawDataPage />,
+        },
+        {
+          path: "weatherpage",
+          element: <WeatherPage />,
+        },
+        {
+          path: "golfcoursespage",
+          element: <GolfCoursesPage />,
+        },
+        {
+          path: "nearbycrimespage",
+          element: <NearbyCrimesPage />,
+        },
+        {
+          path: "cruisespage",
+          element: <CruisesPage />,
+        },
+        {
+          path: "busroutespage",
+          element: <BusRoutesPage />,
+        },
+        {
+          path: "seismicarraydesignpage",
+          element: <SeismicArrayDesignPage />,
+        },
+        {
+          path: "3darrayresponseplotpage",
+          element: <Seismic3DRadialDisplayPage />,
+        },
+        {
+          path: "*",
+          element: (
+            <div>
+              <h1>Not found!</h1>
+              <p>Sorry your page was not found!</p>
+            </div>
+          ),
+        },
+      ],
     },
   ])
 
