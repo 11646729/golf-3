@@ -1,6 +1,5 @@
 import React, { memo } from "react"
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import Album from "./Album"
 // import TopBar from "./TopBar"
@@ -14,77 +13,59 @@ import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 
 function App() {
-  return (
-    <div>
-      {/* <TopBar /> */}
+  // const Layout () => {
 
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="rawdatapage" element={<RawDataPageLink />} />
-          <Route path="weatherpage" element={<WeatherPageLink />} />
-          <Route path="golfcoursespage" element={<GolfCoursesPageLink />} />
-          <Route path="nearbycrimespage" element={<NearbyCrimesPageLink />} />
-          <Route path="cruisespage" element={<CruisesPageLink />} />
-          <Route path="busroutespage" element={<BusRoutesPageLink />} />
-          <Route
-            path="seismicarraydesignpage"
-            element={<SeismicArrayDesignPageLink />}
-          />
-          <Route
-            path="3darrayresponseplotpage"
-            element={<Seismic3DRadialDisplayLink />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
-  )
-}
+  // }
 
-function Home() {
-  return <Album />
-}
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Album />,
+    },
+    {
+      path: "rawdatapage",
+      element: <RawDataPage />,
+    },
+    {
+      path: "weatherpage",
+      element: <WeatherPage />,
+    },
+    {
+      path: "golfcoursespage",
+      element: <GolfCoursesPage />,
+    },
+    {
+      path: "nearbycrimespage",
+      element: <NearbyCrimesPage />,
+    },
+    {
+      path: "cruisespage",
+      element: <CruisesPage />,
+    },
+    {
+      path: "busroutespage",
+      element: <BusRoutesPage />,
+    },
+    {
+      path: "seismicarraydesignpage",
+      element: <SeismicArrayDesignPage />,
+    },
+    {
+      path: "3darrayresponseplotpage",
+      element: <Seismic3DRadialDisplayPage />,
+    },
+    {
+      path: "*",
+      element: (
+        <div>
+          <h1>Not found!</h1>
+          <p>Sorry your page was not found!</p>
+        </div>
+      ),
+    },
+  ])
 
-function RawDataPageLink() {
-  return <RawDataPage />
-}
-
-function WeatherPageLink() {
-  return <WeatherPage />
-}
-
-function GolfCoursesPageLink() {
-  return <GolfCoursesPage />
-}
-
-function CruisesPageLink() {
-  return <CruisesPage />
-}
-
-function NearbyCrimesPageLink() {
-  return <NearbyCrimesPage />
-}
-
-function BusRoutesPageLink() {
-  return <BusRoutesPage />
-}
-
-function SeismicArrayDesignPageLink() {
-  return <SeismicArrayDesignPage />
-}
-
-function Seismic3DRadialDisplayLink() {
-  return <Seismic3DRadialDisplayPage />
-}
-
-function NotFound() {
-  return (
-    <div>
-      <h1>Not found!</h1>
-      <p>Sorry your page was not found!</p>
-    </div>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default memo(App)
