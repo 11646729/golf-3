@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
-import HomePage from "./HomePage"
+import HomePage from "../pages/HomePage"
 import TopBar from "./TopBar"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
@@ -16,7 +16,6 @@ function App() {
   const Layout = () => {
     return (
       <div className="main">
-        {/* <Navbar /> */}
         <TopBar />
         <div className="container">
           <div className="menuContainer">{/* <Menu /> */}</div>

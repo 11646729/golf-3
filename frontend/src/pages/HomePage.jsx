@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { Grid, Container } from "@mui/material"
 
-import CopyRight from "./CopyRight"
+import CopyRight from "../components/CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
 import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
