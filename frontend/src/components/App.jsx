@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
-import Album from "./Album"
+import HomePage from "./HomePage"
 import TopBar from "./TopBar"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
@@ -35,7 +35,7 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Album />,
+          element: <HomePage />,
         },
         {
           path: "rawdatapage",

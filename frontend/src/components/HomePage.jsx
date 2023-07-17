@@ -51,7 +51,7 @@ import SeismicDesignCard from "../cards/SeismicDesignCard"
 //   },
 // }))
 
-const Album = () => {
+const HomePage = () => {
   return (
     <div>
       <main>
@@ -127,4 +127,4 @@ const Album = () => {
   )
 }
 
-export default memo(Album)
+export default memo(HomePage)
