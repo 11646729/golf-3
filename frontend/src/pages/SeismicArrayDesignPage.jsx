@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect } from "react"
 import styled from "styled-components"
 import SeismicArrayDesign from "../components/SeismicArrayDesign"
+import Menu from "../components/Menu"
 
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
 
@@ -13,7 +14,7 @@ const SeismicMenuContainer = styled.div`
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   height: auto;
-  // min-width: 200px;
+  width: 200px;
   background-color: lightyellow;
 `
 
@@ -21,6 +22,7 @@ const SeismicDisplayContainer = styled.div`
   flex: 4;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  width: 100%;
   min-height: 500px;
   background-color: lightgreen;
 `
@@ -51,7 +53,9 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <SeismicArrayDesignContainer>
-      <SeismicMenuContainer>{/* TODO */}</SeismicMenuContainer>
+      <SeismicMenuContainer>
+        <Menu />
+      </SeismicMenuContainer>
       <SeismicDisplayContainer>
         {/* <SeismicArrayDesign
           isLoading={isLoading}
