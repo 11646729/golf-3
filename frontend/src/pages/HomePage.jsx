@@ -1,5 +1,6 @@
 import React, { memo } from "react"
-import { Grid, Container } from "@mui/material"
+import { Grid } from "@mui/material"
+import styled from "styled-components"
 
 import CopyRight from "../components/CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
@@ -9,78 +10,37 @@ import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 import CruiseCard from "../cards/CruiseCard"
 import BusRoutesCard from "../cards/BusRoutesCard"
 import SeismicDesignCard from "../cards/SeismicDesignCard"
+import Menu from "../components/Menu"
 
-// const useStyles = makeStyles((theme) => ({
-//   icon: {
-//     marginRight: theme.spacing(2),
-//   },
-//   heroContent: {
-//     backgroundColor: theme.palette.background.paper,
-//     padding: theme.spacing(8, 0, 6),
-//   },
-//   heroButtons: {
-//     marginTop: theme.spacing(4),
-//   },
-//   cardGrid: {
-//     paddingTop: theme.spacing(8),
-//     paddingBottom: theme.spacing(8),
-//   },
-//   card: {
-//     height: "100%",
-//     display: "flex",
-//     flexDirection: "column",
-//   },
-//   cardMedia: {
-//     paddingTop: "56.25%", // 16:9
-//   },
-//   cardContent: {
-//     flexGrow: 1,
-//   },
-//   footer: {
-//     backgroundColor: theme.palette.background.paper,
-//     padding: theme.spacing(6),
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     display: "flex",
-//     overflow: "auto",
-//     flexDirection: "column",
-//   },
-//   fixedHeight: {
-//     height: "100%",
-//   },
-// }))
+const HomePageContainer = styled.div`
+  display: flex;
+`
 
+const MenuContainer = styled.div`
+  flex: 1;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  height: auto;
+  width: 100px;
+  // background-color: lightyellow;
+`
+
+const CardContainer = styled.div`
+  flex: 4;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  width: 100%;
+  min-height: 500px;
+  // background-color: lightgreen;
+`
 const HomePage = () => {
   return (
     <div>
-      <main>
-        {/* Hero Unit */}
-        {/* <div>
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              My Dashboard
-            </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
-              Something short and leading about ...
-            </Typography>
-          </Container>
-        </div> */}
-        {/* End Hero Unit */}
-
-        {/* Main Area */}
-        <Container maxWidth="xl">
+      <HomePageContainer>
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
+        <CardContainer>
           <Grid container>
             <Grid item sm={3} style={{ padding: 20 }}>
               <RawDataLoadCard />
@@ -104,9 +64,8 @@ const HomePage = () => {
               <SeismicDesignCard />
             </Grid>
           </Grid>
-        </Container>
-        {/* End Main Area */}
-      </main>
+        </CardContainer>
+      </HomePageContainer>
 
       {/* Footer */}
       <footer>

@@ -1,29 +1,33 @@
-import "./menu.scss"
 import { Link } from "react-router-dom"
+import "./menu.scss"
 
 const Menu = () => {
   return (
     <div className="menu">
-      <div className=" item">
+      <div className="item">
         <span className="title">MAIN</span>
-        <Link to="/">
+        <Link to="/rawdatapage">
           <img src="" alt="" />
-          <span className="listItemTitle">Homepage</span>
+          <span className="listItemTitle">Raw Data</span>
         </Link>
         <Link to="/">
           <img src="" alt="" />
           <span className="listItemTitle">Profile</span>
         </Link>
       </div>
-      <div className=" item">
-        <span className="title">MAIN</span>
-        <Link to="/">
+      <div className="item">
+        <span className="title">Seismic Array Design</span>
+        <Link to="/seismicarraydesignpage">
           <img src="" alt="" />
-          <span className="listItemTitle">Homepage</span>
+          <span className="listItemTitle">Array Design</span>
         </Link>
-        <Link to="/">
+        {/* <Link to="/">
           <img src="" alt="" />
-          <span className="listItemTitle">Profile</span>
+          <span className="listItemTitle">2D Radial Design</span>
+        </Link> */}
+        <Link to="/3darrayresponseplotpage">
+          <img src="" alt="" />
+          <span className="listItemTitle">3D Radial Design</span>
         </Link>
       </div>
     </div>

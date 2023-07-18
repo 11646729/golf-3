@@ -15,7 +15,7 @@ const SeismicMenuContainer = styled.div`
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   height: auto;
   width: 200px;
-  background-color: lightyellow;
+  // background-color: lightyellow;
 `
 
 const SeismicDisplayContainer = styled.div`
@@ -24,7 +24,7 @@ const SeismicDisplayContainer = styled.div`
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   width: 100%;
   min-height: 500px;
-  background-color: lightgreen;
+  // background-color: lightgreen;
 `
 
 // -------------------------------------------------------
@@ -53,9 +53,7 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <SeismicArrayDesignContainer>
-      <SeismicMenuContainer>
-        <Menu />
-      </SeismicMenuContainer>
+      <SeismicMenuContainer>{/* <Menu /> */}</SeismicMenuContainer>
       <SeismicDisplayContainer>
         {/* <SeismicArrayDesign
           isLoading={isLoading}
