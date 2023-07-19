@@ -5,7 +5,7 @@ const Menu = () => {
   return (
     <div className="menu">
       <div className="item">
-        <span className="title">MAIN</span>
+        <span className="title">Main</span>
         <Link to="/rawdatapage">
           <img src="" alt="" />
           <span className="listItemTitle">Raw Data</span>
@@ -13,6 +13,13 @@ const Menu = () => {
         <Link to="/">
           <img src="" alt="" />
           <span className="listItemTitle">Profile</span>
+        </Link>
+      </div>
+      <div className="item">
+        <span className="title">Weather</span>
+        <Link to="/weatherpage">
+          <img src="" alt="" />
+          <span className="listItemTitle">Weather</span>
         </Link>
       </div>
       <div className="item">

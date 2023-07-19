@@ -55,10 +55,10 @@ const SeismicArrayDesignPage = () => {
     <SeismicArrayDesignContainer>
       <SeismicMenuContainer>{/* <Menu /> */}</SeismicMenuContainer>
       <SeismicDisplayContainer>
-        {/* <SeismicArrayDesign
+        <SeismicArrayDesign
           isLoading={isLoading}
           seismicDesigns={seismicDesigns}
-        /> */}
+        />
       </SeismicDisplayContainer>
     </SeismicArrayDesignContainer>
   )
