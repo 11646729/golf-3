@@ -37,7 +37,9 @@ const HomePage = () => {
   return (
     <div>
       <HomePageContainer>
-        <MenuContainer>{/* <Menu /> */}</MenuContainer>
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
         <CardContainer>
           <Grid container>
             <Grid item sm={3} style={{ padding: 20 }}>

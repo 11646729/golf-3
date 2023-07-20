@@ -5,21 +5,8 @@ import Menu from "../components/Menu"
 
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
 
-const SeismicArrayDesignContainer = styled.div`
-  display: flex;
-`
-
-const SeismicMenuContainer = styled.div`
-  flex: 1;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  height: auto;
-  width: 200px;
-  // background-color: lightyellow;
-`
-
 const SeismicDisplayContainer = styled.div`
-  flex: 4;
+  // flex: 4;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   width: 100%;
@@ -52,15 +39,12 @@ const SeismicArrayDesignPage = () => {
   console.log(seismicDesigns)
 
   return (
-    <SeismicArrayDesignContainer>
-      <SeismicMenuContainer>{/* <Menu /> */}</SeismicMenuContainer>
-      <SeismicDisplayContainer>
-        <SeismicArrayDesign
-          isLoading={isLoading}
-          seismicDesigns={seismicDesigns}
-        />
-      </SeismicDisplayContainer>
-    </SeismicArrayDesignContainer>
+    <SeismicDisplayContainer>
+      <SeismicArrayDesign
+        isLoading={isLoading}
+        seismicDesigns={seismicDesigns}
+      />
+    </SeismicDisplayContainer>
   )
 }
 
