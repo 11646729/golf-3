@@ -11,6 +11,9 @@ import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
+import Menu from "./Menu"
+
+import "../styles/global.scss"
 
 function App() {
   const Layout = () => {
@@ -18,7 +21,9 @@ function App() {
       <div className="main">
         <TopBar />
         <div className="container">
-          <div className="menuContainer">{/* <Menu /> */}</div>
+          <div className="menuContainer">
+            <Menu />
+          </div>
           <div className="contentContainer">
             <Outlet />
           </div>
