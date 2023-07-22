@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect } from "react"
 import styled from "styled-components"
 import SeismicArrayDesign from "../components/SeismicArrayDesign"
-import Menu from "../components/Menu"
 
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
 

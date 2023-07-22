@@ -10,20 +10,10 @@ import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 import CruiseCard from "../cards/CruiseCard"
 import BusRoutesCard from "../cards/BusRoutesCard"
 import SeismicDesignCard from "../cards/SeismicDesignCard"
-// import Menu from "../components/Menu"
 
 const HomePageContainer = styled.div`
   display: flex;
 `
-
-// const MenuContainer = styled.div`
-//   flex: 1;
-//   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-//   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-//   height: auto;
-//   width: 100px;
-//   // background-color: lightyellow;
-// `
 
 const CardContainer = styled.div`
   flex: 4;
@@ -37,9 +27,6 @@ const HomePage = () => {
   return (
     <div>
       <HomePageContainer>
-        {/* <MenuContainer>
-          <Menu />
-        </MenuContainer> */}
         <CardContainer>
           <Grid container>
             <Grid item sm={3} style={{ padding: 20 }}>
