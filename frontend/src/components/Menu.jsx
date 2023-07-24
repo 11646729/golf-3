@@ -6,25 +6,25 @@ const Menu = () => {
     <div className="menu">
       <div className="item">
         <span className="title">Main</span>
-        <Link to="/rawdatapage">
+        <Link to="/rawdatapage" className="listItem">
           <img className="listItemIcon" src="" alt="" />
           <span className="listItemTitle">Raw Data</span>
         </Link>
-        <Link to="/">
+        <Link to="/" className="listItem">
           <img className="listItemIcon" src="" alt="" />
           <span className="listItemTitle">Profile</span>
         </Link>
       </div>
       <div className="item">
         <span className="title">Weather</span>
-        <Link to="/weatherpage">
+        <Link to="/weatherpage" className="listItem">
           <img className="listItemIcon" src="" alt="" />
           <span className="listItemTitle">Weather</span>
         </Link>
       </div>
       <div className="item">
         <span className="title">Seismic Array Design</span>
-        <Link to="/seismicarraydesignpage">
+        <Link to="/seismicarraydesignpage" className="listItem">
           <img
             className="listItemIcon"
             src="/static/images/scatter_plot_black_24dp.svg"
@@ -32,7 +32,7 @@ const Menu = () => {
           />
           <span className="listItemTitle">Array Design</span>
         </Link>
-        <Link to="/seismicarraydesignpage">
+        <Link to="/seismicarraydesignpage" className="listItem">
           <img
             className="listItemIcon"
             src="/static/images/ssid_chart_black_24dp.svg"
@@ -40,12 +40,8 @@ const Menu = () => {
           />
           <span className="listItemTitle">2D Radial Design</span>
         </Link>
-        <Link to="/3darrayresponseplotpage">
-          <img
-            className="listItemIcon"
-            src="/static/images/pie_chart_outline_black_24dp.svg"
-            alt=""
-          />
+        <Link to="/3darrayresponseplotpage" className="listItem">
+          <img className="listItemIcon" src="/static/images/app.svg" alt="" />
           <span className="listItemTitle">3D Radial Design</span>
         </Link>
       </div>
