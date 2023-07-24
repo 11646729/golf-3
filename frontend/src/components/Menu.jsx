@@ -41,7 +41,11 @@ const Menu = () => {
           <span className="listItemTitle">2D Radial Design</span>
         </Link>
         <Link to="/3darrayresponseplotpage" className="listItem">
-          <img className="listItemIcon" src="/static/images/app.svg" alt="" />
+          <img
+            className="listItemIcon"
+            src="/static/images/pie_chart_outline_black_24dp.svg"
+            alt=""
+          />
           <span className="listItemTitle">3D Radial Design</span>
         </Link>
       </div>
