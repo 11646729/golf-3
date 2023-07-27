@@ -25,7 +25,7 @@ export const menu = [
         id: 1,
         title: "Outside Temperature",
         url: "/weatherpage",
-        icon: "/static/images/user.svg",
+        icon: "/static/images/chart.svg",
       },
     ],
   },

@@ -2,11 +2,12 @@ import React, { memo, useState } from "react"
 import styled from "styled-components"
 import { NotificationsNone, Language, Settings } from "@mui/icons-material"
 import StatusIcon from "./StatusIcon"
+import "../styles/variables.scss"
 
 const Container = styled.div`
   width: 100%;
   height: 50px;
-  background-color: white;
+  background-color: $main-bg;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -24,11 +25,11 @@ const TopBarWrapper = styled.div`
 
 const Logo = styled.span`
   font-weight: bold;
-  font-size: 30px;
+  font-size: 24px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  color: darkblue;
+  color: $main-color;
   cursor: pointer;
 `
 
@@ -41,7 +42,7 @@ const TopBarIconContainer = styled.div`
   position: relative;
   cursor: pointer;
   margin-right: 10px;
-  color: #555;
+  color: $main-color;
 `
 
 const TopIconBadge = styled.div`

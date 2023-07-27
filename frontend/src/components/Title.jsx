@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Typography } from "@mui/material"
+import "../styles/variables.scss"
 
 const Title = (props) => {
   const { children } = props
@@ -10,7 +11,7 @@ const Title = (props) => {
   }
 
   return (
-    <Typography component="h2" variant="h6" color="primary" gutterBottom>
+    <Typography component="h2" variant="h6" color="$menu-color" gutterBottom>
       {children}
     </Typography>
   )
