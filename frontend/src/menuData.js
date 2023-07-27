@@ -43,6 +43,42 @@ export const menu = [
   },
   {
     id: 4,
+    title: "Crimes",
+    listItems: [
+      {
+        id: 1,
+        title: "Nearby Crimes",
+        url: "/nearbycrimespage",
+        icon: "/static/images/user.svg",
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: "Cruise Ship Arrivals",
+    listItems: [
+      {
+        id: 1,
+        title: "Cruise Ship Arrivals",
+        url: "/cruisespage",
+        icon: "/static/images/user.svg",
+      },
+    ],
+  },
+  {
+    id: 6,
+    title: "Bus Transport",
+    listItems: [
+      {
+        id: 1,
+        title: "Bus Transport",
+        url: "/busroutespage",
+        icon: "/static/images/user.svg",
+      },
+    ],
+  },
+  {
+    id: 7,
     title: "Seismic Array Design",
     listItems: [
       {
@@ -66,7 +102,7 @@ export const menu = [
     ],
   },
   {
-    id: 5,
+    id: 8,
     title: "Maintenance",
     listItems: [
       {
@@ -83,24 +119,24 @@ export const menu = [
       },
     ],
   },
-  {
-    id: 6,
-    title: "analytics",
-    listItems: [
-      {
-        id: 1,
-        title: "Charts",
-        url: "/",
-        icon: "/static/images/chart.svg",
-      },
-      {
-        id: 2,
-        title: "Logs",
-        url: "/",
-        icon: "/static/images/log.svg",
-      },
-    ],
-  },
+  // {
+  //   id: 9,
+  //   title: "analytics",
+  //   listItems: [
+  //     {
+  //       id: 1,
+  //       title: "Charts",
+  //       url: "/",
+  //       icon: "/static/images/chart.svg",
+  //     },
+  //     {
+  //       id: 2,
+  //       title: "Logs",
+  //       url: "/",
+  //       icon: "/static/images/log.svg",
+  //     },
+  //   ],
+  // },
 ]
 
 export const topDealUsers = [
