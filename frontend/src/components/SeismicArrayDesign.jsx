@@ -99,7 +99,7 @@ const SeismicArrayDesign = () => {
 
   return (
     <div>
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -107,7 +107,7 @@ const SeismicArrayDesign = () => {
       >
         <SeismicDesignDrawer />
         <BasicModal />
-      </Box>
+      </Box> */}
       <Stage
         width={screenEdgeRect.right}
         height={screenEdgeRect.bottom}

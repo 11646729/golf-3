@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
 import HomePage from "../pages/HomePage"
 import TopBar from "./TopBar"
+import Footer from "./Footer"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -28,6 +29,7 @@ function App() {
             <Outlet />
           </div>
         </div>
+        <Footer />
       </div>
     )
   }

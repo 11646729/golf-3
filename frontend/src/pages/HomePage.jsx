@@ -2,7 +2,6 @@ import React, { memo } from "react"
 import { Grid } from "@mui/material"
 import styled from "styled-components"
 
-import CopyRight from "../components/CopyRight"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
 import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
@@ -21,7 +20,6 @@ const CardContainer = styled.div`
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   width: 100%;
   min-height: 500px;
-  // background-color: lightgreen;
 `
 const HomePage = () => {
   return (
@@ -53,22 +51,6 @@ const HomePage = () => {
           </Grid>
         </CardContainer>
       </HomePageContainer>
-
-      {/* Footer */}
-      <footer>
-        {/* <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography> */}
-        <CopyRight />
-      </footer>
     </div>
   )
 }
