@@ -1,20 +1,17 @@
 import React, { useEffect, useState, memo } from "react"
 import { Stage, Layer } from "react-konva"
-import Box from "@mui/material/Box"
-import SeismicDesignDrawer from "./SeismicDesignDrawer"
 import DrawChartBox from "./DrawChartBox"
 import DrawPlotTitle from "./DrawPlotTitle"
 import DrawTopTitle from "./DrawTopTitle"
 import DrawBottomTitle from "./DrawBottomTitle"
 import DrawLeftTitle from "./DrawLeftTitle"
 import DrawRightTitle from "./DrawRightTitle"
-import DrawGraphPlotArea from "./DrawGraphPlotArea"
+// import DrawGraphPlotArea from "./DrawGraphPlotArea"
 import ArrayDesignDrawGridLines from "./ArrayDesignDrawGridLines"
 import ArrayDesignDrawTopAxis from "./ArrayDesignDrawTopAxis"
 import ArrayDesignDrawBottomAxis from "./ArrayDesignDrawBottomAxis"
 import ArrayDesignDrawLeftAxis from "./ArrayDesignDrawLeftAxis"
 import ArrayDesignDrawRightAxis from "./ArrayDesignDrawRightAxis"
-import BasicModal from "./BasicModal"
 
 import {
   computeScreenEdgeRect,
@@ -99,15 +96,6 @@ const SeismicArrayDesign = () => {
 
   return (
     <div>
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <SeismicDesignDrawer />
-        <BasicModal />
-      </Box> */}
       <Stage
         width={screenEdgeRect.right}
         height={screenEdgeRect.bottom}

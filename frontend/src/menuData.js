@@ -90,13 +90,13 @@ export const menu = [
       {
         id: 2,
         title: "2D Radial Plot",
-        url: "/3darrayresponseplotpage",
+        url: "/seismic3dradialdisplaypage",
         icon: "/static/images/scatter_plot_black_24dp.svg",
       },
       {
         id: 3,
         title: "3D Radial Plot",
-        url: "/3darrayresponseplotpage",
+        url: "/seismic3dradialdisplaypage",
         icon: "/static/images/pie_chart_outline_black_24dp.svg",
       },
     ],

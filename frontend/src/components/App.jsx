@@ -1,9 +1,10 @@
 import React, { memo } from "react"
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
-import HomePage from "../pages/HomePage"
 import TopBar from "./TopBar"
+import Menu from "./Menu"
 import Footer from "./Footer"
+import HomePage from "../pages/HomePage"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -12,7 +13,6 @@ import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
-import Menu from "./Menu"
 
 import "../styles/global.scss"
 
@@ -44,35 +44,35 @@ function App() {
           element: <HomePage />,
         },
         {
-          path: "rawdatapage",
+          path: "/rawdatapage",
           element: <RawDataPage />,
         },
         {
-          path: "weatherpage",
+          path: "/weatherpage",
           element: <WeatherPage />,
         },
         {
-          path: "golfcoursespage",
+          path: "/golfcoursespage",
           element: <GolfCoursesPage />,
         },
         {
-          path: "nearbycrimespage",
+          path: "/nearbycrimespage",
           element: <NearbyCrimesPage />,
         },
         {
-          path: "cruisespage",
+          path: "/cruisespage",
           element: <CruisesPage />,
         },
         {
-          path: "busroutespage",
+          path: "/busroutespage",
           element: <BusRoutesPage />,
         },
         {
-          path: "seismicarraydesignpage",
+          path: "/seismicarraydesignpage",
           element: <SeismicArrayDesignPage />,
         },
         {
-          path: "3darrayresponseplotpage",
+          path: "/seismic3dradialdisplaypage",
           element: <Seismic3DRadialDisplayPage />,
         },
         {
