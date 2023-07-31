@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
-import TopBar from "./TopBar"
+import Header from "./Header"
 import Menu from "./Menu"
 import Footer from "./Footer"
 import HomePage from "../pages/HomePage"
@@ -20,7 +20,7 @@ function App() {
   const Layout = () => {
     return (
       <div className="main">
-        <TopBar />
+        <Header />
         <div className="container">
           <div className="menuContainer">
             <Menu />

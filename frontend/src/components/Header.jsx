@@ -67,7 +67,7 @@ const TopAvatar = styled.img`
   cursor: pointer;
 `
 
-const TopBar = () => {
+const Header = () => {
   const [isActiveStatus1, setIsActiveStatus1] = useState(true)
   const [isActiveStatus2, setIsActiveStatus2] = useState(false)
 
@@ -104,4 +104,4 @@ const TopBar = () => {
   )
 }
 
-export default memo(TopBar)
+export default memo(Header)

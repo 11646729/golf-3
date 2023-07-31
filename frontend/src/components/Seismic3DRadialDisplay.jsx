@@ -14,7 +14,7 @@ import DrawLeftAxis from "../components/DrawLeftAxis"
 import DrawRightAxis from "../components/DrawRightAxis"
 import DrawLegendTitle from "../components/DrawLegendTitle"
 import DrawRadialLinesAndCircles from "../components/DrawRadialLinesAndCircles"
-import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
+// import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
 
 import {
   computeScreenEdgeRect,
@@ -87,7 +87,7 @@ const Seismic3DRadialDisplay = () => {
 
   return (
     <div>
-      <SeismicDesignDrawer />
+      {/* <SeismicDesignDrawer /> */}
       <Stage width={screenEdgeRect.right} height={screenEdgeRect.bottom}>
         <Layer>
           <DrawChartBox rect={insideMarginsRect} />
