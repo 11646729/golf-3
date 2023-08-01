@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .menu {
   .item {
     display: flex;
@@ -9,7 +11,7 @@
     .title {
       font-size: 12px;
       font-weight: 200;
-      color: darkgrey;
+      color: $main-color;
     }
 
     .listItem {

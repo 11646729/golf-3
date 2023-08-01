@@ -72,10 +72,13 @@ const DrawTopAxis = (props) => {
 
     labels.push(
       <Text
+        fontFamily="Arial"
+        fontStyle="normal"
         key={j}
         fontSize={8}
         text={AxisValue}
         stroke="grey"
+        file="grey"
         strokeWidth={0.5}
         x={x - 6}
         y={y1 - 23}

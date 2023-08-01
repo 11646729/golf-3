@@ -16,7 +16,7 @@ import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 
 import "../styles/global.scss"
 
-function App() {
+const App = () => {
   const Layout = () => {
     return (
       <div className="main">

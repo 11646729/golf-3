@@ -27,16 +27,19 @@ const DrawLeftTitle = (props) => {
         height={rect.bottom - rect.top}
       />
       <Text
+        fontFamily="Arial"
+        fontStyle="normal"
         fontSize={16}
         text={titleText}
-        stroke="grey"
+        stroke="white"
+        fill="white"
         strokeWidth={0.5}
         x={rect.left}
         y={rect.bottom}
         width={rect.bottom - rect.top}
         height={rect.right - rect.left}
         align="center"
-        verticalAlign="center"
+        verticalAlign="middle"
         rotation={270}
       />
     </>

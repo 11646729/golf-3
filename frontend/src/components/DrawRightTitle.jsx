@@ -27,9 +27,12 @@ const DrawRightTitle = (props) => {
         height={rect.bottom - rect.top}
       />
       <Text
+        fontFamily="Arial"
+        fontStyle="normal"
         fontSize={16}
         text={titleText}
-        stroke="grey"
+        stroke="white"
+        fill="white"
         strokeWidth={0.5}
         x={rect.right}
         y={rect.top}

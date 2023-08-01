@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Rect, Text } from "react-konva"
+import "../styles/variables.scss"
 
 const DrawPlotTitle = (props) => {
   const { rect, titleDraw, titleText } = props
@@ -35,8 +36,9 @@ const DrawPlotTitle = (props) => {
         fontStyle="normal"
         fontSize={18}
         text={titleText}
-        stroke="black"
-        strokeWidth={1}
+        stroke="white"
+        fill="white"
+        strokeWidth={0.5}
         x={rect.left}
         y={rect.top}
         width={rect.right - rect.left}
