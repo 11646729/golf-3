@@ -1,15 +1,8 @@
 import React, { memo, useState, useEffect } from "react"
-import styled from "styled-components"
 import SeismicArrayDesign from "../components/SeismicArrayDesign"
 
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
-
-const SeismicDisplayContainer = styled.div`
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  width: 100%;
-  min-height: 500px;
-`
+import "../styles/arraydesign.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -36,12 +29,13 @@ const SeismicArrayDesignPage = () => {
   console.log(seismicDesigns)
 
   return (
-    <SeismicDisplayContainer>
-      <SeismicArrayDesign
+    <div className="arraydesignmain">
+      <div className="arraydesigntitle">Test Data</div>
+      {/* <SeismicArrayDesign
         isLoading={isLoading}
         seismicDesigns={seismicDesigns}
-      />
-    </SeismicDisplayContainer>
+      /> */}
+    </div>
   )
 }
 
