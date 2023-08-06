@@ -1,28 +1,9 @@
 import React, { useState, useEffect, memo } from "react"
-import styled from "styled-components"
 
 import GolfCoursesTable from "../components/GolfCoursesTable"
 import GolfCoursesMap from "../components/GolfCoursesMap"
 import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"
-
-const GolfCoursesContainer = styled.div`
-  display: flex;
-`
-
-const GolfCoursesTableContainer = styled.div`
-  flex: 2;
-  // border: 2px solid grey;
-  // -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  // box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  // min-height: 500px;
-`
-
-const GolfCoursesMapContainer = styled.div`
-  flex: 2;
-  // -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  // box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  // min-height: 800px;
-`
+import "../styles/golfcourses.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -46,14 +27,14 @@ const GolfCoursesPage = () => {
   }, [])
 
   return (
-    <GolfCoursesContainer>
-      <GolfCoursesTableContainer>
+    <div className="golfcoursescontainer">
+      <div className="golfcoursestablecontainer">
         <GolfCoursesTable golfCourses={golfCourses} />
-      </GolfCoursesTableContainer>
-      <GolfCoursesMapContainer>
+      </div>
+      <div className="golfcoursesmapcontainer">
         <GolfCoursesMap isLoading={isLoading} golfCourses={golfCourses} />
-      </GolfCoursesMapContainer>
-    </GolfCoursesContainer>
+      </div>
+    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from "react"
-import SeismicArrayDesign from "../components/SeismicArrayDesign"
+import SeismicArrayDesign from "../components/NewSeismicArrayDesign"
 
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
 import "../styles/arraydesign.scss"
@@ -30,11 +30,13 @@ const SeismicArrayDesignPage = () => {
 
   return (
     <div className="arraydesignmain">
-      <div className="arraydesigntitle">Test Data</div>
-      {/* <SeismicArrayDesign
+      <div className="arraydesigntitle">
+        {process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
+      </div>
+      <SeismicArrayDesign
         isLoading={isLoading}
         seismicDesigns={seismicDesigns}
-      /> */}
+      />
     </div>
   )
 }

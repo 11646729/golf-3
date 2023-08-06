@@ -1,0 +1,11 @@
+.golfcoursescontainer {
+  display: flex;
+
+  .golfcoursestablecontainer {
+    flex: 2;
+  }
+
+  .golfcoursesmapcontainer {
+    flex: 2;
+  }
+}
