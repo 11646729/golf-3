@@ -33,13 +33,16 @@ const App = () => {
       // </div>
 
       <div className="main">
-        <header>header: sized to content</header>
+        <Header />
+        {/* <div className="container">
+          <div className="menuContainer">
+            <Menu />
+          </div> */}
         <div className="contentContainer">
           <Outlet />
         </div>
-        <div>
-          <Footer />
-        </div>
+        {/* </div> */}
+        <Footer />
       </div>
     )
   }

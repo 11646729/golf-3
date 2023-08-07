@@ -30,11 +30,6 @@ a {
 //   border-right: 2px solid $soft-bg;
 // }
 
-header {
-  background: tomato;
-  /* no flex rules, it will grow */
-}
-
 .contentContainer {
   flex: 1;
   /* 1 and it will fill whole space left if no flex value are set to other children*/
