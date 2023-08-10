@@ -20,20 +20,21 @@ a {
   color: $main-color;
 }
 
-// .container {
-//   display: flex;
-// }
+.container {
+  display: flex;
+  flex-direction: row;
+}
 
-// .menuContainer {
-//   width: 250px;
-//   padding: 5px 20px;
-//   border-right: 2px solid $soft-bg;
-// }
+.menuContainer {
+  width: 250px;
+  padding: 5px 20px;
+  border-right: 2px solid $soft-bg;
+}
 
 .contentContainer {
   flex: 1;
   /* 1 and it will fill whole space left if no flex value are set to other children*/
-  padding: 5px 20px;
+  // padding: 5px 20px; // THIS LINE PRODUCES SCROLL BARS
   width: 100%;
   overflow: auto;
 }

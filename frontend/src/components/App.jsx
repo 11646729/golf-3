@@ -19,29 +19,16 @@ import "../styles/global.scss"
 const App = () => {
   const Layout = () => {
     return (
-      // <div className="main">
-      //   <Header />
-      //   <div className="container">
-      //     <div className="menuContainer">
-      //       <Menu />
-      //     </div>
-      //     <div className="contentContainer">
-      //       <Outlet />
-      //     </div>
-      //   </div>
-      //   <Footer />
-      // </div>
-
       <div className="main">
         <Header />
-        {/* <div className="container">
+        <div className="container">
           <div className="menuContainer">
             <Menu />
-          </div> */}
-        <div className="contentContainer">
-          <Outlet />
+          </div>
+          <div className="contentContainer">
+            <Outlet />
+          </div>
         </div>
-        {/* </div> */}
         <Footer />
       </div>
     )
