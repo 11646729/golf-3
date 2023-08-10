@@ -6,13 +6,13 @@ export const menu = [
       {
         id: 1,
         title: "Home",
-        url: "/home",
+        url: "/",
         icon: "/static/images/home.svg",
       },
       {
         id: 2,
         title: "Real-Time Home",
-        url: "/",
+        url: "/realtimehomepage",
         icon: "/static/images/home.svg",
       },
       {

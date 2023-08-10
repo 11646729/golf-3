@@ -5,7 +5,6 @@ import Header from "./Header"
 import Menu from "./Menu"
 import Footer from "./Footer"
 import HomePage from "../pages/HomePage"
-import RealTimeHomePage from "../pages/RealTimeHomePage"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -14,6 +13,7 @@ import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
+import RealTimeHomePage from "../pages/RealTimeHomePage"
 
 import "../styles/global.scss"
 
@@ -41,11 +41,11 @@ const App = () => {
       element: <Layout />,
       children: [
         {
-          path: "/home",
+          path: "/",
           element: <HomePage />,
         },
         {
-          path: "/",
+          path: "/realtimehomepage",
           element: <RealTimeHomePage />,
         },
         {
