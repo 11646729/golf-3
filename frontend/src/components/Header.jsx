@@ -7,7 +7,7 @@ import "../styles/variables.scss"
 const Container = styled.div`
   width: 100%;
   height: 50px;
-  background-color: tomato; // $main-bg;
+  background-color: $main-bg;
   position: sticky;
   top: 0;
   z-index: 999;

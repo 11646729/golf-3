@@ -6,11 +6,17 @@ export const menu = [
       {
         id: 1,
         title: "Home",
-        url: "/",
+        url: "/home",
         icon: "/static/images/home.svg",
       },
       {
         id: 2,
+        title: "Real-Time Home",
+        url: "/",
+        icon: "/static/images/home.svg",
+      },
+      {
+        id: 3,
         title: "Raw Data",
         url: "/rawdatapage",
         icon: "/static/images/home.svg",

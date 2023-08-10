@@ -5,6 +5,7 @@ import Header from "./Header"
 import Menu from "./Menu"
 import Footer from "./Footer"
 import HomePage from "../pages/HomePage"
+import RealTimeHomePage from "../pages/RealTimeHomePage"
 import RawDataPage from "../pages/RawDataPage"
 import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
@@ -40,8 +41,12 @@ const App = () => {
       element: <Layout />,
       children: [
         {
-          path: "/",
+          path: "/home",
           element: <HomePage />,
+        },
+        {
+          path: "/",
+          element: <RealTimeHomePage />,
         },
         {
           path: "/rawdatapage",

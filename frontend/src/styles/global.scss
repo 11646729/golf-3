@@ -32,7 +32,8 @@ a {
 }
 
 .contentContainer {
-  flex: 1;
+  // flex: 1;
+  flex-grow: 1;
   /* 1 and it will fill whole space left if no flex value are set to other children*/
   // padding: 5px 20px; // THIS LINE PRODUCES SCROLL BARS
   width: 100%;
