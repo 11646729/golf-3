@@ -5,15 +5,15 @@ import "../styles/realtimehome.scss"
 const RealTimeHomePage = () => {
   return (
     <div className="home">
-      <div className="box box1">Box1</div>
-      <div className="box box2">Box2</div>
-      <div className="box box3">Box3</div>
-      <div className="box box4">Box4</div>
-      <div className="box box5">Box5</div>
-      <div className="box box6">Box6</div>
-      <div className="box box7">Box7</div>
-      <div className="box box8">Box8</div>
-      <div className="box box9">Box9</div>
+      <div className="box box1">Today's Calendar</div>
+      <div className="box box2">News Headlines</div>
+      <div className="box box3">Golf Course Weather & next Tee Time</div>
+      <div className="box box4">Cruise Ships in Belfast or En Route</div>
+      <div className="box box5">Traffic</div>
+      <div className="box box6">Shares</div>
+      <div className="box box7">Crimes</div>
+      <div className="box box8">Bus Services</div>
+      <div className="box box9">To Do</div>
     </div>
   )
 }
