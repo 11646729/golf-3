@@ -13,7 +13,7 @@ import CruisesPage from "../pages/CruisesPage"
 import BusRoutesPage from "../pages/BusRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
-import RealTimeHomePage from "../pages/RealTimeHomePage"
+import RealTimeHomePage from "../pages/RealTimePage"
 
 import "../styles/global.scss"
 
