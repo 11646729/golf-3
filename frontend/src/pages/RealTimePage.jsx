@@ -1,11 +1,13 @@
 import React, { memo } from "react"
-
+import RTCalendar from "../components/RTCalendar"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
   return (
     <div className="home">
-      <div className="box box1">Today's Calendar</div>
+      <div className="box box1">
+        <RTCalendar />
+      </div>
       <div className="box box2">News Headlines</div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>
