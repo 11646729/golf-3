@@ -25,21 +25,18 @@ const RTCalendar = () => {
   //     })
   // }, [])
 
-  // console.log(calendarEvents)
-  // var aistime = calendarEvents.tableData[0].DTSTAMP
-
-  // console.log(aistime)
-  console.log(moment.utc(calendarEvents.tableData[0].DTSTAMP).format("hh:mm"))
-
   return (
     <div className="table">
-      <div className="caption">Calendar Events for Today Mon 17/08/23</div>
-      <div className="thead">
-        {/* <div className="tr"> */}
-        {/* <div className="th">Time</div>
-        <div className="th">Description</div> */}
-        {/* </div> */}
+      <div className="caption">
+        Calendar Events for Today Mon
+        {moment.utc(calendarEvents.tableData[0].DTSTAMP).format("DD/MM/YYYY")}
       </div>
+      {/* <div className="thead">
+        <div className="tr">
+          <div className="th">Time</div>
+          <div className="th">Description</div>
+        </div>
+      </div> */}
       {calendarEvents.tableData.map((item) => (
         <div className="tbody" key={item.id}>
           <div className="eventtime">
