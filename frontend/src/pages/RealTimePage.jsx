@@ -1,5 +1,6 @@
 import React, { memo } from "react"
 import RTCalendar from "../components/RTCalendar"
+import RTNews from "../components/RTNews"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
@@ -8,7 +9,9 @@ const RealTimeHomePage = () => {
       <div className="box box1">
         <RTCalendar />
       </div>
-      <div className="box box2">News Headlines</div>
+      <div className="box box2">
+        <RTNews />
+      </div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>
       <div className="box box5">Cruise Ships in Belfast or En Route</div>

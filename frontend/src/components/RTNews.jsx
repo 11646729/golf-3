@@ -1,23 +1,24 @@
 import React, { useState, useEffect, memo } from "react"
-import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
+// import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
 import moment from "moment"
-import "../styles/calendar.scss"
-import "../data"
-import { calendarEvents } from "../data"
+import "../styles/news.scss"
+import { newsEvents } from "../data"
+
+// News API - https://docs.newscatcherapi.com
 
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
-const RTCalendar = () => {
-  // const [calendarEvents, setCalendarEventsData] = useState([])
+const RTNews = () => {
+  // const [newsEvents, setNewsEventsData] = useState([])
   // const [isLoading, setIsLoading] = useState(true)
 
   // const calendarDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
 
   // useEffect(() => {
-  //   getRTCalendarData(calendarDataUrl)
+  //   getRTNewsData(calendarDataUrl)
   //     .then((returnedData) => {
-  //       // setCalendarEventsData(returnedData)
+  //       // setNewsEventsData(returnedData)
   //       // setIsLoading(false)
   //     })
   //     .catch((err) => {
@@ -28,8 +29,8 @@ const RTCalendar = () => {
   return (
     <div className="table">
       <div className="caption">
-        Calendar Events for Today Mon{" "}
-        {moment.utc(calendarEvents.tableData[0].DTSTAMP).format("DD/MM/YYYY")}
+        News Events for Today Mon{" "}
+        {moment.utc(newsEvents.items[0].published_date).format("DD/MM/YYYY")}
       </div>
       {/* <div className="thead">
         <div className="tr">
@@ -37,16 +38,16 @@ const RTCalendar = () => {
           <div className="th">Description</div>
         </div>
       </div> */}
-      {calendarEvents.tableData.map((item) => (
+      {/* {calendarEvents.tableData.map((item) => (
         <div className="tbody" key={item.id}>
           <div className="eventtime">
             {moment.utc(item.DTSTAMP).format("hh:mm")}
           </div>
           <div className="eventdescription">{item.event}</div>
         </div>
-      ))}
+      ))} */}
     </div>
   )
 }
 
-export default memo(RTCalendar)
+export default memo(RTNews)
