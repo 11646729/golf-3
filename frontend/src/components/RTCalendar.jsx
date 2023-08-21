@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react"
-import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
+// import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
 import moment from "moment"
 import "../styles/calendar.scss"
 import "../data"

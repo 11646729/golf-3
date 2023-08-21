@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react"
-// import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
+// import { getRTNewsData } from "../functionHandlers/loadRTNewsDataHandler"
 import moment from "moment"
 import "../styles/news.scss"
 import { newsEvents } from "../data"
@@ -38,14 +38,14 @@ const RTNews = () => {
           <div className="th">Description</div>
         </div>
       </div> */}
-      {/* {calendarEvents.tableData.map((item) => (
-        <div className="tbody" key={item.id}>
+      {newsEvents.items.map((item) => (
+        <div className="tbody" key={item._id}>
           <div className="eventtime">
-            {moment.utc(item.DTSTAMP).format("hh:mm")}
+            {moment.utc(item.published_date).format("hh:mm")}
           </div>
-          <div className="eventdescription">{item.event}</div>
+          <div className="eventdescription">{item.excerpt}</div>
         </div>
-      ))} */}
+      ))}
     </div>
   )
 }
