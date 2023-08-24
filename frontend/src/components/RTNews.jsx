@@ -1,10 +1,10 @@
 import React, { useState, useEffect, memo } from "react"
-// import { getRTNewsData } from "../functionHandlers/loadRTNewsDataHandler"
+import {
+  getDummyRTNewsData,
+  getRTNewsData,
+} from "../functionHandlers/loadRTNewsDataHandler"
 import moment from "moment"
 import "../styles/news.scss"
-import { newsEvents } from "../data"
-
-// News API - https://docs.newscatcherapi.com
 
 // -------------------------------------------------------
 // React Controller component
@@ -13,23 +13,26 @@ const RTNews = () => {
   // const [newsEvents, setNewsEventsData] = useState([])
   // const [isLoading, setIsLoading] = useState(true)
 
-  // const calendarDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
+  // const newsDataUrl = "https://api.newscatcherapi.com/v2/search"
+  // const key = "12345"
 
   // useEffect(() => {
-  //   getRTNewsData(calendarDataUrl)
-  //     .then((returnedData) => {
-  //       // setNewsEventsData(returnedData)
+  //   getRTNewsData(newsDataUrl, key)
+  // .then((returnedData) => {
+  //   setNewsEventsData(returnedData)
   //       // setIsLoading(false)
-  //     })
+  // })
   //     .catch((err) => {
   //       console.log(err)
   //     })
   // }, [])
 
+  const newsEvents = getDummyRTNewsData()
+
   return (
     <div className="table">
       <div className="caption">
-        News Events for Today Mon{" "}
+        {"News Events for Today Mon "}
         {moment.utc(newsEvents.items[0].published_date).format("DD/MM/YYYY")}
       </div>
       {/* <div className="thead">

@@ -16,7 +16,7 @@ export const calendarEvents = {
   ],
 }
 
-export const newsEvents = {
+export const dummyNewsEvents = {
   items: [
     {
       title: "Tesla Model X vs Tesla Model Y: which Tesla SUV should you buy?",
