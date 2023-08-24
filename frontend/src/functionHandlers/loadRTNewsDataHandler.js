@@ -30,6 +30,6 @@ export const getRTNewsData = async (url, key) => {
 // Function to fetch all Dummy RT News data
 // -------------------------------------------------------
 export const getDummyRTNewsData = () => {
-  console.log(dummyNewsEvents)
+  // console.log(dummyNewsEvents)
   return dummyNewsEvents
 }

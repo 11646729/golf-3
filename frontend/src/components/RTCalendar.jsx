@@ -1,31 +1,21 @@
-import React, { useState, useEffect, memo } from "react"
-// import { getRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
+import React, { memo } from "react"
+import PropTypes from "prop-types"
 import moment from "moment"
 import "../styles/calendar.scss"
 import "../data"
-import { calendarEvents } from "../data"
 
 // -------------------------------------------------------
-// React Controller component
+// Real Time Calendar component
 // -------------------------------------------------------
-const RTCalendar = () => {
-  // const [calendarEvents, setCalendarEventsData] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
+const RTCalendar = (props) => {
+  const { isLoaded, calendarEvents } = props
 
-  // const calendarDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
+  RTCalendar.propTypes = {
+    isLoaded: PropTypes.bool,
+    calendarEvents: PropTypes.array,
+  }
 
-  // useEffect(() => {
-  //   getRTCalendarData(calendarDataUrl)
-  //     .then((returnedData) => {
-  //       // setCalendarEventsData(returnedData)
-  //       // setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
-
-  return (
+  return isLoaded ? (
     <div className="table">
       <div className="caption">
         {"Calendar Events for Today Mon "}
@@ -46,7 +36,7 @@ const RTCalendar = () => {
         </div>
       ))}
     </div>
-  )
+  ) : null
 }
 
 export default memo(RTCalendar)

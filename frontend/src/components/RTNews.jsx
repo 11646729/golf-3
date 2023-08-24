@@ -1,35 +1,20 @@
-import React, { useState, useEffect, memo } from "react"
-import {
-  getDummyRTNewsData,
-  getRTNewsData,
-} from "../functionHandlers/loadRTNewsDataHandler"
+import React, { memo } from "react"
+import PropTypes from "prop-types"
 import moment from "moment"
 import "../styles/news.scss"
 
 // -------------------------------------------------------
-// React Controller component
+// Real Time News component
 // -------------------------------------------------------
-const RTNews = () => {
-  // const [newsEvents, setNewsEventsData] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
+const RTNews = (props) => {
+  const { isLoaded, newsEvents } = props
 
-  // const newsDataUrl = "https://api.newscatcherapi.com/v2/search"
-  // const key = "12345"
+  RTNews.propTypes = {
+    isLoaded: PropTypes.bool,
+    newsEvents: PropTypes.array,
+  }
 
-  // useEffect(() => {
-  //   getRTNewsData(newsDataUrl, key)
-  // .then((returnedData) => {
-  //   setNewsEventsData(returnedData)
-  //       // setIsLoading(false)
-  // })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
-
-  const newsEvents = getDummyRTNewsData()
-
-  return (
+  return isLoaded ? (
     <div className="table">
       <div className="caption">
         {"News Events for Today Mon "}
@@ -50,7 +35,7 @@ const RTNews = () => {
         </div>
       ))}
     </div>
-  )
+  ) : null
 }
 
 export default memo(RTNews)

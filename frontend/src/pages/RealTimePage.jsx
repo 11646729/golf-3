@@ -1,16 +1,44 @@
 import React, { memo } from "react"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
+import {
+  getDummyRTNewsData,
+  // getRTNewsData,
+} from "../functionHandlers/loadRTNewsDataHandler"
+import { getDummyRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
+  // const [newsEvents, setNewsEvents] = useState([])
+  // const [isLoading, setIsLoading] = useState(true)
+
+  // const newsDataUrl = "https://api.newscatcherapi.com/v2/search"
+  // const key = "12345"
+  const calendarEvents = getDummyRTCalendarData()
+  const newsEvents = getDummyRTNewsData()
+  const isLoaded = true
+
+  // useEffect(() => {
+  //   getDummyRTNewsData()
+  //     // getRTNewsData(newsDataUrl, key)
+  //     .then((returnedData) => {
+  //       setNewsEvents(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
+
+  // console.log(newsEvents)
+
   return (
     <div className="home">
       <div className="box box1">
-        <RTCalendar />
+        <RTCalendar isLoaded={isLoaded} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        <RTNews />
+        <RTNews isLoaded={isLoaded} newsEvents={newsEvents} />
       </div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>

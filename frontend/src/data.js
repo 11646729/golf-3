@@ -1,4 +1,4 @@
-export const calendarEvents = {
+export const dummyCalendarEvents = {
   title: "Total Visit",
   // color: "#FF8042",
   // dataKey: "visit",
