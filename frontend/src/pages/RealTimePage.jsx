@@ -12,25 +12,9 @@ const RealTimeHomePage = () => {
   // const [newsEvents, setNewsEvents] = useState([])
   // const [isLoading, setIsLoading] = useState(true)
 
-  // const newsDataUrl = "https://api.newscatcherapi.com/v2/search"
-  // const key = "12345"
   const calendarEvents = getDummyRTCalendarData()
   const newsEvents = getDummyRTNewsData()
   const isLoaded = true
-
-  // useEffect(() => {
-  //   getDummyRTNewsData()
-  //     // getRTNewsData(newsDataUrl, key)
-  //     .then((returnedData) => {
-  //       setNewsEvents(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
-
-  // console.log(newsEvents)
 
   return (
     <div className="home">
