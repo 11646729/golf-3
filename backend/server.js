@@ -15,14 +15,13 @@ const io = new Server(httpServer, { cors: { origin: "*" } })
 const __dirname = path.resolve()
 
 // Routers use Controllers as per Express Tutorial
-import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
-import rtNewsRouter from "./routes/rtNewsRouteCatalog.js"
+import rtCalendarRouter from "./routes/realtimeroutes/rtCalendarRouteCatalog"
+import rtNewsRouter from "./routes/realtimeroutes/rtNewsRouteCatalog"
 import golfRouter from "./routes/golfRouteCatalog.js"
 import weatherRouter from "./routes/weatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
 import busRouter from "./routes/busRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
-// import realtimeRouter from "./routes/realtimeRouteCatalog.js"
 
 dotenv.config()
 
