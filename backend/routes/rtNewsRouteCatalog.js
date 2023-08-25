@@ -3,7 +3,7 @@ import {
   index,
   // prepareEmptyRTNewsTable,
   getNewsItemsFromDatabase,
-} from "../../controllers/rtNewsController"
+} from "../controllers/rtNewsController.js"
 
 var rtNewsRouter = express.Router()
 
