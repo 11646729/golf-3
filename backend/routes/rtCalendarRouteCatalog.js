@@ -2,7 +2,7 @@ import express from "express"
 import {
   index,
   // prepareEmptyRTCalendarTable,
-  getCalendarEventsFromDatabase,
+  getRTCalendarEvents,
 } from "../controllers/rtCalendarController.js"
 
 var rtCalendarRouter = express.Router()
@@ -17,6 +17,6 @@ rtCalendarRouter.get("/", index)
 // rtCalenderRouter.post("/prepareRTCalendarTable", prepareEmptyRTCalendarTable)
 
 // GET all RT Calendar Events from the database
-rtCalendarRouter.get("/getRTCalendarData", getCalendarEventsFromDatabase)
+rtCalendarRouter.get("/getRTCalendarEvents", getRTCalendarEvents)
 
 export default rtCalendarRouter

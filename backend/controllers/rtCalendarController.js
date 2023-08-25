@@ -12,9 +12,9 @@ export var index = (req, res) => {
 
 // -------------------------------------------------------
 // Get all Real Time Calender Events from SQLite database
-// Path: localhost:4000/api/rtcalendar/getRTCalendar
+// Path: localhost:4000/api/rtcalendar/getRTCalendarEvents
 // -------------------------------------------------------
-export const getCalendarEventsFromDatabase = (req, res) => {
-  console.log("Here")
+export const getRTCalendarEvents = (req, res) => {
+  console.log("I am Here")
   return dummyCalendarEvents
 }

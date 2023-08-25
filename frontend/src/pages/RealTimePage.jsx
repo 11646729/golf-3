@@ -5,21 +5,25 @@ import {
   getDummyRTNewsData,
   // getRTNewsData,
 } from "../functionHandlers/loadRTNewsDataHandler"
-import { getDummyRTCalendarData } from "../functionHandlers/loadRTCalendarDataHandler"
+import { getRTCalendarEvents } from "../functionHandlers/loadRTCalendarDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
+  const rtCalendarEventsUrl =
+    "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
   // const [newsEvents, setNewsEvents] = useState([])
   // const [isLoading, setIsLoading] = useState(true)
 
-  const calendarEvents = getDummyRTCalendarData()
+  const calendarEvents = getRTCalendarEvents(rtCalendarEventsUrl)
   const newsEvents = getDummyRTNewsData()
   const isLoaded = true
+
+  // console.log(calendarEvents)
 
   return (
     <div className="home">
       <div className="box box1">
-        <RTCalendar isLoaded={isLoaded} calendarEvents={calendarEvents} />
+        {/* <RTCalendar isLoaded={isLoaded} calendarEvents={calendarEvents} /> */}
       </div>
       <div className="box box2">
         <RTNews isLoaded={isLoaded} newsEvents={newsEvents} />
