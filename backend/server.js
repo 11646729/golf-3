@@ -15,6 +15,7 @@ const io = new Server(httpServer, { cors: { origin: "*" } })
 const __dirname = path.resolve()
 
 // Routers use Controllers as per Express Tutorial
+import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
 import golfRouter from "./routes/golfRouteCatalog.js"
 import weatherRouter from "./routes/weatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
+app.use("/api/rtcalendar", rtCalendarRouter)
 app.use("/api/golf", golfRouter)
 app.use("/api/weather", weatherRouter)
 app.use("/api/cruise", cruiseRouter)
