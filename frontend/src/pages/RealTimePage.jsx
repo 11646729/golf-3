@@ -21,7 +21,7 @@ const RealTimeHomePage = () => {
   const newsEvents = getDummyRTNewsData()
   const isLoaded = true
 
-  loadRTCalendarEventsHandler()
+  loadRTCalendarEventsHandler() // Test Code
 
   // console.log(calendarEvents)
 

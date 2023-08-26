@@ -1,5 +1,5 @@
 import axios from "axios"
-import { dummyNewsEvents } from "../data"
+// import { dummyNewsEvents } from "../data"
 
 // -------------------------------------------------------
 // Function to fetch all RT News data - DON'T TRY TO REFACTOR THIS
@@ -41,7 +41,7 @@ export const getRTNewsData = async (url) => {
 // -------------------------------------------------------
 export const getDummyRTNewsData = () => {
   // console.log(dummyNewsEvents)
-  return dummyNewsEvents
+  // return dummyNewsEvents
 }
 
 export { getRTNewsData as default }

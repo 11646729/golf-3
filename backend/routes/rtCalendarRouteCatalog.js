@@ -18,7 +18,10 @@ rtCalendarRouter.get("/", index)
 rtCalendarRouter.post("/prepareRTCalendarTable", prepareEmptyRTCalendarTable)
 
 // POST all RT Calendar Events into the database
-rtCalendarRouter.get("/importRTCalendarEvents", importRTCalendarEventsFromFile)
+rtCalendarRouter.get(
+  "/importRTCalendarEventsFromFile",
+  importRTCalendarEventsFromFile
+)
 
 // GET all RT Calendar Events from the database
 rtCalendarRouter.get("/getRTCalendarEvents", getRTCalendarEvents)

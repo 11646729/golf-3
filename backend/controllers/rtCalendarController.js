@@ -1,6 +1,6 @@
 import fs from "fs"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
-import { dummyCalendarEvents } from "../raw_data/data.js"
+// import { dummyCalendarEvents } from "../raw_data/rtCalendarData.json"
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -84,7 +84,39 @@ const deleteRTCalendarEvents = (db) => {}
 // Import RTCalendar Events from a File to the Table in the Database
 // Path: localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile
 // -------------------------------------------------------
-export const importRTCalendarEventsFromFile = (req, res) => {}
+export const importRTCalendarEventsFromFile = (req, res) => {
+  console.log("I am Here")
+
+  // Open a Database Connection
+  let db = null
+  db = openSqlDbConnection(process.env.SQL_URI)
+
+  // Guard clause for null Database Connection
+  if (db === null) return
+
+  try {
+    // Fetch all the RTCalendar data
+    fs.readFile(
+      process.env.RAW_RTCALENDAR_DATA_FILEPATH,
+      "utf8",
+      (err, data) => {
+        if (err) {
+          console.error(err.message)
+        }
+
+        // Save the data in the rtcalender Table in the SQLite database
+        const calendarEvents = JSON.parse(data)
+        console.log(calendarEvents)
+        // populateGolfCoursesTable(calendarEvents)
+      }
+    )
+  } catch (err) {
+    console.error("Error in importGolfCoursesData: ", err.message)
+  }
+
+  // Close the Database Connection
+  closeSqlDbConnection(db)
+}
 
 // -------------------------------------------------------
 // Local function for importRTCalendarDataFromFile
@@ -96,8 +128,8 @@ const populateRTCalendarTable = (events) => {}
 // Path: localhost:4000/api/rtcalendar/getRTCalendarEvents
 // -------------------------------------------------------
 export const getRTCalendarEvents = (req, res) => {
-  console.log("I am Here")
-  return dummyCalendarEvents
+  // console.log("I am Here")
+  // return dummyCalendarEvents
 }
 
 export default getRTCalendarEvents

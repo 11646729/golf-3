@@ -1,6 +1,6 @@
 import fs from "fs"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
-import { dummyNewsEvents } from "../raw_data/data.js"
+// import { dummyNewsEvents } from "../raw_data/rtCalendarData.json"
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -16,5 +16,5 @@ export var index = (req, res) => {
 // -------------------------------------------------------
 export const getNewsItemsFromDatabase = (req, res) => {
   console.log("Here")
-  return dummyNewsEvents
+  // return dummyNewsEvents
 }
