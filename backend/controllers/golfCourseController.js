@@ -32,7 +32,7 @@ export const prepareEmptyGolfCoursesTable = (req, res) => {
       if (results.length === 1) {
         // If exists then delete all values
         console.log("golfcourses table exists")
-        deleteGolfCourses(db)
+        deleteGolfCoursesData(db)
       } else {
         // Else create table
         console.log("golfcourses table does not exist")
@@ -50,7 +50,7 @@ export const prepareEmptyGolfCoursesTable = (req, res) => {
 }
 
 // -------------------------------------------------------
-// Create golfcourses Table in the SQLite database
+// Create empty golfcourses Table in the SQLite database
 // -------------------------------------------------------
 const createGolfCoursesTable = (db) => {
   // IF NOT EXISTS isn't really necessary in next line
@@ -76,7 +76,7 @@ const createGolfCoursesTable = (db) => {
 // -------------------------------------------------------
 // Delete all golfcourses records from SQLite database
 // -------------------------------------------------------
-const deleteGolfCourses = (db) => {
+const deleteGolfCoursesData = (db) => {
   // Guard clause for null Database Connection
   if (db === null) return
 
@@ -119,13 +119,12 @@ const deleteGolfCourses = (db) => {
       // })
     })
   } catch (err) {
-    console.error("Error in deleteGolfCourses: ", err.message)
+    console.error("Error in deleteGolfCoursesData: ", err.message)
   }
 }
 
 // -------------------------------------------------------
 // Import Golf Courses Table in the SQLite Database
-// Path: Function called in switchBoard
 // -------------------------------------------------------
 export const importGolfCoursesData = (req, res) => {
   // Open a Database Connection
@@ -147,7 +146,7 @@ export const importGolfCoursesData = (req, res) => {
 
         // Save the data in the golfcourses Table in the SQLite database
         const courses = JSON.parse(data)
-        populateGolfCourses(courses)
+        populateGolfCoursesTable(courses)
       }
     )
   } catch (err) {
@@ -161,7 +160,7 @@ export const importGolfCoursesData = (req, res) => {
 // -------------------------------------------------------
 // Local function
 // -------------------------------------------------------
-const populateGolfCourses = (courses) => {
+const populateGolfCoursesTable = (courses) => {
   // Open a Database Connection
   let db = null
   db = openSqlDbConnection(process.env.SQL_URI)

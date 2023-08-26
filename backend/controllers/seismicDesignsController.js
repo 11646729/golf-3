@@ -125,7 +125,6 @@ const deleteSeismicDesigns = (db) => {
 
 // -------------------------------------------------------
 // Import Seismic Designs Table in the SQLite Database
-// Path: Function called in switchBoard
 // -------------------------------------------------------
 export const importSeismicDesignsData = (req, res) => {
   // Open a Database Connection

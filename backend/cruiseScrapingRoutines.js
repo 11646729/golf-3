@@ -8,7 +8,6 @@ import {
 
 // -------------------------------------------------------
 // Import Port Arrivals & Vessel Details
-// Path: Function called in switchBoard
 // -------------------------------------------------------
 export const importPortArrivalsAndVessels = async (req, res) => {
   // Get the Port Name & Associated values
