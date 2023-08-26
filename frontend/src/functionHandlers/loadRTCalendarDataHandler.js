@@ -26,13 +26,48 @@ import axios from "axios"
 // }
 
 // -------------------------------------------------------
-// Function to fetch all Dummy Real Time Calendar data
+// Function to prepare the RTCalendar table in the database
+// -------------------------------------------------------
+const prepareRTCalendarTable = async (url) => {
+  return await axios
+    .post(url)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to instruct backend to load RTCalendar Events into the database
+// -------------------------------------------------------
+const importRTCalendarEventsFromFile = async (url) => {
+  return await axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to fetch all RTCalendar data
 // -------------------------------------------------------
 export const getRTCalendarEvents = async (url) => {
   return await axios
     .get(url)
     .then((response) => response.data)
     .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to fetch all RTCalendar Events into the database
+// -------------------------------------------------------
+export const loadRTCalendarEventsHandler = () => {
+  // Prepare empty RTCalendar table in the database & show result
+  prepareRTCalendarTable(
+    "http://localhost:4000/api/rtcalendar/prepareRTCalendarTable"
+  )
+
+  // Initial import of the RTCalendar file data into the database
+  importRTCalendarEventsFromFile(
+    "http://localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile"
+  )
 }
 
 export { getRTCalendarEvents as default }
