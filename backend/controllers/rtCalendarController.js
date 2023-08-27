@@ -85,8 +85,6 @@ const deleteRTCalendarEvents = (db) => {}
 // Path: localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile
 // -------------------------------------------------------
 export const importRTCalendarEventsFromFile = (req, res) => {
-  console.log("I am Here")
-
   // Open a Database Connection
   let db = null
   db = openSqlDbConnection(process.env.SQL_URI)
@@ -95,7 +93,7 @@ export const importRTCalendarEventsFromFile = (req, res) => {
   if (db === null) return
 
   try {
-    // Fetch all the RTCalendar data
+    // Fetch all the RTCalendar events
     fs.readFile(
       process.env.RAW_RTCALENDAR_DATA_FILEPATH,
       "utf8",
@@ -106,12 +104,11 @@ export const importRTCalendarEventsFromFile = (req, res) => {
 
         // Save the data in the rtcalender Table in the SQLite database
         const calendarEvents = JSON.parse(data)
-        console.log(calendarEvents)
-        // populateGolfCoursesTable(calendarEvents)
+        populateRTCalendarTable(calendarEvents)
       }
     )
   } catch (err) {
-    console.error("Error in importGolfCoursesData: ", err.message)
+    console.error("Error in importRTCalendarEventsFromFile: ", err.message)
   }
 
   // Close the Database Connection
@@ -121,14 +118,15 @@ export const importRTCalendarEventsFromFile = (req, res) => {
 // -------------------------------------------------------
 // Local function for importRTCalendarDataFromFile
 // -------------------------------------------------------
-const populateRTCalendarTable = (events) => {}
+const populateRTCalendarTable = (events) => {
+  console.log(events.tableData)
+}
 
 // -------------------------------------------------------
 // Get all RTCalender Events from database
 // Path: localhost:4000/api/rtcalendar/getRTCalendarEvents
 // -------------------------------------------------------
 export const getRTCalendarEvents = (req, res) => {
-  // console.log("I am Here")
   // return dummyCalendarEvents
 }
 
