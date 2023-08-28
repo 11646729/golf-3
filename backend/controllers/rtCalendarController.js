@@ -1,6 +1,5 @@
 import fs from "fs"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
-// import { dummyCalendarEvents } from "../raw_data/rtCalendarData.json"
 
 // -------------------------------------------------------
 // Catalogue Home page

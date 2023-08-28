@@ -21,7 +21,7 @@ rtCalendarRouter.post(
 )
 
 // POST all RT Calendar Events into the database
-rtCalendarRouter.get(
+rtCalendarRouter.post(
   "/importRTCalendarEventsFromFile",
   importRTCalendarEventsFromFile
 )

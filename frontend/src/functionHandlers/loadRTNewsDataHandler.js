@@ -1,5 +1,4 @@
 import axios from "axios"
-// import { dummyNewsEvents } from "../data"
 
 // -------------------------------------------------------
 // Function to fetch all RT News data - DON'T TRY TO REFACTOR THIS
@@ -27,9 +26,19 @@ import axios from "axios"
 // }
 
 // -------------------------------------------------------
-// Function to fetch all Real Time News - DON'T TRY TO REFACTOR THIS
+// Function to prepare the empty RTNews table in the database
 // -------------------------------------------------------
-export const getRTNewsData = async (url) => {
+const prepareEmptyRTNewsTable = async (url) => {
+  return await axios
+    .post(url)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to instruct backend to load RTNews Items into the database
+// -------------------------------------------------------
+const importRTNewsItemsFromFile = async (url) => {
   return await axios
     .get(url)
     .then((response) => response.data)
@@ -37,11 +46,27 @@ export const getRTNewsData = async (url) => {
 }
 
 // -------------------------------------------------------
-// Function to fetch all Dummy RT News data
+// Function to fetch all RTNews Items
 // -------------------------------------------------------
-export const getDummyRTNewsData = () => {
-  // console.log(dummyNewsEvents)
-  // return dummyNewsEvents
+export const getRTNewsItems = async (url) => {
+  return await axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
 }
 
-export { getRTNewsData as default }
+// -------------------------------------------------------
+// Function to fetch all RTNews Items into the database
+// -------------------------------------------------------
+export const loadRTNewsItemsHandler = () => {
+  // Prepare empty RTNews table in the database & show result
+  prepareEmptyRTNewsTable(
+    "http://localhost:4000/api/rtcalendar/prepareEmptyRTNewsTable"
+  )
+  // Initial import of the RTNews Items file data into the database
+  importRTNewsItemsFromFile(
+    "http://localhost:4000/api/rtcalendar/importRTNewsItemsFromFile"
+  )
+}
+
+export { getRTNewsItems as default }

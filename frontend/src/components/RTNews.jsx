@@ -7,14 +7,14 @@ import "../styles/news.scss"
 // Real Time News component
 // -------------------------------------------------------
 const RTNews = (props) => {
-  const { isLoaded, newsEvents } = props
+  const { isLoading, newsEvents } = props
 
   RTNews.propTypes = {
-    isLoaded: PropTypes.bool,
+    isLoading: PropTypes.bool,
     newsEvents: PropTypes.array,
   }
 
-  return isLoaded ? (
+  return !isLoading ? (
     <div className="table">
       <div className="caption">
         {"News Events for Today Mon "}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
-// import RTNews from "../components/RTNews"
+import RTNews from "../components/RTNews"
 import // getDummyRTNewsData,
 // getRTNewsData,
 "../functionHandlers/loadRTNewsDataHandler"
 import {
-  loadRTCalendarEventsHandler,
+  // loadRTCalendarEventsHandler,
   getRTCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
 import "../styles/realtimehome.scss"
@@ -31,8 +31,6 @@ const RealTimeHomePage = () => {
         console.log(err)
       })
   }, [])
-
-  // console.log(calendarEvents)
 
   return (
     <div className="home">
