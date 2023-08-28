@@ -26,9 +26,9 @@ import axios from "axios"
 // }
 
 // -------------------------------------------------------
-// Function to prepare the RTCalendar table in the database
+// Function to prepare the empty RTCalendar table in the database
 // -------------------------------------------------------
-const prepareRTCalendarTable = async (url) => {
+const prepareEmptyRTCalendarTable = async (url) => {
   return await axios
     .post(url)
     .then((response) => response.data)
@@ -60,10 +60,9 @@ export const getRTCalendarEvents = async (url) => {
 // -------------------------------------------------------
 export const loadRTCalendarEventsHandler = () => {
   // Prepare empty RTCalendar table in the database & show result
-  prepareRTCalendarTable(
-    "http://localhost:4000/api/rtcalendar/prepareRTCalendarTable"
+  prepareEmptyRTCalendarTable(
+    "http://localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable"
   )
-
   // Initial import of the RTCalendar file data into the database
   importRTCalendarEventsFromFile(
     "http://localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile"

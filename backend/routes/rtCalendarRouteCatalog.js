@@ -15,7 +15,10 @@ var rtCalendarRouter = express.Router()
 rtCalendarRouter.get("/", index)
 
 // Prepare the RTCalendar table in the database
-rtCalendarRouter.post("/prepareRTCalendarTable", prepareEmptyRTCalendarTable)
+rtCalendarRouter.post(
+  "/prepareEmptyRTCalendarTable",
+  prepareEmptyRTCalendarTable
+)
 
 // POST all RT Calendar Events into the database
 rtCalendarRouter.get(

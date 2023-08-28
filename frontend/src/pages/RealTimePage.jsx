@@ -1,10 +1,9 @@
-import React, { memo } from "react"
+import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
-import RTNews from "../components/RTNews"
-import {
-  getDummyRTNewsData,
-  // getRTNewsData,
-} from "../functionHandlers/loadRTNewsDataHandler"
+// import RTNews from "../components/RTNews"
+import // getDummyRTNewsData,
+// getRTNewsData,
+"../functionHandlers/loadRTNewsDataHandler"
 import {
   loadRTCalendarEventsHandler,
   getRTCalendarEvents,
@@ -12,26 +11,36 @@ import {
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
+  const [calendarEvents, setCalendarEvents] = useState([])
+  // const [newsEvents, setNewsEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
   const rtCalendarEventsUrl =
     "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
-  // const [newsEvents, setNewsEvents] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
 
-  const calendarEvents = getRTCalendarEvents(rtCalendarEventsUrl)
-  const newsEvents = getDummyRTNewsData()
-  const isLoaded = true
+  useEffect(() => {
+    // loadRTCalendarEventsHandler()
 
-  loadRTCalendarEventsHandler() // Test Code
+    getRTCalendarEvents(rtCalendarEventsUrl)
+      .then((returnedData) => {
+        setCalendarEvents(returnedData)
+
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   // console.log(calendarEvents)
 
   return (
     <div className="home">
       <div className="box box1">
-        <RTCalendar isLoaded={isLoaded} calendarEvents={calendarEvents} />
+        <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        <RTNews isLoaded={isLoaded} newsEvents={newsEvents} />
+        {/* <RTNews isLoading={isLoading} newsEvents={newsEvents} /> */}
       </div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>

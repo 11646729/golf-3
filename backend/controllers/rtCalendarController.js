@@ -78,7 +78,50 @@ const createRTCalendarTable = (db) => {
 // -------------------------------------------------------
 // Local function to delete all RTCalendar records from Table in database
 // -------------------------------------------------------
-const deleteRTCalendarEvents = (db) => {}
+const deleteRTCalendarEvents = (db) => {
+  // Guard clause for null Database Connection
+  if (db === null) return
+
+  try {
+    // db.serialize(function () {
+    // Count the records in the database
+    const sql = "SELECT COUNT(eventid) AS count FROM rtcalendar"
+
+    db.all(sql, [], (err, result) => {
+      if (err) {
+        console.error(err.message)
+      }
+
+      if (result[0].count > 0) {
+        // Delete all the data in the rtcalendar table
+        const sql1 = "DELETE FROM rtcalendar"
+
+        db.all(sql1, [], function (err, results) {
+          if (err) {
+            console.error(err.message)
+          }
+          console.log("All rtcalendar data deleted")
+        })
+
+        // Reset the id number
+        const sql2 =
+          "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'rtcalendar'"
+
+        db.run(sql2, [], (err) => {
+          if (err) {
+            console.error(err.message)
+          }
+          console.log("In sqlite_sequence table rtcalendar seq number set to 0")
+        })
+      } else {
+        console.log("rtcalendar table was empty (so no data deleted)")
+      }
+      // })
+    })
+  } catch (err) {
+    console.error("Error in deleteRTCalendarEvents: ", err.message)
+  }
+}
 
 // -------------------------------------------------------
 // Import RTCalendar Events from a File to the Table in the Database
@@ -119,7 +162,39 @@ export const importRTCalendarEventsFromFile = (req, res) => {
 // Local function for importRTCalendarDataFromFile
 // -------------------------------------------------------
 const populateRTCalendarTable = (events) => {
-  console.log(events.tableData)
+  // Open a Database Connection
+  let db = null
+  db = openSqlDbConnection(process.env.SQL_URI)
+
+  let loop = 0
+  try {
+    do {
+      const event = [
+        loop,
+        // process.env.DATABASE_VERSION,
+        events.tableData[loop].DTSTAMP,
+        events.tableData[loop].event,
+      ]
+
+      const sql =
+        "INSERT INTO rtcalendar (eventid, DTSTAMP, event) VALUES ($1, $2, $3 )"
+
+      db.run(sql, event, (err) => {
+        if (err) {
+          console.error(err.message)
+        }
+      })
+
+      loop++
+    } while (loop < events.tableData.length)
+
+    console.log("No of new Calendar Events created & saved: ", loop)
+  } catch (e) {
+    console.error(e.message)
+  }
+
+  // Close the Database Connection
+  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
@@ -127,7 +202,35 @@ const populateRTCalendarTable = (events) => {
 // Path: localhost:4000/api/rtcalendar/getRTCalendarEvents
 // -------------------------------------------------------
 export const getRTCalendarEvents = (req, res) => {
-  // return dummyCalendarEvents
+  let sql = "SELECT * FROM rtcalendar ORDER BY eventid"
+  let params = []
+
+  // Open a Database Connection
+  let db = null
+  db = openSqlDbConnection(process.env.SQL_URI)
+
+  if (db !== null) {
+    try {
+      db.all(sql, params, (err, results) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        // res.json({
+        //   message: "success",
+        //   data: results,
+        // })
+        res.send(results)
+      })
+
+      // Close the Database Connection
+      closeSqlDbConnection(db)
+    } catch (e) {
+      console.error(e.message)
+    }
+  } else {
+    console.error("Cannot connect to database")
+  }
 }
 
 export default getRTCalendarEvents
