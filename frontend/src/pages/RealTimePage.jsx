@@ -1,9 +1,10 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
-import RTNews from "../components/RTNews"
-import // getDummyRTNewsData,
-// getRTNewsData,
-"../functionHandlers/loadRTNewsDataHandler"
+// import RTNews from "../components/RTNews"
+import {
+  loadRTNewsItemsHandler,
+  // getRTNewsItems,
+} from "../functionHandlers/loadRTNewsDataHandler"
 import {
   // loadRTCalendarEventsHandler,
   getRTCalendarEvents,
@@ -12,7 +13,7 @@ import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
   const [calendarEvents, setCalendarEvents] = useState([])
-  // const [newsEvents, setNewsEvents] = useState([])
+  // const [newsItems, setNewsItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const rtCalendarEventsUrl =
@@ -32,13 +33,29 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
+  // const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
+
+  useEffect(() => {
+    loadRTNewsItemsHandler()
+
+    // getRTNewsItems(rtNewsItemsUrl)
+    //   .then((returnedData) => {
+    //     setNewsItems(returnedData)
+
+    //     setIsLoading(false)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+  }, [])
+
   return (
     <div className="home">
       <div className="box box1">
         <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        {/* <RTNews isLoading={isLoading} newsEvents={newsEvents} /> */}
+        {/* <RTNews isLoading={isLoading} newsEvents={newsItems} /> */}
       </div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>

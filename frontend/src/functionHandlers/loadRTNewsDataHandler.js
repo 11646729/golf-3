@@ -61,11 +61,11 @@ export const getRTNewsItems = async (url) => {
 export const loadRTNewsItemsHandler = () => {
   // Prepare empty RTNews table in the database & show result
   prepareEmptyRTNewsTable(
-    "http://localhost:4000/api/rtcalendar/prepareEmptyRTNewsTable"
+    "http://localhost:4000/api/rtnews/prepareEmptyRTNewsTable"
   )
   // Initial import of the RTNews Items file data into the database
   importRTNewsItemsFromFile(
-    "http://localhost:4000/api/rtcalendar/importRTNewsItemsFromFile"
+    "http://localhost:4000/api/rtnews/importRTNewsItemsFromFile"
   )
 }
 
