@@ -26,12 +26,12 @@ const RTCalendar = (props) => {
           <div className="th">Description</div>
         </div>
       </div> */}
-      {calendarEvents.map((item) => (
-        <div className="tbody" key={item.id}>
+      {calendarEvents.map((event) => (
+        <div className="tbody" key={event.id}>
           <div className="eventtime">
-            {moment.utc(item.DTSTAMP).format("hh:mm")}
+            {moment.utc(event.DTSTAMP).format("hh:mm")}
           </div>
-          <div className="eventdescription">{item.event}</div>
+          <div className="eventdescription">{event.event_description}</div>
         </div>
       ))}
     </div>

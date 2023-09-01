@@ -56,7 +56,7 @@ export const prepareEmptyRTCalendarTable = (req, res) => {
 const createRTCalendarTable = (db) => {
   // IF NOT EXISTS isn't really necessary in next line
   const sql =
-    "CREATE TABLE IF NOT EXISTS rtcalendar (eventid INTEGER PRIMARY KEY AUTOINCREMENT, DTSTAMP TEXT NOT NULL, event TEXT NOT NULL)"
+    "CREATE TABLE IF NOT EXISTS rtcalendar (eventid INTEGER PRIMARY KEY AUTOINCREMENT, DTSTAMP TEXT NOT NULL, event_description TEXT NOT NULL)"
   let params = []
 
   // Guard clause for null Database Connection
@@ -160,7 +160,7 @@ export const importRTCalendarEventsFromFile = (req, res) => {
 // -------------------------------------------------------
 // Local function for importRTCalendarDataFromFile
 // -------------------------------------------------------
-const populateRTCalendarTable = (events) => {
+const populateRTCalendarTable = (calendarEvents) => {
   // Open a Database Connection
   let db = null
   db = openSqlDbConnection(process.env.SQL_URI)
@@ -169,14 +169,14 @@ const populateRTCalendarTable = (events) => {
   try {
     do {
       const event = [
-        loop,
         // process.env.DATABASE_VERSION,
-        events.tableData[loop].DTSTAMP,
-        events.tableData[loop].event,
+        calendarEvents.tableData[loop].eventid,
+        calendarEvents.tableData[loop].DTSTAMP,
+        calendarEvents.tableData[loop].event_description,
       ]
 
       const sql =
-        "INSERT INTO rtcalendar (eventid, DTSTAMP, event) VALUES ($1, $2, $3 )"
+        "INSERT INTO rtcalendar (eventid, DTSTAMP, event_description) VALUES ($1, $2, $3 )"
 
       db.run(sql, event, (err) => {
         if (err) {
@@ -185,7 +185,7 @@ const populateRTCalendarTable = (events) => {
       })
 
       loop++
-    } while (loop < events.tableData.length)
+    } while (loop < calendarEvents.tableData.length)
 
     console.log("No of new Calendar Events created & saved: ", loop)
   } catch (e) {

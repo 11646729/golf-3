@@ -3,17 +3,17 @@
     {
       "eventid": 1,
       "DTSTAMP": "20191018T091330Z",
-      "event": "Fly to Dubai"
+      "event_description": "Fly to Dubai"
     },
     {
       "eventid": 2,
       "DTSTAMP": "20191018T121330Z",
-      "event": "Book Tee Time"
+      "event_description": "Book Tee Time"
     },
     {
       "eventid": 3,
       "DTSTAMP": "20191018T121330Z",
-      "event": "Book Tee Time"
+      "event_description": "Book Tee Time"
     }
   ]
 }

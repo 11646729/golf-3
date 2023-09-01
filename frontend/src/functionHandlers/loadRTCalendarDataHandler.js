@@ -40,7 +40,7 @@ const prepareEmptyRTCalendarTable = async (url) => {
 // -------------------------------------------------------
 const importRTCalendarEventsFromFile = async (url) => {
   return await axios
-    .get(url)
+    .post(url)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }

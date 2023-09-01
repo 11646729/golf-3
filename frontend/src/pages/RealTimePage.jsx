@@ -1,31 +1,45 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
-// import RTNews from "../components/RTNews"
+import RTNews from "../components/RTNews"
 import {
   loadRTNewsItemsHandler,
-  // getRTNewsItems,
+  getRTNewsItems,
 } from "../functionHandlers/loadRTNewsDataHandler"
 import {
-  // loadRTCalendarEventsHandler,
+  loadRTCalendarEventsHandler,
   getRTCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
   const [calendarEvents, setCalendarEvents] = useState([])
-  // const [newsItems, setNewsItems] = useState([])
+  const [newsItems, setNewsItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const rtCalendarEventsUrl =
-    "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
+  // const rtCalendarEventsUrl =
+  //   "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
+
+  // useEffect(() => {
+  //   // loadRTCalendarEventsHandler()
+
+  //   getRTCalendarEvents(rtCalendarEventsUrl)
+  //     .then((returnedData) => {
+  //       setCalendarEvents(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
+
+  const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
 
   useEffect(() => {
-    // loadRTCalendarEventsHandler()
+    // loadRTNewsItemsHandler()
 
-    getRTCalendarEvents(rtCalendarEventsUrl)
+    getRTNewsItems(rtNewsItemsUrl)
       .then((returnedData) => {
-        setCalendarEvents(returnedData)
-
+        setNewsItems(returnedData)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -33,21 +47,7 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  // const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
-
-  useEffect(() => {
-    loadRTNewsItemsHandler()
-
-    // getRTNewsItems(rtNewsItemsUrl)
-    //   .then((returnedData) => {
-    //     setNewsItems(returnedData)
-
-    //     setIsLoading(false)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-  }, [])
+  console.log(newsItems)
 
   return (
     <div className="home">

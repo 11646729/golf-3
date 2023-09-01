@@ -184,7 +184,7 @@ const populateSeismicDesigns = (courses) => {
       ]
 
       const sql =
-        "INSERT INTO seismicdesigns (seismicdesignsid, databaseversion) VALUES ($1, $2, $3 )"
+        "INSERT INTO seismicdesigns (seismicdesignsid, databaseversion) VALUES ($1, $2 )"
 
       db.run(sql, course, (err) => {
         if (err) {

@@ -40,7 +40,7 @@ const prepareEmptyRTNewsTable = async (url) => {
 // -------------------------------------------------------
 const importRTNewsItemsFromFile = async (url) => {
   return await axios
-    .get(url)
+    .post(url)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
@@ -63,6 +63,7 @@ export const loadRTNewsItemsHandler = () => {
   prepareEmptyRTNewsTable(
     "http://localhost:4000/api/rtnews/prepareEmptyRTNewsTable"
   )
+
   // Initial import of the RTNews Items file data into the database
   importRTNewsItemsFromFile(
     "http://localhost:4000/api/rtnews/importRTNewsItemsFromFile"
