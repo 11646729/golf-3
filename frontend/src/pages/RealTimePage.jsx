@@ -16,21 +16,21 @@ const RealTimeHomePage = () => {
   const [newsItems, setNewsItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // const rtCalendarEventsUrl =
-  //   "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
+  const rtCalendarEventsUrl =
+    "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
 
-  // useEffect(() => {
-  //   // loadRTCalendarEventsHandler()
+  useEffect(() => {
+    // loadRTCalendarEventsHandler()
 
-  //   getRTCalendarEvents(rtCalendarEventsUrl)
-  //     .then((returnedData) => {
-  //       setCalendarEvents(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
+    getRTCalendarEvents(rtCalendarEventsUrl)
+      .then((returnedData) => {
+        setCalendarEvents(returnedData)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
 
@@ -47,15 +47,13 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  console.log(newsItems)
-
   return (
     <div className="home">
       <div className="box box1">
         <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        {/* <RTNews isLoading={isLoading} newsEvents={newsItems} /> */}
+        <RTNews isLoading={isLoading} newsEvents={newsItems} />
       </div>
       <div className="box box3">Golf Course Weather & next Tee Time</div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>

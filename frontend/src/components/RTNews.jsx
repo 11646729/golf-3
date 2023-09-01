@@ -14,13 +14,11 @@ const RTNews = (props) => {
     newsEvents: PropTypes.array,
   }
 
-  console.log(newsEvents)
-
   return !isLoading ? (
     <div className="table">
       <div className="caption">
         {"News Events for Today Mon "}
-        {/* {moment.utc(newsEvents.items[0].published_date).format("DD/MM/YYYY")} */}
+        {moment.utc(newsEvents[0].published_date).format("DD/MM/YYYY")}
       </div>
       {/* <div className="thead">
         <div className="tr">
@@ -28,7 +26,7 @@ const RTNews = (props) => {
           <div className="th">Description</div>
         </div>
       </div> */}
-      {newsEvents.items.map((item) => (
+      {newsEvents.map((item) => (
         <div className="tbody" key={item._id}>
           <div className="eventtime">
             {moment.utc(item.published_date).format("hh:mm")}
