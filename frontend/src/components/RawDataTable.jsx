@@ -11,6 +11,8 @@ import StatusButton from "./StatusButton"
 // import { loadBusTransportDataHandler } from "../functionHandlers/loadBusTransportDataHandler"
 // import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 // import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
+// import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
+// import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
 
 const RawDataTableTitleContainer = styled.div`
   margin-top: 35px;
@@ -94,6 +96,8 @@ const RawDataTable = (props) => {
   const [btnState4, setBtnState4] = useState(0)
   const [btnState5, setBtnState5] = useState(0)
   const [btnState6, setBtnState6] = useState(0)
+  const [btnState7, setBtnState7] = useState(0)
+  const [btnState8, setBtnState8] = useState(0)
 
   return (
     <div>
@@ -222,6 +226,46 @@ const RawDataTable = (props) => {
                       : setBtnState6(0)
 
                     // startRealtimeDataHandler()
+                  }}
+                />
+              </RawDataTableDataCell>
+            </RawDataTableRow>
+            <RawDataTableRow>
+              <RawDataTableDataCellLeft>
+                Realtime Calendar Data
+              </RawDataTableDataCellLeft>
+              <RawDataTableDataCell>
+                {messageArray[btnState7]}
+              </RawDataTableDataCell>
+              <RawDataTableDataCell>
+                <StatusButton
+                  stateText="Fetch Realtime Calendar Data"
+                  onShow={() => {
+                    btnState7 < 3
+                      ? setBtnState7(btnState7 + 1)
+                      : setBtnState7(0)
+
+                    // loadRTCalendarEventsHandler()
+                  }}
+                />
+              </RawDataTableDataCell>
+            </RawDataTableRow>
+            <RawDataTableRow>
+              <RawDataTableDataCellLeft>
+                Realtime News Data
+              </RawDataTableDataCellLeft>
+              <RawDataTableDataCell>
+                {messageArray[btnState8]}
+              </RawDataTableDataCell>
+              <RawDataTableDataCell>
+                <StatusButton
+                  stateText="Fetch Realtime News Data"
+                  onShow={() => {
+                    btnState7 < 3
+                      ? setBtnState8(btnState8 + 1)
+                      : setBtnState8(0)
+
+                    // loadRTNewsItemsHandler()
                   }}
                 />
               </RawDataTableDataCell>
