@@ -1,0 +1,173 @@
+import React, { memo } from "react"
+import PropTypes from "prop-types"
+import styled from "styled-components"
+import Title from "./Title"
+
+import { Button } from "@mui/material"
+
+const TableTitleContainer = styled.div`
+  margin-top: 35px;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: "97%";
+`
+
+const TableContainer = styled.div`
+  min-width: 200px;
+  margin-left: 20px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+`
+
+const TableStyle = styled.table`
+  width: 94%;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-spacing: 20px;
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+`
+
+const TableHeader = styled.thead`
+  /* text-align: left; */
+  font-size: 14px;
+`
+
+//  table tbody tr:hover { background-color: red; }
+
+const TableRow = styled.tr`
+  &:hover {
+    background-color: #ebeccd;
+    color: black;
+  }
+`
+
+const TableHead = styled.th`
+  height: 34px;
+  margin: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+`
+
+const TableBody = styled.tbody``
+
+// const TableCellLeft = styled.td`
+//   height: 34px;
+//   margin: 0;
+//   padding: 0.5rem;
+//   border-bottom: 1px solid lightgray;
+//   border-right: 1px solid lightgray;
+//   text-align: left;
+// `
+
+const TableCell = styled.td`
+  height: 34px;
+  margin: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  text-align: center;
+`
+
+const tableData = [
+  {
+    id: 1,
+    datatype: "Temperatures Data",
+    buttontext: "Fetch Temperatures",
+  },
+  {
+    id: 2,
+    datatype: "Golf Course Data",
+    buttontext: "Fetch Golf Courses",
+  },
+  {
+    id: 3,
+    datatype: "Cruise Ship Arrivals Data",
+    buttontext: "Fetch Cruise Ships",
+  },
+  {
+    id: 4,
+    datatype: "Bus Transport Data",
+    buttontext: "Fetch Bus Data",
+  },
+  {
+    id: 5,
+    datatype: "Crime Data",
+    buttontext: "Fetch Crime Data",
+  },
+  {
+    id: 6,
+    datatype: "Realtime Data",
+    buttontext: "Start Realtime Data",
+  },
+  {
+    id: 7,
+    datatype: "Realtime Calendar Data",
+    buttontext: "Fetch Realtime Calendar Data",
+  },
+  {
+    id: 8,
+    datatype: "Realtime News Data",
+    buttontext: "Fetch Realtime News Data",
+  },
+  // Add more objects as needed
+]
+
+function handleClick(id) {
+  // Define the logic for handling the button click here
+  console.log(`Button clicked for row with id ${id}`)
+  alert(`Here with id ${id}`)
+}
+
+const RawDataTable2 = (props) => {
+  const { rawDataTableTitle } = props
+
+  RawDataTable2.propTypes = {
+    rawDataTableTitle: PropTypes.string,
+  }
+
+  // const RawDataTable2 = (props) => {
+  return (
+    <div>
+      <TableTitleContainer>
+        <Title>{rawDataTableTitle}</Title>
+      </TableTitleContainer>
+
+      <TableContainer>
+        <TableStyle>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Import Raw Data Types</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableData.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.datatype}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleClick(row.id)}
+                  >
+                    {row.buttontext}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </TableStyle>
+      </TableContainer>
+    </div>
+  )
+}
+
+export default memo(RawDataTable2)

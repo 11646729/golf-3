@@ -260,13 +260,18 @@ const RawDataTable = (props) => {
               <RawDataTableDataCell>
                 <StatusButton
                   stateText="Fetch Realtime News Data"
-                  onShow={() => {
-                    btnState7 < 3
-                      ? setBtnState8(btnState8 + 1)
-                      : setBtnState8(0)
+                  onShow={
+                    () => {
+                      btnState7 < 3
+                        ? setBtnState8(btnState8 + 1)
+                        : setBtnState8(0)
 
-                    // loadRTNewsItemsHandler()
-                  }}
+                      // loadRTNewsItemsHandler()
+                    }
+                    // onClick={() => {
+                    //   alert("clicked")
+                    // }}
+                  }
                 />
               </RawDataTableDataCell>
             </RawDataTableRow>
