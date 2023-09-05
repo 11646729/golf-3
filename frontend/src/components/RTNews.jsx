@@ -18,7 +18,7 @@ const RTNews = (props) => {
     <div className="table">
       <div className="caption">
         {"News Events for Today Mon "}
-        {moment.utc(newsEvents[0].published_date).format("DD/MM/YYYY")}
+        {/* {moment.utc(newsEvents[0].published_date).format("DD/MM/YYYY")} */}
       </div>
       {/* <div className="thead">
         <div className="tr">
@@ -27,7 +27,7 @@ const RTNews = (props) => {
         </div>
       </div> */}
       {newsEvents.map((item) => (
-        <div className="tbody" key={item._id}>
+        <div className="tbody" key={item.itemid}>
           <div className="eventtime">
             {moment.utc(item.published_date).format("hh:mm")}
           </div>

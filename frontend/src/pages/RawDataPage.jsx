@@ -1,8 +1,7 @@
 import React, { memo } from "react"
 import styled from "styled-components"
 
-// import RawDataTable from "../components/RawDataTable"
-import RawDataTable2 from "../components/RawDataTable2"
+import RawDataTable from "../components/RawDataTable"
 import RawDataStatusBox from "../components/RawDataStatusBox"
 
 const RawDataContainer = styled.div`
@@ -31,8 +30,7 @@ const RawDataPage = () => {
   return (
     <RawDataContainer>
       <RawDataTableContainer>
-        {/* <RawDataTable rawDataTableTitle="Raw Data Importing Operations" /> */}
-        <RawDataTable2 rawDataTableTitle="Raw Data Importing Operations" />
+        <RawDataTable rawDataTableTitle="Raw Data Importing Operations" />
       </RawDataTableContainer>
       <RawDataStatusBoxContainer>
         <RawDataStatusBox messageString="Here is the status message" />

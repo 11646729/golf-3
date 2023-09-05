@@ -1,34 +1,33 @@
-import React, { memo, useState } from "react"
+import React, { memo } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-
 import Title from "./Title"
-import StatusButton from "./StatusButton"
+import { Button } from "@mui/material"
 
-// import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
-// import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
-// import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
-// import { loadBusTransportDataHandler } from "../functionHandlers/loadBusTransportDataHandler"
-// import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
-// import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
-// import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
-// import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
+import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
+import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
+import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
+import { loadBusTransportDataHandler } from "../functionHandlers/loadBusTransportDataHandler"
+import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
+import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
+import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
+import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
 
-const RawDataTableTitleContainer = styled.div`
+const TableTitleContainer = styled.div`
   margin-top: 35px;
   margin-left: 20px;
   margin-right: 20px;
   width: "97%";
 `
 
-const RawDataTableContainer = styled.div`
+const TableContainer = styled.div`
   min-width: 200px;
   margin-left: 20px;
   margin-right: 10px;
   margin-bottom: 20px;
 `
 
-const RawDataTableStyle = styled.table`
+const TableStyle = styled.table`
   width: 94%;
   margin-left: 20px;
   margin-right: 20px;
@@ -42,18 +41,21 @@ const RawDataTableStyle = styled.table`
     sans-serif;
 `
 
-const RawDataTableHeader = styled.thead`
+const TableHeader = styled.thead`
   /* text-align: left; */
   font-size: 14px;
 `
 
-const RawDataTableRow = styled.tr`
+//  table tbody tr:hover { background-color: red; }
+
+const TableRow = styled.tr`
   &:hover {
     background-color: #ebeccd;
+    color: black;
   }
 `
 
-const RawDataTableHead = styled.th`
+const TableHead = styled.th`
   height: 34px;
   margin: 0;
   padding: 0.5rem;
@@ -61,18 +63,18 @@ const RawDataTableHead = styled.th`
   border-right: 1px solid lightgray;
 `
 
-const RawDataTableBody = styled.tbody``
+const TableBody = styled.tbody``
 
-const RawDataTableDataCellLeft = styled.td`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  text-align: left;
-`
+// const TableCellLeft = styled.td`
+//   height: 34px;
+//   margin: 0;
+//   padding: 0.5rem;
+//   border-bottom: 1px solid lightgray;
+//   border-right: 1px solid lightgray;
+//   text-align: left;
+// `
 
-const RawDataTableDataCell = styled.td`
+const TableCell = styled.td`
   height: 34px;
   margin: 0;
   padding: 0.5rem;
@@ -81,6 +83,85 @@ const RawDataTableDataCell = styled.td`
   text-align: center;
 `
 
+const tableData = [
+  {
+    id: 1,
+    datatype: "Temperatures Data",
+    buttontext: "Fetch Temperatures",
+  },
+  {
+    id: 2,
+    datatype: "Golf Course Data",
+    buttontext: "Fetch Golf Courses",
+  },
+  {
+    id: 3,
+    datatype: "Cruise Ship Arrivals Data",
+    buttontext: "Fetch Cruise Ships",
+  },
+  {
+    id: 4,
+    datatype: "Bus Transport Data",
+    buttontext: "Fetch Bus Data",
+  },
+  {
+    id: 5,
+    datatype: "Crime Data",
+    buttontext: "Fetch Crime Data",
+  },
+  {
+    id: 6,
+    datatype: "Realtime Data",
+    buttontext: "Start Realtime Data",
+  },
+  {
+    id: 7,
+    datatype: "Realtime Calendar Data",
+    buttontext: "Fetch Realtime Calendar Data",
+  },
+  {
+    id: 8,
+    datatype: "Realtime News Data",
+    buttontext: "Fetch Realtime News Data",
+  },
+]
+
+function handleClick(id) {
+  // Define the logic for handling the button click here
+  console.log(`Button clicked for row with id ${id}`)
+  alert(`Here with id ${id}`)
+
+  switch (id) {
+    case 1:
+      loadTemperaturesDataHandler()
+      break
+    case 2:
+      loadGolfCoursesDataHandler()
+      break
+    case 3:
+      loadCruiseShipArrivalsDataHandler()
+      break
+    case 4:
+      loadBusTransportDataHandler()
+      break
+    case 5:
+      loadCrimesDataHandler()
+      break
+    case 6:
+      startRealtimeDataHandler()
+      break
+    case 7:
+      loadRTCalendarEventsHandler()
+      break
+    case 8:
+      loadRTNewsItemsHandler()
+      break
+
+    default:
+    // code block
+  }
+}
+
 const RawDataTable = (props) => {
   const { rawDataTableTitle } = props
 
@@ -88,196 +169,43 @@ const RawDataTable = (props) => {
     rawDataTableTitle: PropTypes.string,
   }
 
-  const messageArray = ["Ready", "Button Pressed", "Working", "Ended"]
-
-  const [btnState1, setBtnState1] = useState(0)
-  const [btnState2, setBtnState2] = useState(0)
-  const [btnState3, setBtnState3] = useState(0)
-  const [btnState4, setBtnState4] = useState(0)
-  const [btnState5, setBtnState5] = useState(0)
-  const [btnState6, setBtnState6] = useState(0)
-  const [btnState7, setBtnState7] = useState(0)
-  const [btnState8, setBtnState8] = useState(0)
-
   return (
     <div>
-      <RawDataTableTitleContainer>
+      <TableTitleContainer>
         <Title>{rawDataTableTitle}</Title>
-      </RawDataTableTitleContainer>
+      </TableTitleContainer>
 
-      <RawDataTableContainer>
-        <RawDataTableStyle>
-          <RawDataTableHeader>
-            <RawDataTableRow>
-              <RawDataTableHead>Import Raw Data Types</RawDataTableHead>
-              <RawDataTableHead>Status</RawDataTableHead>
-              <RawDataTableHead>Actions</RawDataTableHead>
-            </RawDataTableRow>
-          </RawDataTableHeader>
-          <RawDataTableBody>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Temperatures Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState1]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Temperatures"
-                  onShow={() => {
-                    btnState1 < 3
-                      ? setBtnState1(btnState1 + 1)
-                      : setBtnState1(0)
-
-                    // loadTemperaturesDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Golf Course Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState2]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Golf Courses"
-                  onShow={() => {
-                    btnState2 < 3
-                      ? setBtnState2(btnState2 + 1)
-                      : setBtnState2(0)
-
-                    // loadGolfCoursesDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Cruise Ship Arrivals Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState3]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Cruise Ships"
-                  onShow={() => {
-                    btnState3 < 3
-                      ? setBtnState3(btnState3 + 1)
-                      : setBtnState3(0)
-                    // loadCruiseShipArrivalsDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Bus Transport Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState4]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Bus Data"
-                  onShow={() => {
-                    btnState4 < 3
-                      ? setBtnState4(btnState4 + 1)
-                      : setBtnState4(0)
-
-                    // loadBusTransportDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>Crime Data</RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState5]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Crime Data"
-                  onShow={() => {
-                    btnState5 < 3
-                      ? setBtnState5(btnState5 + 1)
-                      : setBtnState5(0)
-
-                    // loadCrimesDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>Realtime Data</RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState6]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Start Realtime Data"
-                  onShow={() => {
-                    btnState6 < 3
-                      ? setBtnState6(btnState6 + 1)
-                      : setBtnState6(0)
-
-                    // startRealtimeDataHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Realtime Calendar Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState7]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Realtime Calendar Data"
-                  onShow={() => {
-                    btnState7 < 3
-                      ? setBtnState7(btnState7 + 1)
-                      : setBtnState7(0)
-
-                    // loadRTCalendarEventsHandler()
-                  }}
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-            <RawDataTableRow>
-              <RawDataTableDataCellLeft>
-                Realtime News Data
-              </RawDataTableDataCellLeft>
-              <RawDataTableDataCell>
-                {messageArray[btnState8]}
-              </RawDataTableDataCell>
-              <RawDataTableDataCell>
-                <StatusButton
-                  stateText="Fetch Realtime News Data"
-                  onShow={
-                    () => {
-                      btnState7 < 3
-                        ? setBtnState8(btnState8 + 1)
-                        : setBtnState8(0)
-
-                      // loadRTNewsItemsHandler()
-                    }
-                    // onClick={() => {
-                    //   alert("clicked")
-                    // }}
-                  }
-                />
-              </RawDataTableDataCell>
-            </RawDataTableRow>
-          </RawDataTableBody>
-        </RawDataTableStyle>
-      </RawDataTableContainer>
+      <TableContainer>
+        <TableStyle>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Import Raw Data Types</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableData.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.datatype}</TableCell>
+                <TableCell>
+                  <Button
+                    sx={{
+                      ml: 6,
+                      textTransform: "capitalize",
+                    }}
+                    variant="contained"
+                    onClick={() => handleClick(row.id)}
+                  >
+                    {row.buttontext}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </TableStyle>
+      </TableContainer>
     </div>
   )
 }

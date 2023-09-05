@@ -18,7 +18,7 @@ const RTCalendar = (props) => {
     <div className="table">
       <div className="caption">
         {"Calendar Events for Today Mon "}
-        {moment.utc(calendarEvents[0].DTSTAMP).format("DD/MM/YYYY")}
+        {/* {moment.utc(calendarEvents[0].DTSTAMP).format("DD/MM/YYYY")} */}
       </div>
       {/* <div className="thead">
         <div className="tr">
