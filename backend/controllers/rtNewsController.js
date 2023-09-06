@@ -96,7 +96,7 @@ const deleteRTNewsItems = (db) => {
 
       if (result[0].count > 0) {
         // Delete all the data in the rtnews table
-        const sql1 = "DELETE FROM rtcalendar"
+        const sql1 = "DELETE FROM rtnews"
 
         db.all(sql1, [], function (err, results) {
           if (err) {

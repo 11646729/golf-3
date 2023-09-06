@@ -1,14 +1,8 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
-import {
-  loadRTNewsItemsHandler,
-  getRTNewsItems,
-} from "../functionHandlers/loadRTNewsDataHandler"
-import {
-  loadRTCalendarEventsHandler,
-  getRTCalendarEvents,
-} from "../functionHandlers/loadRTCalendarDataHandler"
+import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
+import { getRTCalendarEvents } from "../functionHandlers/loadRTCalendarDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
@@ -20,8 +14,6 @@ const RealTimeHomePage = () => {
     "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
 
   useEffect(() => {
-    // loadRTCalendarEventsHandler()
-
     getRTCalendarEvents(rtCalendarEventsUrl)
       .then((returnedData) => {
         setCalendarEvents(returnedData)
@@ -35,8 +27,6 @@ const RealTimeHomePage = () => {
   const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
 
   useEffect(() => {
-    // loadRTNewsItemsHandler()
-
     getRTNewsItems(rtNewsItemsUrl)
       .then((returnedData) => {
         setNewsItems(returnedData)
