@@ -14,26 +14,42 @@ const RTCalendar = (props) => {
     calendarEvents: PropTypes.array,
   }
 
-  return !isLoading ? (
-    <div className="table">
-      <div className="caption">
-        {"Calendar Events for Today Mon "}
-        {/* {moment.utc(calendarEvents[0].DTSTAMP).format("DD/MM/YYYY")} */}
-      </div>
-      {/* <div className="thead">
+  console.log(calendarEvents)
+
+  /* <div className="thead">
         <div className="tr">
           <div className="th">Time</div>
           <div className="th">Description</div>
         </div>
-      </div> */}
-      {calendarEvents.map((event) => (
-        <div className="tbody" key={event.id}>
-          <div className="eventtime">
-            {moment.utc(event.DTSTAMP).format("hh:mm")}
+      </div> */
+
+  return !isLoading ? (
+    <div className="table">
+      {calendarEvents.map((event, index) =>
+        index === 0 ? (
+          <div key={index}>
+            <div className="caption">
+              {"Calendar Events for Today Mon "}
+              {moment.utc(event.DTSTAMP).format("DD/MM/YYYY")}
+            </div>
+            <div className="tbody">
+              <div className="eventtime">
+                {moment.utc(event.DTSTAMP).format("hh:mm")}
+              </div>
+              <div className="eventdescription">{event.event_description}</div>
+            </div>
           </div>
-          <div className="eventdescription">{event.event_description}</div>
-        </div>
-      ))}
+        ) : (
+          <div key={index}>
+            <div className="tbody">
+              <div className="eventtime">
+                {moment.utc(event.DTSTAMP).format("hh:mm")}
+              </div>
+              <div className="eventdescription">{event.event_description}</div>
+            </div>
+          </div>
+        )
+      )}
     </div>
   ) : null
 }

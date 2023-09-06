@@ -14,26 +14,42 @@ const RTNews = (props) => {
     newsEvents: PropTypes.array,
   }
 
+  console.log(newsEvents)
+
+  // <div className="thead">
+  //   <div className="tr">
+  //     <div className="th">Time</div>
+  //     <div className="th">Description</div>
+  //   </div>
+  // </div>
+
   return !isLoading ? (
     <div className="table">
-      <div className="caption">
-        {"News Events for Today Mon "}
-        {/* {moment.utc(newsEvents[0].published_date).format("DD/MM/YYYY")} */}
-      </div>
-      {/* <div className="thead">
-        <div className="tr">
-          <div className="th">Time</div>
-          <div className="th">Description</div>
-        </div>
-      </div> */}
-      {newsEvents.map((item) => (
-        <div className="tbody" key={item.itemid}>
-          <div className="eventtime">
-            {moment.utc(item.published_date).format("hh:mm")}
+      {newsEvents.map((item, index) =>
+        index === 0 ? (
+          <div key={index}>
+            <div className="caption">
+              {"News Events for Today Mon "}
+              {moment.utc(item.published_date).format("DD/MM/YYYY")}
+            </div>
+            <div className="tbody">
+              <div className="eventtime">
+                {moment.utc(item.published_date).format("hh:mm")}
+              </div>
+              <div className="eventdescription">{item.excerpt}</div>
+            </div>
           </div>
-          <div className="eventdescription">{item.excerpt}</div>
-        </div>
-      ))}
+        ) : (
+          <div key={index}>
+            <div className="tbody">
+              <div className="eventtime">
+                {moment.utc(item.published_date).format("hh:mm")}
+              </div>
+              <div className="eventdescription">{item.excerpt}</div>
+            </div>
+          </div>
+        )
+      )}
     </div>
   ) : null
 }
