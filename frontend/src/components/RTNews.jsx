@@ -14,7 +14,7 @@ const RTNews = (props) => {
     newsEvents: PropTypes.array,
   }
 
-  console.log(newsEvents)
+  // console.log(newsEvents)
 
   // <div className="thead">
   //   <div className="tr">

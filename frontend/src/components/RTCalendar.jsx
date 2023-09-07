@@ -14,7 +14,7 @@ const RTCalendar = (props) => {
     calendarEvents: PropTypes.array,
   }
 
-  console.log(calendarEvents)
+  // console.log(calendarEvents)
 
   /* <div className="thead">
         <div className="tr">

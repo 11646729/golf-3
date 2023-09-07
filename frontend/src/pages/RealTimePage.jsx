@@ -10,11 +10,8 @@ const RealTimeHomePage = () => {
   const [newsItems, setNewsItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const rtCalendarEventsUrl =
-    "http://localhost:4000/api/rtcalendar/getRTCalendarEvents"
-
   useEffect(() => {
-    getRTCalendarEvents(rtCalendarEventsUrl)
+    getRTCalendarEvents(process.env.REACT_APP_RT_CALENDAR)
       .then((returnedData) => {
         setCalendarEvents(returnedData)
         setIsLoading(false)
@@ -24,10 +21,8 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  const rtNewsItemsUrl = "http://localhost:4000/api/rtnews/getRTNewsItems"
-
   useEffect(() => {
-    getRTNewsItems(rtNewsItemsUrl)
+    getRTNewsItems(process.env.REACT_APP_RT_NEWS)
       .then((returnedData) => {
         setNewsItems(returnedData)
         setIsLoading(false)
