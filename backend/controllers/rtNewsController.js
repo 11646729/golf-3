@@ -1,4 +1,5 @@
 import fs from "fs"
+import axios from "axios"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -244,6 +245,37 @@ export const getRTNewsItems = (req, res) => {
     }
   } else {
     console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
+// Get all Real Time News Items from News API
+// Path: localhost:4000/api/rtnews/getLiveRTNewsItems
+// -------------------------------------------------------
+export const getLiveRTNewsItems = async (req, res) => {
+  // const liveNewsUrl =
+  //   "https://newsapi.org/v2/everything" +
+  //   "?q=Trump" +
+  //   "&from=2023-09-09" +
+  //   "&sortBy=popularity" +
+  //   "&apiKey=" +
+  //   process.env.RT_NEWS_API
+
+  const liveNewsTopHeadlinesUrl =
+    "https://newsapi.org/v2/top-headlines" +
+    "?sources=bbc-news" +
+    "&apiKey=" +
+    process.env.RT_NEWS_API
+
+  try {
+    // fetch data from the url endpoint and return it
+    const response = await axios.get(liveNewsTopHeadlinesUrl)
+
+    console.log(response.data.status)
+    console.log(response.data.totalResults)
+    console.log(response.data.articles)
+  } catch (err) {
+    console.log("Error in getLiveRTNewsItems: ", err)
   }
 }
 

@@ -35,11 +35,8 @@ const WeatherPage = () => {
   const [temperatureData, setTemperatureData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const temperatureDataUrl =
-    "http://localhost:4000/api/weather/getTemperaturesData"
-
   useEffect(() => {
-    getTemperaturesData(temperatureDataUrl)
+    getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
       .then((returnedData) => {
         // setTemperatureData((returnedData) => [...temperatureData, returnedData])
         setTemperatureData(returnedData)

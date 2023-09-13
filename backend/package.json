@@ -23,6 +23,7 @@
     "gtfs": "^4.1.0",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
+    "newsapi": "^2.4.1",
     "node-cron": "^3.0.2",
     "normalize-url": "^8.0.0",
     "socket.io": "^4.6.1",
