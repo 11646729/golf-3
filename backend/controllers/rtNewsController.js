@@ -1,5 +1,6 @@
 import fs from "fs"
 import axios from "axios"
+import moment from "moment"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -260,6 +261,10 @@ export const getLiveRTNewsItems = async (req, res) => {
   //   "&sortBy=popularity" +
   //   "&apiKey=" +
   //   process.env.RT_NEWS_API
+
+  var date = moment()
+  var currentDate = date.format("YYYY-MM-DD")
+  // console.log(currentDate) // "2022/06/17"
 
   const liveNewsTopHeadlinesUrl =
     "https://newsapi.org/v2/top-headlines" +
