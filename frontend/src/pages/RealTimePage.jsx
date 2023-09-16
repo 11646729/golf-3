@@ -2,7 +2,10 @@ import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
-import { getRTCalendarEvents } from "../functionHandlers/loadRTCalendarDataHandler"
+import {
+  // getRTCalendarEvents,
+  getAndSaveGoogleCalendarData,
+} from "../functionHandlers/loadRTCalendarDataHandler"
 import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
 
@@ -13,7 +16,8 @@ const RealTimeHomePage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getRTCalendarEvents(process.env.REACT_APP_RT_CALENDAR)
+    // getRTCalendarEvents(process.env.REACT_APP_RT_CALENDAR) // Fetch data from example file
+    getAndSaveGoogleCalendarData(process.env.REACT_APP_RT_GOOGLE_CALENDAR) // Fetch data from Google Calendar
       .then((returnedData) => {
         setCalendarEvents(returnedData)
         setIsLoading(false)

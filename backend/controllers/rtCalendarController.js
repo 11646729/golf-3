@@ -232,4 +232,11 @@ export const getRTCalendarEvents = (req, res) => {
   }
 }
 
+// -------------------------------------------------------
+// Fetch calendar data from the Google Calendar
+// -------------------------------------------------------
+export const getAndSaveGoogleCalendarData = async () => {
+  console.log("Today")
+}
+
 export default getRTCalendarEvents
