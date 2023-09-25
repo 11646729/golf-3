@@ -1,5 +1,11 @@
+import { google } from "googleapis"
+import dotenv from "dotenv"
 import fs from "fs"
+import moment from "moment"
+// import createCalendarEvent from "../gcEventStructure.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+
+dotenv.config()
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -235,8 +241,127 @@ export const getRTCalendarEvents = (req, res) => {
 // -------------------------------------------------------
 // Fetch calendar data from the Google Calendar
 // -------------------------------------------------------
-export const getAndSaveGoogleCalendarData = async () => {
-  console.log("Today")
+export const getAndSaveGoogleCalendarData = async (req, res) => {
+  // Provide the required configuration
+  const CREDENTIALS = JSON.parse(process.env.CREDENTIALS)
+  const calendarId = process.env.CALENDAR_ID
+
+  // Google calendar API settings
+  const SCOPES = "https://www.googleapis.com/auth/calendar"
+  const calendar = google.calendar({ version: "v3" })
+
+  const auth = new google.auth.JWT(
+    CREDENTIALS.client_email,
+    null,
+    CREDENTIALS.private_key,
+    SCOPES
+  )
+
+  // // Insert new event to Google Calendar
+  // const insertEvent = async (event) => {
+  //   try {
+  //     let response = await calendar.events.insert({
+  //       auth: auth,
+  //       calendarId: calendarId,
+  //       resource: event,
+  //     })
+
+  //     if (response["status"] === 200 && response["statusText"] === "OK") {
+  //       return 1
+  //     } else {
+  //       return 0
+  //     }
+  //   } catch (error) {
+  //     console.log(`Error at insertEvent --> ${error}`)
+  //     return 0
+  //   }
+  // }
+
+  // let dateTime = dateTimeForCalendar()
+
+  // // Event for Google Calendar
+  // let event = {
+  //   summary: `This is the summary.`,
+  //   description: `This is the description.`,
+  //   start: {
+  //     dateTime: dateTime["start"],
+  //     timeZone: "Europe/London",
+  //   },
+  //   end: {
+  //     dateTime: dateTime["end"],
+  //     timeZone: "Europe/London",
+  //   },
+  // }
+
+  // let tempEvent = createCalendarEvent()
+
+  // insertEvent(tempEvent)
+  //   .then((res) => {
+  //     console.log(res)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+
+  // Get all the events between two dates
+  const getEvents = async (dateTimeStart, dateTimeEnd) => {
+    try {
+      let response = await calendar.events.list({
+        auth: auth,
+        calendarId: calendarId,
+        timeMin: dateTimeStart,
+        timeMax: dateTimeEnd,
+        timeZone: "Europe/London",
+      })
+
+      let items = response["data"]["items"]
+      return items
+    } catch (error) {
+      console.log(`Error at getEvents --> ${error}`)
+      return 0
+    }
+  }
+
+  let start = moment("2023-09-01").format()
+  let end = moment("2023-09-01").add(1, "months").format()
+
+  getEvents(start, end)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  // // Delete an event from eventID
+  // const deleteEvent = async (eventId) => {
+  //   try {
+  //     let response = await calendar.events.delete({
+  //       auth: auth,
+  //       calendarId: calendarId,
+  //       eventId: eventId,
+  //     })
+
+  //     if (response.data === "") {
+  //       return 1
+  //     } else {
+  //       return 0
+  //     }
+  //   } catch (error) {
+  //     console.log(`Error at deleteEvent --> ${error}`)
+  //     return 0
+  //   }
+  // }
+
+  // let eventId = "rnki5eqkae4gjpoojlh49493dg"
+
+  // deleteEvent(eventId)
+  //   .then((res) => {
+  //     console.log(res)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
 }
 
 export default getRTCalendarEvents

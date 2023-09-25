@@ -23,12 +23,12 @@ const importRTCalendarEventsFromFile = async (url) => {
 // -------------------------------------------------------
 // Function to fetch all RTCalendar data
 // -------------------------------------------------------
-export const getRTCalendarEvents = async (url) => {
-  return await axios
-    .get(url)
-    .then((response) => response.data)
-    .catch((err) => console.log(err))
-}
+// export const getRTCalendarEvents = async (url) => {
+//   return await axios
+//     .get(url)
+//     .then((response) => response.data)
+//     .catch((err) => console.log(err))
+// }
 
 // -------------------------------------------------------
 // Function to fetch all Google Calendar data
@@ -54,4 +54,4 @@ export const loadRTCalendarEventsHandler = () => {
   )
 }
 
-export { getRTCalendarEvents as default }
+export { getAndSaveGoogleCalendarData as default }
