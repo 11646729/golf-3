@@ -36,7 +36,8 @@ const importRTCalendarEventsFromFile = async (url) => {
 export const getAndSaveGoogleCalendarData = async (url) => {
   return await axios
     .get(url)
-    .then((response) => response.data)
+    // .then((response) => response.data)
+    .then((response) => console.log(response))
     .catch((err) => console.log(err))
 }
 

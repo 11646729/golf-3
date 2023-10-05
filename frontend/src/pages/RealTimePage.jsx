@@ -27,16 +27,16 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  useEffect(() => {
-    getRTNewsItems(process.env.REACT_APP_RT_NEWS)
-      .then((returnedData) => {
-        setNewsItems(returnedData)
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+  // useEffect(() => {
+  //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)
+  //     .then((returnedData) => {
+  //       setNewsItems(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
 
   useEffect(() => {
     getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
