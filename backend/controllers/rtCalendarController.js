@@ -243,51 +243,71 @@ export const getRTCalendarEvents = (req, res) => {
 // TODO - Enter calendar data from the Google Calendar
 // -------------------------------------------------------
 
-// // Insert new event to Google Calendar
-// const insertEvent = async (event) => {
-//   try {
-//     let response = await calendar.events.insert({
-//       auth: auth,
-//       calendarId: calendarId,
-//       resource: event,
-//     })
+// -------------------------------------------------------
+// Insert new event to Google Calendar
+// -------------------------------------------------------
+const insertEvent = async (event) => {
+  // Provide the required configuration
+  const credentials = JSON.parse(process.env.CREDENTIALS)
+  const calendarId = process.env.CALENDAR_ID
+  const scope = "https://www.googleapis.com/auth/calendar"
+  const calendar = google.calendar({ version: "v3" })
 
-//     if (response["status"] === 200 && response["statusText"] === "OK") {
-//       return 1
-//     } else {
-//       return 0
-//     }
-//   } catch (error) {
-//     console.log(`Error at insertEvent --> ${error}`)
-//     return 0
-//   }
-// }
+  const auth = new google.auth.JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key,
+    scope
+  )
 
-// let dateTime = dateTimeForCalendar()
+  try {
+    let response = await calendar.events.insert({
+      auth: auth,
+      calendarId: calendarId,
+      resource: event,
+    })
 
-// // Event for Google Calendar
-// let event = {
-//   summary: `This is the summary.`,
-//   description: `This is the description.`,
-//   start: {
-//     dateTime: dateTime["start"],
-//     timeZone: "Europe/London",
-//   },
-//   end: {
-//     dateTime: dateTime["end"],
-//     timeZone: "Europe/London",
-//   },
-// }
+    if (response["status"] === 200 && response["statusText"] === "OK") {
+      return 1
+    } else {
+      return 0
+    }
+  } catch (error) {
+    console.log(`Error at insertEvent --> ${error}`)
+    return 0
+  }
+}
 
-// let tempEvent = createCalendarEvent()
+// -------------------------------------------------------
+// Fetch calendar data from the Google Calendar
+// -------------------------------------------------------
+export const insertGoogleCalendarEvent = async (req, res) => {
+  let startTime = moment("2023-09-01").format()
+  let endTime = moment("2023-09-01").add(1, "months").format()
+  let timeZone = "Europe/London"
 
-// insertEvent(tempEvent)
-//   .then((res) => {
-//     console.log(res)
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
+  // Prepare Google Calendar Event
+  let event = {
+    summary: `This is the summary.`,
+    description: `This is the description.`,
+    start: {
+      dateTime: startTime,
+      timeZone: timeZone,
+    },
+    end: {
+      dateTime: endTime,
+      timeZone: timeZone,
+    },
+  }
+
+  insertEvent(event)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 // -------------------------------------------------------
 // TODO - Delete calendar data from the Google Calendar
@@ -324,48 +344,48 @@ export const getRTCalendarEvents = (req, res) => {
 //   })
 
 // -------------------------------------------------------
-// Fetch calendar data from the Google Calendar
+// Fetch all calendar events between two dates from the Google Calendar
 // -------------------------------------------------------
-export const getAndSaveGoogleCalendarData = async (req, res) => {
+const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
   // Provide the required configuration
-  const CREDENTIALS = JSON.parse(process.env.CREDENTIALS)
+  const credentials = JSON.parse(process.env.CREDENTIALS)
   const calendarId = process.env.CALENDAR_ID
-
-  // Google calendar API settings
-  const SCOPES = "https://www.googleapis.com/auth/calendar"
+  const scope = "https://www.googleapis.com/auth/calendar"
   const calendar = google.calendar({ version: "v3" })
 
   const auth = new google.auth.JWT(
-    CREDENTIALS.client_email,
+    credentials.client_email,
     null,
-    CREDENTIALS.private_key,
-    SCOPES
+    credentials.private_key,
+    scope
   )
 
-  // Get all the events between two dates
-  const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
-    try {
-      let response = await calendar.events.list({
-        auth: auth,
-        calendarId: calendarId,
-        timeMin: dateTimeStart,
-        timeMax: dateTimeEnd,
-        timeZone: dateTimeZone,
-      })
+  try {
+    let response = await calendar.events.list({
+      auth: auth,
+      calendarId: calendarId,
+      timeMin: dateTimeStart,
+      timeMax: dateTimeEnd,
+      timeZone: dateTimeZone,
+    })
 
-      let items = response["data"]["items"]
-      return items
-    } catch (error) {
-      console.log(`Error at getEvents --> ${error}`)
-      return 0
-    }
+    let items = response["data"]["items"]
+    return items
+  } catch (error) {
+    console.log(`Error at getEvents --> ${error}`)
+    return 0
   }
+}
 
-  let start = moment("2023-09-01").format()
-  let end = moment("2023-09-01").add(1, "months").format()
+// -------------------------------------------------------
+// Fetch calendar data from the Google Calendar
+// -------------------------------------------------------
+export const getGoogleCalendarEvents = async (req, res) => {
+  let startTime = moment("2023-09-01").format()
+  let endTime = moment("2023-09-01").add(1, "months").format()
   let timeZone = "Europe/London"
 
-  getEvents(start, end, timeZone)
+  getEvents(startTime, endTime, timeZone)
     .then((res) => {
       console.log(res[0])
     })

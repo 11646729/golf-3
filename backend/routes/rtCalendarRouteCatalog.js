@@ -3,7 +3,7 @@ import {
   index,
   prepareEmptyRTCalendarTable,
   importRTCalendarEventsFromFile,
-  getAndSaveGoogleCalendarData,
+  getGoogleCalendarEvents,
   getRTCalendarEvents,
 } from "../controllers/rtCalendarController.js"
 
@@ -28,10 +28,7 @@ rtCalendarRouter.post(
 )
 
 // GET all Google Calendar Data
-rtCalendarRouter.get(
-  "/getAndSaveGoogleCalendarData",
-  getAndSaveGoogleCalendarData
-)
+rtCalendarRouter.get("/getGoogleCalendarEvents", getGoogleCalendarEvents)
 // GET all RT Calendar Events from the database
 rtCalendarRouter.get("/getRTCalendarEvents", getRTCalendarEvents)
 

@@ -4,7 +4,7 @@ import RTNews from "../components/RTNews"
 import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
 import {
   // getRTCalendarEvents,
-  getAndSaveGoogleCalendarData,
+  getGoogleCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
 import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
@@ -17,7 +17,7 @@ const RealTimeHomePage = () => {
 
   useEffect(() => {
     // getRTCalendarEvents(process.env.REACT_APP_RT_CALENDAR) // Fetch data from example file
-    getAndSaveGoogleCalendarData(process.env.REACT_APP_RT_GOOGLE_CALENDAR) // Fetch data from Google Calendar
+    getGoogleCalendarEvents(process.env.REACT_APP_RT_GOOGLE_CALENDAR) // Fetch data from Google Calendar
       .then((returnedData) => {
         setCalendarEvents(returnedData)
         setIsLoading(false)
