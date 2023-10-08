@@ -14,12 +14,12 @@ const RTCalendar = (props) => {
     calendarEvents: PropTypes.array,
   }
 
-  // console.log(calendarEvents)
+  console.log(calendarEvents)
 
   /* <div className="thead">
         <div className="tr">
           <div className="th">Time</div>
-          <div className="th">Description</div>
+          <div className="th">Summary</div>
         </div>
       </div> */
 
@@ -29,23 +29,23 @@ const RTCalendar = (props) => {
         index === 0 ? (
           <div key={index}>
             <div className="caption">
-              {"Calendar Events for Today Mon "}
-              {moment.utc(event.DTSTAMP).format("DD/MM/YYYY")}
+              {"Calendar Events for Today: "}
+              {moment.utc(event.start.dateTime).format("ddd  DD/MM/YYYY")}
             </div>
             <div className="tbody">
               <div className="eventtime">
-                {moment.utc(event.DTSTAMP).format("hh:mm")}
+                {moment.utc(event.start.dateTime).format("LT")}
               </div>
-              <div className="eventdescription">{event.event_description}</div>
+              <div className="eventsummary">{event.summary}</div>
             </div>
           </div>
         ) : (
           <div key={index}>
             <div className="tbody">
               <div className="eventtime">
-                {moment.utc(event.DTSTAMP).format("hh:mm")}
+                {moment.utc(event.start.dateTime).format("LT")}
               </div>
-              <div className="eventdescription">{event.event_description}</div>
+              <div className="eventsummary">{event.summary}</div>
             </div>
           </div>
         )

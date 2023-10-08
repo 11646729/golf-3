@@ -21,6 +21,20 @@ const importRTCalendarEventsFromFile = async (url) => {
 }
 
 // -------------------------------------------------------
+// Function to fetch all RTCalendar Events into the database
+// -------------------------------------------------------
+export const loadRTCalendarEventsHandler = () => {
+  // Prepare empty RTCalendar table in the database & show result
+  prepareEmptyRTCalendarTable(
+    "http://localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable"
+  )
+  // Initial import of the RTCalendar file data into the database
+  importRTCalendarEventsFromFile(
+    "http://localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile"
+  )
+}
+
+// -------------------------------------------------------
 // Function to fetch all RTCalendar data
 // -------------------------------------------------------
 // export const getRTCalendarEvents = async (url) => {
@@ -36,23 +50,8 @@ const importRTCalendarEventsFromFile = async (url) => {
 export const getGoogleCalendarEvents = async (url) => {
   return await axios
     .get(url)
-    // .then((response) => response.data)
-    .then((response) => console.log(response))
+    .then((response) => response.data)
     .catch((err) => console.log(err))
-}
-
-// -------------------------------------------------------
-// Function to fetch all RTCalendar Events into the database
-// -------------------------------------------------------
-export const loadRTCalendarEventsHandler = () => {
-  // Prepare empty RTCalendar table in the database & show result
-  prepareEmptyRTCalendarTable(
-    "http://localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable"
-  )
-  // Initial import of the RTCalendar file data into the database
-  importRTCalendarEventsFromFile(
-    "http://localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile"
-  )
 }
 
 export { getGoogleCalendarEvents as default }

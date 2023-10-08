@@ -310,38 +310,55 @@ export const insertGoogleCalendarEvent = async (req, res) => {
 }
 
 // -------------------------------------------------------
-// TODO - Delete calendar data from the Google Calendar
+// TODO - Delete an event from eventID from the Google Calendar
 // -------------------------------------------------------
+const deleteEvent = async (eventId) => {
+  // Provide the required configuration
+  const credentials = JSON.parse(process.env.CREDENTIALS)
+  const calendarId = process.env.CALENDAR_ID
+  const scope = "https://www.googleapis.com/auth/calendar"
+  const calendar = google.calendar({ version: "v3" })
 
-// // Delete an event from eventID
-// const deleteEvent = async (eventId) => {
-//   try {
-//     let response = await calendar.events.delete({
-//       auth: auth,
-//       calendarId: calendarId,
-//       eventId: eventId,
-//     })
+  const auth = new google.auth.JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key,
+    scope
+  )
 
-//     if (response.data === "") {
-//       return 1
-//     } else {
-//       return 0
-//     }
-//   } catch (error) {
-//     console.log(`Error at deleteEvent --> ${error}`)
-//     return 0
-//   }
-// }
+  try {
+    let response = await calendar.events.delete({
+      auth: auth,
+      calendarId: calendarId,
+      eventId: eventId,
+    })
 
-// let eventId = "rnki5eqkae4gjpoojlh49493dg"
+    if (response.data === "") {
+      return 1
+    } else {
+      return 0
+    }
+  } catch (error) {
+    console.log(`Error at deleteEvent --> ${error}`)
+    return 0
+  }
+}
 
-// deleteEvent(eventId)
-//   .then((res) => {
-//     console.log(res)
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
+// -------------------------------------------------------
+// Delete an event from eventID from the Google Calendar
+// -------------------------------------------------------
+export const deleteGoogleCalendarEvent = async (req, res) => {
+  // Provide the required eventId
+  let eventId = "rnki5eqkae4gjpoojlh49493dg"
+
+  deleteEvent(eventId)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 // -------------------------------------------------------
 // Fetch all calendar events between two dates from the Google Calendar
@@ -386,12 +403,12 @@ export const getGoogleCalendarEvents = async (req, res) => {
   let timeZone = "Europe/London"
 
   getEvents(startTime, endTime, timeZone)
-    .then((res) => {
-      console.log(res[0])
+    .then((results) => {
+      res.send(results)
     })
     .catch((err) => {
       console.log(err)
     })
 }
 
-export default getRTCalendarEvents
+export default getGoogleCalendarEvents

@@ -27,6 +27,8 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
+  console.log(calendarEvents)
+
   // useEffect(() => {
   //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)
   //     .then((returnedData) => {
