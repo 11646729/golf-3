@@ -35,19 +35,19 @@ export const loadRTCalendarEventsHandler = () => {
 }
 
 // -------------------------------------------------------
-// Function to fetch all RTCalendar data
-// -------------------------------------------------------
-// export const getRTCalendarEvents = async (url) => {
-//   return await axios
-//     .get(url)
-//     .then((response) => response.data)
-//     .catch((err) => console.log(err))
-// }
-
-// -------------------------------------------------------
 // Function to fetch all Google Calendar data
 // -------------------------------------------------------
 export const getGoogleCalendarEvents = async (url) => {
+  return await axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to fetch all Google Calendars
+// -------------------------------------------------------
+export const getGoogleCalendarList = async (url) => {
   return await axios
     .get(url)
     .then((response) => response.data)

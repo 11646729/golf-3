@@ -14,15 +14,6 @@ const RTCalendar = (props) => {
     calendarEvents: PropTypes.array,
   }
 
-  console.log(calendarEvents)
-
-  /* <div className="thead">
-        <div className="tr">
-          <div className="th">Time</div>
-          <div className="th">Summary</div>
-        </div>
-      </div> */
-
   return !isLoading ? (
     <div className="table">
       {calendarEvents.map((event, index) =>

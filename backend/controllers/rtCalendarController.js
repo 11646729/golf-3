@@ -240,13 +240,9 @@ export const getRTCalendarEvents = (req, res) => {
 }
 
 // -------------------------------------------------------
-// TODO - Enter calendar data from the Google Calendar
-// -------------------------------------------------------
-
-// -------------------------------------------------------
 // Insert new event to Google Calendar
 // -------------------------------------------------------
-const insertEvent = async (event) => {
+const insertEvent = (event) => {
   // Provide the required configuration
   const credentials = JSON.parse(process.env.CREDENTIALS)
   const calendarId = process.env.CALENDAR_ID
@@ -261,7 +257,7 @@ const insertEvent = async (event) => {
   )
 
   try {
-    let response = await calendar.events.insert({
+    let response = calendar.events.insert({
       auth: auth,
       calendarId: calendarId,
       resource: event,
@@ -386,6 +382,8 @@ const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
       timeZone: dateTimeZone,
     })
 
+    // console.log(response.data)
+
     let items = response["data"]["items"]
     return items
   } catch (error) {
@@ -405,6 +403,50 @@ export const getGoogleCalendarEvents = async (req, res) => {
   getEvents(startTime, endTime, timeZone)
     .then((results) => {
       res.send(results)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+// -------------------------------------------------------
+// Fetch list of calendars from Google Calendar
+// -------------------------------------------------------
+const getCalendarList = async () => {
+  // Provide the required configuration
+  const credentials = JSON.parse(process.env.CREDENTIALS)
+  const scope = "https://www.googleapis.com/auth/calendar"
+  const calendar = google.calendar({ version: "v3" })
+
+  const auth = new google.auth.JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key,
+    scope
+  )
+
+  try {
+    let response = await calendar.calendarList.list({
+      auth: auth,
+      maxResults: 100,
+    })
+
+    let items = response["data"]["items"]
+    return items
+  } catch (error) {
+    console.log(`Error at getEvents --> ${error}`)
+    return 0
+  }
+}
+
+// -------------------------------------------------------
+// Fetch list of calendars from the Google Calendar
+// -------------------------------------------------------
+export const getGoogleCalendarList = async (req, res) => {
+  getCalendarList()
+    .then((results) => {
+      console.log(results)
+      // res.send(results)
     })
     .catch((err) => {
       console.log(err)

@@ -3,23 +3,23 @@ import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
 import {
-  // getRTCalendarEvents,
+  getGoogleCalendarList,
   getGoogleCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
 import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
+  const [calendarList, setCalendarList] = useState([])
   const [calendarEvents, setCalendarEvents] = useState([])
   const [newsItems, setNewsItems] = useState([])
   const [weatherData, setWeatherData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // getRTCalendarEvents(process.env.REACT_APP_RT_CALENDAR) // Fetch data from example file
-    getGoogleCalendarEvents(process.env.REACT_APP_RT_GOOGLE_CALENDAR) // Fetch data from Google Calendar
+    getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
       .then((returnedData) => {
-        setCalendarEvents(returnedData)
+        setCalendarList(returnedData)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -27,7 +27,16 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  console.log(calendarEvents)
+  // useEffect(() => {
+  //   getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
+  //     .then((returnedData) => {
+  //       setCalendarEvents(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
 
   // useEffect(() => {
   //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)

@@ -4,7 +4,7 @@ import {
   prepareEmptyRTCalendarTable,
   importRTCalendarEventsFromFile,
   getGoogleCalendarEvents,
-  // getRTCalendarEvents,
+  getGoogleCalendarList,
 } from "../controllers/rtCalendarController.js"
 
 var rtCalendarRouter = express.Router()
@@ -30,7 +30,7 @@ rtCalendarRouter.post(
 // GET all Google Calendar Data
 rtCalendarRouter.get("/getGoogleCalendarEvents", getGoogleCalendarEvents)
 
-// GET all RT Calendar Events from the database
-// rtCalendarRouter.get("/getRTCalendarEvents", getRTCalendarEvents)
+// GET all Google Calendars
+rtCalendarRouter.get("/getGoogleCalendarList", getGoogleCalendarList)
 
 export default rtCalendarRouter
