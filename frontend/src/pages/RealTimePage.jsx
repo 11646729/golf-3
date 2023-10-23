@@ -3,23 +3,34 @@ import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
 import {
-  getGoogleCalendarList,
+  // getGoogleCalendarList,
   getGoogleCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
 import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
-  const [calendarList, setCalendarList] = useState([])
+  // const [calendarList, setCalendarList] = useState([])
   const [calendarEvents, setCalendarEvents] = useState([])
   const [newsItems, setNewsItems] = useState([])
   const [weatherData, setWeatherData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
+  // useEffect(() => {
+  //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
+  //     .then((returnedData) => {
+  //       setCalendarList(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
+
   useEffect(() => {
-    getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
+    getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
       .then((returnedData) => {
-        setCalendarList(returnedData)
+        setCalendarEvents(returnedData)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -27,27 +38,16 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  // useEffect(() => {
-  //   getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
-  //     .then((returnedData) => {
-  //       setCalendarEvents(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
-
-  // useEffect(() => {
-  //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)
-  //     .then((returnedData) => {
-  //       setNewsItems(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
+  useEffect(() => {
+    getRTNewsItems(process.env.REACT_APP_RT_NEWS)
+      .then((returnedData) => {
+        setNewsItems(returnedData)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
 
   useEffect(() => {
     getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
@@ -62,13 +62,16 @@ const RealTimeHomePage = () => {
     // return () => socket.disconnect()
   }, [])
 
+  // console.log(calendarList)
+  // console.log(calendarEvents)
+
   return (
     <div className="home">
       <div className="box box1">
         <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        {/* <RTNews isLoading={isLoading} newsEvents={newsItems} /> */}
+        <RTNews isLoading={isLoading} newsEvents={newsItems} />
       </div>
       <div className="box box3">
         Golf Course Weather & next Tee Time

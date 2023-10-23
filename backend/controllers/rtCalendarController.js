@@ -382,8 +382,6 @@ const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
       timeZone: dateTimeZone,
     })
 
-    // console.log(response.data)
-
     let items = response["data"]["items"]
     return items
   } catch (error) {
@@ -396,8 +394,8 @@ const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
 // Fetch calendar data from the Google Calendar
 // -------------------------------------------------------
 export const getGoogleCalendarEvents = async (req, res) => {
-  let startTime = moment("2023-09-01").format()
-  let endTime = moment("2023-09-01").add(1, "months").format()
+  let startTime = moment().subtract(1, "months").format()
+  let endTime = moment().add(1, "days").format()
   let timeZone = "Europe/London"
 
   getEvents(startTime, endTime, timeZone)
