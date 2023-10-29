@@ -29,7 +29,11 @@ export var switchOnRealtimeData = (io, switchOn) => {
           // console.log("OpenWeather temperature: " + result)
           emitTemperatureData(socket, result)
         })
+      })
 
+      // -----------------------------
+      // Fetch data every 2 Minutes
+      cron.schedule("*/2 * * * *", () => {
         // -----------------------------
         getAndSaveRTNewsItems().then((result) => {
           // console.log(result.data.articles)
