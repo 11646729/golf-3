@@ -241,8 +241,8 @@ export const getRTNewsItems = (req, res) => {
 
       // Close the Database Connection
       closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
+    } catch (err) {
+      console.error(err.message)
     }
   } else {
     console.error("Cannot connect to database")
@@ -253,34 +253,44 @@ export const getRTNewsItems = (req, res) => {
 // Get all Real Time News Items from News API
 // Path: localhost:4000/api/rtnews/getLiveRTNewsItems
 // -------------------------------------------------------
-export const getLiveRTNewsItems = async (req, res) => {
-  // const liveNewsUrl =
-  //   "https://newsapi.org/v2/everything" +
-  //   "?q=Trump" +
-  //   "&from=2023-09-09" +
-  //   "&sortBy=popularity" +
-  //   "&apiKey=" +
-  //   process.env.RT_NEWS_API
-
-  var date = moment()
-  var currentDate = date.format("YYYY-MM-DD")
-  // console.log(currentDate) // "2022/06/17"
-
-  const liveNewsTopHeadlinesUrl =
+export const getAndSaveRTNewsItems = async () => {
+  let liveNewsTopHeadlinesUrl =
     "https://newsapi.org/v2/top-headlines" +
     "?sources=bbc-news" +
     "&apiKey=" +
     process.env.RT_NEWS_API
 
+  let currentDate = moment().format()
+  //.format("YYYY-MM-DD")
+  let timeNow = new Date().toISOString()
+  // console.log(currentDate)
+  // console.log(timeNow)
+
   try {
     // fetch data from the url endpoint and return it
-    const response = await axios.get(liveNewsTopHeadlinesUrl)
+    let results = await axios.get(liveNewsTopHeadlinesUrl)
 
-    console.log(response.data.status)
-    console.log(response.data.totalResults)
-    console.log(response.data.articles)
+    // console.log(results.data.articles)
+
+    return results
   } catch (err) {
-    console.log("Error in getLiveRTNewsItems: ", err)
+    console.log("Error in getAndSaveRTNewsItems: ", err)
+  }
+}
+
+// -------------------------------------------------------
+// Socket Emit news data to be consumed by the client
+// -------------------------------------------------------
+export const emitNewsData = (socket, newsData) => {
+  // Guard clauses
+  if (socket == null) return
+  if (newsData == null) return
+
+  try {
+    console.log("Ready to emit news: " + newsData)
+    // socket.emit("DataFromOpenNewsAPI", newsData)
+  } catch (err) {
+    console.log("Error in emitNewsData: ", err)
   }
 }
 

@@ -2,7 +2,11 @@ import cron from "node-cron"
 import {
   emitTemperatureData,
   getAndSaveOpenWeatherData,
-} from "./controllers/weatherController.js"
+} from "./controllers/rtWeatherController.js"
+import {
+  emitNewsData,
+  getAndSaveRTNewsItems,
+} from "./controllers/rtNewsController.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -17,21 +21,19 @@ export var switchOnRealtimeData = (io, switchOn) => {
       socket.join("room-" + roomno)
       console.log("Room No: " + roomno + " Joined & Client Connected")
 
-      console.log(socket.id)
-
       // -----------------------------
-      // Fetch data every Day at 07:00
-      // cron.schedule("0 7 * * *", () => {
-
-      // Fetch data every 15 Minutes
-      // cron.schedule("*/15 * * * *", () => {
-
       // Fetch data every Minute
       cron.schedule("*/1 * * * *", () => {
         // -----------------------------
         getAndSaveOpenWeatherData().then((result) => {
           // console.log("OpenWeather temperature: " + result)
-          // emitTemperatureData(socket, result)
+          emitTemperatureData(socket, result)
+        })
+
+        // -----------------------------
+        getAndSaveRTNewsItems().then((result) => {
+          // console.log(result.data.articles)
+          emitNewsData(socket, result)
         })
       })
 

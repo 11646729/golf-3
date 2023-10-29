@@ -63,7 +63,7 @@ const RealTimeHomePage = () => {
   }, [])
 
   // console.log(calendarList)
-  // console.log(calendarEvents)
+  console.log(newsItems)
 
   return (
     <div className="home">
@@ -71,7 +71,7 @@ const RealTimeHomePage = () => {
         <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        <RTNews isLoading={isLoading} newsEvents={newsItems} />
+        {/* <RTNews isLoading={isLoading} newsEvents={newsItems} /> */}
       </div>
       <div className="box box3">
         Golf Course Weather & next Tee Time

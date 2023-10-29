@@ -1,4 +1,5 @@
 import axios from "axios"
+import moment from "moment"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -195,14 +196,14 @@ const saveTemperature = (temperatureReading) => {
 // -------------------------------------------------------
 export const getAndSaveOpenWeatherData = async () => {
   const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-  const timeNow = new Date().toISOString()
+  let timeNow = new Date().toISOString()
 
   try {
     // fetch data from the url endpoint and return it
-    const response = await axios.get(weatherDataUrl)
+    let response = await axios.get(weatherDataUrl)
 
     // Reformat data into Transient object
-    const temperatureReading = [
+    let temperatureReading = [
       timeNow,
       process.env.DATABASE_VERSION,
       unixToUtc(response.data.dt),
@@ -229,10 +230,9 @@ export const emitTemperatureData = (socket, weatherData) => {
   if (socket == null) return
   if (weatherData == null) return
 
-  // console.log("Ready to emit temperature: " + weatherData)
-
   try {
-    socket.emit("DataFromOpenWeatherAPI", weatherData)
+    console.log("Ready to emit temperature: " + weatherData)
+    // socket.emit("DataFromOpenWeatherAPI", weatherData)
   } catch (err) {
     console.log("Error in emitTemperatureData: ", err)
   }

@@ -3,20 +3,20 @@ import {
   index,
   prepareEmptyTemperaturesTable,
   getTemperaturesFromDatabase,
-} from "../controllers/weatherController.js"
+} from "../controllers/rtWeatherController.js"
 
-var weatherRouter = express.Router()
+var rtWeatherRouter = express.Router()
 
 // ---------------------------------------------------
 // Weather Routes
 // ---------------------------------------------------
 // GET catalogue home page
-weatherRouter.get("/", index)
+rtWeatherRouter.get("/", index)
 
 // Prepare the temperatures table in the database
-weatherRouter.post("/prepareTemperaturesTable", prepareEmptyTemperaturesTable)
+rtWeatherRouter.post("/prepareTemperaturesTable", prepareEmptyTemperaturesTable)
 
 // GET all temperature readings from the database
-weatherRouter.get("/getTemperaturesData", getTemperaturesFromDatabase)
+rtWeatherRouter.get("/getTemperaturesData", getTemperaturesFromDatabase)
 
-export default weatherRouter
+export default rtWeatherRouter

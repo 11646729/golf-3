@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-// import { switchOnRealtimeData } from "./enableRealtimeData.js"
+import { switchOnRealtimeData } from "./enableRealtimeData.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -18,7 +18,7 @@ const __dirname = path.resolve()
 import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
 import rtNewsRouter from "./routes/rtNewsRouteCatalog.js"
 import golfRouter from "./routes/golfRouteCatalog.js"
-import weatherRouter from "./routes/weatherRouteCatalog.js"
+import rtWeatherRouter from "./routes/rtWeatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
 import busRouter from "./routes/busRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/api/rtcalendar", rtCalendarRouter)
 app.use("/api/rtnews", rtNewsRouter)
 app.use("/api/golf", golfRouter)
-app.use("/api/weather", weatherRouter)
+app.use("/api/weather", rtWeatherRouter)
 app.use("/api/cruise", cruiseRouter)
 app.use("/api/bus", busRouter)
 app.use("/api/seismicdesigns", seismicDesignsRouter)
@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 })
 
 // Enable Realtime data sending system
-// switchOnRealtimeData(io, process.env.REALTIME_TEMPERATURES_ENABLED)
+switchOnRealtimeData(io, process.env.REALTIME_TEMPERATURES_ENABLED)
 
 // Start Express server
 httpServer.listen(port, (err) => {
