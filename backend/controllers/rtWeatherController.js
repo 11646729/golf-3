@@ -1,5 +1,4 @@
 import axios from "axios"
-import moment from "moment"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -231,7 +230,7 @@ export const emitTemperatureData = (socket, weatherData) => {
   if (weatherData == null) return
 
   try {
-    console.log("Ready to emit temperature: " + weatherData)
+    // console.log("Ready to emit temperature: " + weatherData)
     // socket.emit("DataFromOpenWeatherAPI", weatherData)
   } catch (err) {
     console.log("Error in emitTemperatureData: ", err)

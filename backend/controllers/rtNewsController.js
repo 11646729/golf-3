@@ -268,11 +268,20 @@ export const getAndSaveRTNewsItems = async () => {
 
   try {
     // fetch data from the url endpoint and return it
-    let results = await axios.get(liveNewsTopHeadlinesUrl)
-
-    // console.log(results.data.articles)
-
-    return results
+    await axios
+      .get(liveNewsTopHeadlinesUrl)
+      .then(function (response) {
+        // handle success
+        console.log(response.data.articles)
+        return response
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error)
+      })
+      .finally(function () {
+        // always executed
+      })
   } catch (err) {
     console.log("Error in getAndSaveRTNewsItems: ", err)
   }
@@ -287,7 +296,7 @@ export const emitNewsData = (socket, newsData) => {
   if (newsData == null) return
 
   try {
-    console.log("Ready to emit news: " + newsData)
+    // console.log("Ready to emit news: " + newsData)
     // socket.emit("DataFromOpenNewsAPI", newsData)
   } catch (err) {
     console.log("Error in emitNewsData: ", err)
