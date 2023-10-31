@@ -25,7 +25,7 @@ const RTNews = (props) => {
 
   return !isLoading ? (
     <div className="table">
-      {newsItems.map((item, index) =>
+      {/* {newsItems.map((item, index) =>
         index === 0 ? (
           <div key={index}>
             <div className="caption">
@@ -49,7 +49,7 @@ const RTNews = (props) => {
             </div>
           </div>
         )
-      )}
+      )} */}
     </div>
   ) : null
 }

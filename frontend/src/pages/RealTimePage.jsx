@@ -77,13 +77,13 @@ const RealTimeHomePage = () => {
   useEffect(() => {
     socket.on("DataFromOpenNewsAPI", (currentData) => {
       // console.log(currentData)
-      // setNewsItems(currentData)
+      setNewsItems(currentData)
     })
   }, [socket])
 
   // console.log(calendarList)
   // console.log(newsItems)
-  console.log(weatherData)
+  // console.log(weatherData)
 
   return (
     <div className="home">
@@ -91,7 +91,7 @@ const RealTimeHomePage = () => {
         <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
       </div>
       <div className="box box2">
-        {/* <RTNews isLoading={isLoading} newsEvents={newsItems} /> */}
+        <RTNews isLoading={isLoading} newsItems={newsItems} />
       </div>
       <div className="box box3">
         Golf Course Weather & next Tee Time

@@ -36,8 +36,8 @@ export var switchOnRealtimeData = (io, switchOn) => {
       cron.schedule("*/1 * * * *", () => {
         // -----------------------------
         getAndSaveRTNewsItems().then((result) => {
-          console.log(result)
-          // emitNewsData(socket, result)
+          // console.log(result)
+          emitNewsData(socket, result)
         })
       })
 

@@ -285,8 +285,8 @@ export const emitNewsData = (socket, newsData) => {
   if (newsData == null) return
 
   try {
-    console.log("Ready to emit news: " + newsData)
-    // socket.emit("DataFromOpenNewsAPI", newsData)
+    // console.log("Ready to emit news: " + newsData)
+    socket.emit("DataFromOpenNewsAPI", newsData)
   } catch (error) {
     console.log("Error in emitNewsData: ", error)
   }
