@@ -260,30 +260,19 @@ export const getAndSaveRTNewsItems = async () => {
     "&apiKey=" +
     process.env.RT_NEWS_API
 
-  let currentDate = moment().format()
+  // let currentDate = moment().format()
   //.format("YYYY-MM-DD")
-  let timeNow = new Date().toISOString()
+  // let timeNow = new Date().toISOString()
   // console.log(currentDate)
   // console.log(timeNow)
 
   try {
     // fetch data from the url endpoint and return it
-    await axios
-      .get(liveNewsTopHeadlinesUrl)
-      .then(function (response) {
-        // handle success
-        console.log(response.data.articles)
-        return response
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error)
-      })
-      .finally(function () {
-        // always executed
-      })
-  } catch (err) {
-    console.log("Error in getAndSaveRTNewsItems: ", err)
+    let response = await axios.get(liveNewsTopHeadlinesUrl)
+
+    return response.data.articles
+  } catch (error) {
+    console.log("Error in getAndSaveRTNewsData: ", error)
   }
 }
 
@@ -296,10 +285,10 @@ export const emitNewsData = (socket, newsData) => {
   if (newsData == null) return
 
   try {
-    // console.log("Ready to emit news: " + newsData)
+    console.log("Ready to emit news: " + newsData)
     // socket.emit("DataFromOpenNewsAPI", newsData)
-  } catch (err) {
-    console.log("Error in emitNewsData: ", err)
+  } catch (error) {
+    console.log("Error in emitNewsData: ", error)
   }
 }
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
-import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
+import { io } from "socket.io-client"
+// import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
 import {
   // getGoogleCalendarList,
   getGoogleCalendarEvents,
 } from "../functionHandlers/loadRTCalendarDataHandler"
-import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
+// import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
@@ -27,6 +28,10 @@ const RealTimeHomePage = () => {
   //     })
   // }, [])
 
+  const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
+    // autoConnect: false,
+  })
+
   useEffect(() => {
     getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
       .then((returnedData) => {
@@ -38,32 +43,47 @@ const RealTimeHomePage = () => {
       })
   }, [])
 
-  useEffect(() => {
-    getRTNewsItems(process.env.REACT_APP_RT_NEWS)
-      .then((returnedData) => {
-        setNewsItems(returnedData)
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+  // useEffect(() => {
+  //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)
+  //     .then((returnedData) => {
+  //       setNewsItems(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
+
+  // useEffect(() => {
+  //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
+  //     .then((returnedData) => {
+  //       // setTemperatureData((returnedData) => [...temperatureData, returnedData])
+  //       setWeatherData(returnedData)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //   // return () => socket.disconnect()
+  // }, [])
 
   useEffect(() => {
-    getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
-      .then((returnedData) => {
-        // setTemperatureData((returnedData) => [...temperatureData, returnedData])
-        setWeatherData(returnedData)
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    // return () => socket.disconnect()
-  }, [])
+    socket.on("DataFromOpenWeatherAPI", (currentData) => {
+      // console.log(currentData)
+      setWeatherData(currentData)
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket.on("DataFromOpenNewsAPI", (currentData) => {
+      // console.log(currentData)
+      // setNewsItems(currentData)
+    })
+  }, [socket])
 
   // console.log(calendarList)
-  console.log(newsItems)
+  // console.log(newsItems)
+  console.log(weatherData)
 
   return (
     <div className="home">

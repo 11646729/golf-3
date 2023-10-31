@@ -53,7 +53,7 @@ const WeatherPage = () => {
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
-      // console.log(currentData)
+      console.log(currentData)
     })
   }, [])
 

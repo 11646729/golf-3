@@ -22,9 +22,9 @@ export const prepareEmptyTemperaturesTable = (req, res) => {
       "SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'temperatures'"
 
     // Must use db.all not db.run
-    db.all(sql, [], (err, results) => {
-      if (err) {
-        return console.error(err.message)
+    db.all(sql, [], (error, results) => {
+      if (error) {
+        return console.error(error.message)
       }
 
       // results.length shows 1 if exists or 0 if doesn't exist
@@ -60,17 +60,17 @@ const createTemperaturesTable = (req, res) => {
       const sql =
         "CREATE TABLE IF NOT EXISTS temperatures (temperatureid INTEGER PRIMARY KEY AUTOINCREMENT, timenow TEXT NOT NULL, databaseversion INTEGER, timeofmeasurement TEXT NOT NULL, locationname TEXT NOT NULL, locationtemperature REAL, lng REAL CHECK( lng >= -180 AND lng <= 180 ), lat REAL CHECK( lat >= -90 AND lat <= 90 ))"
 
-      db.all(sql, [], (err) => {
-        if (err) {
-          return console.error(err.message)
+      db.all(sql, [], (error) => {
+        if (error) {
+          return console.error(error.message)
         }
         console.log("temperatures table successfully created")
       })
 
       // Disconnect from the SQLite database
       closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
+    } catch (error) {
+      console.error(error.message)
     }
   } else {
     console.error("Cannot connect to database")
@@ -88,18 +88,18 @@ const deleteTemperatures = (db) => {
     // Count the records in the database
     const sql = "SELECT COUNT(temperatureid) AS count FROM temperatures"
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
+    db.all(sql, [], (error, result) => {
+      if (error) {
+        console.error(error.message)
       }
 
       if (result[0].count > 0) {
         // Delete all the data in the temperatures table
         const sql1 = "DELETE FROM temperatures"
 
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
+        db.all(sql1, [], function (error, results) {
+          if (error) {
+            console.error(error.message)
           }
           console.log("All temperatures data deleted")
         })
@@ -108,9 +108,9 @@ const deleteTemperatures = (db) => {
         const sql2 =
           "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'temperatures'"
 
-        db.run(sql2, [], (err) => {
-          if (err) {
-            console.error(err.message)
+        db.run(sql2, [], (error) => {
+          if (error) {
+            console.error(error.message)
           }
           console.log(
             "In sqlite_sequence table temperatures seq number set to 0"
@@ -120,8 +120,8 @@ const deleteTemperatures = (db) => {
         console.log("temperatures table was empty (so no data deleted)")
       }
     })
-  } catch (err) {
-    console.error("Error in deleteTemperatures: ", err.message)
+  } catch (error) {
+    console.error("Error in deleteTemperatures: ", error.message)
   }
 }
 
@@ -138,9 +138,9 @@ export const getTemperaturesFromDatabase = (req, res) => {
       const sql =
         "SELECT * FROM temperatures ORDER BY temperatureid DESC LIMIT 20"
 
-      db.all(sql, [], (err, results) => {
-        if (err) {
-          return console.error(err.message)
+      db.all(sql, [], (error, results) => {
+        if (error) {
+          return console.error(error.message)
         }
         // console.log("Results: ", results.length)
 
@@ -149,8 +149,8 @@ export const getTemperaturesFromDatabase = (req, res) => {
 
       // Close the Database Connection
       closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
+    } catch (error) {
+      console.error(error.message)
     }
   } else {
     console.error("Cannot connect to database")
@@ -182,8 +182,8 @@ const saveTemperature = (temperatureReading) => {
 
       // Close the Database Connection
       closeSqlDbConnection(db)
-    } catch (err) {
-      console.error("Error in saveTemperature: ", err)
+    } catch (error) {
+      console.error("Error in saveTemperature: ", error)
     }
   } else {
     console.error("Cannot connect to database")
@@ -216,8 +216,8 @@ export const getAndSaveOpenWeatherData = async () => {
     saveTemperature(temperatureReading)
 
     return temperatureReading
-  } catch (err) {
-    console.log("Error in getAndSaveOpenWeatherData: ", err)
+  } catch (error) {
+    console.log("Error in getAndSaveOpenWeatherData: ", error)
   }
 }
 
@@ -231,9 +231,9 @@ export const emitTemperatureData = (socket, weatherData) => {
 
   try {
     // console.log("Ready to emit temperature: " + weatherData)
-    // socket.emit("DataFromOpenWeatherAPI", weatherData)
-  } catch (err) {
-    console.log("Error in emitTemperatureData: ", err)
+    socket.emit("DataFromOpenWeatherAPI", weatherData)
+  } catch (error) {
+    console.log("Error in emitTemperatureData: ", error)
   }
 }
 
