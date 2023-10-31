@@ -1,6 +1,6 @@
 import fs from "fs"
 import axios from "axios"
-import moment from "moment"
+// import moment from "moment"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -270,6 +270,9 @@ export const getAndSaveRTNewsItems = async () => {
     // fetch data from the url endpoint and return it
     let response = await axios.get(liveNewsTopHeadlinesUrl)
 
+    // TODO - Save data in the Database
+    // saveNews(response)
+
     return response.data.articles
   } catch (error) {
     console.log("Error in getAndSaveRTNewsData: ", error)
@@ -285,7 +288,6 @@ export const emitNewsData = (socket, newsData) => {
   if (newsData == null) return
 
   try {
-    // console.log("Ready to emit news: " + newsData)
     socket.emit("DataFromOpenNewsAPI", newsData)
   } catch (error) {
     console.log("Error in emitNewsData: ", error)

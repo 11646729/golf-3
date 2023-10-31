@@ -230,7 +230,6 @@ export const emitTemperatureData = (socket, weatherData) => {
   if (weatherData == null) return
 
   try {
-    // console.log("Ready to emit temperature: " + weatherData)
     socket.emit("DataFromOpenWeatherAPI", weatherData)
   } catch (error) {
     console.log("Error in emitTemperatureData: ", error)

@@ -69,21 +69,17 @@ const RealTimeHomePage = () => {
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
-      // console.log(currentData)
       setWeatherData(currentData)
     })
   }, [socket])
 
   useEffect(() => {
     socket.on("DataFromOpenNewsAPI", (currentData) => {
-      // console.log(currentData)
       setNewsItems(currentData)
     })
   }, [socket])
 
   // console.log(calendarList)
-  // console.log(newsItems)
-  // console.log(weatherData)
 
   return (
     <div className="home">

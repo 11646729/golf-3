@@ -23,20 +23,18 @@ export var switchOnRealtimeData = (io, switchOn) => {
 
       // -----------------------------
       // Fetch data every Minute
-      // cron.schedule("*/1 * * * *", () => {
-      //   // -----------------------------
-      //   getAndSaveOpenWeatherData().then((result) => {
-      //     // console.log("OpenWeather temperature: " + result)
-      //     emitTemperatureData(socket, result)
-      //   })
-      // })
+      cron.schedule("*/1 * * * *", () => {
+        // -----------------------------
+        getAndSaveOpenWeatherData().then((result) => {
+          emitTemperatureData(socket, result)
+        })
+      })
 
       // -----------------------------
       // Fetch data every 2 Minutes
-      cron.schedule("*/1 * * * *", () => {
+      cron.schedule("*/2 * * * *", () => {
         // -----------------------------
         getAndSaveRTNewsItems().then((result) => {
-          // console.log(result)
           emitNewsData(socket, result)
         })
       })
