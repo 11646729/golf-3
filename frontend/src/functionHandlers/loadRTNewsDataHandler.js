@@ -1,31 +1,6 @@
 import axios from "axios"
 
 // -------------------------------------------------------
-// Function to fetch all RT News data - DON'T TRY TO REFACTOR THIS
-// -------------------------------------------------------
-// export const getRTNewsData = async (url, key) => {
-//   var options = {
-//     method: "GET",
-//     url: url, //"https://api.newscatcherapi.com/v2/search",
-//     params: { q: "Bitcoin", lang: "en", sort_by: "relevancy", page: "1" },
-//     headers: {
-//       "x-api-key": key, //"your_key_1",
-//     },
-//   }
-
-//   return await axios
-//     .request(options)
-//     // .then((response) => response.data)
-//     .then(function (response) {
-//       console.log(response.data)
-//     })
-//     // .catch((err) => console.log(err))
-//     .catch(function (error) {
-//       console.error(error)
-//     })
-// }
-
-// -------------------------------------------------------
 // Function to prepare the empty RTNews table in the database
 // -------------------------------------------------------
 const prepareEmptyRTNewsTable = async (url) => {
@@ -46,16 +21,6 @@ const importRTNewsItemsFromFile = async (url) => {
 }
 
 // -------------------------------------------------------
-// Function to fetch all RTNews Items
-// -------------------------------------------------------
-export const getRTNewsItems = async (url) => {
-  return await axios
-    .get(url)
-    .then((response) => response.data)
-    .catch((err) => console.log(err))
-}
-
-// -------------------------------------------------------
 // Function to fetch all RTNews Items into the database
 // -------------------------------------------------------
 export const loadRTNewsItemsHandler = () => {
@@ -70,4 +35,4 @@ export const loadRTNewsItemsHandler = () => {
   )
 }
 
-export { getRTNewsItems as default }
+export { loadRTNewsItemsHandler as default }

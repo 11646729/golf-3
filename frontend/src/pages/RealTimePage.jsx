@@ -1,8 +1,8 @@
 import React, { useEffect, useState, memo } from "react"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
+import RTWeather from "../components/RTWeather"
 import { io } from "socket.io-client"
-// import { getRTNewsItems } from "../functionHandlers/loadRTNewsDataHandler"
 import {
   // getGoogleCalendarList,
   getGoogleCalendarEvents,
@@ -28,10 +28,6 @@ const RealTimeHomePage = () => {
   //     })
   // }, [])
 
-  const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
-    // autoConnect: false,
-  })
-
   useEffect(() => {
     getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
       .then((returnedData) => {
@@ -42,17 +38,6 @@ const RealTimeHomePage = () => {
         console.log(err)
       })
   }, [])
-
-  // useEffect(() => {
-  //   getRTNewsItems(process.env.REACT_APP_RT_NEWS)
-  //     .then((returnedData) => {
-  //       setNewsItems(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
 
   // useEffect(() => {
   //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
@@ -66,6 +51,10 @@ const RealTimeHomePage = () => {
   //     })
   //   // return () => socket.disconnect()
   // }, [])
+
+  const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
+    // autoConnect: false,
+  })
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
@@ -90,8 +79,8 @@ const RealTimeHomePage = () => {
         <RTNews isLoading={isLoading} newsItems={newsItems} />
       </div>
       <div className="box box3">
-        Golf Course Weather & next Tee Time
-        {/* <RTWeather isLoading={isLoading} weatherData={weatherData} /> */}
+        Next Tee Time
+        <RTWeather isLoading={isLoading} weatherData={weatherData} />
       </div>
       <div className="box box4">Golf Handicap, Trend & Practise</div>
       <div className="box box5">Cruise Ships in Belfast or En Route</div>
