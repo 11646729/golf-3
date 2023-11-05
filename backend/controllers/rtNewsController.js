@@ -251,32 +251,13 @@ export const getRTNewsItems = (req, res) => {
 
 // -------------------------------------------------------
 // Get all Real Time News Items from News API
-// Path: localhost:4000/api/rtnews/getLiveRTNewsItems
+// Path: localhost:4000/api/rtnews/getNewsItems
 // -------------------------------------------------------
-export const getAndSaveRTNewsItems = async () => {
-  let liveNewsTopHeadlinesUrl =
-    "https://newsapi.org/v2/top-headlines" +
-    "?sources=bbc-news" +
-    "&apiKey=" +
-    process.env.RT_NEWS_API
-
-  // let currentDate = moment().format()
-  //.format("YYYY-MM-DD")
-  // let timeNow = new Date().toISOString()
-  // console.log(currentDate)
-  // console.log(timeNow)
-
-  try {
-    // fetch data from the url endpoint and return it
-    let response = await axios.get(liveNewsTopHeadlinesUrl)
-
-    // TODO - Save data in the Database
-    // saveNews(response)
-
-    return response.data.articles
-  } catch (error) {
-    console.log("Error in getAndSaveRTNewsData: ", error)
-  }
+export const getNewsItems = async (liveNewsTopHeadlinesUrl) => {
+  return await axios
+    .get(liveNewsTopHeadlinesUrl)
+    .then((response) => response.data.articles)
+    .catch((error) => console.log("Error in getAndSaveRTNewsData: ", error))
 }
 
 // -------------------------------------------------------

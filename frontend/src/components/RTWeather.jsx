@@ -7,14 +7,14 @@ import moment from "moment"
 // Real Time News component
 // -------------------------------------------------------
 const RTWeather = (props) => {
-  const { isLoading, weatherData } = props
+  const { isLoading, temperatureReadings } = props
 
   RTWeather.propTypes = {
     isLoading: PropTypes.bool,
-    weatherData: PropTypes.array,
+    temperatureReadings: PropTypes.array,
   }
 
-  console.log(weatherData)
+  // console.log(temperatureReadings)
 
   // <div className="thead">
   //   <div className="tr">
@@ -25,27 +25,27 @@ const RTWeather = (props) => {
 
   // return !isLoading ? (
   //   <div className="table">
-  //     {weatherData.map((item, publishedAt) =>
-  //       publishedAt === 0 ? (
-  //         <div key={publishedAt}>
+  //     {temperatureReading.map((item, index) =>
+  //       index === 0 ? (
+  //         <div key={index}>
   //           <div className="caption">
   //             {"Golf Course Weather for: "}
-  //             {moment.utc(item.published_date).format("ddd  DD/MM/YYYY")}
+  //             {/* {moment.utc(item.published_date).format("ddd  DD/MM/YYYY")} */}
   //           </div>
   //           <div className="tbody">
   //             <div className="eventtime">
-  //               {moment.utc(item.publishedAt).format("hh:mm")}
+  //               {moment.utc(item.readingTime).format("hh:mm")}
   //             </div>
-  //             <div className="eventdescription">{item.title}</div>
+  //             <div className="eventdescription">{item.location}</div>
   //           </div>
   //         </div>
   //       ) : (
-  //         <div key={publishedAt}>
+  //         <div key={index}>
   //           <div className="tbody">
   //             <div className="eventtime">
-  //               {moment.utc(item.publishedAt).format("hh:mm")}
+  //               {moment.utc(item.readingTime).format("hh:mm")}
   //             </div>
-  //             <div className="eventdescription">{item.title}</div>
+  //             {/* <div className="eventdescription">{item.location}</div> */}
   //           </div>
   //         </div>
   //       )

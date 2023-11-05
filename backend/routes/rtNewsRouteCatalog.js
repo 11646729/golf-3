@@ -3,7 +3,7 @@ import {
   index,
   prepareEmptyRTNewsTable,
   importRTNewsItemsFromFile,
-  getAndSaveRTNewsItems,
+  getNewsItems,
 } from "../controllers/rtNewsController.js"
 
 var rtNewsRouter = express.Router()
@@ -21,6 +21,6 @@ rtNewsRouter.post("/prepareEmptyRTNewsTable", prepareEmptyRTNewsTable)
 rtNewsRouter.post("/importRTNewsItemsFromFile", importRTNewsItemsFromFile)
 
 // GET all RT News Items from the database
-rtNewsRouter.get("/getRTNewsItems", getAndSaveRTNewsItems)
+rtNewsRouter.get("/getRTNewsItems", getNewsItems)
 
 export default rtNewsRouter

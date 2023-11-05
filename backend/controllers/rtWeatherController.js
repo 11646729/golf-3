@@ -201,21 +201,27 @@ export const getAndSaveOpenWeatherData = async () => {
     // fetch data from the url endpoint and return it
     let response = await axios.get(weatherDataUrl)
 
-    // Reformat data into Transient object
-    let temperatureReading = [
-      timeNow,
-      process.env.DATABASE_VERSION,
-      unixToUtc(response.data.dt),
-      "Clandeboye Golf Course",
-      response.data.main.temp,
-      process.env.HOME_LATITUDE,
-      process.env.HOME_LONGITUDE,
-    ]
+    let temperatureReadings = []
+    let latestReading = {
+      index: 1,
+      timeNow: timeNow,
+      version: process.env.DATABASE_VERSION,
+      readingTime: unixToUtc(response.data.dt),
+      location: "Clandeboye Golf Course",
+      temperatureValue: response.data.main.temp,
+      latitude: process.env.HOME_LATITUDE,
+      longitude: process.env.HOME_LONGITUDE,
+    }
+
+    temperatureReadings.push(latestReading)
 
     // Save data in the Database
-    saveTemperature(temperatureReading)
+    // saveTemperature(temperatureReading)
 
-    return temperatureReading
+    // console.log(temperatureReadings)
+
+    // return temperatureReadings
+    return response
   } catch (error) {
     console.log("Error in getAndSaveOpenWeatherData: ", error)
   }
@@ -224,13 +230,13 @@ export const getAndSaveOpenWeatherData = async () => {
 // -------------------------------------------------------
 // Socket Emit temperature data to be consumed by the client
 // -------------------------------------------------------
-export const emitTemperatureData = (socket, weatherData) => {
+export const emitTemperatureData = (socket, temperatureReadings) => {
   // Guard clauses
   if (socket == null) return
-  if (weatherData == null) return
+  if (temperatureReadings == null) return
 
   try {
-    socket.emit("DataFromOpenWeatherAPI", weatherData)
+    socket.emit("DataFromOpenWeatherAPI", temperatureReadings)
   } catch (error) {
     console.log("Error in emitTemperatureData: ", error)
   }

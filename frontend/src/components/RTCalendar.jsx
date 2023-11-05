@@ -14,7 +14,7 @@ const RTCalendar = (props) => {
     calendarEvents: PropTypes.array,
   }
 
-  console.log(calendarEvents)
+  // console.log(calendarEvents)
 
   return !isLoading ? (
     <div className="table">

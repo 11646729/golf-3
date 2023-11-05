@@ -3,10 +3,7 @@ import {
   emitTemperatureData,
   getAndSaveOpenWeatherData,
 } from "./controllers/rtWeatherController.js"
-import {
-  emitNewsData,
-  getAndSaveRTNewsItems,
-} from "./controllers/rtNewsController.js"
+import { emitNewsData, getNewsItems } from "./controllers/rtNewsController.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -26,15 +23,30 @@ export var switchOnRealtimeData = (io, switchOn) => {
       cron.schedule("*/1 * * * *", () => {
         // -----------------------------
         getAndSaveOpenWeatherData().then((result) => {
-          emitTemperatureData(socket, result)
+          // console.log(result.data)
+          // emitTemperatureData(socket, result)
         })
       })
 
       // -----------------------------
       // Fetch data every 2 Minutes
-      cron.schedule("*/2 * * * *", () => {
+      cron.schedule("*/1 * * * *", () => {
         // -----------------------------
-        getAndSaveRTNewsItems().then((result) => {
+        let liveNewsTopHeadlinesUrl =
+          "https://newsapi.org/v2/top-headlines" +
+          "?sources=bbc-news" +
+          "&apiKey=" +
+          process.env.RT_NEWS_API
+
+        // let currentDate = moment().format()
+        //.format("YYYY-MM-DD")
+        // let timeNow = new Date().toISOString()
+        // console.log(currentDate)
+        // console.log(timeNow)
+
+        getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+          // TODO - Save data in the Database
+          saveNewsItems(result)
           emitNewsData(socket, result)
         })
       })
@@ -48,4 +60,8 @@ export var switchOnRealtimeData = (io, switchOn) => {
   } else {
     return "Realtime data disabled"
   }
+}
+
+const saveNewsItems = (result) => {
+  console.log("Test of saveNewsItems function " + result)
 }
