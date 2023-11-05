@@ -193,38 +193,11 @@ const saveTemperature = (temperatureReading) => {
 // -------------------------------------------------------
 // Fetch weather data from the Dark Skies website
 // -------------------------------------------------------
-export const getAndSaveOpenWeatherData = async () => {
-  const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-  let timeNow = new Date().toISOString()
-
-  try {
-    // fetch data from the url endpoint and return it
-    let response = await axios.get(weatherDataUrl)
-
-    let temperatureReadings = []
-    let latestReading = {
-      index: 1,
-      timeNow: timeNow,
-      version: process.env.DATABASE_VERSION,
-      readingTime: unixToUtc(response.data.dt),
-      location: "Clandeboye Golf Course",
-      temperatureValue: response.data.main.temp,
-      latitude: process.env.HOME_LATITUDE,
-      longitude: process.env.HOME_LONGITUDE,
-    }
-
-    temperatureReadings.push(latestReading)
-
-    // Save data in the Database
-    // saveTemperature(temperatureReading)
-
-    // console.log(temperatureReadings)
-
-    // return temperatureReadings
-    return response
-  } catch (error) {
-    console.log("Error in getAndSaveOpenWeatherData: ", error)
-  }
+export const getOpenWeatherData = async (weatherDataUrl) => {
+  return await axios
+    .get(weatherDataUrl)
+    .then((response) => response.data)
+    .catch((error) => console.log("Error in getAndSaveRTNewsData: ", error))
 }
 
 // -------------------------------------------------------
@@ -240,13 +213,6 @@ export const emitTemperatureData = (socket, temperatureReadings) => {
   } catch (error) {
     console.log("Error in emitTemperatureData: ", error)
   }
-}
-
-// -------------------------------------------------------
-// Function to convert Unix timestamp to UTC
-// -------------------------------------------------------
-const unixToUtc = (timestamp) => {
-  return new Date(timestamp * 1000).toJSON()
 }
 
 export default getTemperaturesFromDatabase

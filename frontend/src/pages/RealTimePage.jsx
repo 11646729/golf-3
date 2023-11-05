@@ -14,7 +14,7 @@ const RealTimeHomePage = () => {
   // const [calendarList, setCalendarList] = useState([])
   const [calendarEvents, setCalendarEvents] = useState([])
   const [newsItems, setNewsItems] = useState([])
-  const [weatherData, setWeatherData] = useState([])
+  const [temperatureReadings, setTemperatureReadings] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   // useEffect(() => {
@@ -58,7 +58,7 @@ const RealTimeHomePage = () => {
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
-      setWeatherData(currentData)
+      setTemperatureReadings(currentData)
     })
   }, [socket])
 
@@ -79,10 +79,14 @@ const RealTimeHomePage = () => {
         <RTNews isLoading={isLoading} newsItems={newsItems} />
       </div>
       <div className="box box3">
-        Next Tee Time
-        <RTWeather isLoading={isLoading} weatherData={weatherData} />
+        <RTWeather
+          isLoading={isLoading}
+          temperatureReadings={temperatureReadings}
+        />
       </div>
-      <div className="box box4">Golf Handicap, Trend & Practise</div>
+      <div className="box box4">
+        Golf Handicap, Trend & Practise, Next Tee Time
+      </div>
       <div className="box box5">Cruise Ships in Belfast or En Route</div>
       <div className="box box6">Traffic</div>
       <div className="box box7">Shares</div>
