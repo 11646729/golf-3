@@ -78,8 +78,6 @@ const reformatTemperatureValue = (result) => {
   // Guard clause
   if (result == null) return
 
-  // let timeNow = new Date().toISOString()
-
   try {
     let temperatureReadings = []
     let latestReading = {

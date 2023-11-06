@@ -14,7 +14,7 @@ const RTWeather = (props) => {
     temperatureReadings: PropTypes.array,
   }
 
-  console.log(temperatureReadings)
+  // console.log(temperatureReadings)
 
   // <div className="thead">
   //   <div className="tr">
@@ -34,7 +34,7 @@ const RTWeather = (props) => {
             </div>
             <div className="tbody">
               <div className="eventtime">
-                {moment.utc(item.readingTime).format("hh:mm")}
+                {moment.utc(item.timeNow).format("hh:mm")}
               </div>
               <div className="eventdescription">{item.location}</div>
             </div>
