@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import moment from "moment"
-// import "../styles/news.scss"
+import "../styles/weather.scss"
 
 // -------------------------------------------------------
 // Real Time News component
@@ -30,22 +30,22 @@ const RTWeather = (props) => {
           <div key={index}>
             <div className="caption">
               {"Golf Course Weather for: "}
-              {/* {moment.utc(item.published_date).format("ddd  DD/MM/YYYY")} */}
+              {moment.utc(item.timeNow).format("ddd  DD/MM/YYYY")}
             </div>
             <div className="tbody">
-              <div className="eventtime">
-                {moment.utc(item.timeNow).format("hh:mm")}
+              <div className="readingtime">
+                {moment.utc(item.readingTime).format("hh:mm")}
               </div>
-              <div className="eventdescription">{item.location}</div>
+              <div className="readinglocation">{item.location}</div>
             </div>
           </div>
         ) : (
           <div key={index}>
             <div className="tbody">
-              <div className="eventtime">
+              <div className="readingtime">
                 {moment.utc(item.readingTime).format("hh:mm")}
               </div>
-              {/* <div className="eventdescription">{item.location}</div> */}
+              <div className="readinglocation">{item.location}</div>
             </div>
           </div>
         )
