@@ -359,10 +359,9 @@ export const deleteGoogleCalendarEvent = async (req, res) => {
 // -------------------------------------------------------
 // Fetch all calendar events between two dates from the Google Calendar
 // -------------------------------------------------------
-const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
+export const getGoogleCalendarEvents = async () => {
   // Provide the required configuration
   const credentials = JSON.parse(process.env.CREDENTIALS)
-  const calendarId = process.env.CALENDAR_ID
   const scope = "https://www.googleapis.com/auth/calendar"
   const calendar = google.calendar({ version: "v3" })
 
@@ -373,38 +372,36 @@ const getEvents = async (dateTimeStart, dateTimeEnd, dateTimeZone) => {
     scope
   )
 
-  try {
-    let response = await calendar.events.list({
-      auth: auth,
-      calendarId: calendarId,
-      timeMin: dateTimeStart,
-      timeMax: dateTimeEnd,
-      timeZone: dateTimeZone,
-    })
-
-    let items = response["data"]["items"]
-    return items
-  } catch (error) {
-    console.log(`Error at getEvents --> ${error}`)
-    return 0
-  }
-}
-
-// -------------------------------------------------------
-// Fetch calendar data from the Google Calendar
-// -------------------------------------------------------
-export const getGoogleCalendarEvents = async (req, res) => {
+  const calendarId = process.env.CALENDAR_ID
   let startTime = moment().subtract(1, "months").format()
   let endTime = moment().add(1, "days").format()
   let timeZone = "Europe/London"
 
-  getEvents(startTime, endTime, timeZone)
-    .then((results) => {
-      res.send(results)
+  return await calendar.events
+    .list({
+      auth: auth,
+      calendarId: calendarId,
+      timeMin: startTime,
+      timeMax: endTime,
+      timeZone: timeZone,
     })
-    .catch((err) => {
-      console.log(err)
-    })
+    .then((response) => response.data.items)
+    .catch((error) => console.log("Error in getAndSaveRTNewsData: ", error))
+}
+
+// -------------------------------------------------------
+// Socket Emit calendar events data to be consumed by the client
+// -------------------------------------------------------
+export const emitCalendarEventsData = (socket, calendarEvents) => {
+  // Guard clauses
+  if (socket == null) return
+  if (calendarEvents == null) return
+
+  try {
+    socket.emit("DataFromGoogleCalendarAPI", calendarEvents)
+  } catch (error) {
+    console.log("Error in emitCalendarEventsData: ", error)
+  }
 }
 
 // -------------------------------------------------------

@@ -16,13 +16,6 @@ const RTNews = (props) => {
 
   // console.log(newsItems)
 
-  // <div className="thead">
-  //   <div className="tr">
-  //     <div className="th">Time</div>
-  //     <div className="th">Description</div>
-  //   </div>
-  // </div>
-
   return !isLoading ? (
     <div className="table">
       {newsItems.map((item, publishedAt) =>

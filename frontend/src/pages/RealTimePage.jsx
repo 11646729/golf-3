@@ -3,11 +3,6 @@ import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import { io } from "socket.io-client"
-import {
-  // getGoogleCalendarList,
-  getGoogleCalendarEvents,
-} from "../functionHandlers/loadRTCalendarDataHandler"
-// import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"
 import "../styles/realtimehome.scss"
 
 const RealTimeHomePage = () => {
@@ -28,17 +23,6 @@ const RealTimeHomePage = () => {
   //     })
   // }, [])
 
-  useEffect(() => {
-    getGoogleCalendarEvents(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_EVENTS) // Fetch data from Google Calendar
-      .then((returnedData) => {
-        setCalendarEvents(returnedData)
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
-
   // useEffect(() => {
   //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
   //     .then((returnedData) => {
@@ -57,18 +41,27 @@ const RealTimeHomePage = () => {
   })
 
   useEffect(() => {
+    socket.on("DataFromGoogleCalendarAPI", (currentData) => {
+      setIsLoading(false)
+      setCalendarEvents(currentData)
+    })
+  }, [socket])
+
+  useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
+      setIsLoading(false)
       setTemperatureReadings(currentData)
     })
   }, [socket])
 
   useEffect(() => {
     socket.on("DataFromOpenNewsAPI", (currentData) => {
+      setIsLoading(false)
       setNewsItems(currentData)
     })
   }, [socket])
 
-  // console.log(calendarList)
+  console.log(calendarEvents)
 
   return (
     <div className="home">

@@ -16,13 +16,6 @@ const RTWeather = (props) => {
 
   // console.log(temperatureReadings)
 
-  // <div className="thead">
-  //   <div className="tr">
-  //     <div className="th">Time</div>
-  //     <div className="th">Description</div>
-  //   </div>
-  // </div>
-
   return !isLoading ? (
     <div className="table">
       {temperatureReadings.map((item, index) =>

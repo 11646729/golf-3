@@ -4,6 +4,10 @@ import {
   getOpenWeatherData,
 } from "./controllers/rtWeatherController.js"
 import { emitNewsData, getNewsItems } from "./controllers/rtNewsController.js"
+import {
+  emitCalendarEventsData,
+  getGoogleCalendarEvents,
+} from "./controllers/rtCalendarController.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -19,7 +23,18 @@ export var switchOnRealtimeData = (io, switchOn) => {
       console.log("Room No: " + roomno + " Joined & Client Connected")
 
       // -----------------------------
-      // Fetch data every Minute
+      // Fetch Calendar Event data every Minute
+      cron.schedule("*/1 * * * *", () => {
+        // -----------------------------
+        getGoogleCalendarEvents().then((result) => {
+          // TODO - Save data in the Database
+          saveCalendarEvents(result)
+          emitCalendarEventsData(socket, result)
+        })
+      })
+
+      // -----------------------------
+      // Fetch Temperature data every Minute
       cron.schedule("*/1 * * * *", () => {
         // -----------------------------
         const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
@@ -33,8 +48,8 @@ export var switchOnRealtimeData = (io, switchOn) => {
       })
 
       // -----------------------------
-      // Fetch data every 2 Minutes
-      cron.schedule("*/1 * * * *", () => {
+      // Fetch News Headline data every 2 Minutes
+      cron.schedule("*/2 * * * *", () => {
         // -----------------------------
         const liveNewsTopHeadlinesUrl =
           "https://newsapi.org/v2/top-headlines" +
@@ -64,6 +79,10 @@ export var switchOnRealtimeData = (io, switchOn) => {
   } else {
     return "Realtime data disabled"
   }
+}
+
+const saveCalendarEvents = (result) => {
+  // console.log("Test of saveCalendarEvents function " + result)
 }
 
 const saveNewsItems = (result) => {
