@@ -35,7 +35,7 @@ export var switchOnRealtimeData = (io, switchOn) => {
 
       // -----------------------------
       // Fetch Temperature data every Minute
-      cron.schedule("*/1 * * * *", () => {
+      cron.schedule("*/3 * * * *", () => {
         // -----------------------------
         const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
 

@@ -1,5 +1,11 @@
 @import "./variables.scss";
 
+.loadingnotice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .table {
   width: 100%;
   font-family: "Inter", sans-serif;

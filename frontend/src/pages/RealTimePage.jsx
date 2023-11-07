@@ -10,7 +10,9 @@ const RealTimeHomePage = () => {
   const [calendarEvents, setCalendarEvents] = useState([])
   const [newsItems, setNewsItems] = useState([])
   const [temperatureReadings, setTemperatureReadings] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingCalendarData, setIsLoadingCalendarData] = useState(true)
+  const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
+  const [isLoadingNewsData, setIsLoadingNewsData] = useState(true)
 
   // useEffect(() => {
   //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
@@ -42,21 +44,21 @@ const RealTimeHomePage = () => {
 
   useEffect(() => {
     socket.on("DataFromGoogleCalendarAPI", (currentData) => {
-      setIsLoading(false)
+      setIsLoadingCalendarData(false)
       setCalendarEvents(currentData)
     })
   }, [socket])
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
-      setIsLoading(false)
+      setIsLoadingTemperatureData(false)
       setTemperatureReadings(currentData)
     })
   }, [socket])
 
   useEffect(() => {
     socket.on("DataFromOpenNewsAPI", (currentData) => {
-      setIsLoading(false)
+      setIsLoadingNewsData(false)
       setNewsItems(currentData)
     })
   }, [socket])
@@ -66,14 +68,17 @@ const RealTimeHomePage = () => {
   return (
     <div className="home">
       <div className="box box1">
-        <RTCalendar isLoading={isLoading} calendarEvents={calendarEvents} />
+        <RTCalendar
+          isLoadingCalendarData={isLoadingCalendarData}
+          calendarEvents={calendarEvents}
+        />
       </div>
       <div className="box box2">
-        <RTNews isLoading={isLoading} newsItems={newsItems} />
+        <RTNews isLoadingNewsData={isLoadingNewsData} newsItems={newsItems} />
       </div>
       <div className="box box3">
         <RTWeather
-          isLoading={isLoading}
+          isLoadingTemperatureData={isLoadingTemperatureData}
           temperatureReadings={temperatureReadings}
         />
       </div>

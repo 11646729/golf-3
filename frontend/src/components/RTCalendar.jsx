@@ -7,16 +7,16 @@ import "../styles/calendar.scss"
 // Real Time Calendar component
 // -------------------------------------------------------
 const RTCalendar = (props) => {
-  const { isLoading, calendarEvents } = props
+  const { isLoadingCalendarData, calendarEvents } = props
 
   RTCalendar.propTypes = {
-    isLoading: PropTypes.bool,
+    isLoadingCalendarData: PropTypes.bool,
     calendarEvents: PropTypes.array,
   }
 
   // console.log(calendarEvents)
 
-  return !isLoading ? (
+  return !isLoadingCalendarData ? (
     <div className="table">
       {calendarEvents.map((event, index) =>
         index === 0 ? (
@@ -44,7 +44,9 @@ const RTCalendar = (props) => {
         )
       )}
     </div>
-  ) : null
+  ) : (
+    <div className="loadingnotice">Loading...</div>
+  )
 }
 
 export default memo(RTCalendar)

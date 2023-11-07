@@ -7,16 +7,16 @@ import "../styles/news.scss"
 // Real Time News component
 // -------------------------------------------------------
 const RTNews = (props) => {
-  const { isLoading, newsItems } = props
+  const { isLoadingNewsData, newsItems } = props
 
   RTNews.propTypes = {
-    isLoading: PropTypes.bool,
+    isLoadingNewsData: PropTypes.bool,
     newsItems: PropTypes.array,
   }
 
   // console.log(newsItems)
 
-  return !isLoading ? (
+  return !isLoadingNewsData ? (
     <div className="table">
       {newsItems.map((item, publishedAt) =>
         publishedAt === 0 ? (
@@ -44,7 +44,9 @@ const RTNews = (props) => {
         )
       )}
     </div>
-  ) : null
+  ) : (
+    <div className="loadingnotice">Loading...</div>
+  )
 }
 
 export default memo(RTNews)

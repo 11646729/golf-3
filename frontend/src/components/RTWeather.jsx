@@ -7,16 +7,16 @@ import "../styles/weather.scss"
 // Real Time News component
 // -------------------------------------------------------
 const RTWeather = (props) => {
-  const { isLoading, temperatureReadings } = props
+  const { isLoadingTemperatureData, temperatureReadings } = props
 
   RTWeather.propTypes = {
-    isLoading: PropTypes.bool,
+    isLoadingTemperatureData: PropTypes.bool,
     temperatureReadings: PropTypes.array,
   }
 
   // console.log(temperatureReadings)
 
-  return !isLoading ? (
+  return !isLoadingTemperatureData ? (
     <div className="table">
       {temperatureReadings.map((item, index) =>
         index === 0 ? (
@@ -44,7 +44,9 @@ const RTWeather = (props) => {
         )
       )}
     </div>
-  ) : null
+  ) : (
+    <div className="loadingnotice">Loading...</div>
+  )
 }
 
 export default memo(RTWeather)
