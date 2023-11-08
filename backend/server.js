@@ -56,22 +56,6 @@ app.use((req, res) => {
   res.status(404)
 })
 
-io.on("connection", (socket) => {
-  console.log("a user connected")
-
-  socket.emit("pong", () => {
-    "Server sent a pong"
-  })
-
-  socket.on("ping", () => {
-    console.log("Server receives a ping")
-  })
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected")
-  })
-})
-
 // Enable Realtime data sending system
 switchOnRealtimeData(io, process.env.REALTIME_TEMPERATURES_ENABLED)
 
