@@ -14,11 +14,10 @@ const RTWeather = (props) => {
     temperatureReadings: PropTypes.array,
   }
 
-  // console.log(temperatureReadings)
-
   return !isLoadingTemperatureData ? (
     <div className="table">
-      {temperatureReadings.map((item, index) =>
+      Test
+      {/* {temperatureReadings.map((item, index) =>
         index === 0 ? (
           <div key={index}>
             <div className="caption">
@@ -42,7 +41,7 @@ const RTWeather = (props) => {
             </div>
           </div>
         )
-      )}
+      )} */}
     </div>
   ) : (
     <div className="loadingnotice">Loading...</div>

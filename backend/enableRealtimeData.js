@@ -15,14 +15,13 @@ import {
 export var switchOnRealtimeData = (io, switchOn) => {
   if (switchOn) {
     // Using socket.io for realtime data transmission
-    var roomno = 1
-
+    // var roomno = 1
     io.on("connection", (socket) => {
-      console.log("Here")
+      console.log(socket.id)
 
       // Join a room
-      socket.join("room-" + roomno)
-      console.log("Room No: " + roomno + " Joined & Client Connected")
+      // socket.join("room-" + roomno)
+      // console.log("Room No: " + roomno + " Joined & Client Connected")
 
       // -----------------------------
       // Fetch Calendar Event data every Minute
@@ -45,38 +44,37 @@ export var switchOnRealtimeData = (io, switchOn) => {
       //     "&apiKey=" +
       //     process.env.RT_NEWS_API
 
-      //   // let currentDate = moment().format()
-      //   //.format("YYYY-MM-DD")
-      //   // let timeNow = new Date().toISOString()
-      //   // console.log(currentDate)
-      //   // console.log(timeNow)
+      // let currentDate = moment().format()
+      //.format("YYYY-MM-DD")
+      // let timeNow = new Date().toISOString()
+      // console.log(currentDate)
+      // console.log(timeNow)
 
-      //   getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
-      //     // TODO - Save data in the Database
-      //     saveNewsItems(result)
-      //     emitNewsData(socket, result)
-      //   })
+      // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+      //   // TODO - Save data in the Database
+      //   saveNewsItems(result)
+      //   emitNewsData(socket, result)
+      // })
       // })
 
       // -----------------------------
       // Fetch Temperature data every Minute
-      // cron.schedule("*/2 * * * *", () => {
-      //   // -----------------------------
-      //   const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-
-      //   getOpenWeatherData(weatherDataUrl).then((result) => {
-      //     let temperatureReadings = reformatTemperatureValue(result)
-      //     // TODO - Save data in the Database
-      //     saveTemperatureValue(temperatureReadings)
-      //     emitTemperatureData(socket, temperatureReadings)
-      //   })
+      // cron.schedule("*/1 * * * *", () => {
+      // -----------------------------
+      const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
+      getOpenWeatherData(weatherDataUrl).then((result) => {
+        let temperatureReadings = reformatTemperatureValue(result)
+        // TODO - Save data in the Database
+        saveTemperatureValue(temperatureReadings)
+        emitTemperatureData(socket, temperatureReadings)
+      })
       // })
 
-      socket.on("disconnect", () => {
-        // Leave the room
-        socket.leave("room-" + roomno)
-        console.log("Left Room No: " + roomno + " & Client Disconnected")
-      })
+      // socket.on("disconnect", () => {
+      //   // Leave the room
+      //   // socket.leave("room-" + roomno)
+      //   // console.log("Left Room No: " + roomno + " & Client Disconnected")
+      // })
     })
   } else {
     return "Realtime data disabled"

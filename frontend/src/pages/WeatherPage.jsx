@@ -35,27 +35,27 @@ const WeatherPage = () => {
   const [temperatureData, setTemperatureData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
-      .then((returnedData) => {
-        // setTemperatureData((returnedData) => [...temperatureData, returnedData])
-        setTemperatureData(returnedData)
+  // useEffect(() => {
+  //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
+  //     .then((returnedData) => {
+  //       // setTemperatureData((returnedData) => [...temperatureData, returnedData])
+  //       setTemperatureData(returnedData)
 
-        console.log(returnedData)
+  //       console.log(returnedData)
 
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    return () => socket.disconnect()
-  }, [])
+  //       setIsLoading(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //   return () => socket.disconnect()
+  // }, [])
 
-  useEffect(() => {
-    socket.on("DataFromOpenWeatherAPI", (currentData) => {
-      console.log(currentData)
-    })
-  }, [])
+  // useEffect(() => {
+  //   socket.on("DataFromOpenWeatherAPI", (currentData) => {
+  //     console.log(currentData)
+  //   })
+  // }, [])
 
   // Now delete all except the last 20 readings
   // temperatureData.splice(0, temperatureData.length - 20)
@@ -71,9 +71,9 @@ const WeatherPage = () => {
   // temperatureData.splice(0, temperatureData.length - 20)
   // }
 
-  socket.on("connect", () => {
-    console.log(socket.id) // x8WIv7-mJelg7on_ALbx
-  })
+  // socket.on("connect", () => {
+  //   console.log(socket.id) // x8WIv7-mJelg7on_ALbx
+  // })
 
   // Listen for realtime temperature data and update the state
   // if (temperatureData.length > 0) {

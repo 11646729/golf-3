@@ -4,6 +4,11 @@ import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import { io } from "socket.io-client"
 import "../styles/realtimehome.scss"
+import getTemperaturesData from "../functionHandlers/loadTemperaturesDataHandler"
+
+const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
+  // autoConnect: false,
+})
 
 const RealTimeHomePage = () => {
   // const [calendarList, setCalendarList] = useState([])
@@ -13,6 +18,10 @@ const RealTimeHomePage = () => {
   const [isLoadingCalendarData, setIsLoadingCalendarData] = useState(true)
   const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
   const [isLoadingNewsData, setIsLoadingNewsData] = useState(true)
+
+  socket.on("connect", () => {
+    console.log(socket.id)
+  })
 
   // useEffect(() => {
   //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
@@ -25,45 +34,41 @@ const RealTimeHomePage = () => {
   //     })
   // }, [])
 
-  // useEffect(() => {
-  //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
-  //     .then((returnedData) => {
-  //       // setTemperatureData((returnedData) => [...temperatureData, returnedData])
-  //       setWeatherData(returnedData)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //   // return () => socket.disconnect()
-  // }, [])
-
-  const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
-    // autoConnect: false,
-  })
-
   useEffect(() => {
-    socket.on("DataFromGoogleCalendarAPI", (currentData) => {
-      setIsLoadingCalendarData(false)
-      setCalendarEvents(currentData)
-    })
-  }, [socket])
+    getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
+      .then((returnedData) => {
+        // setTemperatureData((returnedData) => [...temperatureData, returnedData])
+        setTemperatureReadings(returnedData)
+        setIsLoadingTemperatureData(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    return () => socket.disconnect()
+  }, [])
+
+  // useEffect(() => {
+  //   socket.on("DataFromGoogleCalendarAPI", (currentData) => {
+  //     setIsLoadingCalendarData(false)
+  //     setCalendarEvents(currentData)
+  //   })
+  // }, [socket])
 
   useEffect(() => {
     socket.on("DataFromOpenWeatherAPI", (currentData) => {
       setIsLoadingTemperatureData(false)
       setTemperatureReadings(currentData)
     })
-  }, [socket])
+  }, [])
 
-  useEffect(() => {
-    socket.on("DataFromOpenNewsAPI", (currentData) => {
-      setIsLoadingNewsData(false)
-      setNewsItems(currentData)
-    })
-  }, [socket])
+  // useEffect(() => {
+  //   socket.on("DataFromOpenNewsAPI", (currentData) => {
+  //     setIsLoadingNewsData(false)
+  //     setNewsItems(currentData)
+  //   })
+  // }, [socket])
 
-  console.log(calendarEvents)
+  // console.log(calendarEvents)
 
   return (
     <div className="home">
