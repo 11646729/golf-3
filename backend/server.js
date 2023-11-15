@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import { switchOnRealtimeData } from "./enableRealtimeData.js"
+import { enableRealtimeData } from "./enableRealtimeData.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -56,12 +56,8 @@ app.use((req, res) => {
   res.status(404)
 })
 
-io.on("connection", (socket) => {
-  console.log("Server-Sent: a user connected")
-})
-
 // Enable Realtime data sending system
-switchOnRealtimeData(io)
+enableRealtimeData(io)
 
 // Start Express server
 httpServer.listen(port, (err) => {

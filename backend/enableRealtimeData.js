@@ -12,100 +12,96 @@ import {
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
 // -------------------------------------------------------
-export var switchOnRealtimeData = (io) => {
-  if (process.env.REALTIME_DATA_ENABLED) {
-    // -------------------------------------------------------------------
-    // From socket-io code
-    // -------------------------------------------------------------------
-    let interval
+export var enableRealtimeData = (io) => {
+  // -------------------------------------------------------------------
+  // From socket-io code
+  // -------------------------------------------------------------------
+  let interval
 
-    io.on("connection", (socket) => {
-      console.log("New client connected")
-      if (interval) {
-        clearInterval(interval)
-      }
-
-      interval = setInterval(() => getApiAndEmit(socket), 1000)
-
-      socket.on("disconnect", () => {
-        console.log("Client disconnected")
-        clearInterval(interval)
-      })
-    })
-
-    const getApiAndEmit = (socket) => {
-      const response = new Date()
-      // Emitting a new message. Will be consumed by the client
-      socket.emit("FromAPI", response)
+  io.on("connection", (socket) => {
+    console.log("New client connected")
+    if (interval) {
+      clearInterval(interval)
     }
-    // -------------------------------------------------------------------
 
-    // Using socket.io for realtime data transmission
-    // var roomno = 1
-    // io.on("connection", (socket) => {
-    //   console.log(socket.id)
+    interval = setInterval(() => getApiAndEmit(socket), 1000)
 
-    // Join a room
-    // socket.join("room-" + roomno)
-    // console.log("Room No: " + roomno + " Joined & Client Connected")
+    socket.on("disconnect", () => {
+      console.log("Client disconnected")
+      clearInterval(interval)
+    })
+  })
 
-    // -----------------------------
-    // Fetch Calendar Event data every Minute
-    // cron.schedule("*/1 * * * *", () => {
-    //   // -----------------------------
-    //   getGoogleCalendarEvents().then((result) => {
-    //     // TODO - Save data in the Database
-    //     saveCalendarEvents(result)
-    //     emitCalendarEventsData(socket, result)
-    //   })
-    // })
-
-    // -----------------------------
-    // Fetch News Headline data every 2 Minutes
-    // cron.schedule("*/2 * * * *", () => {
-    //   // -----------------------------
-    //   const liveNewsTopHeadlinesUrl =
-    //     "https://newsapi.org/v2/top-headlines" +
-    //     "?sources=bbc-news" +
-    //     "&apiKey=" +
-    //     process.env.RT_NEWS_API
-
-    // let currentDate = moment().format()
-    //.format("YYYY-MM-DD")
-    // let timeNow = new Date().toISOString()
-    // console.log(currentDate)
-    // console.log(timeNow)
-
-    // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
-    //   // TODO - Save data in the Database
-    //   saveNewsItems(result)
-    //   emitNewsData(socket, result)
-    // })
-    // })
-
-    // -----------------------------
-    // Fetch Temperature data every Minute
-    // cron.schedule("*/1 * * * *", () => {
-    // -----------------------------
-    // const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-    // getOpenWeatherData(weatherDataUrl).then((result) => {
-    //   let temperatureReadings = reformatTemperatureValue(result)
-    //   // TODO - Save data in the Database
-    //   saveTemperatureValue(temperatureReadings)
-    //   emitTemperatureData(socket, temperatureReadings)
-    // })
-    // })
-
-    // socket.on("disconnect", () => {
-    //   // Leave the room
-    //   // socket.leave("room-" + roomno)
-    //   // console.log("Left Room No: " + roomno + " & Client Disconnected")
-    // })
-    // }
-  } else {
-    return "Realtime data disabled"
+  const getApiAndEmit = (socket) => {
+    const response = new Date()
+    // Emitting a new message. Will be consumed by the client
+    socket.emit("FromAPI", response)
   }
+  // -------------------------------------------------------------------
+
+  // Using socket.io for realtime data transmission
+  // var roomno = 1
+  // io.on("connection", (socket) => {
+  //   console.log(socket.id)
+
+  // Join a room
+  // socket.join("room-" + roomno)
+  // console.log("Room No: " + roomno + " Joined & Client Connected")
+
+  // -----------------------------
+  // Fetch Calendar Event data every Minute
+  // cron.schedule("*/1 * * * *", () => {
+  //   // -----------------------------
+  //   getGoogleCalendarEvents().then((result) => {
+  //     // TODO - Save data in the Database
+  //     saveCalendarEvents(result)
+  //     emitCalendarEventsData(socket, result)
+  //   })
+  // })
+
+  // -----------------------------
+  // Fetch News Headline data every 2 Minutes
+  // cron.schedule("*/2 * * * *", () => {
+  //   // -----------------------------
+  //   const liveNewsTopHeadlinesUrl =
+  //     "https://newsapi.org/v2/top-headlines" +
+  //     "?sources=bbc-news" +
+  //     "&apiKey=" +
+  //     process.env.RT_NEWS_API
+
+  // let currentDate = moment().format()
+  //.format("YYYY-MM-DD")
+  // let timeNow = new Date().toISOString()
+  // console.log(currentDate)
+  // console.log(timeNow)
+
+  // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+  //   // TODO - Save data in the Database
+  //   saveNewsItems(result)
+  //   emitNewsData(socket, result)
+  // })
+  // })
+
+  // -----------------------------
+  // Fetch Temperature data every Minute
+  // cron.schedule("*/1 * * * *", () => {
+  // -----------------------------
+  // const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
+  // getOpenWeatherData(weatherDataUrl).then((result) => {
+  //   let temperatureReadings = reformatTemperatureValue(result)
+  //   // TODO - Save data in the Database
+  //   saveTemperatureValue(temperatureReadings)
+  //   emitTemperatureData(socket, temperatureReadings)
+  // })
+  // })
+
+  // socket.on("disconnect", () => {
+  //   // Leave the room
+  //   // socket.leave("room-" + roomno)
+  //   // console.log("Left Room No: " + roomno + " & Client Disconnected")
+  // })
   // }
+  // // }
 
   // const saveCalendarEvents = (result) => {
   //   // console.log("Test of saveCalendarEvents function " + result)
