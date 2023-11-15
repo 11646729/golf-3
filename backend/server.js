@@ -56,8 +56,12 @@ app.use((req, res) => {
   res.status(404)
 })
 
+io.on("connection", (socket) => {
+  console.log("Server-Sent: a user connected")
+})
+
 // Enable Realtime data sending system
-switchOnRealtimeData(io, process.env.REALTIME_TEMPERATURES_ENABLED)
+switchOnRealtimeData(io)
 
 // Start Express server
 httpServer.listen(port, (err) => {

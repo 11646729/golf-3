@@ -12,109 +12,135 @@ import {
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
 // -------------------------------------------------------
-export var switchOnRealtimeData = (io, switchOn) => {
-  if (switchOn) {
+export var switchOnRealtimeData = (io) => {
+  if (process.env.REALTIME_DATA_ENABLED) {
+    // -------------------------------------------------------------------
+    // From socket-io code
+    // -------------------------------------------------------------------
+    let interval
+
+    io.on("connection", (socket) => {
+      console.log("New client connected")
+      if (interval) {
+        clearInterval(interval)
+      }
+
+      interval = setInterval(() => getApiAndEmit(socket), 1000)
+
+      socket.on("disconnect", () => {
+        console.log("Client disconnected")
+        clearInterval(interval)
+      })
+    })
+
+    const getApiAndEmit = (socket) => {
+      const response = new Date()
+      // Emitting a new message. Will be consumed by the client
+      socket.emit("FromAPI", response)
+    }
+    // -------------------------------------------------------------------
+
     // Using socket.io for realtime data transmission
     // var roomno = 1
-    io.on("connection", (socket) => {
-      console.log(socket.id)
+    // io.on("connection", (socket) => {
+    //   console.log(socket.id)
 
-      // Join a room
-      // socket.join("room-" + roomno)
-      // console.log("Room No: " + roomno + " Joined & Client Connected")
+    // Join a room
+    // socket.join("room-" + roomno)
+    // console.log("Room No: " + roomno + " Joined & Client Connected")
 
-      // -----------------------------
-      // Fetch Calendar Event data every Minute
-      // cron.schedule("*/1 * * * *", () => {
-      //   // -----------------------------
-      //   getGoogleCalendarEvents().then((result) => {
-      //     // TODO - Save data in the Database
-      //     saveCalendarEvents(result)
-      //     emitCalendarEventsData(socket, result)
-      //   })
-      // })
+    // -----------------------------
+    // Fetch Calendar Event data every Minute
+    // cron.schedule("*/1 * * * *", () => {
+    //   // -----------------------------
+    //   getGoogleCalendarEvents().then((result) => {
+    //     // TODO - Save data in the Database
+    //     saveCalendarEvents(result)
+    //     emitCalendarEventsData(socket, result)
+    //   })
+    // })
 
-      // -----------------------------
-      // Fetch News Headline data every 2 Minutes
-      // cron.schedule("*/2 * * * *", () => {
-      //   // -----------------------------
-      //   const liveNewsTopHeadlinesUrl =
-      //     "https://newsapi.org/v2/top-headlines" +
-      //     "?sources=bbc-news" +
-      //     "&apiKey=" +
-      //     process.env.RT_NEWS_API
+    // -----------------------------
+    // Fetch News Headline data every 2 Minutes
+    // cron.schedule("*/2 * * * *", () => {
+    //   // -----------------------------
+    //   const liveNewsTopHeadlinesUrl =
+    //     "https://newsapi.org/v2/top-headlines" +
+    //     "?sources=bbc-news" +
+    //     "&apiKey=" +
+    //     process.env.RT_NEWS_API
 
-      // let currentDate = moment().format()
-      //.format("YYYY-MM-DD")
-      // let timeNow = new Date().toISOString()
-      // console.log(currentDate)
-      // console.log(timeNow)
+    // let currentDate = moment().format()
+    //.format("YYYY-MM-DD")
+    // let timeNow = new Date().toISOString()
+    // console.log(currentDate)
+    // console.log(timeNow)
 
-      // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
-      //   // TODO - Save data in the Database
-      //   saveNewsItems(result)
-      //   emitNewsData(socket, result)
-      // })
-      // })
+    // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+    //   // TODO - Save data in the Database
+    //   saveNewsItems(result)
+    //   emitNewsData(socket, result)
+    // })
+    // })
 
-      // -----------------------------
-      // Fetch Temperature data every Minute
-      // cron.schedule("*/1 * * * *", () => {
-      // -----------------------------
-      const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-      getOpenWeatherData(weatherDataUrl).then((result) => {
-        let temperatureReadings = reformatTemperatureValue(result)
-        // TODO - Save data in the Database
-        saveTemperatureValue(temperatureReadings)
-        emitTemperatureData(socket, temperatureReadings)
-      })
-      // })
+    // -----------------------------
+    // Fetch Temperature data every Minute
+    // cron.schedule("*/1 * * * *", () => {
+    // -----------------------------
+    // const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
+    // getOpenWeatherData(weatherDataUrl).then((result) => {
+    //   let temperatureReadings = reformatTemperatureValue(result)
+    //   // TODO - Save data in the Database
+    //   saveTemperatureValue(temperatureReadings)
+    //   emitTemperatureData(socket, temperatureReadings)
+    // })
+    // })
 
-      // socket.on("disconnect", () => {
-      //   // Leave the room
-      //   // socket.leave("room-" + roomno)
-      //   // console.log("Left Room No: " + roomno + " & Client Disconnected")
-      // })
-    })
+    // socket.on("disconnect", () => {
+    //   // Leave the room
+    //   // socket.leave("room-" + roomno)
+    //   // console.log("Left Room No: " + roomno + " & Client Disconnected")
+    // })
+    // }
   } else {
     return "Realtime data disabled"
   }
-}
+  // }
 
-const saveCalendarEvents = (result) => {
-  // console.log("Test of saveCalendarEvents function " + result)
-}
+  // const saveCalendarEvents = (result) => {
+  //   // console.log("Test of saveCalendarEvents function " + result)
+  // }
 
-const saveNewsItems = (result) => {
-  // console.log("Test of saveNewsItems function " + result)
-}
+  // const saveNewsItems = (result) => {
+  //   // console.log("Test of saveNewsItems function " + result)
+  // }
 
-const saveTemperatureValue = (result) => {
-  // console.log("Test of saveTemperatureValue function " + result)
-}
+  // const saveTemperatureValue = (result) => {
+  //   // console.log("Test of saveTemperatureValue function " + result)
+  // }
 
-const reformatTemperatureValue = (result) => {
-  // Guard clause
-  if (result == null) return
+  // const reformatTemperatureValue = (result) => {
+  //   // Guard clause
+  //   if (result == null) return
 
-  try {
-    let temperatureReadings = []
-    let latestReading = {
-      index: 1,
-      timeNow: new Date().toISOString(),
-      version: process.env.DATABASE_VERSION,
-      readingTime: unixToUtc(result.dt),
-      location: "Clandeboye Golf Course",
-      temperatureValue: result.main.temp,
-      latitude: process.env.HOME_LATITUDE,
-      longitude: process.env.HOME_LONGITUDE,
-    }
-    temperatureReadings.push(latestReading)
+  //   try {
+  //     let temperatureReadings = []
+  //     let latestReading = {
+  //       index: 1,
+  //       timeNow: new Date().toISOString(),
+  //       version: process.env.DATABASE_VERSION,
+  //       readingTime: unixToUtc(result.dt),
+  //       location: "Clandeboye Golf Course",
+  //       temperatureValue: result.main.temp,
+  //       latitude: process.env.HOME_LATITUDE,
+  //       longitude: process.env.HOME_LONGITUDE,
+  //     }
+  //     temperatureReadings.push(latestReading)
 
-    return temperatureReadings
-  } catch (error) {
-    console.log("Error in reformatTemperatureValue: ", error)
-  }
+  //     return temperatureReadings
+  //   } catch (error) {
+  //     console.log("Error in reformatTemperatureValue: ", error)
+  //   }
 }
 
 // -------------------------------------------------------
