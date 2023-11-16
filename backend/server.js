@@ -10,7 +10,14 @@ const port = process.env.EXPRESS_SERVER_PORT || 4000
 
 const app = express()
 const httpServer = createServer(app)
-const io = new Server(httpServer, { cors: { origin: "*" } })
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:" + process.env.REACT_SERVER_PORT,
+    methods: "GET, POST, PUT, DELETE",
+    allowedHeaders: "Content-Type, Authorization",
+  },
+})
 
 const __dirname = path.resolve()
 
@@ -28,9 +35,9 @@ dotenv.config()
 // cors settings from https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
 app.use(
   cors({
-    origin: ["http://localhost:" + process.env.REACT_SERVER_PORT],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:" + process.env.REACT_SERVER_PORT,
+    methods: "GET, POST, PUT, DELETE",
+    allowedHeaders: "Content-Type, Authorization",
   })
 )
 
