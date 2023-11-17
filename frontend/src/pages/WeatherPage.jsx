@@ -24,7 +24,7 @@ const TemperaturesChartContainer = styled.div`
   min-height: 500px;
 `
 
-// const socket = io(process.env.REACT_APP_SOCKET_ENDPOINT_URL, {
+// const socket = io(process.env.REACT_APP_EXPRESS_SERVER_ENDPOINT_URL, {
 //   // autoConnect: false,
 // })
 

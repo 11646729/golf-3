@@ -1,4 +1,4 @@
-import cron from "node-cron"
+import nodeCron from "node-cron"
 import {
   emitTemperatureData,
   getOpenWeatherData,
@@ -21,21 +21,27 @@ export var enableRealtimeData = (io) => {
   io.on("connection", (socket) => {
     console.log("New client connected")
     if (interval) {
-      clearInterval(interval)
+      // clearInterval(interval)
+      interval.stop()
     }
 
-    interval = setInterval(() => getApiAndEmit(socket), 1000)
+    // interval = setInterval(() => getApiAndEmit(socket), 1000)
+    interval = nodeCron.schedule("*/1 * * * * *", () => {
+      // Do whatever you want in here. Send email, Make  database backup or download data.
+      getApiAndEmit(socket)
+    })
 
     socket.on("disconnect", () => {
       console.log("Client disconnected")
-      clearInterval(interval)
+      // clearInterval(interval)
+      interval.stop()
     })
   })
 
   const getApiAndEmit = (socket) => {
     const response = new Date()
     // Emitting a new message. Will be consumed by the client
-    socket.emit("FromAPI", response)
+    socket.emit("FromTemperatureAPI", response)
   }
   // -------------------------------------------------------------------
 
