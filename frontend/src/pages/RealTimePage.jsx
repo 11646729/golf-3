@@ -2,7 +2,7 @@ import React, { useEffect, useState, memo } from "react"
 import socketIOClient from "socket.io-client"
 // import RTCalendar from "../components/RTCalendar"
 // import RTNews from "../components/RTNews"
-// import RTWeather from "../components/RTWeather"
+import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
 // import getTemperaturesData from "../functionHandlers/loadTemperaturesDataHandler"
 
@@ -31,8 +31,9 @@ const RealTimeHomePage = () => {
 }
 
 const ClientComponent = () => {
-  const [response, setResponse] = useState("")
-  // const [temperatureReadings, setTemperatureReadings] = useState([])
+  const [response, setResponse] = useState([])
+  const [temperatureReadings, setTemperatureReadings] = useState([])
+  const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
 
   useEffect(() => {
     const socket = socketIOClient(
@@ -45,9 +46,16 @@ const ClientComponent = () => {
     // Manual connect
     socket.connect()
 
+    socket.on("FromAPI", (response) => {
+      setResponse(response)
+    })
+
+    socket.on("FromIsLoadingTemperatureData", (response) => {
+      setIsLoadingTemperatureData(response)
+    })
+
     socket.on("FromTemperatureAPI", (data) => {
-      setResponse(data)
-      // setTemperatureReadings(data)
+      setTemperatureReadings(data)
     })
 
     // socket.on("FromNewsAPI", (data) => {
@@ -62,21 +70,9 @@ const ClientComponent = () => {
   // const [calendarList, setCalendarList] = useState([])
   // const [calendarEvents, setCalendarEvents] = useState([])
   // const [newsItems, setNewsItems] = useState([])
-  // const [temperatureReadings, setTemperatureReadings] = useState([])
   // const [isLoadingCalendarData, setIsLoadingCalendarData] = useState(true)
   // const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
   // const [isLoadingNewsData, setIsLoadingNewsData] = useState(true)
-
-  // io.on("connection", (socket) => {
-  //   console.log("a user connected")
-  //   socket.on("disconnect", () => {
-  //     console.log("user disconnected")
-  //   })
-  // })
-
-  // socket.on("connect", () => {
-  //   console.log(socket.id)
-  // })
 
   // useEffect(() => {
   //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
@@ -110,20 +106,11 @@ const ClientComponent = () => {
   // }, [socket])
 
   // useEffect(() => {
-  //   socket.on("DataFromOpenWeatherAPI", (currentData) => {
-  //     setIsLoadingTemperatureData(false)
-  //     setTemperatureReadings(currentData)
-  //   })
-  // }, [])
-
-  // useEffect(() => {
   //   socket.on("DataFromOpenNewsAPI", (currentData) => {
   //     setIsLoadingNewsData(false)
   //     setNewsItems(currentData)
   //   })
   // }, [socket])
-
-  // console.log(calendarEvents)
 
   return (
     <>
@@ -139,13 +126,13 @@ const ClientComponent = () => {
   </div>
   <div className="box box2">
     <RTNews isLoadingNewsData={isLoadingNewsData} newsItems={newsItems} />
-  </div>
-  <div className="box box3">
-    <RTWeather
-      isLoadingTemperatureData={isLoadingTemperatureData}
-      temperatureReadings={temperatureReadings}
-    />
   </div> */}
+        <div className="box box3">
+          <RTWeather
+            isLoadingTemperatureData={isLoadingTemperatureData}
+            temperatureReadings={temperatureReadings}
+          />
+        </div>
         <div className="box box4">
           Golf Handicap, Trend & Practise, Next Tee Time
         </div>

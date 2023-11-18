@@ -200,19 +200,19 @@ export const getOpenWeatherData = async (weatherDataUrl) => {
     .catch((error) => console.log("Error in getAndSaveRTNewsData: ", error))
 }
 
-// -------------------------------------------------------
-// Socket Emit temperature data to be consumed by the client
-// -------------------------------------------------------
-export const emitTemperatureData = (socket, temperatureReadings) => {
-  // Guard clauses
-  if (socket == null) return
-  if (temperatureReadings == null) return
+// // -------------------------------------------------------
+// // Socket Emit temperature data to be consumed by the client
+// // -------------------------------------------------------
+// export const emitTemperatureData = (socket, temperatureReadings) => {
+//   // Guard clauses
+//   if (socket == null) return
+//   if (temperatureReadings == null) return
 
-  try {
-    socket.emit("DataFromOpenWeatherAPI", temperatureReadings)
-  } catch (error) {
-    console.log("Error in emitTemperatureData: ", error)
-  }
-}
+//   try {
+//     socket.emit("DataFromOpenWeatherAPI", temperatureReadings)
+//   } catch (error) {
+//     console.log("Error in emitTemperatureData: ", error)
+//   }
+// }
 
 export default getTemperaturesFromDatabase

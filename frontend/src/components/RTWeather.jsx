@@ -16,8 +16,7 @@ const RTWeather = (props) => {
 
   return !isLoadingTemperatureData ? (
     <div className="table">
-      Test
-      {/* {temperatureReadings.map((item, index) =>
+      {temperatureReadings.map((item, index) =>
         index === 0 ? (
           <div key={index}>
             <div className="caption">
@@ -41,7 +40,7 @@ const RTWeather = (props) => {
             </div>
           </div>
         )
-      )} */}
+      )}
     </div>
   ) : (
     <div className="loadingnotice">Loading...</div>
