@@ -1,6 +1,6 @@
 import nodeCron from "node-cron"
 import { getOpenWeatherData } from "./controllers/rtWeatherController.js"
-import { emitNewsData, getNewsItems } from "./controllers/rtNewsController.js"
+import { getNewsItems } from "./controllers/rtNewsController.js"
 import {
   emitCalendarEventsData,
   getGoogleCalendarEvents,
@@ -13,12 +13,13 @@ export var enableRealtimeData = (io) => {
   // -------------------------------------------------------------------
   // From socket-io code
   // -------------------------------------------------------------------
-  let TemperatureInterval
+  let TemperatureInterval, NewsInterval
 
   io.on("connection", (socket) => {
     console.log("New client connected")
     if (TemperatureInterval) {
       TemperatureInterval.stop()
+      NewsInterval.stop()
     }
 
     TemperatureInterval = nodeCron.schedule("*/1 * * * * *", () => {
@@ -27,9 +28,15 @@ export var enableRealtimeData = (io) => {
       getTemperatureApiAndEmit(socket)
     })
 
+    NewsInterval = nodeCron.schedule("*/2 * * * * *", () => {
+      // Do whatever you want in here. Send email, Make  database backup or download data.
+      getNewsHeadlinesApiAndEmit(socket)
+    })
+
     socket.on("disconnect", () => {
       console.log("Client disconnected")
       TemperatureInterval.stop()
+      NewsInterval.stop()
     })
   })
 
@@ -56,6 +63,29 @@ export var enableRealtimeData = (io) => {
     })
   }
 
+  // -----------------------------
+  // Fetch News Headline data
+  // -----------------------------
+  const getNewsHeadlinesApiAndEmit = (socket) => {
+    const liveNewsTopHeadlinesUrl =
+      "https://newsapi.org/v2/top-headlines" +
+      "?sources=bbc-news" +
+      "&apiKey=" +
+      process.env.RT_NEWS_API
+
+    // let currentDate = moment().format().format("YYYY-MM-DD")
+    // let timeNow = new Date().toISOString()
+    // console.log(currentDate)
+    // console.log(timeNow)
+
+    getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+      // TODO - Save data in the Database
+      // saveNewsItems(result)
+      socket.emit("FromIsLoadingNewsHeadlinesData", false)
+      socket.emit("FromNewsHeadlinesAPI", result)
+    })
+  }
+
   // -------------------------------------------------------------------
   //  // -----------------------------
   // Fetch Calendar Event data every Minute
@@ -66,29 +96,6 @@ export var enableRealtimeData = (io) => {
   //     saveCalendarEvents(result)
   //     emitCalendarEventsData(socket, result)
   //   })
-  // })
-
-  // -----------------------------
-  // Fetch News Headline data every 2 Minutes
-  // cron.schedule("*/2 * * * *", () => {
-  //   // -----------------------------
-  //   const liveNewsTopHeadlinesUrl =
-  //     "https://newsapi.org/v2/top-headlines" +
-  //     "?sources=bbc-news" +
-  //     "&apiKey=" +
-  //     process.env.RT_NEWS_API
-
-  // let currentDate = moment().format()
-  //.format("YYYY-MM-DD")
-  // let timeNow = new Date().toISOString()
-  // console.log(currentDate)
-  // console.log(timeNow)
-
-  // getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
-  //   // TODO - Save data in the Database
-  //   saveNewsItems(result)
-  //   emitNewsData(socket, result)
-  // })
   // })
 
   // const saveCalendarEvents = (result) => {

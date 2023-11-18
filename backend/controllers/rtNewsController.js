@@ -263,16 +263,16 @@ export const getNewsItems = async (liveNewsTopHeadlinesUrl) => {
 // -------------------------------------------------------
 // Socket Emit news data to be consumed by the client
 // -------------------------------------------------------
-export const emitNewsData = (socket, newsData) => {
-  // Guard clauses
-  if (socket == null) return
-  if (newsData == null) return
+// export const emitNewsData = (socket, newsData) => {
+//   // Guard clauses
+//   if (socket == null) return
+//   if (newsData == null) return
 
-  try {
-    socket.emit("DataFromOpenNewsAPI", newsData)
-  } catch (error) {
-    console.log("Error in emitNewsData: ", error)
-  }
-}
+//   try {
+//     socket.emit("DataFromOpenNewsAPI", newsData)
+//   } catch (error) {
+//     console.log("Error in emitNewsData: ", error)
+//   }
+// }
 
 export default getRTNewsItems

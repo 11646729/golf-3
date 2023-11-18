@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from "react"
 import socketIOClient from "socket.io-client"
 // import RTCalendar from "../components/RTCalendar"
-// import RTNews from "../components/RTNews"
+import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
 // import getTemperaturesData from "../functionHandlers/loadTemperaturesDataHandler"
@@ -34,6 +34,9 @@ const ClientComponent = () => {
   const [response, setResponse] = useState([])
   const [temperatureReadings, setTemperatureReadings] = useState([])
   const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
+  const [newsHeadlinesItems, setNewsHeadlinesItems] = useState([])
+  const [isLoadingNewsHeadlinesData, setIsLoadingNewsHeadlinesData] =
+    useState(true)
 
   useEffect(() => {
     const socket = socketIOClient(
@@ -58,9 +61,13 @@ const ClientComponent = () => {
       setTemperatureReadings(data)
     })
 
-    // socket.on("FromNewsAPI", (data) => {
-    //   setResponse(data)
-    // })
+    socket.on("FromIsLoadingNewsHeadlinesData", (response) => {
+      setIsLoadingNewsHeadlinesData(response)
+    })
+
+    socket.on("FromNewsHeadlinesAPI", (data) => {
+      setNewsHeadlinesItems(data)
+    })
 
     // CLEAN UP THE EFFECT
     return () => socket.disconnect()
@@ -69,10 +76,7 @@ const ClientComponent = () => {
 
   // const [calendarList, setCalendarList] = useState([])
   // const [calendarEvents, setCalendarEvents] = useState([])
-  // const [newsItems, setNewsItems] = useState([])
   // const [isLoadingCalendarData, setIsLoadingCalendarData] = useState(true)
-  // const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
-  // const [isLoadingNewsData, setIsLoadingNewsData] = useState(true)
 
   // useEffect(() => {
   //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
@@ -83,19 +87,6 @@ const ClientComponent = () => {
   //     .catch((err) => {
   //       console.log(err)
   //     })
-  // }, [])
-
-  // useEffect(() => {
-  //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
-  //     .then((returnedData) => {
-  //       // setTemperatureData((returnedData) => [...temperatureData, returnedData])
-  //       setTemperatureReadings(returnedData)
-  //       setIsLoadingTemperatureData(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //   return () => socket.disconnect()
   // }, [])
 
   // useEffect(() => {
@@ -123,10 +114,13 @@ const ClientComponent = () => {
       isLoadingCalendarData={isLoadingCalendarData}
       calendarEvents={calendarEvents}
     />
-  </div>
-  <div className="box box2">
-    <RTNews isLoadingNewsData={isLoadingNewsData} newsItems={newsItems} />
   </div> */}
+        <div className="box box2">
+          <RTNews
+            isLoadingNewsData={isLoadingNewsHeadlinesData}
+            newsItems={newsHeadlinesItems}
+          />
+        </div>
         <div className="box box3">
           <RTWeather
             isLoadingTemperatureData={isLoadingTemperatureData}
