@@ -62,20 +62,6 @@ export var enableRealtimeData = (io) => {
   }
 
   // -----------------------------
-  // Fetch Temperature data
-  // -----------------------------
-  const getTemperatureApiAndEmit = (socket) => {
-    const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
-    getOpenWeatherData(weatherDataUrl).then((result) => {
-      let temperatureReadings = reformatTemperatureValue(result)
-      // TODO - Save data in the Database
-      // saveTemperatureValue(temperatureReadings)
-      socket.emit("FromIsLoadingTemperatureData", false)
-      emitTemperatureData(socket, temperatureReadings)
-    })
-  }
-
-  // -----------------------------
   // Fetch News Headline data
   // -----------------------------
   const getNewsHeadlinesApiAndEmit = (socket) => {
@@ -95,6 +81,20 @@ export var enableRealtimeData = (io) => {
       // saveNewsItems(result)
       socket.emit("FromIsLoadingNewsHeadlinesData", false)
       emitNewsHeadlinesData(socket, result)
+    })
+  }
+
+  // -----------------------------
+  // Fetch Temperature data
+  // -----------------------------
+  const getTemperatureApiAndEmit = (socket) => {
+    const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
+    getOpenWeatherData(weatherDataUrl).then((result) => {
+      let temperatureReadings = reformatTemperatureValue(result)
+      // TODO - Save data in the Database
+      // saveTemperatureValue(temperatureReadings)
+      socket.emit("FromIsLoadingTemperatureData", false)
+      emitTemperatureData(socket, temperatureReadings)
     })
   }
 
