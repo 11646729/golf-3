@@ -253,26 +253,30 @@ export const getRTNewsItems = (req, res) => {
 // Get all Real Time News Items from News API
 // Path: localhost:4000/api/rtnews/getNewsItems
 // -------------------------------------------------------
-export const getNewsItems = async (liveNewsTopHeadlinesUrl) => {
+export const getNewsHeadlinesItems = async (liveNewsTopHeadlinesUrl) => {
   return await axios
-    .get(liveNewsTopHeadlinesUrl)
+    .get(liveNewsTopHeadlinesUrl, {
+      params: {
+        pageSize: 5, // Fetch 5 items
+      },
+    })
     .then((response) => response.data.articles)
     .catch((error) => console.log("Error in getAndSaveRTNewsData: ", error))
 }
 
 // -------------------------------------------------------
-// Socket Emit news data to be consumed by the client
+// Socket Emit news headlines data to be consumed by the client
 // -------------------------------------------------------
-// export const emitNewsData = (socket, newsData) => {
-//   // Guard clauses
-//   if (socket == null) return
-//   if (newsData == null) return
+export const emitNewsHeadlinesData = (socket, newsHeadlinesData) => {
+  // Guard clauses
+  if (socket == null) return
+  if (newsHeadlinesData == null) return
 
-//   try {
-//     socket.emit("DataFromOpenNewsAPI", newsData)
-//   } catch (error) {
-//     console.log("Error in emitNewsData: ", error)
-//   }
-// }
+  try {
+    socket.emit("FromNewsHeadlinesAPI", newsHeadlinesData)
+  } catch (error) {
+    console.log("Error in emitNewsHeadlinesData: ", error)
+  }
+}
 
 export default getRTNewsItems

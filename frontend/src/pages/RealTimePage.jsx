@@ -117,8 +117,8 @@ const ClientComponent = () => {
   </div> */}
         <div className="box box2">
           <RTNews
-            isLoadingNewsData={isLoadingNewsHeadlinesData}
-            newsItems={newsHeadlinesItems}
+            isLoadingNewsHeadlinesData={isLoadingNewsHeadlinesData}
+            newsHeadlinesItems={newsHeadlinesItems}
           />
         </div>
         <div className="box box3">

@@ -1,6 +1,9 @@
 import nodeCron from "node-cron"
 import { getOpenWeatherData } from "./controllers/rtWeatherController.js"
-import { getNewsItems } from "./controllers/rtNewsController.js"
+import {
+  emitNewsHeadlinesData,
+  getNewsHeadlinesItems,
+} from "./controllers/rtNewsController.js"
 import {
   emitCalendarEventsData,
   getGoogleCalendarEvents,
@@ -78,11 +81,11 @@ export var enableRealtimeData = (io) => {
     // console.log(currentDate)
     // console.log(timeNow)
 
-    getNewsItems(liveNewsTopHeadlinesUrl).then((result) => {
+    getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
       // TODO - Save data in the Database
       // saveNewsItems(result)
       socket.emit("FromIsLoadingNewsHeadlinesData", false)
-      socket.emit("FromNewsHeadlinesAPI", result)
+      emitNewsHeadlinesData(socket, result)
     })
   }
 

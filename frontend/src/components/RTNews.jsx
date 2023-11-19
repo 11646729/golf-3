@@ -7,18 +7,19 @@ import "../styles/news.scss"
 // Real Time News component
 // -------------------------------------------------------
 const RTNews = (props) => {
-  const { isLoadingNewsData, newsItems } = props
+  const { isLoadingNewsHeadlinesData, newsHeadlinesItems } = props
 
   RTNews.propTypes = {
-    isLoadingNewsData: PropTypes.bool,
-    newsItems: PropTypes.array,
+    isLoadingNewsHeadlinesData: PropTypes.bool,
+    newsHeadlinesItems: PropTypes.array,
   }
 
-  // console.log(newsItems)
+  // console.log(newsHeadlinesItems)
+  console.log(isLoadingNewsHeadlinesData)
 
-  return !isLoadingNewsData ? (
+  return !isLoadingNewsHeadlinesData ? (
     <div className="table">
-      {newsItems.map((item, publishedAt) =>
+      {newsHeadlinesItems.map((item, publishedAt) =>
         publishedAt === 0 ? (
           <div key={publishedAt}>
             <div className="caption">
