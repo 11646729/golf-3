@@ -53,20 +53,20 @@ const ClientComponent = () => {
       setResponse(response)
     })
 
-    socket.on("FromIsLoadingTemperatureData", (response) => {
-      setIsLoadingTemperatureData(response)
-    })
-
-    socket.on("FromTemperatureAPI", (data) => {
-      setTemperatureReadings(data)
-    })
-
     socket.on("FromIsLoadingNewsHeadlinesData", (response) => {
       setIsLoadingNewsHeadlinesData(response)
     })
 
     socket.on("FromNewsHeadlinesAPI", (data) => {
       setNewsHeadlinesItems(data)
+    })
+
+    socket.on("FromIsLoadingTemperatureData", (response) => {
+      setIsLoadingTemperatureData(response)
+    })
+
+    socket.on("FromTemperatureAPI", (data) => {
+      setTemperatureReadings(data)
     })
 
     // CLEAN UP THE EFFECT
