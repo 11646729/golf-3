@@ -19,12 +19,16 @@ export var enableRealtimeData = (io) => {
   // -------------------------------------------------------------------
   // From socket-io code
   // -------------------------------------------------------------------
-  let Heartbeat, TemperatureInterval, NewsHeadlinesInterval
+  let Heartbeat,
+    CalendarEventsInterval,
+    TemperatureInterval,
+    NewsHeadlinesInterval
 
   io.on("connection", (socket) => {
     console.log("New client connected")
     if (TemperatureInterval) {
       Heartbeat.stop()
+      CalendarEventsInterval.stop()
       TemperatureInterval.stop()
       NewsHeadlinesInterval.stop()
     }
@@ -32,6 +36,11 @@ export var enableRealtimeData = (io) => {
     Heartbeat = nodeCron.schedule("*/1 * * * * *", () => {
       // Do whatever you want in here. Send email, Make  database backup or download data.
       getApiAndEmit(socket)
+    })
+
+    CalendarEventsInterval = nodeCron.schedule("*/1 * * * * *", () => {
+      // Do whatever you want in here. Send email, Make  database backup or download data.
+      getCalendarEventsApiAndEmit(socket)
     })
 
     TemperatureInterval = nodeCron.schedule("*/1 * * * * *", () => {
@@ -47,6 +56,7 @@ export var enableRealtimeData = (io) => {
     socket.on("disconnect", () => {
       console.log("Client disconnected")
       Heartbeat.stop()
+      CalendarEventsInterval.stop()
       TemperatureInterval.stop()
       NewsHeadlinesInterval.stop()
     })
@@ -59,6 +69,17 @@ export var enableRealtimeData = (io) => {
     const response = new Date()
     // Emitting a 1 second heartbeat
     socket.emit("Heartbeat", response)
+  }
+
+  // -----------------------------
+  // Fetch Google Calendar Events data
+  // -----------------------------
+  const getCalendarEventsApiAndEmit = (socket) => {
+    getGoogleCalendarEvents().then((result) => {
+      saveCalendarEvents(result)
+      socket.emit("FromIsLoadingCalendarEvents", false)
+      emitCalendarEventsData(socket, result)
+    })
   }
 
   // -----------------------------
@@ -77,8 +98,7 @@ export var enableRealtimeData = (io) => {
     // console.log(timeNow)
 
     getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
-      // TODO - Save data in the Database
-      // saveNewsItems(result)
+      saveNewsHeadlinesItems(result)
       socket.emit("FromIsLoadingNewsHeadlinesData", false)
       emitNewsHeadlinesData(socket, result)
     })
@@ -91,36 +111,23 @@ export var enableRealtimeData = (io) => {
     const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
     getOpenWeatherData(weatherDataUrl).then((result) => {
       let temperatureReadings = reformatTemperatureValue(result)
-      // TODO - Save data in the Database
-      // saveTemperatureValue(temperatureReadings)
+      saveTemperatureValue(temperatureReadings)
       socket.emit("FromIsLoadingTemperatureData", false)
       emitTemperatureData(socket, temperatureReadings)
     })
   }
 
-  // -------------------------------------------------------------------
-  //  // -----------------------------
-  // Fetch Calendar Event data every Minute
-  // cron.schedule("*/1 * * * *", () => {
-  //   // -----------------------------
-  //   getGoogleCalendarEvents().then((result) => {
-  //     // TODO - Save data in the Database
-  //     saveCalendarEvents(result)
-  //     emitCalendarEventsData(socket, result)
-  //   })
-  // })
+  const saveCalendarEvents = (result) => {
+    console.log("Test of saveCalendarEvents function " + result)
+  }
 
-  // const saveCalendarEvents = (result) => {
-  //   // console.log("Test of saveCalendarEvents function " + result)
-  // }
+  const saveNewsHeadlinesItems = (result) => {
+    console.log("Test of saveNewsHeadlinesItems function " + result)
+  }
 
-  // const saveNewsHeadlinesItems = (result) => {
-  //   // console.log("Test of saveNewsHeadlinesItems function " + result)
-  // }
-
-  // const saveTemperatureValue = (result) => {
-  //   // console.log("Test of saveTemperatureValue function " + result)
-  // }
+  const saveTemperatureValue = (result) => {
+    console.log("Test of saveTemperatureValue function " + result)
+  }
 
   // -------------------------------------------------------
   // Function to refactor Temperature Value

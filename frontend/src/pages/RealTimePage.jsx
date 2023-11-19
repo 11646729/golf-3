@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo } from "react"
 import socketIOClient from "socket.io-client"
-// import RTCalendar from "../components/RTCalendar"
+import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
@@ -31,6 +31,8 @@ const RealTimeHomePage = () => {
 
 const ClientComponent = () => {
   const [response, setResponse] = useState([])
+  const [calendarEvents, setCalendarEvents] = useState([])
+  const [isLoadingCalendarEvents, setIsLoadingCalendarEvents] = useState(true)
   const [temperatureReadings, setTemperatureReadings] = useState([])
   const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
   const [newsHeadlinesItems, setNewsHeadlinesItems] = useState([])
@@ -50,6 +52,14 @@ const ClientComponent = () => {
 
     socket.on("Heartbeat", (response) => {
       setResponse(response)
+    })
+
+    socket.on("FromIsLoadingCalendarEvents", (response) => {
+      setIsLoadingCalendarEvents(response)
+    })
+
+    socket.on("FromCalendarEventsAPI", (response) => {
+      setCalendarEvents(response)
     })
 
     socket.on("FromIsLoadingNewsHeadlinesData", (response) => {
@@ -74,8 +84,6 @@ const ClientComponent = () => {
   }, [])
 
   // const [calendarList, setCalendarList] = useState([])
-  // const [calendarEvents, setCalendarEvents] = useState([])
-  // const [isLoadingCalendarData, setIsLoadingCalendarData] = useState(true)
 
   // useEffect(() => {
   //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
@@ -88,25 +96,18 @@ const ClientComponent = () => {
   //     })
   // }, [])
 
-  // useEffect(() => {
-  //   socket.on("DataFromGoogleCalendarAPI", (currentData) => {
-  //     setIsLoadingCalendarData(false)
-  //     setCalendarEvents(currentData)
-  //   })
-  // }, [socket])
-
   return (
     <>
       <p>
         It's <time dateTime={response}>{response}</time>
       </p>
       <div className="home">
-        {/* <div className="box box1">
-    <RTCalendar
-      isLoadingCalendarData={isLoadingCalendarData}
-      calendarEvents={calendarEvents}
-    />
-  </div> */}
+        <div className="box box1">
+          <RTCalendar
+            isLoadingCalendarEvents={isLoadingCalendarEvents}
+            calendarEvents={calendarEvents}
+          />
+        </div>
         <div className="box box2">
           <RTNews
             isLoadingNewsHeadlinesData={isLoadingNewsHeadlinesData}

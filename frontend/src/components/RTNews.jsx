@@ -14,9 +14,6 @@ const RTNews = (props) => {
     newsHeadlinesItems: PropTypes.array,
   }
 
-  // console.log(newsHeadlinesItems)
-  console.log(isLoadingNewsHeadlinesData)
-
   return !isLoadingNewsHeadlinesData ? (
     <div className="table">
       {newsHeadlinesItems.map((item, publishedAt) =>

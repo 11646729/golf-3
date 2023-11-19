@@ -398,7 +398,7 @@ export const emitCalendarEventsData = (socket, calendarEvents) => {
   if (calendarEvents == null) return
 
   try {
-    socket.emit("DataFromGoogleCalendarAPI", calendarEvents)
+    socket.emit("FromCalendarEventsAPI", calendarEvents)
   } catch (error) {
     console.log("Error in emitCalendarEventsData: ", error)
   }

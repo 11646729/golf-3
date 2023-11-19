@@ -7,16 +7,14 @@ import "../styles/calendar.scss"
 // Real Time Calendar component
 // -------------------------------------------------------
 const RTCalendar = (props) => {
-  const { isLoadingCalendarData, calendarEvents } = props
+  const { isLoadingCalendarEvents, calendarEvents } = props
 
   RTCalendar.propTypes = {
-    isLoadingCalendarData: PropTypes.bool,
+    isLoadingCalendarEvents: PropTypes.bool,
     calendarEvents: PropTypes.array,
   }
 
-  // console.log(calendarEvents)
-
-  return !isLoadingCalendarData ? (
+  return !isLoadingCalendarEvents ? (
     <div className="table">
       {calendarEvents.map((event, index) =>
         index === 0 ? (
