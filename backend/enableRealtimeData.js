@@ -1,5 +1,8 @@
 import nodeCron from "node-cron"
-import { getOpenWeatherData } from "./controllers/rtWeatherController.js"
+import {
+  emitTemperatureData,
+  getOpenWeatherData,
+} from "./controllers/rtWeatherController.js"
 import {
   emitNewsHeadlinesData,
   getNewsHeadlinesItems,
@@ -16,30 +19,36 @@ export var enableRealtimeData = (io) => {
   // -------------------------------------------------------------------
   // From socket-io code
   // -------------------------------------------------------------------
-  let TemperatureInterval, NewsInterval
+  let Heartbeat, TemperatureInterval, NewsHeadlinesInterval
 
   io.on("connection", (socket) => {
     console.log("New client connected")
     if (TemperatureInterval) {
+      Heartbeat.stop()
       TemperatureInterval.stop()
-      NewsInterval.stop()
+      NewsHeadlinesInterval.stop()
     }
+
+    Heartbeat = nodeCron.schedule("*/1 * * * * *", () => {
+      // Do whatever you want in here. Send email, Make  database backup or download data.
+      getApiAndEmit(socket)
+    })
 
     TemperatureInterval = nodeCron.schedule("*/1 * * * * *", () => {
       // Do whatever you want in here. Send email, Make  database backup or download data.
-      getApiAndEmit(socket)
       getTemperatureApiAndEmit(socket)
     })
 
-    NewsInterval = nodeCron.schedule("*/2 * * * * *", () => {
+    NewsHeadlinesInterval = nodeCron.schedule("*/2 * * * * *", () => {
       // Do whatever you want in here. Send email, Make  database backup or download data.
       getNewsHeadlinesApiAndEmit(socket)
     })
 
     socket.on("disconnect", () => {
       console.log("Client disconnected")
+      Heartbeat.stop()
       TemperatureInterval.stop()
-      NewsInterval.stop()
+      NewsHeadlinesInterval.stop()
     })
   })
 
@@ -49,7 +58,7 @@ export var enableRealtimeData = (io) => {
   const getApiAndEmit = (socket) => {
     const response = new Date()
     // Emitting a 1 second heartbeat
-    socket.emit("FromAPI", response)
+    socket.emit("Heartbeat", response)
   }
 
   // -----------------------------
@@ -62,7 +71,7 @@ export var enableRealtimeData = (io) => {
       // TODO - Save data in the Database
       // saveTemperatureValue(temperatureReadings)
       socket.emit("FromIsLoadingTemperatureData", false)
-      socket.emit("FromTemperatureAPI", temperatureReadings)
+      emitTemperatureData(socket, temperatureReadings)
     })
   }
 
@@ -105,8 +114,8 @@ export var enableRealtimeData = (io) => {
   //   // console.log("Test of saveCalendarEvents function " + result)
   // }
 
-  // const saveNewsItems = (result) => {
-  //   // console.log("Test of saveNewsItems function " + result)
+  // const saveNewsHeadlinesItems = (result) => {
+  //   // console.log("Test of saveNewsHeadlinesItems function " + result)
   // }
 
   // const saveTemperatureValue = (result) => {

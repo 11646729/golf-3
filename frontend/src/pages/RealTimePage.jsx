@@ -49,7 +49,7 @@ const ClientComponent = () => {
     // Manual connect
     socket.connect()
 
-    socket.on("FromAPI", (response) => {
+    socket.on("Heartbeat", (response) => {
       setResponse(response)
     })
 
