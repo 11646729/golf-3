@@ -4,7 +4,6 @@ import socketIOClient from "socket.io-client"
 import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
-// import getTemperaturesData from "../functionHandlers/loadTemperaturesDataHandler"
 
 const RealTimeHomePage = () => {
   const [loadClient, setLoadClient] = useState(false)
@@ -93,13 +92,6 @@ const ClientComponent = () => {
   //   socket.on("DataFromGoogleCalendarAPI", (currentData) => {
   //     setIsLoadingCalendarData(false)
   //     setCalendarEvents(currentData)
-  //   })
-  // }, [socket])
-
-  // useEffect(() => {
-  //   socket.on("DataFromOpenNewsAPI", (currentData) => {
-  //     setIsLoadingNewsData(false)
-  //     setNewsItems(currentData)
   //   })
   // }, [socket])
 
