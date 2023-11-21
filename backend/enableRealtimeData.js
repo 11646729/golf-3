@@ -118,15 +118,15 @@ export var enableRealtimeData = (io) => {
   }
 
   const saveCalendarEvents = (result) => {
-    console.log("Test of saveCalendarEvents function " + result)
+    // console.log("Test of saveCalendarEvents function " + result)
   }
 
   const saveNewsHeadlinesItems = (result) => {
-    console.log("Test of saveNewsHeadlinesItems function " + result)
+    // console.log("Test of saveNewsHeadlinesItems function " + result)
   }
 
   const saveTemperatureValue = (result) => {
-    console.log("Test of saveTemperatureValue function " + result)
+    // console.log("Test of saveTemperatureValue function " + result)
   }
 
   // -------------------------------------------------------
