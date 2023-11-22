@@ -267,12 +267,18 @@ export const getNewsHeadlinesItems = async (liveNewsTopHeadlinesUrl) => {
 // -------------------------------------------------------
 // Socket Emit news headlines data to be consumed by the client
 // -------------------------------------------------------
-export const emitNewsHeadlinesData = (socket, newsHeadlinesData) => {
+export const emitNewsHeadlinesData = (
+  socket,
+  newsHeadlinesData,
+  stillLoading
+) => {
   // Guard clauses
   if (socket == null) return
   if (newsHeadlinesData == null) return
+  if (stillLoading == null) return
 
   try {
+    socket.emit("FromIsLoadingNewsHeadlinesData", stillLoading)
     socket.emit("FromNewsHeadlinesAPI", newsHeadlinesData)
   } catch (error) {
     console.log("Error in emitNewsHeadlinesData: ", error)

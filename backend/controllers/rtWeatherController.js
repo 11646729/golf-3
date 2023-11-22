@@ -203,12 +203,18 @@ export const getOpenWeatherData = async (weatherDataUrl) => {
 // -------------------------------------------------------
 // Socket Emit temperature data to be consumed by the client
 // -------------------------------------------------------
-export const emitTemperatureData = (socket, temperatureReadings) => {
+export const emitTemperatureData = (
+  socket,
+  temperatureReadings,
+  stillLoading
+) => {
   // Guard clauses
   if (socket == null) return
   if (temperatureReadings == null) return
+  if (stillLoading == null) return
 
   try {
+    socket.emit("FromIsLoadingTemperatureData", stillLoading)
     socket.emit("FromTemperatureAPI", temperatureReadings)
   } catch (error) {
     console.log("Error in emitTemperatureData: ", error)

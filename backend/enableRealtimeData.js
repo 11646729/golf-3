@@ -77,8 +77,8 @@ export var enableRealtimeData = (io) => {
   const getCalendarEventsApiAndEmit = (socket) => {
     getGoogleCalendarEvents().then((result) => {
       saveCalendarEvents(result)
-      socket.emit("FromIsLoadingCalendarEvents", false)
-      emitCalendarEventsData(socket, result)
+      // Emit 2 events isLoading & sendData to client
+      emitCalendarEventsData(socket, result, false)
     })
   }
 
@@ -99,8 +99,8 @@ export var enableRealtimeData = (io) => {
 
     getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
       saveNewsHeadlinesItems(result)
-      socket.emit("FromIsLoadingNewsHeadlinesData", false)
-      emitNewsHeadlinesData(socket, result)
+      // Emit 2 events isLoading & sendData to client
+      emitNewsHeadlinesData(socket, result, false)
     })
   }
 
@@ -112,8 +112,8 @@ export var enableRealtimeData = (io) => {
     getOpenWeatherData(weatherDataUrl).then((result) => {
       let temperatureReadings = reformatTemperatureValue(result)
       saveTemperatureValue(temperatureReadings)
-      socket.emit("FromIsLoadingTemperatureData", false)
-      emitTemperatureData(socket, temperatureReadings)
+      // Emit 2 events isLoading & sendData to client
+      emitTemperatureData(socket, temperatureReadings, false)
     })
   }
 

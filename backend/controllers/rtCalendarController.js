@@ -392,12 +392,18 @@ export const getGoogleCalendarEvents = async () => {
 // -------------------------------------------------------
 // Socket Emit calendar events data to be consumed by the client
 // -------------------------------------------------------
-export const emitCalendarEventsData = (socket, calendarEvents) => {
+export const emitCalendarEventsData = (
+  socket,
+  calendarEvents,
+  stillLoading
+) => {
   // Guard clauses
   if (socket == null) return
   if (calendarEvents == null) return
+  if (stillLoading == null) return
 
   try {
+    socket.emit("FromIsLoadingCalendarEvents", false)
     socket.emit("FromCalendarEventsAPI", calendarEvents)
   } catch (error) {
     console.log("Error in emitCalendarEventsData: ", error)
