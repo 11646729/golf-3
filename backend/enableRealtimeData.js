@@ -2,6 +2,7 @@ import nodeCron from "node-cron"
 import {
   emitTemperatureData,
   getOpenWeatherData,
+  reformatTemperatureValue,
 } from "./controllers/rtWeatherController.js"
 import {
   emitNewsHeadlinesData,
@@ -127,39 +128,5 @@ export var enableRealtimeData = (io) => {
 
   const saveTemperatureValue = (result) => {
     // console.log("Test of saveTemperatureValue function " + result)
-  }
-
-  // -------------------------------------------------------
-  // Function to refactor Temperature Value
-  // -------------------------------------------------------
-  const reformatTemperatureValue = (result) => {
-    // Guard clause
-    if (result == null) return
-
-    try {
-      let temperatureReadings = []
-      let latestReading = {
-        index: 1,
-        timeNow: new Date().toISOString(),
-        version: process.env.DATABASE_VERSION,
-        readingTime: unixToUtc(result.dt),
-        location: "Clandeboye Golf Course",
-        temperatureValue: result.main.temp,
-        latitude: process.env.HOME_LATITUDE,
-        longitude: process.env.HOME_LONGITUDE,
-      }
-      temperatureReadings.push(latestReading)
-
-      return temperatureReadings
-    } catch (error) {
-      console.log("Error in reformatTemperatureValue: ", error)
-    }
-  }
-
-  // -------------------------------------------------------
-  // Function to convert Unix timestamp to UTC
-  // -------------------------------------------------------
-  const unixToUtc = (timestamp) => {
-    return new Date(timestamp * 1000).toJSON()
   }
 }
