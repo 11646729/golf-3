@@ -12,6 +12,7 @@ import {
   emitCalendarEventsData,
   getGoogleCalendarEvents,
 } from "./controllers/rtCalendarController.js"
+import { prepareMessage } from "./prepareMessage.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -77,7 +78,9 @@ export var enableRealtimeData = (io) => {
   // -----------------------------
   const getCalendarEventsApiAndEmit = (socket) => {
     getGoogleCalendarEvents().then((result) => {
-      saveCalendarEvents(result)
+      let message = prepareMessage(result)
+      console.log(message)
+
       // Emit 2 events isLoading & sendData to client
       emitCalendarEventsData(socket, result, false)
     })
@@ -99,7 +102,6 @@ export var enableRealtimeData = (io) => {
     // console.log(timeNow)
 
     getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
-      saveNewsHeadlinesItems(result)
       // Emit 2 events isLoading & sendData to client
       emitNewsHeadlinesData(socket, result, false)
     })
@@ -112,21 +114,8 @@ export var enableRealtimeData = (io) => {
     const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
     getOpenWeatherData(weatherDataUrl).then((result) => {
       let temperatureReadings = reformatTemperatureValue(result)
-      saveTemperatureValue(temperatureReadings)
       // Emit 2 events isLoading & sendData to client
       emitTemperatureData(socket, temperatureReadings, false)
     })
-  }
-
-  const saveCalendarEvents = (result) => {
-    // console.log("Test of saveCalendarEvents function " + result)
-  }
-
-  const saveNewsHeadlinesItems = (result) => {
-    // console.log("Test of saveNewsHeadlinesItems function " + result)
-  }
-
-  const saveTemperatureValue = (result) => {
-    // console.log("Test of saveTemperatureValue function " + result)
   }
 }
