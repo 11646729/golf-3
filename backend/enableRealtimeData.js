@@ -1,5 +1,9 @@
 import nodeCron from "node-cron"
 import {
+  emitCalendarEventsData,
+  getGoogleCalendarEvents,
+} from "./controllers/rtCalendarController.js"
+import {
   emitTemperatureData,
   getOpenWeatherData,
   reformatTemperatureValue,
@@ -8,11 +12,7 @@ import {
   emitNewsHeadlinesData,
   getNewsHeadlinesItems,
 } from "./controllers/rtNewsController.js"
-import {
-  emitCalendarEventsData,
-  getGoogleCalendarEvents,
-} from "./controllers/rtCalendarController.js"
-import { prepareMessage } from "./prepareMessage.js"
+// import { formatMessage } from "./formatMessage.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -28,7 +28,13 @@ export var enableRealtimeData = (io) => {
 
   io.on("connection", (socket) => {
     console.log("New client connected")
-    if (TemperatureInterval) {
+
+    if (
+      Heartbeat ||
+      CalendarEventsInterval ||
+      TemperatureInterval ||
+      NewsHeadlinesInterval
+    ) {
       Heartbeat.stop()
       CalendarEventsInterval.stop()
       TemperatureInterval.stop()
@@ -36,22 +42,18 @@ export var enableRealtimeData = (io) => {
     }
 
     Heartbeat = nodeCron.schedule("*/1 * * * * *", () => {
-      // Do whatever you want in here. Send email, Make  database backup or download data.
       getApiAndEmit(socket)
     })
 
     CalendarEventsInterval = nodeCron.schedule("*/1 * * * * *", () => {
-      // Do whatever you want in here. Send email, Make  database backup or download data.
       getCalendarEventsApiAndEmit(socket)
     })
 
     TemperatureInterval = nodeCron.schedule("*/1 * * * * *", () => {
-      // Do whatever you want in here. Send email, Make  database backup or download data.
       getTemperatureApiAndEmit(socket)
     })
 
     NewsHeadlinesInterval = nodeCron.schedule("*/2 * * * * *", () => {
-      // Do whatever you want in here. Send email, Make  database backup or download data.
       getNewsHeadlinesApiAndEmit(socket)
     })
 
@@ -78,8 +80,8 @@ export var enableRealtimeData = (io) => {
   // -----------------------------
   const getCalendarEventsApiAndEmit = (socket) => {
     getGoogleCalendarEvents().then((result) => {
-      let message = prepareMessage(result)
-      console.log(message)
+      // let message = formatMessage(result)
+      // console.log(message)
 
       // Emit 2 events isLoading & sendData to client
       emitCalendarEventsData(socket, result, false)

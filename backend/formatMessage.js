@@ -1,4 +1,4 @@
-export const prepareMessage = (data) => {
+export const formatMessage = (data) => {
   var domainData = {
     type: "string",
     description: "The domain of the event",
