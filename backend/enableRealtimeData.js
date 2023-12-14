@@ -12,7 +12,10 @@ import {
   emitNewsHeadlinesData,
   getNewsHeadlinesItems,
 } from "./controllers/rtNewsController.js"
+import Producer from "./producer.js"
 // import { formatMessage } from "./formatMessage.js"
+
+const producer = new Producer()
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -24,7 +27,8 @@ export var enableRealtimeData = (io) => {
   let Heartbeat,
     CalendarEventsInterval,
     TemperatureInterval,
-    NewsHeadlinesInterval
+    NewsHeadlinesInterval,
+    RabbitMQ
 
   io.on("connection", (socket) => {
     console.log("New client connected")
@@ -57,12 +61,23 @@ export var enableRealtimeData = (io) => {
       getNewsHeadlinesApiAndEmit(socket)
     })
 
+    // RabbitMQ code
+    RabbitMQ = nodeCron.schedule("*/5 * * * * *", () => {
+      // Do whatever you want in here. Send email, Make  database backup or download data.
+      const newsMessage = "This is a News message"
+      const weatherMessage = { idx: 11, nvalue: 0, svalue: "19.70;44.00;0" }
+
+      producer.publishMessage("Weather", weatherMessage)
+      producer.publishMessage("News", newsMessage)
+    })
+
     socket.on("disconnect", () => {
       console.log("Client disconnected")
       Heartbeat.stop()
       CalendarEventsInterval.stop()
       TemperatureInterval.stop()
       NewsHeadlinesInterval.stop()
+      RabbitMQ.stop()
     })
   })
 
