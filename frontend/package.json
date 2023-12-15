@@ -28,12 +28,11 @@
     "react-konva": "^18.2.5",
     "react-konva-utils": "^1.0.4",
     "react-router-dom": "^6.14.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "recharts": "^2.5.0",
     "sass": "^1.63.6",
     "socket.io-client": "^4.6.1",
-    "styled-components": "^5.3.9",
-    "typescript": "^5.0.2"
+    "styled-components": "^5.3.9"
   },
   "scripts": {
     "start": "react-scripts start",
