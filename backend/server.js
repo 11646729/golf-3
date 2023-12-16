@@ -35,7 +35,11 @@ dotenv.config()
 // cors settings from https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
 app.use(
   cors({
-    origin: "http://localhost:" + process.env.REACT_SERVER_PORT,
+    // Changed to allow PORT 3006 for rabbitMQ rtSwitchboard data to pass
+    origin: [
+      "http://localhost:" + process.env.REACT_SERVER_PORT,
+      "http://localhost:3006",
+    ],
     methods: "GET, POST, PUT, DELETE",
     allowedHeaders: "Content-Type, Authorization",
   })
