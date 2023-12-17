@@ -13,6 +13,36 @@ import {
   getNewsHeadlinesItems,
 } from "./controllers/rtNewsController.js"
 // import { formatMessage } from "./formatMessage.js"
+import { connect } from "amqplib"
+import { rabbitMQ } from "./rtNewsMSconfig.js"
+
+async function consumeMessages() {
+  const connection = await connect(rabbitMQ.exchangeUrl)
+  const channel = await connection.createChannel()
+
+  await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType)
+
+  const qn = await channel.assertQueue("NewsQueue")
+  await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "News")
+
+  const qw = await channel.assertQueue("WeatherQueue")
+  await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "Weather")
+
+  console.log(qn.queue)
+  console.log(qw.queue)
+
+  channel.consume(qn.queue, (msg) => {
+    const data = JSON.parse(msg.content)
+    console.log(data)
+    channel.ack(msg)
+  })
+
+  // channel.consume(qw.queue, (msg) => {
+  //   const data = JSON.parse(msg.content)
+  //   console.log(data)
+  //   channel.ack(msg)
+  // })
+}
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -25,6 +55,8 @@ export var enableRealtimeData = (io) => {
     CalendarEventsInterval,
     TemperatureInterval,
     NewsHeadlinesInterval
+
+  consumeMessages()
 
   io.on("connection", (socket) => {
     console.log("New client connected")
