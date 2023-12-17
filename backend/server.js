@@ -5,6 +5,8 @@ import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
+import { connect } from "amqplib"
+import { rabbitMQ } from "./rtNewsMSconfig.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -66,6 +68,43 @@ app.use("/api/seismicdesigns", seismicDesignsRouter)
 app.use((req, res) => {
   res.status(404)
 })
+
+//step 1 : Connect to the rabbitmq server
+//step 2 : Create a new channel
+//step 3 : Create the exchange
+//step 4 : Create the queue
+//step 5 : Bind the queue to the exchange
+//step 6 : Consume messages from the queue
+
+async function consumeMessages() {
+  const connection = await connect(rabbitMQ.exchangeUrl)
+  const channel = await connection.createChannel()
+
+  await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType)
+
+  const qn = await channel.assertQueue("NewsQueue")
+  await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "News")
+
+  const qw = await channel.assertQueue("WeatherQueue")
+  await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "Weather")
+
+  console.log(qn.queue)
+  console.log(qw.queue)
+
+  channel.consume(qn.queue, (msg) => {
+    const data = JSON.parse(msg.content)
+    console.log(data)
+    channel.ack(msg)
+  })
+
+  // channel.consume(qw.queue, (msg) => {
+  //   const data = JSON.parse(msg.content)
+  //   console.log(data)
+  //   channel.ack(msg)
+  // })
+}
+
+consumeMessages()
 
 // Enable Realtime data sending system
 enableRealtimeData(io)
