@@ -24,16 +24,15 @@ async function consumeMessages() {
 
   const qc = await channel.assertQueue("CalendarQueue")
   await channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "Calendar")
+  console.log(qc.queue + " queue created")
 
   const qn = await channel.assertQueue("NewsQueue")
   await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "News")
+  console.log(qn.queue + " queue created")
 
   const qw = await channel.assertQueue("WeatherQueue")
   await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "Weather")
-
-  console.log(qc.queue)
-  console.log(qn.queue)
-  console.log(qw.queue)
+  console.log(qw.queue + " queue created")
 
   channel.consume(qc.queue, (msg) => {
     const data = JSON.parse(msg.content)
