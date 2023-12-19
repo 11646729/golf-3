@@ -22,9 +22,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Added by BDS 16-12-23
+# Added by BDS 19-12-23
 /backend/node_modules
 /backend/gtfs_data
 /frontend/node_modules
-/rtSwitchboard/node_modules
+/rtMockDatafeed/node_modules
 .env
