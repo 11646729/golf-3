@@ -67,36 +67,6 @@ app.use((req, res) => {
   res.status(404)
 })
 
-// async function consumeMessages() {
-//   const connection = await connect(rabbitMQ.exchangeUrl)
-//   const channel = await connection.createChannel()
-
-//   await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType)
-
-//   const qn = await channel.assertQueue("NewsQueue")
-//   await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "News")
-
-//   const qw = await channel.assertQueue("WeatherQueue")
-//   await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "Weather")
-
-//   console.log(qn.queue)
-//   console.log(qw.queue)
-
-//   channel.consume(qn.queue, (msg) => {
-//     const data = JSON.parse(msg.content)
-//     console.log(data)
-//     channel.ack(msg)
-//   })
-
-//   // channel.consume(qw.queue, (msg) => {
-//   //   const data = JSON.parse(msg.content)
-//   //   console.log(data)
-//   //   channel.ack(msg)
-//   // })
-// }
-
-// consumeMessages()
-
 // Enable Realtime data sending system
 enableRealtimeData(io)
 

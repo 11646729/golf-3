@@ -22,20 +22,30 @@ async function consumeMessages() {
 
   await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType)
 
+  const qc = await channel.assertQueue("CalendarQueue")
+  await channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "Calendar")
+
   const qn = await channel.assertQueue("NewsQueue")
   await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "News")
 
   const qw = await channel.assertQueue("WeatherQueue")
   await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "Weather")
 
+  console.log(qc.queue)
   console.log(qn.queue)
   console.log(qw.queue)
 
-  channel.consume(qn.queue, (msg) => {
+  channel.consume(qc.queue, (msg) => {
     const data = JSON.parse(msg.content)
     console.log(data)
     channel.ack(msg)
   })
+
+  // channel.consume(qn.queue, (msg) => {
+  //   const data = JSON.parse(msg.content)
+  //   console.log(data)
+  //   channel.ack(msg)
+  // })
 
   // channel.consume(qw.queue, (msg) => {
   //   const data = JSON.parse(msg.content)
@@ -148,6 +158,9 @@ export var enableRealtimeData = (io) => {
     const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
     getOpenWeatherData(weatherDataUrl).then((result) => {
       let temperatureReadings = reformatTemperatureValue(result)
+
+      console.log(temperatureReadings)
+
       // Emit 2 events isLoading & sendData to client
       emitTemperatureData(socket, temperatureReadings, false)
     })
