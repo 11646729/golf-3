@@ -7,26 +7,37 @@ const producer = new Producer()
 
 const app = express()
 
+const indexCount = 1
+const precision = 100 // 2 decimals
+
 nodeCron.schedule("*/5 * * * * *", () => {
-  // Do whatever you want in here. Send email, Make  database backup or download data.
   const calendarMessage = "This is a Calendar message"
-  const newsMessage = "This is a News message"
+
+  let randomNum =
+    Math.floor(
+      Math.random() * (10 * precision - 1 * precision) + 1 * precision
+    ) /
+    (1 * precision)
+
   const weatherMessage = [
     {
-      index: 1,
-      timeNow: new Date().toISOString(),
+      index: indexCount,
       version: "1.0",
       readingTime: "2023-12-18T09:48:28.000Z",
       location: "Clandeboye Golf Course",
-      temperatureValue: 52.29,
+      temperatureValue: randomNum,
       latitude: "54.665577",
       longitude: "-5.766897",
     },
   ]
+  const newsMessage = "This is a News message"
 
   producer.publishMessage("Calendar", calendarMessage)
   producer.publishMessage("Weather", weatherMessage)
   producer.publishMessage("News", newsMessage)
+
+  indexCount++
+  console.log(weatherMessage)
 })
 
 app.listen(rabbitMQ.port, () => {

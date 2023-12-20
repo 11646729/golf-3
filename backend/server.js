@@ -5,6 +5,7 @@ import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
+import { listenForRabbitMQMessages } from "./listenForRabbitMQMessages.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -68,7 +69,8 @@ app.use((req, res) => {
 })
 
 // Enable Realtime data sending system
-enableRealtimeData(io)
+// enableRealtimeData(io)
+listenForRabbitMQMessages()
 
 // Start Express server
 httpServer.listen(port, (err) => {
