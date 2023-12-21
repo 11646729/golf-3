@@ -19,7 +19,7 @@ nodeCron.schedule("*/5 * * * * *", () => {
     ) /
     (1 * precision)
 
-  const weatherMessage = [
+  const mockWeatherMessage = [
     {
       index: indexCount,
       version: "1.0",
@@ -33,11 +33,11 @@ nodeCron.schedule("*/5 * * * * *", () => {
   const newsMessage = "This is a News message"
 
   producer.publishMessage("Calendar", calendarMessage)
-  producer.publishMessage("Weather", weatherMessage)
+  producer.publishMessage("Weather", mockWeatherMessage)
   producer.publishMessage("News", newsMessage)
 
   indexCount++
-  console.log(weatherMessage)
+  console.log(mockWeatherMessage)
 })
 
 app.listen(rabbitMQ.port, () => {
