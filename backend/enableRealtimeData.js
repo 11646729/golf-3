@@ -115,6 +115,38 @@ export var enableRealtimeData = (io) => {
   const getTemperatureApiAndEmit = (socket) => {
     const weatherDataUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${process.env.CGC_LATITUDE}&lon=${process.env.CGC_LONGITUDE}&exclude=alerts&units=imperial&appid=${process.env.OPEN_WEATHER_KEY}`
     getOpenWeatherData(weatherDataUrl).then((result) => {
+      // Sample result
+      // -------------
+      // {
+      //   coord: { lon: -5.6839, lat: 54.6255 },
+      //   weather: [ { id: 500, main: 'Rain', description: 'light rain', icon: '10d' } ],
+      //   base: 'stations',
+      //   main: {
+      //     temp: 49.82,
+      //     feels_like: 43.66,
+      //     temp_min: 49.44,
+      //     temp_max: 50.67,
+      //     pressure: 1004,
+      //     humidity: 85
+      //   },
+      //   visibility: 10000,
+      //   wind: { speed: 18.41, deg: 290, gust: 32.21 },
+      //   rain: { '1h': 0.15 },
+      //   clouds: { all: 75 },
+      //   dt: 1703153732,
+      //   sys: {
+      //     type: 2,
+      //     id: 2008547,
+      //     country: 'GB',
+      //     sunrise: 1703148200,
+      //     sunset: 1703174273
+      //   },
+      //   timezone: 0,
+      //   id: 2656396,
+      //   name: 'Bangor',
+      //   cod: 200
+      // }
+
       let temperatureReadings = reformatTemperatureValue(result)
 
       // Emit 2 events isLoading & sendData to client
