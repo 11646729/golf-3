@@ -2,34 +2,17 @@ import express from "express"
 import nodeCron from "node-cron"
 import Producer from "./producer.js"
 import { rabbitMQ } from "./rtMockDatafeedConfig.js"
+import { generateData } from "./generateMockWeatherData.js"
 
 const producer = new Producer()
 
 const app = express()
 
 const indexCount = 1
-const precision = 100 // 2 decimals
 
 nodeCron.schedule("*/5 * * * * *", () => {
   const calendarMessage = "This is a Calendar message"
-
-  let randomNum =
-    Math.floor(
-      Math.random() * (10 * precision - 1 * precision) + 1 * precision
-    ) /
-    (1 * precision)
-
-  const mockWeatherMessage = [
-    {
-      index: indexCount,
-      version: "1.0",
-      readingTime: "2023-12-18T09:48:28.000Z",
-      location: "Clandeboye Golf Course",
-      temperatureValue: randomNum,
-      latitude: "54.665577",
-      longitude: "-5.766897",
-    },
-  ]
+  const mockWeatherMessage = generateData("Weather", indexCount)
   const newsMessage = "This is a News message"
 
   producer.publishMessage("Calendar", calendarMessage)

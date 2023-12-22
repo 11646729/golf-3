@@ -70,7 +70,7 @@ app.use((req, res) => {
 
 // Enable Realtime data sending system
 enableRealtimeData(io)
-// listenForRabbitMQMessages()
+listenForRabbitMQMessages()
 
 // Start Express server
 httpServer.listen(port, (err) => {
