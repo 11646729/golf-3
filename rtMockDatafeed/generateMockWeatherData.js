@@ -1,5 +1,4 @@
-export const generateData = (mockType, indexCount) => {
-  // const indexCount = 1
+export const generateMockWeatherData = (mockType, indexCount) => {
   const precision = 100 // 2 decimals
 
   let randomNum =
@@ -8,17 +7,17 @@ export const generateData = (mockType, indexCount) => {
     ) /
     (1 * precision)
 
-  const mockWeatherMessage = [
+  const mockWeatherMessageBody = [
     {
       index: indexCount,
-      version: "1.0",
-      readingTime: "2023-12-18T09:48:28.000Z",
+      version: 1.0,
+      readingTime: new Date(),
       location: "Clandeboye Golf Course",
       temperatureValue: randomNum,
-      latitude: "54.665577",
-      longitude: "-5.766897",
+      latitude: 54.665577,
+      longitude: -5.766897,
     },
   ]
 
-  return mockWeatherMessage
+  return mockWeatherMessageBody
 }

@@ -2,7 +2,7 @@ import express from "express"
 import nodeCron from "node-cron"
 import Producer from "./producer.js"
 import { rabbitMQ } from "./rtMockDatafeedConfig.js"
-import { generateData } from "./generateMockWeatherData.js"
+import { generateMockWeatherData } from "./generateMockWeatherData.js"
 
 const producer = new Producer()
 
@@ -12,7 +12,7 @@ const indexCount = 1
 
 nodeCron.schedule("*/5 * * * * *", () => {
   const calendarMessage = "This is a Calendar message"
-  const mockWeatherMessage = generateData("Weather", indexCount)
+  const mockWeatherMessage = generateMockWeatherData("Weather", indexCount)
   const newsMessage = "This is a News message"
 
   producer.publishMessage("Calendar", calendarMessage)
