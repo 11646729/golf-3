@@ -6,7 +6,7 @@
   "keywords": [],
   "author": "Brian Smith",
   "license": "ISC",
-  "main": "index.js",
+  "main": "index.jsx",
   "dependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-syntax-flow": "^7.14.5",
