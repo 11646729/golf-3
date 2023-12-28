@@ -7,6 +7,7 @@
   "author": "Brian Smith",
   "license": "ISC",
   "main": "index.jsx",
+  "type": "module",
   "dependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-syntax-flow": "^7.14.5",
@@ -28,17 +29,15 @@
     "react-konva": "^18.2.5",
     "react-konva-utils": "^1.0.4",
     "react-router-dom": "^6.14.1",
-    "react-scripts": "^5.0.1",
     "recharts": "^2.5.0",
     "sass": "^1.63.6",
     "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -56,5 +55,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.10"
   }
 }
