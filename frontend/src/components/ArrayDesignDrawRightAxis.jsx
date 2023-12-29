@@ -35,9 +35,9 @@ const DrawArrayDesignRightAxis = (props) => {
       <Line
         key={hline}
         points={[x1, y, x2, y]}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        stroke={process.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          process.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
       />

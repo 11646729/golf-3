@@ -17,15 +17,15 @@ const DrawTopAxis = (props) => {
 
   // Read Axis Values - Min, Max & Interval Values
   var MinWaveNumber = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER
   ).toFixed(2)
 
   var MaxWaveNumber = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER
   ).toFixed(2)
 
   var WaveNumberInterval = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL
   ).toFixed(2)
 
   const ScaleHorizontal =
@@ -51,9 +51,9 @@ const DrawTopAxis = (props) => {
       <Line
         key={i}
         points={[x, y1, x, y2]}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
+          import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH,
           10
         )}
       />

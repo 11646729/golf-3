@@ -22,9 +22,9 @@ const DrawChartBox = (props) => {
       y={rect.top}
       width={rect.right - rect.left}
       height={rect.bottom - rect.top}
-      stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+      stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
       strokeWidth={parseInt(
-        process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+        import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
       )}
       // onClick={(e) => {
       //   handleClick(e)

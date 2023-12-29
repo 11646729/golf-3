@@ -24,7 +24,7 @@ const TemperaturesChartContainer = styled.div`
   min-height: 500px;
 `
 
-// const socket = io(process.env.REACT_APP_EXPRESS_SERVER_ENDPOINT_URL, {
+// const socket = io(process.env.VITE_EXPRESS_SERVER_ENDPOINT_URL, {
 //   // autoConnect: false,
 // })
 
@@ -36,7 +36,7 @@ const WeatherPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   // useEffect(() => {
-  //   getTemperaturesData(process.env.REACT_APP_RT_WEATHER)
+  //   getTemperaturesData(process.env.VITE_RT_WEATHER)
   //     .then((returnedData) => {
   //       // setTemperatureData((returnedData) => [...temperatureData, returnedData])
   //       setTemperatureData(returnedData)

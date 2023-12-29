@@ -12,7 +12,7 @@ const DrawRadialLinesAndCircles = (props) => {
   }
 
   const NoOfAngles = parseInt(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALNOOFANGLES
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALNOOFANGLES
   )
   const pi_rad = Math.PI / 180
   const mcentrex = (rect.right - rect.left) / 2
@@ -23,9 +23,9 @@ const DrawRadialLinesAndCircles = (props) => {
 
   // DRAW CIRCLES
   const NoOfCircles =
-    (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER -
-      process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER) /
-    (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL * 2)
+    (import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMAXIMUMWAVENUMBER -
+      import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMINIMUMWAVENUMBER) /
+    (import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALWAVENUMBERINTERVAL * 2)
 
   for (let j = 1; j <= NoOfCircles; j++) {
     const circleRadius = Math.round(
@@ -38,9 +38,9 @@ const DrawRadialLinesAndCircles = (props) => {
         x={rect.left + mcentrex}
         y={rect.top + mcentrey}
         radius={circleRadius}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+          import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
       />
     )
@@ -48,7 +48,7 @@ const DrawRadialLinesAndCircles = (props) => {
 
   // DRAW RADIAL LINES
   if (
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDISPLAYRADIALLINES === "true"
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDISPLAYRADIALLINES === "true"
   ) {
     for (let i = 1; i <= NoOfAngles; i++) {
       const dOffx = mcentrey * Math.sin((360 / NoOfAngles) * pi_rad * i)
@@ -63,16 +63,16 @@ const DrawRadialLinesAndCircles = (props) => {
         <Line
           key={i}
           points={[x1, y1, x2, y2]}
-          stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+          stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
           strokeWidth={parseInt(
-            process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+            import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
           )}
         />
       )
     }
 
     // DRAW LABELS
-    if (process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDISPLAYLABELS === "true") {
+    if (import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDISPLAYLABELS === "true") {
       for (let k = 1; k <= NoOfAngles; k++) {
         const dOffx = mcentrey * Math.sin((360 / NoOfAngles) * pi_rad * k)
         const dOffy = 0 - mcentrey * Math.cos((360 / NoOfAngles) * pi_rad * k)

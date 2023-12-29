@@ -105,88 +105,64 @@ const SeismicArrayDesign = () => {
           <DrawChartBox rect={insideMarginsRect} />
           <DrawPlotTitle
             rect={insidePlotTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWPLOTTITLE
-            }
-            titleText={process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
+            titleDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWPLOTTITLE}
+            titleText={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
           />
           {/* <DrawGraphPlotArea
             rect={graphPlotAreaRect}
             boundaryDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOUNDARY
+              process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWBOUNDARY
             }
           /> */}
           <DrawTopTitle
             rect={topTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
-            }
-            titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT
-            }
+            titleDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE}
+            titleText={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT}
           />
           <DrawBottomTitle
             rect={bottomTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
-            }
+            titleDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE}
             titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNBOTTOMTITLETEXT
+              process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNBOTTOMTITLETEXT
             }
           />
           <DrawLeftTitle
             rect={leftTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
-            }
-            titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT
-            }
+            titleDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE}
+            titleText={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNTOPTITLETEXT}
           />
           <DrawRightTitle
             rect={rightTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE
-            }
-            titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLETEXT
-            }
+            titleDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPTITLE}
+            titleText={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNRIGHTTITLETEXT}
           />
           <ArrayDesignDrawTopAxis
-            axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPAXIS
-            }
+            axisDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWTOPAXIS}
             rect={graphPlotAreaRect}
             NoVLines={NoVLines}
             VLineSpacing={VLineSpacing}
           />
           <ArrayDesignDrawBottomAxis
-            axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWBOTTOMAXIS
-            }
+            axisDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWBOTTOMAXIS}
             rect={graphPlotAreaRect}
             NoVLines={NoVLines}
             VLineSpacing={VLineSpacing}
           />
           <ArrayDesignDrawLeftAxis
-            axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWLEFTAXIS
-            }
+            axisDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWLEFTAXIS}
             rect={graphPlotAreaRect}
             NoHLines={NoHLines}
             HLineSpacing={HLineSpacing}
           />
           <ArrayDesignDrawRightAxis
-            axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWRIGHTAXIS
-            }
+            axisDraw={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWRIGHTAXIS}
             rect={graphPlotAreaRect}
             NoHLines={NoHLines}
             HLineSpacing={HLineSpacing}
           />
           <ArrayDesignDrawGridLines
             gridlinesDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES
+              process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES
             }
             rect={graphPlotAreaRect}
             NoVLines={NoVLines}

@@ -35,8 +35,8 @@ const CruisesPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const homePosition = {
-    lat: parseFloat(process.env.REACT_APP_HOME_LATITUDE),
-    lng: parseFloat(process.env.REACT_APP_HOME_LONGITUDE),
+    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
+    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   }
 
   // build portArrivalsData Url

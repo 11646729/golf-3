@@ -24,12 +24,12 @@ const DrawLegendTitle = (props) => {
         x={rect.left}
         y={
           rect.top -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH) -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
+          parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH) -
+          parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
         }
         width={rect.right - rect.left}
         height={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH
+          import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH
         )}
       />
       <Text
@@ -40,12 +40,12 @@ const DrawLegendTitle = (props) => {
         x={rect.left}
         y={
           rect.top -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH) -
-          parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
+          parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH) -
+          parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
         }
         width={rect.right - rect.left}
         height={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH
+          import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH
         )}
         align="center"
         verticalAlign="bottom"

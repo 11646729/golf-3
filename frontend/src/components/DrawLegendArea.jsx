@@ -36,7 +36,7 @@ const DrawLegendArea = (props) => {
       <DrawLegendAxisLabels
         rect={rect}
         legendDraw={legendDraw}
-        greyScale={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALGREYSCALE}
+        greyScale={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALGREYSCALE}
       />
     </>
   )

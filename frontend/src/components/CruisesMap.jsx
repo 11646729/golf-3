@@ -39,12 +39,12 @@ const CruisesMap = (props) => {
   const [map, setMap] = useState(null)
   const [selected, setSelected] = useState(null)
 
-  const mapZoom = parseInt(process.env.REACT_APP_MAP_DEFAULT_ZOOM, 10)
+  const mapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
 
   const mapCenter = useMemo(
     () => ({
-      lat: parseFloat(process.env.REACT_APP_BELFAST_PORT_LATITUDE),
-      lng: parseFloat(process.env.REACT_APP_BELFAST_PORT_LONGITUDE),
+      lat: parseFloat(import.meta.env.VITE_BELFAST_PORT_LATITUDE),
+      lng: parseFloat(import.meta.env.VITE_BELFAST_PORT_LONGITUDE),
     }),
     []
   )
@@ -60,7 +60,7 @@ const CruisesMap = (props) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_KEY,
   })
 
   // Store a reference to the google map instance in state

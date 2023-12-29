@@ -36,15 +36,15 @@ const DrawLegendAxisLabels = (props) => {
 
   // Read Amplitude Values - Min, Max & Interval Values
   var MinAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMINIMUMAMPLITUDE
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMINIMUMAMPLITUDE
   ).toFixed(2)
 
   var MaxAmplitude = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALMAXIMUMAMPLITUDE
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALMAXIMUMAMPLITUDE
   ).toFixed(2)
 
   var NoOfAmplitudeIntervalBands = parseFloat(
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALNUMBEROFAMPLITUDEBANDS
+    import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALNUMBEROFAMPLITUDEBANDS
   ).toFixed(0)
 
   const ScaleValue = parseInt(
@@ -56,21 +56,18 @@ const DrawLegendAxisLabels = (props) => {
   const values = []
   const legendRects = []
 
-  legendRectColors[1] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND1
-  legendRectColors[2] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND2
-  legendRectColors[3] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND3
-  legendRectColors[4] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND4
-  legendRectColors[5] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND5
-  legendRectColors[6] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND6
-  legendRectColors[7] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND7
-  legendRectColors[8] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND8
-  legendRectColors[9] = process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND9
-  legendRectColors[10] =
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND10
-  legendRectColors[11] =
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND11
-  legendRectColors[12] =
-    process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALCOLORBAND12
+  legendRectColors[1] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND1
+  legendRectColors[2] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND2
+  legendRectColors[3] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND3
+  legendRectColors[4] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND4
+  legendRectColors[5] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND5
+  legendRectColors[6] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND6
+  legendRectColors[7] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND7
+  legendRectColors[8] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND8
+  legendRectColors[9] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND9
+  legendRectColors[10] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND10
+  legendRectColors[11] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND11
+  legendRectColors[12] = import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALCOLORBAND12
 
   // Code for grey scale on Legend
   if (greyScale === "true") {
@@ -121,9 +118,9 @@ const DrawLegendAxisLabels = (props) => {
         y={y}
         width={rect.right - x}
         height={VerticalInterval}
-        stroke={process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
         strokeWidth={parseInt(
-          process.env.REACT_APP_GEOPHONEARRAY_CHARTOUTLINEWIDTH
+          import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
         fill={legendRectColors[j]}
       />

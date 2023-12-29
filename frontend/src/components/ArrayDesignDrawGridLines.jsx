@@ -36,7 +36,7 @@ const ArrayDesignDrawGridLines = (props) => {
   const hlines = []
 
   // DRAW VERTICAL GRIDLINES FROM LEFT TO RIGHT
-  if (process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
+  if (process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNDRAWGRIDLINES === "true") {
     for (let vline = 0; vline < parseInt(NoVLines); vline++) {
       const x =
         rect.left +
@@ -50,11 +50,9 @@ const ArrayDesignDrawGridLines = (props) => {
         <Line
           key={vline}
           points={[x, y1, x, y2]}
-          stroke={
-            process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
-          }
+          stroke={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR}
           strokeWidth={parseInt(
-            process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINEWIDTH
+            process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINEWIDTH
           )}
           dash={[5, 5]}
         />
@@ -75,11 +73,9 @@ const ArrayDesignDrawGridLines = (props) => {
         <Line
           key={hline}
           points={[x1, y, x2, y]}
-          stroke={
-            process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR
-          }
+          stroke={process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINECOLOR}
           strokeWidth={parseInt(
-            process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINEWIDTH
+            process.env.VITE_GEOPHONEARRAY_ARRAYDESIGNCHARTOUTLINEWIDTH
           )}
           dash={[5, 5]}
         />

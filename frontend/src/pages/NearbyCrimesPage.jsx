@@ -32,16 +32,18 @@ const NearbyCrimesPage = () => {
 
   // Required for location of crimes data to fetch
   const mapCenter = {
-    lat: parseFloat(process.env.REACT_APP_HOME_LATITUDE),
-    lng: parseFloat(process.env.REACT_APP_HOME_LONGITUDE),
+    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
+    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   }
 
   // Required output from DataPicker
   // const dateInfo = "&date=2022-06"
 
   // build Crimes Url - set dateInfo to "" to fetch most recent data
-  // const crimesUrl = `${process.env.REACT_APP_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}${dateInfo}`
-  const crimesUrl = `${process.env.REACT_APP_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}`
+  // const crimesUrl = `${process.env.VITE_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}${dateInfo}`
+  const crimesUrl = `${import.meta.env.VITE_CRIMES_ENDPOINT}?lat=${
+    mapCenter.lat
+  }&lng=${mapCenter.lng}`
 
   // Download crimes data
   useEffect(() => {

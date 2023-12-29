@@ -8,6 +8,8 @@ import "../styles/realtimehome.scss"
 const RealTimeHomePage = () => {
   const [loadClient, setLoadClient] = useState(false)
 
+  console.log("Here")
+
   return (
     <>
       {/* LOAD OR UNLOAD THE CLIENT */}
@@ -41,7 +43,7 @@ const ClientComponent = () => {
 
   useEffect(() => {
     const socket = socketIOClient(
-      process.env.REACT_APP_EXPRESS_SERVER_ENDPOINT_URL,
+      import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL,
       {
         autoConnect: false,
       }
@@ -86,7 +88,7 @@ const ClientComponent = () => {
   // const [calendarList, setCalendarList] = useState([])
 
   // useEffect(() => {
-  //   getGoogleCalendarList(process.env.REACT_APP_RT_GET_GOOGLE_CALENDAR_LIST)
+  //   getGoogleCalendarList(process.env.VITE_RT_GET_GOOGLE_CALENDAR_LIST)
   //     .then((returnedData) => {
   //       setCalendarList(returnedData)
   //       setIsLoading(false)

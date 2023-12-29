@@ -31,7 +31,7 @@ const SeismicArrayDesignPage = () => {
   return (
     <div className="arraydesignmain">
       <div className="arraydesigntitle">
-        {process.env.REACT_APP_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
+        {import.meta.env.VITE_GEOPHONEARRAY_ARRAYDESIGNPLOTTITLE}
       </div>
       <SeismicArrayDesign
         isLoading={isLoading}

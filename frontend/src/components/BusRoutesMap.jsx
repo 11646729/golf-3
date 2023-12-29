@@ -38,11 +38,11 @@ const BusRoutesMap = (props) => {
 
   const [map, setMap] = useState(null)
   const [mapZoom] = useState(
-    parseInt(process.env.REACT_APP_MAP_DEFAULT_ZOOM, 10)
+    parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
   )
   const [mapCenter] = useState({
-    lat: parseFloat(process.env.REACT_APP_HOME_LATITUDE),
-    lng: parseFloat(process.env.REACT_APP_HOME_LONGITUDE),
+    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
+    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   })
 
   const mapContainerStyle = {
@@ -56,7 +56,7 @@ const BusRoutesMap = (props) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_KEY,
   })
 
   // Store a reference to the google map instance in state

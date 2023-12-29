@@ -94,91 +94,75 @@ const Seismic3DRadialDisplay = () => {
           <DrawPlotTitle
             rect={insidePlotTitleRect}
             titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE
             }
             titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLETEXT
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALPLOTTITLETEXT
             }
           />
           <DrawGraphPlotArea
             rect={graphPlotAreaRect}
             boundaryDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWGRAPHAREABOUNDARY
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWGRAPHAREABOUNDARY
             }
           />
           <DrawTopTitle
             rect={topTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE
-            }
-            titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT
-            }
+            titleDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE}
+            titleText={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT}
           />
           <DrawBottomTitle
             rect={bottomTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE
-            }
+            titleDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE}
             titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMTITLETEXT
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALBOTTOMTITLETEXT
             }
           />
           <DrawLeftTitle
             rect={leftTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE
-            }
-            titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT
-            }
+            titleDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE}
+            titleText={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLETEXT}
           />
           <DrawRightTitle
             rect={rightTitleRect}
-            titleDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE
-            }
+            titleDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE}
             titleText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLETEXT
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALRIGHTTITLETEXT
             }
           />
           <DrawTopAxis
             rect={graphPlotAreaRect}
-            axisDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS}
+            axisDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS}
           />
           <DrawBottomAxis
             rect={graphPlotAreaRect}
             axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS
             }
           />
           <DrawLeftAxis
             rect={graphPlotAreaRect}
-            axisDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS}
+            axisDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS}
           />
           <DrawRightAxis
             rect={graphPlotAreaRect}
-            axisDraw={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS
-            }
+            axisDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS}
           />
           <DrawLegendTitle
             rect={legendAreaRect}
-            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
-            legendTitle={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDTEXT
-            }
+            legendDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+            legendTitle={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALLEGENDTEXT}
           />
           <DrawLegendArea
             rect={legendAreaRect}
-            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+            legendDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
             legendText={
-              process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDVALUESTEXT
+              import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALLEGENDVALUESTEXT
             }
           />
           <DrawRadialLinesAndCircles
             rect={graphPlotAreaRect}
-            legendDraw={process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
+            legendDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEGEND}
           />
         </Layer>
       </Stage>

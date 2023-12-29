@@ -6,12 +6,12 @@ export const computeScreenEdgeRect = () => {
     top: 0,
     bottom:
       window.innerHeight -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_DRAWERSIZEADJUSTMENT) -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_DRAWERSIZEADJUSTMENT) -
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_SIZEADJUSTMENT),
     left: 0,
     right:
       window.innerWidth -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_SIZEADJUSTMENT),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_SIZEADJUSTMENT),
   }
 }
 
@@ -22,16 +22,16 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
   return {
     top:
       ScreenEdgeRect.top +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_MARGINWIDTH),
     bottom:
       ScreenEdgeRect.bottom -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_MARGINWIDTH),
     left:
       ScreenEdgeRect.left +
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_MARGINWIDTH),
     right:
       ScreenEdgeRect.right -
-      parseInt(process.env.REACT_APP_GEOPHONEARRAY_MARGINWIDTH),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_MARGINWIDTH),
   }
 }
 
@@ -39,62 +39,62 @@ export const computeInsideMarginsRect = (ScreenEdgeRect) => {
 // Function to fetch Widths of various Title, AxisRect & Legend rectangles - translated from C++ code
 // -------------------------------------------------------
 const getPlotTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALPLOTTITLEWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWPLOTTITLE === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALPLOTTITLEWIDTH)
     : 0
 }
 
 const getTopTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPTITLE === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPTITLEWIDTH)
     : 0
 }
 
 const getBottomTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMTITLEWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMTITLE === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALBOTTOMTITLEWIDTH)
     : 0
 }
 
 const getLeftTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEFTTITLEWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEFTTITLE === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALLEFTTITLEWIDTH)
     : 0
 }
 
 const getRightTitleWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTTITLE === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTTITLEWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWRIGHTTITLE === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALRIGHTTITLEWIDTH)
     : 0
 }
 
 const getTopAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWTOPAXIS === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALTOPAXISWIDTH)
     : 0
 }
 
 const getBottomAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALBOTTOMAXISWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWBOTTOMAXIS === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALBOTTOMAXISWIDTH)
     : 0
 }
 
 const getLeftAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEFTAXISWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEFTAXIS === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALLEFTAXISWIDTH)
     : 0
 }
 
 const getRightAxisWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALRIGHTAXISWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWRIGHTAXIS === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALRIGHTAXISWIDTH)
     : 0
 }
 
 const getLegendWidth = () => {
-  return process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALDRAWLEGEND === "true"
-    ? parseInt(process.env.REACT_APP_GEOPHONEARRAY_M3DRADIALLEGENDWIDTH)
+  return import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWLEGEND === "true"
+    ? parseInt(import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALLEGENDWIDTH)
     : 0
 }
 
