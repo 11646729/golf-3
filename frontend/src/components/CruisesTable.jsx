@@ -73,6 +73,7 @@ const CruisesTableBodyStyle = styled.tbody``
 const CruiseShip = styled.div`
   display: flex;
   flex-direction: row;
+  background-color: white;
 `
 
 const CruiseLineLogo = styled.img`

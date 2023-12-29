@@ -93,7 +93,11 @@ const App = () => {
     },
   ])
 
-  return <RouterProvider router={router} />
+  return (
+    // <React.StrictMode>
+    <RouterProvider router={router} />
+    // </React.StrictMode>
+  )
 }
 
 export default memo(App)
