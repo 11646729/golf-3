@@ -8,8 +8,6 @@ import "../styles/realtimehome.scss"
 const RealTimeHomePage = () => {
   const [loadClient, setLoadClient] = useState(false)
 
-  console.log("Here")
-
   return (
     <>
       {/* LOAD OR UNLOAD THE CLIENT */}
