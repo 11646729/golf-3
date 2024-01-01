@@ -1,3 +1,8 @@
+// The promise-based API is the “main” module in the library:
+// var amqp = require('amqplib');
+// You can access the callback-based API this way:
+// var amqp = require('amqplib/callback_api');
+
 import { connect } from "amqplib"
 import { rabbitMQ } from "./rtMockDatafeedConfig.js"
 
@@ -10,6 +15,7 @@ class Producer {
   channel
 
   async createChannel() {
+    // Await is required in next line
     const connection = await connect(rabbitMQ.url)
     this.channel = await connection.createChannel()
   }

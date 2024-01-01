@@ -17,7 +17,7 @@ import {
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
 // -------------------------------------------------------
-export var enableRealtimeData = (io) => {
+export const enableRealtimeData = (io) => {
   // -------------------------------------------------------------------
   // From socket-io code
   // -------------------------------------------------------------------
@@ -27,7 +27,7 @@ export var enableRealtimeData = (io) => {
     NewsHeadlinesInterval
 
   io.on("connection", (socket) => {
-    console.log("New client connected")
+    // console.log("New client connected")
 
     if (
       Heartbeat ||

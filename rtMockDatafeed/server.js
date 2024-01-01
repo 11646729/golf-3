@@ -12,12 +12,12 @@ const indexCount = 1
 
 nodeCron.schedule("*/5 * * * * *", () => {
   const calendarMessage = "This is a Calendar message"
-  const mockWeatherMessage = generateMockWeatherData("Weather", indexCount)
+  const mockWeatherMessage = generateMockWeatherData("weather", indexCount)
   const newsMessage = "This is a News message"
 
-  producer.publishMessage("Calendar", calendarMessage)
-  producer.publishMessage("Weather", mockWeatherMessage)
-  producer.publishMessage("News", newsMessage)
+  producer.publishMessage("calendar", calendarMessage)
+  producer.publishMessage("weather", mockWeatherMessage)
+  producer.publishMessage("news", newsMessage)
 
   indexCount++
   console.log(mockWeatherMessage)
