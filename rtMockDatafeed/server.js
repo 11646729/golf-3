@@ -15,12 +15,13 @@ nodeCron.schedule("*/5 * * * * *", () => {
   const mockWeatherMessage = generateMockWeatherData("weather", indexCount)
   const newsMessage = "This is a News message"
 
+  // console.log(mockWeatherMessage)
+
   producer.publishMessage("calendar", calendarMessage)
   producer.publishMessage("weather", mockWeatherMessage)
   producer.publishMessage("news", newsMessage)
 
   indexCount++
-  console.log(mockWeatherMessage)
 })
 
 app.listen(rabbitMQ.port, () => {
