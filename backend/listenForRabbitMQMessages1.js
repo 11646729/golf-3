@@ -20,7 +20,7 @@ export const listenForRabbitMQMessages = () => {
       }
 
       channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType, {
-        durable: true,
+        durable: false,
       })
 
       channel.assertQueue(
@@ -36,7 +36,7 @@ export const listenForRabbitMQMessages = () => {
           }
           console.log("calendarQueue created & bound to exchange")
 
-          channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "calendarQueue")
+          channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "calendar")
         }
       )
 
@@ -53,7 +53,7 @@ export const listenForRabbitMQMessages = () => {
           }
           console.log("newsQueue created & bound to exchange")
 
-          channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "newsQueue")
+          channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "news")
         }
       )
 
@@ -70,7 +70,7 @@ export const listenForRabbitMQMessages = () => {
           }
           console.log("weatherQueue created & bound to exchange")
 
-          channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weatherQueue")
+          channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weather")
         }
       )
 
