@@ -6,6 +6,10 @@ import { rabbitMQ } from "./rtNewsMSconfig.js"
 import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 
 export const listenForRabbitMQMessages = (io) => {
+  // io.on("connection", (socket) => {
+  //   console.log("New RabbitMQ client connected")
+  // })
+
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
     if (error) {
       console.log("Fatal Error - Cannot connect to exchange")
@@ -69,10 +73,6 @@ export const listenForRabbitMQMessages = (io) => {
           channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weather")
         }
       )
-
-      io.on("connection", (socket) => {
-        console.log("New RabbitMQ client connected")
-      })
 
       channel.consume(
         "calendarQueue",
