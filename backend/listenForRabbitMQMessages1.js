@@ -1,12 +1,11 @@
-#!/usr/bin/env node
-
 // Management Console
 // http://localhost:15672
 
 import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
+import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 
-export const listenForRabbitMQMessages = () => {
+export const listenForRabbitMQMessages = (io) => {
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
     if (error) {
       console.log("Fatal Error - Cannot connect to exchange")
@@ -27,7 +26,6 @@ export const listenForRabbitMQMessages = () => {
         "calendarQueue",
         {
           durable: false,
-          // exclusive: true,
         },
         (error2, qc) => {
           if (error2) {
@@ -44,7 +42,6 @@ export const listenForRabbitMQMessages = () => {
         "newsQueue",
         {
           durable: false,
-          // exclusive: true,
         },
         (error2, qn) => {
           if (error2) {
@@ -61,7 +58,6 @@ export const listenForRabbitMQMessages = () => {
         "weatherQueue",
         {
           durable: false,
-          // exclusive: true,
         },
         (error2, qw) => {
           if (error2) {
@@ -73,6 +69,10 @@ export const listenForRabbitMQMessages = () => {
           channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weather")
         }
       )
+
+      io.on("connection", (socket) => {
+        console.log("New RabbitMQ client connected")
+      })
 
       channel.consume(
         "calendarQueue",
@@ -107,6 +107,10 @@ export const listenForRabbitMQMessages = () => {
         (payload) => {
           if (payload != null) {
             let contents = JSON.parse(payload.content)
+
+            // Emit 2 events isLoading & sendData to client
+            // emitTemperatureData(socket, data, false)
+
             console.log("===== Receive =====")
             console.log(contents)
           }

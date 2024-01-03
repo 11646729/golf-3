@@ -1,25 +1,31 @@
 import { connect } from "amqplib"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
-import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 
-// async function listenForRabbitMQMessages() {
-export const listenForRabbitMQMessages = async (io) => {
+//  -------------------------------------
+//  THIS IS WORKING CODE - DO NOT DELETE
+//  -------------------------------------
+
+export const listenForRabbitMQMessages = async () => {
   const connection = await connect(rabbitMQ.exchangeUrl)
   const channel = await connection.createChannel()
 
-  await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType)
+  await channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType, {
+    durable: false,
+  })
 
-  const qc = await channel.assertQueue("calendarQueue")
-  await channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "calendar")
+  // const qc = await channel.assertQueue("calendarQueue")
+  // await channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "calendar")
   // console.log(qc.queue + " queue created")
 
-  const qn = await channel.assertQueue("newsQueue")
-  await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "news")
+  // const qn = await channel.assertQueue("newsQueue")
+  // await channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "news")
   // console.log(qn.queue + " queue created")
 
-  const qw = await channel.assertQueue("weatherQueue")
+  const qw = await channel.assertQueue("weatherQueue", {
+    durable: false,
+  })
   await channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weather")
-  // console.log(qw.queue + " queue created")
+  console.log(qw.queue + " queue created")
 
   // channel.consume(qc.queue, (msg) => {
   //   const data = JSON.parse(msg.content)
@@ -33,16 +39,8 @@ export const listenForRabbitMQMessages = async (io) => {
   //   channel.ack(msg)
   // })
 
-  io.on("connection", (socket) => {
-    console.log("New RabbitMQ client connected")
-  })
-
   channel.consume(qw.queue, (msg) => {
     const data = JSON.parse(msg.content)
-
-    // Emit 2 events isLoading & sendData to client
-    // emitTemperatureData(socket, data, false)
-
     console.log(data)
     channel.ack(msg)
   })
