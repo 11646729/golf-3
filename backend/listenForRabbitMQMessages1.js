@@ -3,12 +3,12 @@
 
 import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
-import { emitTemperatureData } from "./controllers/rtWeatherController.js"
+// import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 
 export const listenForRabbitMQMessages = (io) => {
-  // io.on("connection", (socket) => {
-  //   console.log("New RabbitMQ client connected")
-  // })
+  io.on("connection", (socket) => {
+    console.log("New RabbitMQ client connected")
+  })
 
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
     if (error) {
