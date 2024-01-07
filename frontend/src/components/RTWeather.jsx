@@ -28,6 +28,10 @@ const RTWeather = (props) => {
                 {moment.utc(item.readingTime).format("hh:mm")}
               </div>
               <div className="readinglocation">{item.location}</div>
+              <div className="temperaturevalue">
+                {item.temperatureValue}
+                {" ºC"}
+              </div>
             </div>
           </div>
         ) : (

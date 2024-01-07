@@ -27,7 +27,7 @@ export const enableRealtimeData = (io) => {
     NewsHeadlinesInterval
 
   io.on("connection", (socket) => {
-    // console.log("New client connected")
+    console.log("New client connected")
 
     if (
       Heartbeat ||

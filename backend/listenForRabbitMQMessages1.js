@@ -3,13 +3,9 @@
 
 import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
-// import { emitTemperatureData } from "./controllers/rtWeatherController.js"
+import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 
 export const listenForRabbitMQMessages = (io) => {
-  io.on("connection", (socket) => {
-    console.log("New RabbitMQ client connected")
-  })
-
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
     if (error) {
       console.log("Fatal Error - Cannot connect to exchange")
@@ -102,23 +98,39 @@ export const listenForRabbitMQMessages = (io) => {
         }
       )
 
-      channel.consume(
-        "weatherQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
+      io.on("connection", (socket) => {
+        console.log("New RabbitMQ client connected")
+        console.log(socket.id)
 
-            // Emit 2 events isLoading & sendData to client
-            // emitTemperatureData(socket, data, false)
+        channel.consume(
+          "weatherQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
 
-            console.log("===== Receive =====")
-            console.log(contents)
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  emitTemperatureData(socket, contents.message, false)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages1: ", error)
+              }
+
+              console.log("===== Receive =====")
+              console.log(contents)
+            }
+            // })
+          },
+          {
+            noAck: true,
           }
-        },
-        {
-          noAck: true,
-        }
-      )
+        )
+
+        // socket.on("disconnect", () => {
+        //   console.log("Client disconnected")
+        // })
+      })
     })
   })
 }
