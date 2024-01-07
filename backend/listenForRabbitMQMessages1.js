@@ -4,6 +4,7 @@
 import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
 import { emitTemperatureData } from "./controllers/rtWeatherController.js"
+import { emitNewsHeadlinesData } from "./controllers/rtNewsController.js"
 
 export const listenForRabbitMQMessages = (io) => {
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
@@ -84,23 +85,34 @@ export const listenForRabbitMQMessages = (io) => {
         }
       )
 
-      channel.consume(
-        "newsQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            console.log("===== Receive =====")
-            console.log(contents)
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
-
       io.on("connection", (socket) => {
         console.log("New RabbitMQ client connected")
         console.log(socket.id)
+
+        channel.consume(
+          "newsQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  emitNewsHeadlinesData(socket, contents.message, false)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages1: ", error)
+              }
+
+              console.log("===== Receive =====")
+              console.log(contents)
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
 
         channel.consume(
           "weatherQueue",
@@ -118,7 +130,7 @@ export const listenForRabbitMQMessages = (io) => {
               }
 
               console.log("===== Receive =====")
-              console.log(contents)
+              // console.log(contents)
             }
             // })
           },

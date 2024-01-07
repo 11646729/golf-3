@@ -10,7 +10,8 @@ export const generateMockWeatherData = (mockType, indexCount) => {
   try {
     let mockWeatherMessageBody = []
     let latestReading = {
-      index: 1,
+      mocktype: mockType,
+      index: indexCount,
       timeNow: new Date(),
       version: 1.0,
       readingTime: new Date(),
