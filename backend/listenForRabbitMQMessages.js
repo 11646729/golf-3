@@ -14,18 +14,6 @@ export const listenForRabbitMQMessages = (io) => {
       throw error
     }
 
-    // var amqpConnection = amqp.createConnection(amqpConnectionDetails);
-    // amqpConnection.on('ready', function(){
-    //   var exchange = amqpConnection.exchange('some_exchange', {'passive':true});
-    //   exchange.on('error', function(error) {
-    //     done();
-    //    });
-    //    exchange.on('open', function(exchange) {
-    //      throw("exchange exists!")
-    //      done();
-    //    });
-    //  });
-
     connection.createChannel((error1, channel) => {
       if (error1) {
         console.log("Fatal Error - Cannot create a channel to exchange")
