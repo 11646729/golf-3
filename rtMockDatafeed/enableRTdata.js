@@ -2,6 +2,7 @@ import nodeCron from "node-cron"
 import Producer from "./producer.js"
 import { generateMockWeatherData } from "./generateMockWeatherData.js"
 import { generateMockNewsData } from "./generateMockNewsData.js"
+import { generateMockCalendarData } from "./generateMockCalendarData.js"
 
 const enableRTdata = () => {
   const producer = new Producer()
@@ -9,7 +10,7 @@ const enableRTdata = () => {
   const indexCount = 1
 
   nodeCron.schedule("*/5 * * * * *", () => {
-    const calendarMessage = "This is a Calendar message"
+    const calendarMessage = generateMockCalendarData(indexCount)
     const mockWeatherMessage = generateMockWeatherData(indexCount)
     const mockNewsMessage = generateMockNewsData(indexCount)
 

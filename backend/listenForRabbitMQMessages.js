@@ -5,6 +5,7 @@ import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
 import { emitTemperatureData } from "./controllers/rtWeatherController.js"
 import { emitNewsHeadlinesData } from "./controllers/rtNewsController.js"
+import { emitCalendarEventsData } from "./controllers/rtCalendarController.js"
 
 export const listenForRabbitMQMessages = (io) => {
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
@@ -92,6 +93,17 @@ export const listenForRabbitMQMessages = (io) => {
           (payload) => {
             if (payload != null) {
               let contents = JSON.parse(payload.content)
+
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  emitCalendarEventsData(socket, contents.message, false)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+
               console.log("===== Receive =====")
               console.log(contents)
             }
@@ -114,7 +126,7 @@ export const listenForRabbitMQMessages = (io) => {
                   emitNewsHeadlinesData(socket, contents.message, false)
                 }
               } catch (error) {
-                console.log("Error in listenForRabbitMQMessages1: ", error)
+                console.log("Error in listenForRabbitMQMessages: ", error)
               }
 
               // console.log("===== Receive =====")
@@ -138,7 +150,7 @@ export const listenForRabbitMQMessages = (io) => {
                   emitTemperatureData(socket, contents.message, false)
                 }
               } catch (error) {
-                console.log("Error in listenForRabbitMQMessages1: ", error)
+                console.log("Error in listenForRabbitMQMessages: ", error)
               }
 
               // console.log("===== Receive =====")
