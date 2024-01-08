@@ -1,4 +1,4 @@
-export const generateMockWeatherData = (mockType, indexCount) => {
+export const generateMockWeatherData = (indexCount) => {
   const precision = 100 // 2 decimals
 
   let randomNum =
@@ -10,7 +10,6 @@ export const generateMockWeatherData = (mockType, indexCount) => {
   try {
     let mockWeatherMessageBody = []
     let latestReading = {
-      mocktype: mockType,
       index: indexCount,
       timeNow: new Date(),
       version: 1.0,

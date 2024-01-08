@@ -1,4 +1,4 @@
-export const generateMockNewsData = (mockType, indexCount) => {
+export const generateMockNewsData = (indexCount) => {
   let indexNum = 0
 
   try {
@@ -8,7 +8,6 @@ export const generateMockNewsData = (mockType, indexCount) => {
       name: "BBC News",
     }
     let latestReading = {
-      mocktype: mockType,
       index: indexCount,
       index: indexNum,
       title: "Watch: Inside Alaska Airlines plane as part blows off mid-air",
@@ -19,7 +18,6 @@ export const generateMockNewsData = (mockType, indexCount) => {
     }
 
     let latestReading1 = {
-      mocktype: mockType,
       index: indexCount,
       index: indexNum,
       title: "David Soul: Starsky & Hutch actor dies aged 80",
@@ -30,7 +28,6 @@ export const generateMockNewsData = (mockType, indexCount) => {
     }
 
     let latestReading2 = {
-      mocktype: mockType,
       index: indexCount,
       index: indexNum,
       title: "Iowa school principal distracted gunman before being shot",
@@ -41,7 +38,6 @@ export const generateMockNewsData = (mockType, indexCount) => {
     }
 
     let latestReading3 = {
-      mocktype: mockType,
       index: indexCount,
       index: indexNum,
       title: "NRA chief executive Wayne LaPierre steps down",
@@ -52,7 +48,6 @@ export const generateMockNewsData = (mockType, indexCount) => {
     }
 
     let latestReading4 = {
-      mocktype: mockType,
       index: indexCount,
       index: indexNum,
       title:

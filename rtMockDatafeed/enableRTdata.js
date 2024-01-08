@@ -10,8 +10,8 @@ const enableRTdata = () => {
 
   nodeCron.schedule("*/5 * * * * *", () => {
     const calendarMessage = "This is a Calendar message"
-    const mockWeatherMessage = generateMockWeatherData("weather", indexCount)
-    const mockNewsMessage = generateMockNewsData("news", indexCount)
+    const mockWeatherMessage = generateMockWeatherData(indexCount)
+    const mockNewsMessage = generateMockNewsData(indexCount)
 
     producer.publishMessage("calendar", calendarMessage)
     producer.publishMessage("weather", mockWeatherMessage)

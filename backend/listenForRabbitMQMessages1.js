@@ -71,23 +71,23 @@ export const listenForRabbitMQMessages = (io) => {
         }
       )
 
-      channel.consume(
-        "calendarQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            console.log("===== Receive =====")
-            console.log(contents)
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
-
       io.on("connection", (socket) => {
         console.log("New RabbitMQ client connected")
         console.log(socket.id)
+
+        channel.consume(
+          "calendarQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+              console.log("===== Receive =====")
+              console.log(contents)
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
 
         channel.consume(
           "newsQueue",
@@ -105,8 +105,8 @@ export const listenForRabbitMQMessages = (io) => {
                 console.log("Error in listenForRabbitMQMessages1: ", error)
               }
 
-              console.log("===== Receive =====")
-              console.log(contents)
+              // console.log("===== Receive =====")
+              // console.log(contents)
             }
           },
           {
@@ -129,7 +129,7 @@ export const listenForRabbitMQMessages = (io) => {
                 console.log("Error in listenForRabbitMQMessages1: ", error)
               }
 
-              console.log("===== Receive =====")
+              // console.log("===== Receive =====")
               // console.log(contents)
             }
             // })
