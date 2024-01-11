@@ -15,7 +15,6 @@ class Producer {
   channel
 
   async createChannel() {
-    // const connection = amqp.connect(rabbitMQ.url)
     const connection = await amqp.connect(rabbitMQ.url) //  DO NOT REMOVE await HERE
     this.channel = await connection.createChannel()
   }
