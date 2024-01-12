@@ -92,8 +92,8 @@ export const listenForRabbitMQMessages = (io) => {
                 console.log("Error in listenForRabbitMQMessages: ", error)
               }
 
-              console.log("===== Receive =====")
-              console.log(contents)
+              // console.log("===== Receive =====")
+              // console.log(contents)
             }
           },
           {
