@@ -74,7 +74,7 @@ export const listenForRabbitMQMessages = (io) => {
 
       io.on("connection", (socket) => {
         console.log("New RabbitMQ client connected")
-        console.log(socket.id)
+        // console.log(socket.id)
 
         channel.consume(
           "calendarQueue",
@@ -150,10 +150,6 @@ export const listenForRabbitMQMessages = (io) => {
             noAck: true,
           }
         )
-
-        // socket.on("disconnect", () => {
-        //   console.log("Client disconnected")
-        // })
       })
     })
   })

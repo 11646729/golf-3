@@ -24,10 +24,13 @@ class Producer {
       await this.createChannel()
     }
 
-    const exchangeName = rabbitMQ.exchangeName
-    await this.channel.assertExchange(exchangeName, rabbitMQ.exchangeType, {
-      durable: false,
-    })
+    await this.channel.assertExchange(
+      rabbitMQ.exchangeName,
+      rabbitMQ.exchangeType,
+      {
+        durable: false,
+      }
+    )
 
     const envelopeDetails = {
       messageType: routingKey,
@@ -36,13 +39,13 @@ class Producer {
     }
 
     await this.channel.publish(
-      exchangeName,
+      rabbitMQ.exchangeName,
       routingKey,
       Buffer.from(JSON.stringify(envelopeDetails))
     )
 
     console.log(
-      `The new ${routingKey} string is sent to exchange ${exchangeName}`
+      `The new ${routingKey} string is sent to exchange ${rabbitMQ.exchangeName}`
     )
   }
 }
