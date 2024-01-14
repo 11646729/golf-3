@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-// import { enableRealtimeData } from "./enableRealtimeData.js"
+import { enableRealtimeData } from "./enableRealtimeData.js"
 import { listenForRabbitMQMessages } from "./listenForRabbitMQMessages.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000

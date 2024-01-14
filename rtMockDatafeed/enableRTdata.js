@@ -10,6 +10,15 @@ const enableRTdata = () => {
 
   let indexCount = 1
 
+  // -----------------------------
+  // 1 second tick clock
+  // -----------------------------
+  nodeCron.schedule("*/1 * * * * *", () => {
+    const response = new Date()
+    // Emitting a 1 second heartbeat
+    publishMessage("heartbeat", response)
+  })
+
   nodeCron.schedule("*/5 * * * * *", () => {
     const calendarMessage = generateMockCalendarData(indexCount)
     const mockWeatherMessage = generateMockWeatherData(indexCount)

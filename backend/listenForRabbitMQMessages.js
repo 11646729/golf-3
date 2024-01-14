@@ -25,6 +25,22 @@ export const listenForRabbitMQMessages = (io) => {
       })
 
       channel.assertQueue(
+        "heartbeatQueue",
+        {
+          durable: false,
+        },
+        (error2, qh) => {
+          if (error2) {
+            console.log("Fatal Error - Cannot create a heartbeatQueue")
+            throw error2
+          }
+          console.log("heartbeatQueue created & bound to exchange")
+
+          channel.bindQueue(qh.queue, rabbitMQ.exchangeName, "heartbeat")
+        }
+      )
+
+      channel.assertQueue(
         "calendarQueue",
         {
           durable: false,
@@ -74,7 +90,33 @@ export const listenForRabbitMQMessages = (io) => {
 
       io.on("connection", (socket) => {
         console.log("New RabbitMQ client connected")
-        // console.log(socket.id)
+
+        channel.consume(
+          "heartbeatQueue",
+          (payload) => {
+            if (payload != null) {
+              console.log(payload)
+
+              let contents = JSON.parse(payload.content)
+
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  // emitCalendarEventsData(socket, contents.message, false)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+
+              // console.log("===== Receive =====")
+              // console.log(contents)
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
 
         channel.consume(
           "calendarQueue",

@@ -30,7 +30,7 @@ const RealTimeHomePage = () => {
 }
 
 const ClientComponent = () => {
-  const [response, setResponse] = useState([])
+  const [heartbeat, setHeartbeat] = useState([])
   const [calendarEvents, setCalendarEvents] = useState([])
   const [isLoadingCalendarEvents, setIsLoadingCalendarEvents] = useState(true)
   const [temperatureReadings, setTemperatureReadings] = useState([])
@@ -51,7 +51,7 @@ const ClientComponent = () => {
     socket.connect()
 
     socket.on("Heartbeat", (response) => {
-      setResponse(response)
+      setHeartbeat(response)
     })
 
     socket.on("FromIsLoadingCalendarEvents", (response) => {
@@ -99,7 +99,7 @@ const ClientComponent = () => {
   return (
     <>
       <p>
-        It's <time dateTime={response}>{response}</time>
+        It's <time dateTime={heartbeat}>{heartbeat}</time>
       </p>
       <div className="home">
         <div className="box box1">
