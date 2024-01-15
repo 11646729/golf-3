@@ -1,5 +1,5 @@
 import nodeCron from "node-cron"
-// import Producer from "./producer1.js"
+// import Producer from "./producer.js"
 import { publishMessage } from "./producer1.js"
 import { generateMockWeatherData } from "./generateMockWeatherData.js"
 import { generateMockNewsData } from "./generateMockNewsData.js"
@@ -28,9 +28,9 @@ const enableRTdata = () => {
     // producer.publishMessage("weather", mockWeatherMessage)
     // producer.publishMessage("news", mockNewsMessage)
 
-    publishMessage("calendar", calendarMessage)
-    publishMessage("weather", mockWeatherMessage)
-    publishMessage("news", mockNewsMessage)
+    // publishMessage("calendar", calendarMessage)
+    // publishMessage("weather", mockWeatherMessage)
+    // publishMessage("news", mockNewsMessage)
 
     indexCount++
   })

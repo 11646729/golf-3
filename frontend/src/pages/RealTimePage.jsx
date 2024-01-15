@@ -30,7 +30,8 @@ const RealTimeHomePage = () => {
 }
 
 const ClientComponent = () => {
-  const [heartbeat, setHeartbeat] = useState([])
+  const [heartbeatEvents, setHeartbeatEvents] = useState([])
+  const [isLoadingHeartbeatEvents, setIsLoadingHeartbeatEvents] = useState(true)
   const [calendarEvents, setCalendarEvents] = useState([])
   const [isLoadingCalendarEvents, setIsLoadingCalendarEvents] = useState(true)
   const [temperatureReadings, setTemperatureReadings] = useState([])
@@ -50,8 +51,12 @@ const ClientComponent = () => {
     // Manual connect
     socket.connect()
 
-    socket.on("Heartbeat", (response) => {
-      setHeartbeat(response)
+    socket.on("FromIsLoadingHeartbeatData", (response) => {
+      setIsLoadingHeartbeatEvents(response)
+    })
+
+    socket.on("FromHeartbeatAPI", (response) => {
+      setHeartbeatEvents(response)
     })
 
     socket.on("FromIsLoadingCalendarEvents", (response) => {
@@ -99,7 +104,7 @@ const ClientComponent = () => {
   return (
     <>
       <p>
-        It's <time dateTime={heartbeat}>{heartbeat}</time>
+        It's <time dateTime={heartbeatEvents}>{heartbeatEvents}</time>
       </p>
       <div className="home">
         <div className="box box1">
