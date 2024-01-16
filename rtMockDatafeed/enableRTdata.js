@@ -1,21 +1,15 @@
 import nodeCron from "node-cron"
-// import Producer from "./producer.js"
-import { publishMessage } from "./producer1.js"
+import { publishMessage } from "./producer.js"
 import { generateMockWeatherData } from "./generateMockWeatherData.js"
 import { generateMockNewsData } from "./generateMockNewsData.js"
 import { generateMockCalendarData } from "./generateMockCalendarData.js"
 
 const enableRTdata = () => {
-  // const producer = new Producer()
-
   let indexCount = 1
 
-  // -----------------------------
-  // 1 second tick clock
-  // -----------------------------
+  // Emitting a 1 second heartbeat
   nodeCron.schedule("*/1 * * * * *", () => {
     const response = new Date()
-    // Emitting a 1 second heartbeat
     publishMessage("heartbeat", response)
   })
 
@@ -24,10 +18,6 @@ const enableRTdata = () => {
     const calendarMessage = generateMockCalendarData(indexCount)
     const mockWeatherMessage = generateMockWeatherData(indexCount)
     const mockNewsMessage = generateMockNewsData(indexCount)
-
-    // producer.publishMessage("calendar", calendarMessage)
-    // producer.publishMessage("weather", mockWeatherMessage)
-    // producer.publishMessage("news", mockNewsMessage)
 
     publishMessage("calendar", calendarMessage)
     publishMessage("weather", mockWeatherMessage)
