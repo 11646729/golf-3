@@ -105,7 +105,7 @@ export const listenForRabbitMQMessages = (io) => {
                   emitHeartbeatData(socket, contents.message, false)
 
                   // console.log("===== Receive =====")
-                  console.log(contents.message)
+                  // console.log(contents.message)
                 }
               } catch (error) {
                 console.log("Error in listenForRabbitMQMessages: ", error)

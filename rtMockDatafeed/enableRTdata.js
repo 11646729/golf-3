@@ -19,6 +19,7 @@ const enableRTdata = () => {
     publishMessage("heartbeat", response)
   })
 
+  //  Emitting events at 5 second intervals
   nodeCron.schedule("*/5 * * * * *", () => {
     const calendarMessage = generateMockCalendarData(indexCount)
     const mockWeatherMessage = generateMockWeatherData(indexCount)
@@ -28,9 +29,9 @@ const enableRTdata = () => {
     // producer.publishMessage("weather", mockWeatherMessage)
     // producer.publishMessage("news", mockNewsMessage)
 
-    // publishMessage("calendar", calendarMessage)
-    // publishMessage("weather", mockWeatherMessage)
-    // publishMessage("news", mockNewsMessage)
+    publishMessage("calendar", calendarMessage)
+    publishMessage("weather", mockWeatherMessage)
+    publishMessage("news", mockNewsMessage)
 
     indexCount++
   })
