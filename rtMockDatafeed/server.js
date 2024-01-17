@@ -1,12 +1,12 @@
 import express from "express"
 import { createServer } from "http"
 import { rabbitMQ } from "./rtMockDatafeedConfig.js"
-import enableRTdata from "./enableRTdata.js"
+import enableRabbitMQSendingData from "./enableRTdata.js"
 
 const app = express()
 const httpServer = createServer(app)
 
-enableRTdata()
+enableRabbitMQSendingData()
 
 // Start Express server
 httpServer.listen(rabbitMQ.port, (err) => {

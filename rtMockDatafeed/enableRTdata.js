@@ -4,7 +4,7 @@ import { generateMockWeatherData } from "./generateMockWeatherData.js"
 import { generateMockNewsData } from "./generateMockNewsData.js"
 import { generateMockCalendarData } from "./generateMockCalendarData.js"
 
-const enableRTdata = () => {
+const enableRabbitMQSendingData = () => {
   let indexCount = 1
 
   // Emitting a 1 second heartbeat
@@ -27,4 +27,4 @@ const enableRTdata = () => {
   })
 }
 
-export default enableRTdata
+export default enableRabbitMQSendingData
