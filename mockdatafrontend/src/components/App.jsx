@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
-// import Header from "./Header"
+import Header from "./Header"
 // import Menu from "./Menu"
 import Footer from "./Footer"
 // import HomePage from "../pages/HomePage"
@@ -23,7 +23,7 @@ const App = () => {
       // <button>STOP CLIENT</button>
 
       <div className="main">
-        {/* <Header /> */}
+        <Header />
         <div className="container">
           <div className="menuContainer">{/* <Menu /> */}</div>
           <div className="contentContainer">
