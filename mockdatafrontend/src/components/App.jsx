@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 
 // import Header from "./Header"
 // import Menu from "./Menu"
-// import Footer from "./Footer"
+import Footer from "./Footer"
 // import HomePage from "../pages/HomePage"
 // import RawDataPage from "../pages/RawDataPage"
 // import WeatherPage from "../pages/WeatherPage"
@@ -15,21 +15,23 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 // import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 import RealTimeHomePage from "../pages/RealTimePage"
 
-// import "../styles/global.scss"
+import "../styles/global.scss"
 
 const App = () => {
   const Layout = () => {
     return (
-      <button>STOP CLIENT</button>
+      // <button>STOP CLIENT</button>
 
-      // <div className="main">
-      //   {/* <Header /> */}
-      //   <div className="container">
-      //     <div className="menuContainer">{/* <Menu /> */}</div>
-      //     <div className="contentContainer">{/* <Outlet /> */}</div>
-      //   </div>
-      //   {/* <Footer /> */}
-      // </div>
+      <div className="main">
+        {/* <Header /> */}
+        <div className="container">
+          <div className="menuContainer">{/* <Menu /> */}</div>
+          <div className="contentContainer">
+            <Outlet />
+          </div>
+        </div>
+        <Footer />
+      </div>
     )
   }
 
