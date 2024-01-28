@@ -1,6 +1,8 @@
 import React, { memo, useState } from "react"
 import styled from "styled-components"
-// import { NotificationsNone, Language, Settings } from "@mui/material"
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
+import LanguageIcon from "@mui/icons-material/Language"
+import SettingsIcon from "@mui/icons-material/Settings"
 import StatusIcon from "./StatusIcon"
 import "../styles/variables.scss"
 
@@ -77,7 +79,7 @@ const Header = () => {
         <Logo>My Dashboard</Logo>
         <TopRight>
           <TopBarIconContainer>
-            {/* <NotificationsNone /> */}
+            <NotificationsNoneIcon />
             <TopIconBadge>1</TopIconBadge>
           </TopBarIconContainer>
           <TopBarIconContainer>
@@ -91,10 +93,12 @@ const Header = () => {
               status={isActiveStatus2}
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
             />
-            {/* <Language /> */}
+            <LanguageIcon />
             <TopIconBadge>2</TopIconBadge>
           </TopBarIconContainer>
-          <TopBarIconContainer>{/* <Settings /> */}</TopBarIconContainer>
+          <TopBarIconContainer>
+            <SettingsIcon />
+          </TopBarIconContainer>
           <TopAvatar src="/static/images/brian.jpeg" alt="" />
         </TopRight>
       </TopBarWrapper>
