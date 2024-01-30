@@ -76,7 +76,7 @@ const Header = () => {
   return (
     <Container>
       <TopBarWrapper>
-        <Logo>My Dashboard</Logo>
+        <Logo>Real-time Data Simulator</Logo>
         <TopRight>
           <TopBarIconContainer>
             <NotificationsNoneIcon />
