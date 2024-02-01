@@ -1,14 +1,14 @@
 export const menu = [
   {
     id: 1,
-    title: "Home",
+    // title: "Default",
     listItems: [
-      // {
-      //   id: 1,
-      //   title: "Home",
-      //   url: "/",
-      //   icon: "/static/images/home.svg",
-      // },
+      {
+        id: 1,
+        title: "Home",
+        url: "/",
+        icon: "/static/images/home.svg",
+      },
       {
         id: 2,
         title: "Real-Time Home",
