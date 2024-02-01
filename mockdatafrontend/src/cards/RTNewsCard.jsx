@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const GolfCoursesCard = () => {
+const RTNewsCard = () => {
   return (
     <Card
       sx={{
@@ -25,9 +25,9 @@ const GolfCoursesCard = () => {
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          Golf Courses
+          News
         </Typography>
-        <Typography>This shows Golf Courses in the Province</Typography>
+        <Typography>Real-time News Feed</Typography>
       </CardContent>
       <CardActions>
         <Button
@@ -36,11 +36,19 @@ const GolfCoursesCard = () => {
           component={Link}
           // to="/golfcoursespage"
         >
-          View
+          Live Data
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          component={Link}
+          // to="/golfcoursespage"
+        >
+          Dummy Data
         </Button>
       </CardActions>
     </Card>
   )
 }
 
-export default memo(GolfCoursesCard)
+export default memo(RTNewsCard)
