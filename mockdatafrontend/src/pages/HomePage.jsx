@@ -5,6 +5,7 @@ import styled from "styled-components"
 // import RawDataLoadCard from "../cards/RawDataLoadCard"
 // import WeatherCard from "../cards/WeatherCard"
 import RTNewsCard from "../cards/RTNewsCard"
+import RTCalendarCard from "../cards/RTCalendarCard"
 // import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 // import CruiseCard from "../cards/CruiseCard"
 // import BusRoutesCard from "../cards/BusRoutesCard"
@@ -29,10 +30,11 @@ const HomePage = () => {
           <Grid container>
             <Grid item sm={3} style={{ padding: 20 }}>
               {/* <RawDataLoadCard /> */}
-              <RTNewsCard />
+              <RTCalendarCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
               {/* <WeatherCard /> */}
+              <RTNewsCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
               {/* <RTNewsCard /> */}

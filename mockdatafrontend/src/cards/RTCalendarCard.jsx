@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const RTNewsCard = () => {
+const RTCalendarCard = () => {
   return (
     <Card
       sx={{
@@ -20,12 +20,12 @@ const RTNewsCard = () => {
     >
       <CardMedia
         sx={{ paddingTop: "56.25%" }}
-        image="/static/images/NewsImage.jpg"
-        title="Real-time News"
+        image="/static/images/CalendarImage.jpg"
+        title="Real-time Calendar"
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2"></Typography>
-        <Typography>Real-time News Feed</Typography>
+        <Typography>Real-time Calendar Feed</Typography>
       </CardContent>
       <CardActions>
         <Button
@@ -49,4 +49,4 @@ const RTNewsCard = () => {
   )
 }
 
-export default memo(RTNewsCard)
+export default memo(RTCalendarCard)
