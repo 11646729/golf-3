@@ -2,10 +2,9 @@ import React, { memo } from "react"
 import { Grid } from "@mui/material"
 import styled from "styled-components"
 
-// import RawDataLoadCard from "../cards/RawDataLoadCard"
-// import WeatherCard from "../cards/WeatherCard"
 import RTNewsCard from "../cards/RTNewsCard"
 import RTCalendarCard from "../cards/RTCalendarCard"
+import RTWeatherCard from "../cards/RTWeatherCard"
 // import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 // import CruiseCard from "../cards/CruiseCard"
 // import BusRoutesCard from "../cards/BusRoutesCard"
@@ -29,15 +28,13 @@ const HomePage = () => {
         <CardContainer>
           <Grid container>
             <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <RawDataLoadCard /> */}
               <RTCalendarCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <WeatherCard /> */}
               <RTNewsCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <RTNewsCard /> */}
+              <RTWeatherCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
               {/* <NearbyCrimesCard /> */}
