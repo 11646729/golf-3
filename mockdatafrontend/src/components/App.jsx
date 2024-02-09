@@ -4,8 +4,7 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
 import Header from "./Header"
 import Menu from "./Menu"
 import Footer from "./Footer"
-import HomePage from "../pages/HomePage"
-import RealTimeHomePage from "../pages/RealTimePage"
+import RealTimeHomePage from "../pages/RealTimeHomePage"
 
 import "../styles/global.scss"
 
@@ -34,10 +33,6 @@ const App = () => {
       children: [
         {
           path: "/",
-          element: <HomePage />,
-        },
-        {
-          path: "/realtimehomepage",
           element: <RealTimeHomePage />,
         },
         {

@@ -1,14 +1,11 @@
-import React, { memo } from "react"
+import React, { useEffect, useState, memo } from "react"
+import { getGoogleCalendarEvents } from "../functionHandlers/loadRTCalendarDataHandler"
 import { Grid } from "@mui/material"
 import styled from "styled-components"
 
 import RTNewsCard from "../cards/RTNewsCard"
 import RTCalendarCard from "../cards/RTCalendarCard"
 import RTWeatherCard from "../cards/RTWeatherCard"
-// import NearbyCrimesCard from "../cards/NearbyCrimesCard"
-// import CruiseCard from "../cards/CruiseCard"
-// import BusRoutesCard from "../cards/BusRoutesCard"
-// import SeismicDesignCard from "../cards/SeismicDesignCard"
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -21,9 +18,41 @@ const CardContainer = styled.div`
   width: 100%;
   min-height: 500px;
 `
-const HomePage = () => {
+
+const RealTimeHomePage = () => {
+  const [loadClient, setLoadClient] = useState(false)
+
+  const golfRTCalendarUrl = "http://localhost:4000/api/golf/getGolfCourses"
+
+  useEffect(() => {
+    getGoogleCalendarEvents(golfRTCalendarUrl)
+      .then((returnedData) => {
+        // setGolfCoursesData(returnedData)
+        // setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
   return (
     <div>
+      {/* LOAD OR UNLOAD THE CLIENT */}
+      {loadClient ? (
+        //  if true
+        <button onClick={() => setLoadClient((prevState) => !prevState)}>
+          STOP CLIENT
+        </button>
+      ) : (
+        // if false
+        <button onClick={() => setLoadClient((prevState) => !prevState)}>
+          START CLIENT
+        </button>
+      )}
+
+      {/* SOCKET IO CLIENT*/}
+      {/* {loadClient ? <ClientComponent /> : null} */}
+
       <HomePageContainer>
         <CardContainer>
           <Grid container>
@@ -55,4 +84,4 @@ const HomePage = () => {
   )
 }
 
-export default memo(HomePage)
+export default memo(RealTimeHomePage)

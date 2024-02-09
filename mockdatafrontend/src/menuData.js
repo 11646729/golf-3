@@ -5,22 +5,10 @@ export const menu = [
     listItems: [
       {
         id: 1,
-        title: "Home",
+        title: "Real-Time Home",
         url: "/",
         icon: "/static/images/home.svg",
       },
-      {
-        id: 2,
-        title: "Real-Time Home",
-        url: "/realtimehomepage",
-        icon: "/static/images/home.svg",
-      },
-      // {
-      //   id: 3,
-      //   title: "Raw Data",
-      //   url: "/rawdatapage",
-      //   icon: "/static/images/home.svg",
-      // },
     ],
   },
 ]
