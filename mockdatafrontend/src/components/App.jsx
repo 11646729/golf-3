@@ -5,6 +5,7 @@ import Header from "./Header"
 import Menu from "./Menu"
 import Footer from "./Footer"
 import RealTimeHomePage from "../pages/RealTimeHomePage"
+import RTCalendarPage from "../pages/RTCalendarPage"
 
 import "../styles/global.scss"
 
@@ -34,6 +35,10 @@ const App = () => {
         {
           path: "/",
           element: <RealTimeHomePage />,
+        },
+        {
+          path: "/rtcalendarpage",
+          element: <RTCalendarPage />,
         },
         {
           path: "*",

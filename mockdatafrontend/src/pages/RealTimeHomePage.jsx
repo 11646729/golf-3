@@ -1,5 +1,4 @@
-import React, { useEffect, useState, memo } from "react"
-import { getGoogleCalendarEvents } from "../functionHandlers/loadRTCalendarDataHandler"
+import React, { useState, memo } from "react"
 import { Grid } from "@mui/material"
 import styled from "styled-components"
 
@@ -22,19 +21,6 @@ const CardContainer = styled.div`
 const RealTimeHomePage = () => {
   const [loadClient, setLoadClient] = useState(false)
 
-  const golfRTCalendarUrl = "http://localhost:4000/api/golf/getGolfCourses"
-
-  useEffect(() => {
-    getGoogleCalendarEvents(golfRTCalendarUrl)
-      .then((returnedData) => {
-        // setGolfCoursesData(returnedData)
-        // setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
-
   return (
     <div>
       {/* LOAD OR UNLOAD THE CLIENT */}
@@ -50,32 +36,17 @@ const RealTimeHomePage = () => {
         </button>
       )}
 
-      {/* SOCKET IO CLIENT*/}
-      {/* {loadClient ? <ClientComponent /> : null} */}
-
       <HomePageContainer>
         <CardContainer>
           <Grid container>
-            <Grid item sm={3} style={{ padding: 20 }}>
+            <Grid item sm={2} style={{ padding: 20 }}>
               <RTCalendarCard />
             </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
+            <Grid item sm={2} style={{ padding: 20 }}>
               <RTNewsCard />
             </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
+            <Grid item sm={2} style={{ padding: 20 }}>
               <RTWeatherCard />
-            </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <NearbyCrimesCard /> */}
-            </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <CruiseCard /> */}
-            </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <BusRoutesCard /> */}
-            </Grid>
-            <Grid item sm={3} style={{ padding: 20 }}>
-              {/* <SeismicDesignCard /> */}
             </Grid>
           </Grid>
         </CardContainer>
