@@ -27,9 +27,11 @@ const RTCalendarPage = () => {
   return (
     <div className="golfcoursescontainer">
       <div className="golfcoursestablecontainer">
+        This is the RT Calendar Page - Live Data
         {/* <GolfCoursesTable golfCourses={golfCourses} /> */}
       </div>
       <div className="golfcoursesmapcontainer">
+        This is the RT Calendar Page - Dummy Data
         {/* <GolfCoursesMap isLoading={isLoading} golfCourses={golfCourses} /> */}
       </div>
     </div>
