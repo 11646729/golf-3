@@ -3,7 +3,7 @@ import axios from "axios"
 // -------------------------------------------------------
 // Function to fetch Static GTFS data into the SQL database
 // -------------------------------------------------------
-export const loadStaticGFTSDataHandler = async () => {
+export const loadStaticGTFSDataHandler = async () => {
   // This function prepares an empty database & imports Static GTFS Data into local SQL database
   const params = {}
   const config = {
@@ -14,8 +14,8 @@ export const loadStaticGFTSDataHandler = async () => {
   }
 
   await axios
-    .post("http://localhost:4000/api/bus/importStaticGTFSData", params, config)
-    .then(() => alert("Static GFTS data has been Imported to SQL database"))
+    .post("http://localhost:4000/api/gtfs/importStaticGTFSData", params, config)
+    .then(() => alert("Static GTFS data has been Imported to SQL database"))
     .catch((err) => console.log(err))
 }
 
@@ -64,7 +64,7 @@ export const selectedUniqueRoute = async (
 // -------------------------------------------------------
 export const getAgencyName = async () => {
   const resultData = await axios({
-    url: "http://localhost:4000/api/bus/agencyname/",
+    url: "http://localhost:4000/api/gtfs/agencyname/",
     method: "GET",
     timeout: 8000,
     headers: {
@@ -171,7 +171,7 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
 // -------------------------------------------------------
 export const getAllStops = async () => {
   const resultData = await axios({
-    url: "http://localhost:4000/api/bus/stops/",
+    url: "http://localhost:4000/api/gtfs/stops/",
     method: "GET",
     timeout: 8000,
     headers: {
@@ -187,7 +187,7 @@ export const getAllStops = async () => {
 // -------------------------------------------------------
 export const getAllRoutes = async () => {
   const resultData = await axios({
-    url: "http://localhost:4000/api/bus/routes/",
+    url: "http://localhost:4000/api/gtfs/routes/",
     method: "GET",
     timeout: 8000,
     headers: {
@@ -219,7 +219,7 @@ export const getDisplayData = (originalArray) => {
 // -------------------------------------------------------
 export const getAllShapes = async () => {
   const resultData = await axios({
-    url: "http://localhost:4000/api/bus/shapes/",
+    url: "http://localhost:4000/api/gtfs/shapes/",
     method: "GET",
     timeout: 8000,
     headers: {

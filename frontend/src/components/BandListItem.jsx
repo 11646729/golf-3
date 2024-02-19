@@ -39,14 +39,14 @@ const BandListItem = (props) => {
   //   if (routeVisibleCheckbox === true) {
   //     setRouteVisibleCheckbox(false)
   //     selectedUniqueRoute(
-  //       "http://localhost:4000/api/bus/groutes/:routenumber",
+  //       "http://localhost:4000/api/gtfs/groutes/:routenumber",
   //       routeNumber,
   //       false
   //     )
   //   } else {
   //     setRouteVisibleCheckbox(true)
   //     selectedUniqueRoute(
-  //       "http://localhost:4000/api/bus/groutes/:routenumber",
+  //       "http://localhost:4000/api/gtfs/groutes/:routenumber",
   //       routeNumber,
   //       true
   //     )

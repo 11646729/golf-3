@@ -7,7 +7,7 @@ import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
 // Catalogue Home page
-// Path: localhost:4000/api/bus/
+// Path: localhost:4000/api/gtfs/
 // -------------------------------------------------------
 export var index = async (req, res) => {
   res.send({ response: "I am alive" }).status(200)
@@ -33,7 +33,7 @@ export var importGtfsToSQLite = (showResult) => {
 
 // -------------------------------------------------------
 // Bus Route Shapes
-// Path: localhost:4000/api/bus/shapes/
+// Path: localhost:4000/api/gtfs/shapes/
 // -------------------------------------------------------
 export var getAllShapes = (req, res) => {
   // Open a Database Connection
@@ -65,7 +65,7 @@ export var getAllShapes = (req, res) => {
 
 // -------------------------------------------------------
 // Bus Route Shape
-// Path: localhost:4000/api/bus/shape/:shapeID
+// Path: localhost:4000/api/gtfs/shape/:shapeID
 // -------------------------------------------------------
 export var getShape = (req, res) => {
   // Open a Database Connection
@@ -100,7 +100,7 @@ export var getShape = (req, res) => {
 
 // -------------------------------------------------------
 // Bus Stops
-// Path: localhost:4000/api/bus/stops/
+// Path: localhost:4000/api/gtfs/stops/
 // -------------------------------------------------------
 export var getAllStops = (req, res) => {
   // Open a Database Connection
@@ -130,7 +130,7 @@ export var getAllStops = (req, res) => {
 
 // -------------------------------------------------------
 // Bus Agency Name
-// Path: localhost:4000/api/bus/agencyname/
+// Path: localhost:4000/api/gtfs/agencyname/
 // -------------------------------------------------------
 export var getAgencyName = (req, res) => {
   // Open a Database Connection
@@ -160,7 +160,7 @@ export var getAgencyName = (req, res) => {
 
 // -------------------------------------------------------
 // Bus Routes
-// Path: localhost:4000/api/bus/routes/
+// Path: localhost:4000/api/gtfs/routes/
 // -------------------------------------------------------
 export var getAllRoutes = (req, res) => {
   // Open a Database Connection
