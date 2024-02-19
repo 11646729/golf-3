@@ -7,7 +7,7 @@ import { Button } from "@mui/material"
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
-import { loadBusTransportDataHandler } from "../functionHandlers/loadBusTransportDataHandler"
+import { loadStaticGFTSDataHandler } from "../functionHandlers/loadStaticGFTSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
@@ -101,8 +101,8 @@ const tableData = [
   },
   {
     id: 4,
-    datatype: "Bus Transport Data",
-    buttontext: "Fetch Bus Data",
+    datatype: "Static GFTS Transport Data",
+    buttontext: "Fetch Static GFTS Data",
   },
   {
     id: 5,
@@ -142,7 +142,7 @@ function handleClick(id) {
       loadCruiseShipArrivalsDataHandler()
       break
     case 4:
-      loadBusTransportDataHandler()
+      loadStaticGFTSDataHandler()
       break
     case 5:
       loadCrimesDataHandler()

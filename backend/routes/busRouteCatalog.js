@@ -18,7 +18,7 @@ var busRouter = express.Router()
 busRouter.get("/", index)
 
 // POST all GTFS data into the SQL database
-busRouter.post("/importGTFSBusData", importGtfsToSQLite)
+busRouter.post("/importStaticGTFSData", importGtfsToSQLite)
 
 // GET all Bus Route Shapes
 busRouter.get("/shapes", getAllShapes)

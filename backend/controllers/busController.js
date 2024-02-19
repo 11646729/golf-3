@@ -1,7 +1,8 @@
 import { importGtfs } from "gtfs"
-import config from "../configHamilton.js"
+// import config from "../configHamilton.js"
 // import config from "../configMetro.js"
 // import config from "../configDublin.js"
+import config from "../configDublinNew.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------

@@ -9,7 +9,7 @@ import {
   getAllShapes,
   getAllRoutes,
   // getDisplayData,
-} from "../functionHandlers/loadBusTransportDataHandler"
+} from "../functionHandlers/loadStaticGFTSDataHandler"
 
 const BusRoutesContainer = styled.div`
   display: flex;

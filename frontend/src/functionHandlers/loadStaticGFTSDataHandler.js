@@ -1,9 +1,10 @@
 import axios from "axios"
 
 // -------------------------------------------------------
-// Function to import the GTFS data into the SQL database
+// Function to fetch Static GTFS data into the SQL database
 // -------------------------------------------------------
-const importGTFSBusData = async () => {
+export const loadStaticGFTSDataHandler = async () => {
+  // This function prepares an empty database & imports Static GTFS Data into local SQL database
   const params = {}
   const config = {
     timeout: 20000,
@@ -13,9 +14,8 @@ const importGTFSBusData = async () => {
   }
 
   await axios
-    .post("http://localhost:4000/api/bus/importGTFSBusData", params, config)
-    //    .then((returnedData) => console.log(returnedData))
-    .then(() => alert("Import now successful"))
+    .post("http://localhost:4000/api/bus/importStaticGTFSData", params, config)
+    .then(() => alert("Static GFTS data has been Imported to SQL database"))
     .catch((err) => console.log(err))
 }
 
@@ -235,33 +235,3 @@ export const getAllShapes = async () => {
 
   return reformattedShapes
 }
-
-// -------------------------------------------------------
-// Function to fetch all GTFS Bus data into the SQL database
-// -------------------------------------------------------
-export const loadBusTransportDataHandler = () => {
-  // The import GTFS function prepares the empty database table
-
-  // Import GTFS Data from Website into local SQL database
-  importGTFSBusData()
-}
-
-// Function to remove duplicates from array
-// var removeDuplicates = (originalArray, prop) => {
-//   return [...new Map(originalArray.map((item) => [item[prop], item])).values()]
-// }
-
-// Function to fetch Unique Gtfs Route data
-// export var getRoutesData = async (url) => {
-// const resultData = await fetchData(url, {})
-
-// Filter out Duplicate Routes here
-// let sortedDisplayArray = removeDuplicates(resultData.data, "routeNumber")
-
-// Sort Routes code here
-// let res = []
-// sortedDisplayArray.sort((a, b) => (a.routeNumber > b.routeNumber ? 1 : -1))
-// res[0] = sortedDisplayArray
-
-// return res
-// }
