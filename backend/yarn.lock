@@ -340,10 +340,10 @@ basic-auth@~2.0.1:
   dependencies:
     safe-buffer "5.1.2"
 
-better-sqlite3@^9.1.1:
-  version "9.2.2"
-  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-9.2.2.tgz#3ce1ed24f327ed8c9b0c39b825cdc2341aeb249f"
-  integrity sha512-qwjWB46il0lsDkeB4rSRI96HyDQr8sxeu1MkBVLMrwusq1KRu4Bpt1TMI+8zIJkDUtZ3umjAkaEjIlokZKWCQw==
+better-sqlite3@^9.4.1:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-9.4.1.tgz#006bc6a899a69166c5fe89c9cff64509295d12b2"
+  integrity sha512-QpqiQeMI4WkE+dQ68zTMX5OzlPGc7lXIDP1iKUt4Omt9PdaVgzKYxHIJRIzt1E+RUBQoFmkip/IbvzyrxehAIg==
   dependencies:
     bindings "^1.5.0"
     prebuild-install "^7.1.1"
@@ -678,12 +678,12 @@ css-what@^6.0.1, css-what@^6.1.0:
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-6.1.0.tgz#fb5effcf76f1ddea2c81bdfaa4de44e79bac70f4"
   integrity sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==
 
-csv-parse@^5.5.2:
+csv-parse@^5.5.3:
   version "5.5.3"
   resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-5.5.3.tgz#0261050761ee46cd0e46421854bf9bf4de1317bf"
   integrity sha512-v0KW6C0qlZzoGjk6u5tLmVfyZxNgPGXZsWTXshpAgKVGmGXzaVWGdlCFxNx5iuzcXT/oJN1HHM9DZKwtAtYa+A==
 
-csv-stringify@^6.4.4:
+csv-stringify@^6.4.5:
   version "6.4.5"
   resolved "https://registry.yarnpkg.com/csv-stringify/-/csv-stringify-6.4.5.tgz#99808b40ec30b86cc0e1c7d707c1d6ecbc4e1a00"
   integrity sha512-SPu1Vnh8U5EnzpNOi1NDBL5jU5Rx7DVHr15DNg9LXDTAbQlAVAmEbVt16wZvEW9Fu9Qt4Ji8kmeCJ2B1+4rFTQ==
@@ -1287,15 +1287,15 @@ gtfs-realtime-bindings@^1.1.1:
     protobufjs "^7.1.2"
     protobufjs-cli "^1.0.2"
 
-gtfs@^4.1.0:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/gtfs/-/gtfs-4.5.1.tgz#ccc473cd45ab6a9d238451cbc34c463592488727"
-  integrity sha512-zTXKZfEyn42Vf/Tw4zFaOv1Wto2q9g6BcDfyIQnmml6CnO8SDGsS1VmrT/uP6sNjw5N8xhsDgaG/1lvcxXo+Hw==
+gtfs@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/gtfs/-/gtfs-4.7.1.tgz#87e4d8259b82962a5bbf856ec43ab2010d006eef"
+  integrity sha512-HV3ncxWSOIsDtG07Z69lV7P9AYNa5sk+kothibCIw2i5HatNLWYTa4u8hdZ6if5DLg4XDjtUY5oDFYvPlELeEw==
   dependencies:
     "@turf/helpers" "^6.5.0"
-    better-sqlite3 "^9.1.1"
-    csv-parse "^5.5.2"
-    csv-stringify "^6.4.4"
+    better-sqlite3 "^9.4.1"
+    csv-parse "^5.5.3"
+    csv-stringify "^6.4.5"
     gtfs-realtime-bindings "^1.1.1"
     lodash-es "^4.17.21"
     long "^5.2.3"

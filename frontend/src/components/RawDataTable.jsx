@@ -128,8 +128,6 @@ const tableData = [
 
 function handleClick(id) {
   // Define the logic for handling the button click here
-  console.log(`Button clicked for row with id ${id}`)
-  alert(`Here with id ${id}`)
 
   switch (id) {
     case 1:
