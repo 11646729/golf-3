@@ -1,8 +1,14 @@
 import { importGtfs } from "gtfs"
+
+import * as fs from "fs"
+import * as stream from "stream"
+import axios from "axios"
+import { promisify } from "util"
+
 // import config from "../configHamilton.js"
 // import config from "../configMetro.js"
 // import config from "../configDublin.js"
-import config from "../configDublinNew.js"
+import config from "../configDublinVersion2.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -13,22 +19,53 @@ export var index = async (req, res) => {
   res.send({ response: "I am alive" }).status(200)
 }
 
+var downloadZipFile = async () => {
+  const tempFile = "/Users/briansmith/Desktop/GTFS_Realtime.zip"
+  const finishedDownload = promisify(stream.finished)
+  const writer = fs.createWriteStream(tempFile)
+
+  const response = await axios({
+    method: "GET",
+    url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
+    responseType: "stream",
+  })
+
+  response.data.pipe(writer)
+
+  await finishedDownload(writer).then(() => {
+    // Getting information for a file
+    fs.stat(tempFile, (error, stats) => {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(
+          "Zip file containing Static GTFS files imported successfully. "
+        )
+        console.log("Zip file created at: " + stats.birthtime)
+      }
+    })
+  })
+}
+
 // -------------------------------------------------------
 // Function to import GTFS data to SQLite database
 // -------------------------------------------------------
 export var importGtfsToSQLite = (showResult) => {
-  try {
-    importGtfs(config)
-      .then(() => {
-        // return
-        console.log("Import Successful")
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  } catch (error) {
-    console.log("\n\nError in importGtfsToSQLite: ", error)
-  }
+  //  Firstly download the most recent zip file of GTFS Static files
+  downloadZipFile()
+
+  // try {
+  //   importGtfs(config)
+  //     .then(() => {
+  //       // return
+  //       console.log("Import Successful")
+  //     })
+  //     .catch((err) => {
+  //       console.error(err)
+  //     })
+  // } catch (error) {
+  //   console.log("\n\nError in importGtfsToSQLite: ", error)
+  // }
 }
 
 // -------------------------------------------------------
