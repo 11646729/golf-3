@@ -2,6 +2,8 @@ import { importGtfs } from "gtfs"
 
 import * as fs from "fs"
 import * as stream from "stream"
+// const decompress = require("decompress");
+import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
 
@@ -19,7 +21,11 @@ export var index = async (req, res) => {
   res.send({ response: "I am alive" }).status(200)
 }
 
-var downloadZipFile = async () => {
+// -------------------------------------------------------
+// Function to import latest GTFS Static file data to SQLite database
+// -------------------------------------------------------
+export var importGtfsToSQLite = async () => {
+  //  Firstly download the most recent zip file of GTFS Static files
   const tempFile = "/Users/briansmith/Desktop/GTFS_Realtime.zip"
   const finishedDownload = promisify(stream.finished)
   const writer = fs.createWriteStream(tempFile)
@@ -32,40 +38,45 @@ var downloadZipFile = async () => {
 
   response.data.pipe(writer)
 
-  await finishedDownload(writer).then(() => {
-    // Getting information for a file
-    fs.stat(tempFile, (error, stats) => {
-      if (error) {
-        console.log(error)
-      } else {
-        console.log(
-          "Zip file containing Static GTFS files imported successfully. "
-        )
-        console.log("Zip file created at: " + stats.birthtime)
+  await finishedDownload(writer)
+    .then(() => {
+      // Getting information for a file
+      fs.stat(tempFile, (error, stats) => {
+        if (error) {
+          console.log(error)
+        } else {
+          console.log(
+            "Zip file containing Static GTFS files imported successfully. "
+          )
+          console.log("Zip file created at: " + stats.birthtime)
+        }
+      })
+    })
+    //  Secondly unzip the GTFS Static files from the zipfile
+    .then(() => {
+      decompress(tempFile, "gtfs_data/TFI Dublin Version 2")
+        .then((files) => {
+          // console.log(files)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
+    //  Thirdly import the GTFS Static files into the gtfs.db database
+    .then(() => {
+      try {
+        importGtfs(config)
+          .then(() => {
+            // return
+            console.log("Import Successful")
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      } catch (error) {
+        console.log("\n\nError in importGtfsToSQLite: ", error)
       }
     })
-  })
-}
-
-// -------------------------------------------------------
-// Function to import GTFS data to SQLite database
-// -------------------------------------------------------
-export var importGtfsToSQLite = (showResult) => {
-  //  Firstly download the most recent zip file of GTFS Static files
-  downloadZipFile()
-
-  // try {
-  //   importGtfs(config)
-  //     .then(() => {
-  //       // return
-  //       console.log("Import Successful")
-  //     })
-  //     .catch((err) => {
-  //       console.error(err)
-  //     })
-  // } catch (error) {
-  //   console.log("\n\nError in importGtfsToSQLite: ", error)
-  // }
 }
 
 // -------------------------------------------------------
