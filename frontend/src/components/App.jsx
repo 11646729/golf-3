@@ -10,7 +10,7 @@ import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
-import BusRoutesPage from "../pages/BusRoutesPage"
+import TransportRoutesPage from "../pages/TransportRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 import RealTimeHomePage from "../pages/RealTimePage"
@@ -69,8 +69,8 @@ const App = () => {
           element: <CruisesPage />,
         },
         {
-          path: "/busroutespage",
-          element: <BusRoutesPage />,
+          path: "/transportroutespage",
+          element: <TransportRoutesPage />,
         },
         {
           path: "/seismicarraydesignpage",

@@ -1,8 +1,6 @@
 import { importGtfs } from "gtfs"
-
 import * as fs from "fs"
 import * as stream from "stream"
-// const decompress = require("decompress");
 import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
@@ -26,13 +24,12 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 export var importGtfsToSQLite = async () => {
   //  Firstly download the most recent zip file of GTFS Static files
-  const tempFile = "/Users/briansmith/Desktop/GTFS_Realtime.zip"
   const finishedDownload = promisify(stream.finished)
-  const writer = fs.createWriteStream(tempFile)
+  const writer = fs.createWriteStream(config.tempFile)
 
   const response = await axios({
     method: "GET",
-    url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
+    url: config.zipFileUrl,
     responseType: "stream",
   })
 
@@ -41,7 +38,7 @@ export var importGtfsToSQLite = async () => {
   await finishedDownload(writer)
     .then(() => {
       // Getting information for a file
-      fs.stat(tempFile, (error, stats) => {
+      fs.stat(config.tempFile, (error, stats) => {
         if (error) {
           console.log(error)
         } else {
@@ -54,7 +51,8 @@ export var importGtfsToSQLite = async () => {
     })
     //  Secondly unzip the GTFS Static files from the zipfile
     .then(() => {
-      decompress(tempFile, "gtfs_data/TFI Dublin Version 2")
+      decompress(config.tempFile, config.agencies[0].path)
+        // sqlitePath)
         .then((files) => {
           // console.log(files)
         })

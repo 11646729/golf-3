@@ -32,7 +32,7 @@ const BusRoutesMapContainer = styled.div`
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
-const BusRoutesPage = () => {
+const TransportRoutesPage = () => {
   const [busAgencyName, setBusAgencyName] = useState()
   const [busShapesCollection, setBusShapesCollection] = useState([])
   const [busStopsCollection, setBusStopsCollection] = useState([])
@@ -103,4 +103,4 @@ const BusRoutesPage = () => {
   )
 }
 
-export default memo(BusRoutesPage)
+export default memo(TransportRoutesPage)

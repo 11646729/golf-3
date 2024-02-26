@@ -73,12 +73,12 @@ export const menu = [
   },
   {
     id: 6,
-    title: "Bus Transport",
+    title: "Transport",
     listItems: [
       {
         id: 1,
-        title: "Bus Transport",
-        url: "/busroutespage",
+        title: "Transport",
+        url: "/transportroutespage",
         icon: "/static/images/user.svg",
       },
     ],

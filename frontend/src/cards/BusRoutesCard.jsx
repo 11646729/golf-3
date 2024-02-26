@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const GTFSBusTransportCard = () => {
+const GTFSTransportCard = () => {
   return (
     <Card
       sx={{
@@ -22,20 +22,20 @@ const GTFSBusTransportCard = () => {
         sx={{ paddingTop: "56.25%" }}
         image="/static/images/GTFS_UI.png"
         // image="/static/images/HamiltonBus.jpg"
-        title="Bus Transport Map"
+        title="Transport Map"
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          Bus Transport
+          Transport
         </Typography>
-        <Typography>This shows Bus Transport in the Province</Typography>
+        <Typography>This shows Transport in the Province</Typography>
       </CardContent>
       <CardActions>
         <Button
           size="small"
           color="primary"
           component={Link}
-          to="/busroutespage"
+          to="/transportroutespage"
         >
           View
         </Button>
@@ -44,4 +44,4 @@ const GTFSBusTransportCard = () => {
   )
 }
 
-export default memo(GTFSBusTransportCard)
+export default memo(GTFSTransportCard)
