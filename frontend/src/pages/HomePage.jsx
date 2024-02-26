@@ -7,7 +7,7 @@ import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
 import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 import CruiseCard from "../cards/CruiseCard"
-import BusRoutesCard from "../cards/BusRoutesCard"
+import TransportRoutesCard from "../cards/TransportRoutesCard"
 import SeismicDesignCard from "../cards/SeismicDesignCard"
 
 const HomePageContainer = styled.div`
@@ -43,7 +43,7 @@ const HomePage = () => {
               <CruiseCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
-              <BusRoutesCard />
+              <TransportRoutesCard />
             </Grid>
             <Grid item sm={3} style={{ padding: 20 }}>
               <SeismicDesignCard />
