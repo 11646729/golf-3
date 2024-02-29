@@ -5,10 +5,9 @@ import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
 
-// import config from "../configHamilton.js"
+import config from "../configHamilton.js"
 // import config from "../configMetro.js"
-// import config from "../configDublin.js"
-import config from "../configDublinVersion2.js"
+// import config from "../configTransportForIreland.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -84,9 +83,7 @@ export var importGtfsToSQLite = async () => {
 export var getAllShapes = (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.HAMILTON_SQL_URI)
-
-  let newResults = null
+  db = openSqlDbConnection(config.sqlitePath)
 
   if (db !== null) {
     try {
@@ -116,7 +113,7 @@ export var getAllShapes = (req, res) => {
 export var getShape = (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.HAMILTON_SQL_URI)
+  db = openSqlDbConnection(config.sqlitePath)
 
   let newResults = null
   let shapeID = req.query.shape
@@ -151,7 +148,7 @@ export var getShape = (req, res) => {
 export var getAllStops = (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.HAMILTON_SQL_URI)
+  db = openSqlDbConnection(config.sqlitePath)
 
   if (db !== null) {
     try {
@@ -181,7 +178,7 @@ export var getAllStops = (req, res) => {
 export var getAgencyName = (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.HAMILTON_SQL_URI)
+  db = openSqlDbConnection(config.sqlitePath)
 
   if (db !== null) {
     try {
@@ -211,7 +208,7 @@ export var getAgencyName = (req, res) => {
 export var getAllRoutes = (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.HAMILTON_SQL_URI)
+  db = openSqlDbConnection(config.sqlitePath)
 
   if (db !== null) {
     try {

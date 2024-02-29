@@ -86,7 +86,7 @@ const BusRoutesMap = (props) => {
     }
   }, [map, busStopsCollection])
 
-  console.log(busStopsCollection)
+  // console.log(busStopsCollection)
 
   // const handleBusStopClick = (event) => {
   //   console.log(event)

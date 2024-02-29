@@ -50,6 +50,7 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     getAgencyName()
       .then((returnedData) => {
+        console.log(returnedData)
         setBusAgencyName(returnedData[0].agency_name)
       })
       .catch((err) => {
