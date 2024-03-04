@@ -1,13 +1,13 @@
-import { importGtfs } from "gtfs"
+import { importGtfs, exportGtfs } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
 
-import config from "../configHamilton.js"
+// import config from "../configHamilton.js"
 // import config from "../configMetro.js"
-// import config from "../configTransportForIreland.js"
+import config from "../configTransportForIreland.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -22,13 +22,23 @@ export var index = async (req, res) => {
 // Function to import latest GTFS Static file data to SQLite database
 // -------------------------------------------------------
 export var importGtfsToSQLite = async () => {
+  //  ----------------------------------------------------
+  // THIS IS SUSPECT AS THE TFI FORMATS HAVE CHANGED
+  //  ----------------------------------------------------
+  // await importGtfs(config)
+
+  //  ----------------------------------------------------
+  //  CANNOT USE THIS AS TFI FILE FORMATS ARE NOT STANDARD
+  //  ----------------------------------------------------
+  // await exportGtfs(config)
+
   //  Firstly download the most recent zip file of GTFS Static files
   const finishedDownload = promisify(stream.finished)
   const writer = fs.createWriteStream(config.tempFile)
 
   const response = await axios({
     method: "GET",
-    url: config.zipFileUrl,
+    url: config.agencies[0].url,
     responseType: "stream",
   })
 
