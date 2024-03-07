@@ -1,4 +1,4 @@
-import { importGtfs, exportGtfs } from "gtfs"
+import { importGtfs, exportGtfs, closeDb, openDb, getAgencies } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
@@ -87,6 +87,34 @@ export var importGtfsToSQLite = async () => {
 }
 
 // -------------------------------------------------------
+// Get Transport Agency Names
+// Path: localhost:4000/api/gtfs/agencyname/
+// -------------------------------------------------------
+export var getAgencyName = (req, res) => {
+  const db = openDb(config)
+
+  if (db !== null) {
+    try {
+      const agencies = getAgencies(
+        {}, // No query filters
+        ["agency_id", "agency_name"] // Only return these fields
+      )
+      if (err) {
+        return console.error(err.message)
+      }
+
+      res.send(agencies)
+
+      closeDb(db)
+    } catch (e) {
+      console.error(e.message)
+    }
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
 // Bus Route Shapes
 // Path: localhost:4000/api/gtfs/shapes/
 // -------------------------------------------------------
@@ -163,36 +191,6 @@ export var getAllStops = (req, res) => {
   if (db !== null) {
     try {
       let sql = `SELECT stop_id, stop_lat, stop_lon FROM stops ORDER BY stop_id`
-      db.all(sql, [], (err, results) => {
-        if (err) {
-          return console.error(err.message)
-        }
-
-        res.send(results)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
-  }
-}
-
-// -------------------------------------------------------
-// Bus Agency Name
-// Path: localhost:4000/api/gtfs/agencyname/
-// -------------------------------------------------------
-export var getAgencyName = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(config.sqlitePath)
-
-  if (db !== null) {
-    try {
-      let sql = `SELECT agency_name FROM agency`
       db.all(sql, [], (err, results) => {
         if (err) {
           return console.error(err.message)

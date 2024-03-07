@@ -20,6 +20,16 @@ export const loadStaticGTFSDataHandler = async () => {
 }
 
 // -------------------------------------------------------
+// Function to fetch Transport Agency
+// -------------------------------------------------------
+export const getAgencyName = async () => {
+  return await axios
+    .get("http://localhost:4000/api/gtfs/agencyname/")
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
 // Function to fetch all shape_ids
 // -------------------------------------------------------
 const getShapeIDs = (busShapesCollection) => {
@@ -56,24 +66,6 @@ export const selectedUniqueRoute = async (
       "Content-Type": "application/json",
     },
   })
-  return resultData.data
-}
-
-// -------------------------------------------------------
-// Function to fetch Bus Agency
-// -------------------------------------------------------
-export const getAgencyName = async () => {
-  const resultData = await axios({
-    url: "http://localhost:4000/api/gtfs/agencyname/",
-    method: "GET",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-
-  // console.log(resultData.data)
-
   return resultData.data
 }
 

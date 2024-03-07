@@ -33,6 +33,7 @@ const BusRoutesMapContainer = styled.div`
 // React Controller component
 // -------------------------------------------------------
 const TransportRoutesPage = () => {
+  const [busAgencyId, setBusAgencyId] = useState()
   const [busAgencyName, setBusAgencyName] = useState()
   const [busShapesCollection, setBusShapesCollection] = useState([])
   const [busStopsCollection, setBusStopsCollection] = useState([])
@@ -51,32 +52,9 @@ const TransportRoutesPage = () => {
     getAgencyName()
       .then((returnedData) => {
         console.log(returnedData)
-        setBusAgencyName(returnedData[0].agency_name)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
 
-    // This function does some reduction & reformatting
-    getAllShapes()
-      .then((returnedData) => {
-        setBusShapesCollection(returnedData)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-
-    getAllStops()
-      .then((returnedData) => {
-        setBusStopsCollection(returnedData)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-
-    getAllRoutes()
-      .then((returnedData) => {
-        saveToHooks(returnedData)
+        setBusAgencyId(returnedData[0].agencyId)
+        setBusAgencyName(returnedData[0].agencyName)
 
         setIsLoading(false)
       })
@@ -84,6 +62,50 @@ const TransportRoutesPage = () => {
         console.log(err)
       })
   }, [])
+
+  // results.length shows 1 if exists or 0 if doesn't exist
+
+  useEffect(() => {
+    setIsLoading(true)
+    if (busAgencyId >= null) {
+      console.log(busAgencyId)
+      // getRoutes(busAgencyId)
+      //   .then((returnedData) => {
+      //     setBusShapesCollection(returnedData)
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+    }
+  }, [busAgencyId])
+
+  // // This function does some reduction & reformatting
+  // getAllShapes()
+  //   .then((returnedData) => {
+  //     setBusShapesCollection(returnedData)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+
+  // getAllStops()
+  //   .then((returnedData) => {
+  //     setBusStopsCollection(returnedData)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+
+  // getAllRoutes()
+  //   .then((returnedData) => {
+  //     saveToHooks(returnedData)
+
+  //     setIsLoading(false)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }, [])
 
   return (
     <BusRoutesContainer>

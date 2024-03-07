@@ -47,7 +47,7 @@ const CruisesPage = () => {
     getPortArrivalsData(portArrivalsDataUrl)
       .then((returnedData) => {
         // DOES NOT WORK
-        // Sort by date becaause returnedData is not always in timestamp order
+        // Sort by date because returnedData is not always in timestamp order
         // returnedData.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
 
         setPortArrivals(returnedData.data)
