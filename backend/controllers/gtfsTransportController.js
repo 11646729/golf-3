@@ -1,4 +1,11 @@
-import { importGtfs, exportGtfs, closeDb, openDb, getAgencies } from "gtfs"
+import {
+  importGtfs,
+  exportGtfs,
+  closeDb,
+  openDb,
+  getAgencies,
+  getRoutes,
+} from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
@@ -87,10 +94,10 @@ export var importGtfsToSQLite = async () => {
 }
 
 // -------------------------------------------------------
-// Get Transport Agency Names
-// Path: localhost:4000/api/gtfs/agencyname/
+// Get Transport Agencies
+// Path: localhost:4000/api/gtfs/agencynames/
 // -------------------------------------------------------
-export var getAgencyName = (req, res) => {
+export var getAllAgencyNames = (req, res) => {
   const db = openDb(config)
 
   if (db !== null) {
@@ -99,16 +106,41 @@ export var getAgencyName = (req, res) => {
         {}, // No query filters
         ["agency_id", "agency_name"] // Only return these fields
       )
-      if (err) {
-        return console.error(err.message)
-      }
 
       res.send(agencies)
-
-      closeDb(db)
     } catch (e) {
       console.error(e.message)
     }
+
+    closeDb(db)
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
+// Get All Routes for a single Transport Agency
+// Path: localhost:4000/api/gtfs/routesforsingleagency/
+// -------------------------------------------------------
+export var getRoutesForSingleAgency = (req, res, agencyId) => {
+  const db = openDb(config)
+
+  if (db !== null) {
+    try {
+      const db = openDb(config)
+      const routes = getRoutes(
+        { agency_id: agencyId }, // No query filters
+        ["agency_id", "route_short_name", "route_color"] // Only return these fields
+      )
+
+      console.log(routes)
+
+      // res.send(routes)
+    } catch (e) {
+      console.error(e.message)
+    }
+
+    closeDb(db)
   } else {
     console.error("Cannot connect to database")
   }

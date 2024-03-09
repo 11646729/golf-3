@@ -22,11 +22,42 @@ export const loadStaticGTFSDataHandler = async () => {
 // -------------------------------------------------------
 // Function to fetch Transport Agency
 // -------------------------------------------------------
-export const getAgencyName = async () => {
+export const getAllAgencyNames = async () => {
   return await axios
-    .get("http://localhost:4000/api/gtfs/agencyname/")
+    .get("http://localhost:4000/api/gtfs/agencynames/")
     .then((response) => response.data)
     .catch((err) => console.log(err))
+}
+
+// -------------------------------------------------------
+// Function to fetch Routes for a Single Agency data
+// -------------------------------------------------------
+export const getRoutesForSingleAgency = async (agencyId) => {
+  // axios.get("/user", {
+  //   params: {
+  //     agency_id: agencyId,
+  //   },
+  // })
+
+  // async function getUser() {
+  //   try {
+  //     const response = await axios.get("/user?agency_id=12345")
+  //     console.log(response)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
+  const resultData = await axios({
+    url: "http://localhost:4000/api/gtfs/routeforsingleagency/",
+    method: "GET",
+    timeout: 8000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  return resultData.data
 }
 
 // -------------------------------------------------------

@@ -4,7 +4,8 @@ import styled from "styled-components"
 // import BusRouteSelectionPanel from "../components/BusRouteSelectionPanel"
 import BusRoutesMap from "../components/BusRoutesMap"
 import {
-  getAgencyName,
+  getAllAgencyNames,
+  getRoutesForSingleAgency,
   getAllStops,
   getAllShapes,
   getAllRoutes,
@@ -33,28 +34,26 @@ const BusRoutesMapContainer = styled.div`
 // React Controller component
 // -------------------------------------------------------
 const TransportRoutesPage = () => {
-  const [busAgencyId, setBusAgencyId] = useState()
-  const [busAgencyName, setBusAgencyName] = useState()
+  const [transportAgencyId, setTransportAgencyId] = useState()
+  const [transportAgencyName, setTransportAgencyName] = useState()
+  const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
   const [busShapesCollection, setBusShapesCollection] = useState([])
   const [busStopsCollection, setBusStopsCollection] = useState([])
-  const [busRoutesCollection, setBusRoutesCollection] = useState([])
   // const [displayBusRoutesCollection, setDisplayBusRoutesCollection] = useState(
   //   []
   // )
   const [isLoading, setIsLoading] = useState(true)
 
-  const saveToHooks = (array) => {
-    setBusRoutesCollection(array)
-    // setDisplayBusRoutesCollection(getDisplayData(array[0]))
-  }
+  // const saveToHooks = (array) => {
+  //   setBusRoutesCollection(array)
+  //   // setDisplayBusRoutesCollection(getDisplayData(array[0]))
+  // }
 
   useEffect(() => {
-    getAgencyName()
+    getAllAgencyNames()
       .then((returnedData) => {
-        console.log(returnedData)
-
-        setBusAgencyId(returnedData[0].agencyId)
-        setBusAgencyName(returnedData[0].agencyName)
+        setTransportAgencyId(returnedData[0].agency_id)
+        setTransportAgencyName(returnedData[0].agency_name)
 
         setIsLoading(false)
       })
@@ -67,17 +66,20 @@ const TransportRoutesPage = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    if (busAgencyId >= null) {
-      console.log(busAgencyId)
-      // getRoutes(busAgencyId)
+    if (transportAgencyId >= null) {
+      console.log(transportAgencyId)
+      console.log(transportAgencyName)
+
+      // getRoutesForSingleAgency(transportAgencyId)
       //   .then((returnedData) => {
-      //     setBusShapesCollection(returnedData)
+      //     console.log(returnedData)
+      //     // setBusShapesCollection(returnedData)
       //   })
       //   .catch((err) => {
       //     console.log(err)
       //   })
     }
-  }, [busAgencyId])
+  }, [transportAgencyId])
 
   // // This function does some reduction & reformatting
   // getAllShapes()
@@ -115,10 +117,10 @@ const TransportRoutesPage = () => {
       <BusRoutesMapContainer>
         <BusRoutesMap
           isLoading={isLoading}
-          busAgencyName={busAgencyName}
+          busAgencyName={transportAgencyName}
           busShapesCollection={busShapesCollection}
           busStopsCollection={busStopsCollection}
-          busRoutesCollection={busRoutesCollection}
+          busRoutesCollection={transportRoutesCollection}
           // displayBusRoutesCollection={displayBusRoutesCollection}
         />
       </BusRoutesMapContainer>
