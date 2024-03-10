@@ -22,9 +22,9 @@ export const loadStaticGTFSDataHandler = async () => {
 // -------------------------------------------------------
 // Function to fetch Transport Agency
 // -------------------------------------------------------
-export const getAllAgencyNames = async () => {
+export const getAllAgencyNames = async (url) => {
   return await axios
-    .get("http://localhost:4000/api/gtfs/agencynames/")
+    .get(url)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
@@ -32,32 +32,27 @@ export const getAllAgencyNames = async () => {
 // -------------------------------------------------------
 // Function to fetch Routes for a Single Agency data
 // -------------------------------------------------------
-export const getRoutesForSingleAgency = async (agencyId) => {
-  // axios.get("/user", {
-  //   params: {
-  //     agency_id: agencyId,
-  //   },
-  // })
+export const getRoutesForSingleAgencyFrontEnd = async (
+  url,
+  transportAgencyId
+) => {
+  // Guard clauses
+  if (url == null) return
+  if (transportAgencyId == null) return
 
-  // async function getUser() {
-  //   try {
-  //     const response = await axios.get("/user?agency_id=12345")
-  //     console.log(response)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
-  const resultData = await axios({
-    url: "http://localhost:4000/api/gtfs/routeforsingleagency/",
-    method: "GET",
-    timeout: 8000,
+  // Ok to headers
+  const params = { agency_id: transportAgencyId }
+  const config = {
+    timeout: 20000,
     headers: {
       "Content-Type": "application/json",
     },
-  })
+  }
 
-  return resultData.data
+  return await axios
+    .get(url, params, config)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
 }
 
 // -------------------------------------------------------
@@ -195,22 +190,6 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
 export const getAllStops = async () => {
   const resultData = await axios({
     url: "http://localhost:4000/api/gtfs/stops/",
-    method: "GET",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-
-  return resultData.data
-}
-
-// -------------------------------------------------------
-// Function to fetch Unique Gtfs Routes data
-// -------------------------------------------------------
-export const getAllRoutes = async () => {
-  const resultData = await axios({
-    url: "http://localhost:4000/api/gtfs/routes/",
     method: "GET",
     timeout: 8000,
     headers: {

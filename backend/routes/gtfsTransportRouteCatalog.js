@@ -24,11 +24,8 @@ gtfsRouter.post("/importStaticGTFSData", importGtfsToSQLite)
 // GET all Transport Route Agencies
 gtfsRouter.get("/agencynames", getAllAgencyNames)
 
-//  GET All Routes for one Agency
-gtfsRouter.get(
-  "http://localhost:4000/api/gtfs/routeforsingleagency/",
-  getRoutesForSingleAgency
-)
+//  GET Transport Routes for one Agency
+gtfsRouter.get("/routesforsingleagency/", getRoutesForSingleAgency)
 
 // GET all Bus Route Shapes
 gtfsRouter.get("/shapes", getAllShapes)
@@ -40,11 +37,11 @@ gtfsRouter.get("/shapes", getAllShapes)
 gtfsRouter.get("/stops", getAllStops)
 
 // GET all Bus Routes
-gtfsRouter.get("/routes", getAllRoutes)
+// gtfsRouter.get("/routes", getAllRoutes)
 
-gtfsRouter.get("/routes", function (req, res) {
-  res.send("GTFS Controller get Routes home page")
-})
+// gtfsRouter.get("/routes", function (req, res) {
+//   res.send("GTFS Controller get Routes home page")
+// })
 
 // GET all Selected Panel List Bus Routes
 // gtfsRouter.get("/groutes/:routevisible", gtfsTransportController.getSelectedRoutes)

@@ -5,10 +5,10 @@ import styled from "styled-components"
 import BusRoutesMap from "../components/BusRoutesMap"
 import {
   getAllAgencyNames,
-  getRoutesForSingleAgency,
+  getRoutesForSingleAgencyFrontEnd,
   getAllStops,
   getAllShapes,
-  getAllRoutes,
+  // getAllRoutes,
   // getDisplayData,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 
@@ -49,8 +49,13 @@ const TransportRoutesPage = () => {
   //   // setDisplayBusRoutesCollection(getDisplayData(array[0]))
   // }
 
+  // build agenciesData Url
+  const agenciesDataUrl = "http://localhost:4000/api/gtfs/agencynames/"
+  const routesDataUrl =
+    "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId=7778021"
+
   useEffect(() => {
-    getAllAgencyNames()
+    getAllAgencyNames(agenciesDataUrl)
       .then((returnedData) => {
         setTransportAgencyId(returnedData[0].agency_id)
         setTransportAgencyName(returnedData[0].agency_name)
@@ -62,24 +67,21 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
-  // results.length shows 1 if exists or 0 if doesn't exist
-
   useEffect(() => {
     setIsLoading(true)
     if (transportAgencyId >= null) {
-      console.log(transportAgencyId)
-      console.log(transportAgencyName)
-
-      // getRoutesForSingleAgency(transportAgencyId)
-      //   .then((returnedData) => {
-      //     console.log(returnedData)
-      //     // setBusShapesCollection(returnedData)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
+      getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
+        .then((returnedData) => {
+          setTransportRoutesCollection(returnedData)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }, [transportAgencyId])
+
+  if (transportRoutesCollection.length > 0)
+    console.log(transportRoutesCollection)
 
   // // This function does some reduction & reformatting
   // getAllShapes()
@@ -97,17 +99,6 @@ const TransportRoutesPage = () => {
   //   .catch((err) => {
   //     console.log(err)
   //   })
-
-  // getAllRoutes()
-  //   .then((returnedData) => {
-  //     saveToHooks(returnedData)
-
-  //     setIsLoading(false)
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
-  // }, [])
 
   return (
     <BusRoutesContainer>

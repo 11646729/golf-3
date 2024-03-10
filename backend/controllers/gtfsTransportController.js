@@ -122,20 +122,18 @@ export var getAllAgencyNames = (req, res) => {
 // Get All Routes for a single Transport Agency
 // Path: localhost:4000/api/gtfs/routesforsingleagency/
 // -------------------------------------------------------
-export var getRoutesForSingleAgency = (req, res, agencyId) => {
+export var getRoutesForSingleAgency = (req, res) => {
   const db = openDb(config)
 
   if (db !== null) {
     try {
       const db = openDb(config)
-      const routes = getRoutes(
-        { agency_id: agencyId }, // No query filters
-        ["agency_id", "route_short_name", "route_color"] // Only return these fields
+      const transportRoutes = getRoutes(
+        { agency_id: req.query.transportAgencyId }, // Query filters
+        ["agency_id", "route_short_name"] // Only return these fields
       )
 
-      console.log(routes)
-
-      // res.send(routes)
+      res.send(transportRoutes)
     } catch (e) {
       console.error(e.message)
     }
