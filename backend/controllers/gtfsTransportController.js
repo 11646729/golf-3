@@ -1,6 +1,6 @@
 import {
   importGtfs,
-  exportGtfs,
+  // exportGtfs,
   closeDb,
   openDb,
   getAgencies,
@@ -130,7 +130,7 @@ export var getRoutesForSingleAgency = (req, res) => {
       const db = openDb(config)
       const transportRoutes = getRoutes(
         { agency_id: req.query.transportAgencyId }, // Query filters
-        ["agency_id", "route_short_name"] // Only return these fields
+        ["route_id", "agency_id", "route_short_name", "route_long_name"] // Only return these fields
       )
 
       res.send(transportRoutes)
