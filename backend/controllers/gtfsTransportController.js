@@ -5,6 +5,7 @@ import {
   openDb,
   getAgencies,
   getRoutes,
+  getShapes,
 } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
@@ -12,9 +13,9 @@ import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
 
-// import config from "../configHamilton.js"
+import config from "../configHamilton.js"
 // import config from "../configMetro.js"
-import config from "../configTransportForIreland.js"
+// import config from "../configTransportForIreland.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
@@ -30,13 +31,9 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 export var importGtfsToSQLite = async () => {
   //  ----------------------------------------------------
-  // THIS IS SUSPECT AS THE TFI FORMATS HAVE CHANGED
+  // THESE ARE SUSPECT AS THE TFI FORMATS HAVE CHANGED
   //  ----------------------------------------------------
   // await importGtfs(config)
-
-  //  ----------------------------------------------------
-  //  CANNOT USE THIS AS TFI FILE FORMATS ARE NOT STANDARD
-  //  ----------------------------------------------------
   // await exportGtfs(config)
 
   //  Firstly download the most recent zip file of GTFS Static files
@@ -95,7 +92,7 @@ export var importGtfsToSQLite = async () => {
 
 // -------------------------------------------------------
 // Get Transport Agencies
-// Path: localhost:4000/api/gtfs/agencynames/
+// Path: "localhost:4000/api/gtfs/agencynames/"
 // -------------------------------------------------------
 export var getAllAgencyNames = (req, res) => {
   const db = openDb(config)
@@ -120,9 +117,11 @@ export var getAllAgencyNames = (req, res) => {
 
 // -------------------------------------------------------
 // Get All Routes for a single Transport Agency
-// Path: localhost:4000/api/gtfs/routesforsingleagency/
+// Path: localhost:4000/api/gtfs/routesforsingleagency
 // -------------------------------------------------------
 export var getRoutesForSingleAgency = (req, res) => {
+  // console.log(req.query.transportAgencyId)
+
   const db = openDb(config)
 
   if (db !== null) {
@@ -134,6 +133,36 @@ export var getRoutesForSingleAgency = (req, res) => {
       )
 
       res.send(transportRoutes)
+    } catch (e) {
+      console.error(e.message)
+    }
+
+    closeDb(db)
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
+// Get All Shapes for a single Route
+// Path: localhost:4000/api/gtfs/shapesforsingleroute/
+// -------------------------------------------------------
+export var getShapesForSingleRoute = (req, res) => {
+  console.log(req.query.routeId)
+  console.log("Here")
+
+  const db = openDb(config)
+
+  if (db !== null) {
+    try {
+      const db = openDb(config)
+
+      const transportShapes = getShapes(
+        { route_id: req.query.routeId }, // Query filters
+        ["shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence"] // Only return these fields
+      )
+
+      res.send(transportShapes)
     } catch (e) {
       console.error(e.message)
     }
@@ -178,36 +207,36 @@ export var getAllShapes = (req, res) => {
 // Bus Route Shape
 // Path: localhost:4000/api/gtfs/shape/:shapeID
 // -------------------------------------------------------
-export var getShape = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(config.sqlitePath)
+// export var getShape = (req, res) => {
+//   // Open a Database Connection
+//   let db = null
+//   db = openSqlDbConnection(config.sqlitePath)
 
-  let newResults = null
-  let shapeID = req.query.shape
+//   let newResults = null
+//   let shapeID = req.query.shape
 
-  if (db !== null) {
-    try {
-      let sql = `SELECT shape_id, shape_pt_lat, shape_pt_lon, shape_pt_sequence FROM shapes WHERE shape_id = ${shapeID} ORDER BY shape_id, shape_pt_sequence`
-      db.all(sql, [], (err, results) => {
-        if (err) {
-          return console.error(err.message)
-        }
+//   if (db !== null) {
+//     try {
+//       let sql = `SELECT shape_id, shape_pt_lat, shape_pt_lon, shape_pt_sequence FROM shapes WHERE shape_id = ${shapeID} ORDER BY shape_id, shape_pt_sequence`
+//       db.all(sql, [], (err, results) => {
+//         if (err) {
+//           return console.error(err.message)
+//         }
 
-        newResults = consolidateShapeCoordinates(results, shapeID)
+//         newResults = consolidateShapeCoordinates(results, shapeID)
 
-        res.send(newResults)
-      })
+//         res.send(newResults)
+//       })
 
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
-  }
-}
+//       // Close the Database Connection
+//       closeSqlDbConnection(db)
+//     } catch (e) {
+//       console.error(e.message)
+//     }
+//   } else {
+//     console.error("Cannot connect to database")
+//   }
+// }
 
 // -------------------------------------------------------
 // Bus Stops
@@ -326,4 +355,4 @@ const consolidateShapeCoordinates = (results, shapeID) => {
   return newResults
 }
 
-export default getAllShapes
+export default index

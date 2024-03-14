@@ -4,10 +4,11 @@ import {
   importGtfsToSQLite,
   getAllAgencyNames,
   getRoutesForSingleAgency,
+  getShapesForSingleRoute,
   getAllShapes,
   // getShape,
   getAllStops,
-  getAllRoutes,
+  // getAllRoutes,
 } from "../controllers/gtfsTransportController.js"
 
 var gtfsRouter = express.Router()
@@ -25,7 +26,10 @@ gtfsRouter.post("/importStaticGTFSData", importGtfsToSQLite)
 gtfsRouter.get("/agencynames", getAllAgencyNames)
 
 //  GET Transport Routes for one Agency
-gtfsRouter.get("/routesforsingleagency/", getRoutesForSingleAgency)
+gtfsRouter.get("/routesforsingleagency", getRoutesForSingleAgency)
+
+//  GET Shapes for one Route
+gtfsRouter.get("/shapesforsingleroute", getShapesForSingleRoute)
 
 // GET all Bus Route Shapes
 gtfsRouter.get("/shapes", getAllShapes)

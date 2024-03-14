@@ -6,6 +6,7 @@ import BusRoutesMap from "../components/BusRoutesMap"
 import {
   getAllAgencyNames,
   getRoutesForSingleAgencyFrontEnd,
+  getShapesForSingleRouteFrontEnd,
   getAllStops,
   getAllShapes,
   // getAllRoutes,
@@ -37,22 +38,14 @@ const TransportRoutesPage = () => {
   const [transportAgencyId, setTransportAgencyId] = useState()
   const [transportAgencyName, setTransportAgencyName] = useState()
   const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
-  const [busShapesCollection, setBusShapesCollection] = useState([])
+  const [transportShapesCollection, setTransportShapesCollection] = useState([])
   const [busStopsCollection, setBusStopsCollection] = useState([])
-  // const [displayBusRoutesCollection, setDisplayBusRoutesCollection] = useState(
-  //   []
-  // )
   const [isLoading, setIsLoading] = useState(true)
-
-  // const saveToHooks = (array) => {
-  //   setBusRoutesCollection(array)
-  //   // setDisplayBusRoutesCollection(getDisplayData(array[0]))
-  // }
 
   // build agenciesData Url
   const agenciesDataUrl = "http://localhost:4000/api/gtfs/agencynames/"
-  const routesDataUrl =
-    "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId=7778021"
+  const shapesDataUrl =
+    "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId=3904_62393"
 
   useEffect(() => {
     getAllAgencyNames(agenciesDataUrl)
@@ -69,7 +62,10 @@ const TransportRoutesPage = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    if (transportAgencyId >= null) {
+    if (transportAgencyId != null) {
+      const routesDataUrl =
+        "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId=" +
+        transportAgencyId
       getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
         .then((returnedData) => {
           setTransportRoutesCollection(returnedData)
@@ -80,13 +76,29 @@ const TransportRoutesPage = () => {
     }
   }, [transportAgencyId])
 
-  if (transportRoutesCollection.length > 0)
-    console.log(transportRoutesCollection)
+  console.log(transportRoutesCollection.length)
 
-  // // This function does some reduction & reformatting
+  useEffect(() => {
+    setIsLoading(true)
+    if (transportRoutesCollection.length > 0) {
+      let routeId = transportRoutesCollection[6].route_id
+      // let routeId = "4383"
+      const shapesDataUrl =
+        "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId=" + routeId
+      getShapesForSingleRouteFrontEnd(shapesDataUrl, routeId)
+        .then((returnedData) => {
+          setTransportShapesCollection(returnedData)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [transportRoutesCollection])
+
+  // This function does some reduction & reformatting
   // getAllShapes()
   //   .then((returnedData) => {
-  //     setBusShapesCollection(returnedData)
+  //     setTransportShapesCollection(returnedData)
   //   })
   //   .catch((err) => {
   //     console.log(err)
@@ -109,7 +121,7 @@ const TransportRoutesPage = () => {
         <BusRoutesMap
           isLoading={isLoading}
           busAgencyName={transportAgencyName}
-          busShapesCollection={busShapesCollection}
+          busShapesCollection={transportShapesCollection}
           busStopsCollection={busStopsCollection}
           busRoutesCollection={transportRoutesCollection}
           // displayBusRoutesCollection={displayBusRoutesCollection}
