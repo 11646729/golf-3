@@ -63,10 +63,12 @@ export const getRoutesForSingleAgencyFrontEnd = async (
 // -------------------------------------------------------
 export const getShapesForSingleRouteFrontEnd = async (
   url,
-  transportRouteId
+  transportRouteId,
+  transportRoutesCollection
 ) => {
   // console.log(url)
   // console.log(transportRouteId)
+  console.log(transportRoutesCollection)
 
   // Guard clauses
   if (url == null) return
@@ -99,30 +101,6 @@ export const getShapesForSingleRouteFrontEnd = async (
   })
 
   // console.log(resultData.data)
-
-  // Now extract all unique shape_id and sort into ascending order
-  const uniqueShapeIds = getShapeIDs(resultData.data)
-
-  // Now reformat busShapesCollection into a new array
-  const reformattedShapes = reformatShapesData(uniqueShapeIds, resultData.data)
-
-  return reformattedShapes
-}
-
-// -------------------------------------------------------
-// Function to fetch all Shapes data
-// -------------------------------------------------------
-export const getAllShapes = async () => {
-  const resultData = await axios({
-    url: "http://localhost:4000/api/gtfs/shapes/",
-    method: "GET",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-
-  console.log(resultData.data)
 
   // Now extract all unique shape_id and sort into ascending order
   const uniqueShapeIds = getShapeIDs(resultData.data)
@@ -215,54 +193,6 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
 }
 
 // -------------------------------------------------------
-// Function to fetch Position data for a Specific Route
-// -------------------------------------------------------
-export const selectedUniqueRoute = async (
-  url,
-  selectedBusRouteNumber,
-  selected
-) => {
-  // Guard clause
-  if (url == null) return
-  const resultData = await axios({
-    url: { url },
-    data: {
-      routeNumber: selectedBusRouteNumber,
-      routeVisible: selected,
-    },
-    method: "PUT",
-    timeout: 8000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-  return resultData.data
-}
-
-// // -------------------------------------------------------
-// // Function to fetch Shapes data for a specific shapeID
-// // -------------------------------------------------------
-// export const getShape = async (url, shapeID) => {
-//   // Guard clauses
-//   if (url == null) return
-//   if (shapeID == null) return
-
-//   const resultData = await axios({
-//     url: { url },
-//     params: {
-//       shape: shapeID,
-//     },
-//     method: "GET",
-//     timeout: 8000,
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   })
-
-//   return resultData.data
-// }
-
-// -------------------------------------------------------
 // Function to fetch Unique Gtfs Stops data
 // -------------------------------------------------------
 export const getAllStops = async () => {
@@ -276,20 +206,4 @@ export const getAllStops = async () => {
   })
 
   return resultData.data
-}
-
-// -------------------------------------------------------
-// Function to remove Gtfs data fields routeVisible === false
-// -------------------------------------------------------
-export const getDisplayData = (originalArray) => {
-  const displayArray = []
-  let index = 0
-  do {
-    if (originalArray[index].routeVisible === true) {
-      displayArray.push(originalArray[index])
-    }
-    index += 1
-  } while (index < originalArray.length)
-
-  return displayArray
 }

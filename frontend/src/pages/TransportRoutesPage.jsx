@@ -7,10 +7,7 @@ import {
   getAllAgencyNames,
   getRoutesForSingleAgencyFrontEnd,
   getShapesForSingleRouteFrontEnd,
-  getAllStops,
-  getAllShapes,
-  // getAllRoutes,
-  // getDisplayData,
+  // getAllStops,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 
 const BusRoutesContainer = styled.div`
@@ -76,16 +73,17 @@ const TransportRoutesPage = () => {
     }
   }, [transportAgencyId])
 
-  console.log(transportRoutesCollection.length)
-
   useEffect(() => {
     setIsLoading(true)
     if (transportRoutesCollection.length > 0) {
-      let routeId = transportRoutesCollection[6].route_id
-      // let routeId = "4383"
+      let routeId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
       const shapesDataUrl =
         "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId=" + routeId
-      getShapesForSingleRouteFrontEnd(shapesDataUrl, routeId)
+      getShapesForSingleRouteFrontEnd(
+        shapesDataUrl,
+        routeId,
+        transportRoutesCollection
+      )
         .then((returnedData) => {
           setTransportShapesCollection(returnedData)
         })
@@ -94,15 +92,6 @@ const TransportRoutesPage = () => {
         })
     }
   }, [transportRoutesCollection])
-
-  // This function does some reduction & reformatting
-  // getAllShapes()
-  //   .then((returnedData) => {
-  //     setTransportShapesCollection(returnedData)
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
 
   // getAllStops()
   //   .then((returnedData) => {
