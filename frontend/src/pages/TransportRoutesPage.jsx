@@ -1,8 +1,8 @@
 import React, { useState, useEffect, memo } from "react"
 import styled from "styled-components"
 
-// import BusRouteSelectionPanel from "../components/BusRouteSelectionPanel"
-import BusRoutesMap from "../components/BusRoutesMap"
+// import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
+import TransportRoutesMap from "../components/TransportRoutesMap"
 import {
   getAllAgencyNames,
   getRoutesForSingleAgencyFrontEnd,
@@ -10,18 +10,18 @@ import {
   // getAllStops,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 
-const BusRoutesContainer = styled.div`
+const TransportRoutesContainer = styled.div`
   display: flex;
 `
 
-const BusRoutesTableContainer = styled.div`
+const TransportRoutesTableContainer = styled.div`
   flex: 2;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   min-height: 500px;
 `
 
-const BusRoutesMapContainer = styled.div`
+const TransportRoutesMapContainer = styled.div`
   flex: 2;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
@@ -101,20 +101,20 @@ const TransportRoutesPage = () => {
   //   })
 
   return (
-    <BusRoutesContainer>
-      <BusRoutesTableContainer>
-        {/* <BusRouteSelectionPanel busRoutesCollection={busRoutesCollection} /> */}
-      </BusRoutesTableContainer>
-      <BusRoutesMapContainer>
-        <BusRoutesMap
+    <TransportRoutesContainer>
+      <TransportRoutesTableContainer>
+        {/* <TransportRouteSelectionPanel busRoutesCollection={busRoutesCollection} /> */}
+      </TransportRoutesTableContainer>
+      <TransportRoutesMapContainer>
+        <TransportRoutesMap
           isLoading={isLoading}
           busAgencyName={transportAgencyName}
           busShapesCollection={transportShapesCollection}
           busRoutesCollection={transportRoutesCollection}
           busStopsCollection={transportStopsCollection}
         />
-      </BusRoutesMapContainer>
-    </BusRoutesContainer>
+      </TransportRoutesMapContainer>
+    </TransportRoutesContainer>
   )
 }
 

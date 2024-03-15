@@ -11,7 +11,7 @@ import styled from "styled-components"
 
 import Title from "./Title"
 
-const BusMapContainer = styled.div`
+const TransportMapContainer = styled.div`
   font-size: 20px;
   font-weight: 600;
   padding-left: 20px;
@@ -21,7 +21,7 @@ const BusMapContainer = styled.div`
 // -------------------------------------------------------
 // React View component
 // -------------------------------------------------------
-const BusRoutesMap = (props) => {
+const TransportRoutesMap = (props) => {
   const {
     busAgencyName,
     busShapesCollection,
@@ -29,7 +29,7 @@ const BusRoutesMap = (props) => {
     busStopsCollection,
   } = props
 
-  BusRoutesMap.propTypes = {
+  TransportRoutesMap.propTypes = {
     busAgencyName: PropTypes.string,
     busShapesCollection: PropTypes.array,
     busStopsCollection: PropTypes.array,
@@ -106,7 +106,7 @@ const BusRoutesMap = (props) => {
 
   return isLoaded ? (
     <div>
-      <BusMapContainer>
+      <TransportMapContainer>
         <Title>{busAgencyName}</Title>
 
         <div>
@@ -174,9 +174,9 @@ const BusRoutesMap = (props) => {
             ) : null} */}
           </GoogleMap>
         </div>
-      </BusMapContainer>
+      </TransportMapContainer>
     </div>
   ) : null
 }
 
-export default memo(BusRoutesMap)
+export default memo(TransportRoutesMap)
