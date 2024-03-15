@@ -25,8 +25,8 @@ const BusRoutesMap = (props) => {
   const {
     busAgencyName,
     busShapesCollection,
-    busStopsCollection,
     // busRoutesCollection,
+    busStopsCollection,
   } = props
 
   BusRoutesMap.propTypes = {

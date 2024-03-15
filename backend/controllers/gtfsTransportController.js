@@ -13,9 +13,9 @@ import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
 
-import config from "../configHamilton.js"
+// import config from "../configHamilton.js"
 // import config from "../configMetro.js"
-// import config from "../configTransportForIreland.js"
+import config from "../configTransportForIreland.js"
 import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------

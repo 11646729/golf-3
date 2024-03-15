@@ -36,13 +36,15 @@ const TransportRoutesPage = () => {
   const [transportAgencyName, setTransportAgencyName] = useState()
   const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
   const [transportShapesCollection, setTransportShapesCollection] = useState([])
-  const [busStopsCollection, setBusStopsCollection] = useState([])
+  const [transportStopsCollection, setTransportStopsCollection] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   // build agenciesData Url
-  const agenciesDataUrl = "http://localhost:4000/api/gtfs/agencynames/"
-  const shapesDataUrl =
-    "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId=3904_62393"
+  const agenciesDataUrl = "http://localhost:4000/api/gtfs/agencynames"
+  const routesDataBaseUrl =
+    "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId="
+  const shapesDataBaseUrl =
+    "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId="
 
   useEffect(() => {
     getAllAgencyNames(agenciesDataUrl)
@@ -60,9 +62,7 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     setIsLoading(true)
     if (transportAgencyId != null) {
-      const routesDataUrl =
-        "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId=" +
-        transportAgencyId
+      const routesDataUrl = routesDataBaseUrl + transportAgencyId
       getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
         .then((returnedData) => {
           setTransportRoutesCollection(returnedData)
@@ -76,12 +76,11 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     setIsLoading(true)
     if (transportRoutesCollection.length > 0) {
-      let routeId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
-      const shapesDataUrl =
-        "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId=" + routeId
+      let transportRouteId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
+      const shapesDataUrl = shapesDataBaseUrl + transportRouteId
       getShapesForSingleRouteFrontEnd(
         shapesDataUrl,
-        routeId,
+        transportRouteId,
         transportRoutesCollection
       )
         .then((returnedData) => {
@@ -111,9 +110,8 @@ const TransportRoutesPage = () => {
           isLoading={isLoading}
           busAgencyName={transportAgencyName}
           busShapesCollection={transportShapesCollection}
-          busStopsCollection={busStopsCollection}
           busRoutesCollection={transportRoutesCollection}
-          // displayBusRoutesCollection={displayBusRoutesCollection}
+          busStopsCollection={transportStopsCollection}
         />
       </BusRoutesMapContainer>
     </BusRoutesContainer>
