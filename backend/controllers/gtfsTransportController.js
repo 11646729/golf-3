@@ -20,7 +20,7 @@ import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
 
 // -------------------------------------------------------
 // Catalogue Home page
-// Path: localhost:4000/api/gtfs/
+// Path: localhost:4000/api/gtfs
 // -------------------------------------------------------
 export var index = async (req, res) => {
   res.send({ response: "I am alive" }).status(200)
@@ -92,7 +92,7 @@ export var importGtfsToSQLite = async () => {
 
 // -------------------------------------------------------
 // Get Transport Agencies
-// Path: "localhost:4000/api/gtfs/agencynames/"
+// Path: localhost:4000/api/gtfs/agencynames
 // -------------------------------------------------------
 export var getAllAgencyNames = (req, res) => {
   const db = openDb(config)
@@ -120,8 +120,6 @@ export var getAllAgencyNames = (req, res) => {
 // Path: localhost:4000/api/gtfs/routesforsingleagency
 // -------------------------------------------------------
 export var getRoutesForSingleAgency = (req, res) => {
-  // console.log(req.query.transportAgencyId)
-
   const db = openDb(config)
 
   if (db !== null) {
@@ -145,7 +143,7 @@ export var getRoutesForSingleAgency = (req, res) => {
 
 // -------------------------------------------------------
 // Get All Shapes for a single Route
-// Path: localhost:4000/api/gtfs/shapesforsingleroute/
+// Path: localhost:4000/api/gtfs/shapesforsingleroute
 // -------------------------------------------------------
 export var getShapesForSingleRoute = (req, res) => {
   const db = openDb(config)
@@ -172,7 +170,7 @@ export var getShapesForSingleRoute = (req, res) => {
 
 // -------------------------------------------------------
 // Bus Stops
-// Path: localhost:4000/api/gtfs/stops/
+// Path: localhost:4000/api/gtfs/stops
 // -------------------------------------------------------
 export var getAllStops = (req, res) => {
   // Open a Database Connection

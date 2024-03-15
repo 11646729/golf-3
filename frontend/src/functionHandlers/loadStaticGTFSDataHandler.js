@@ -36,9 +36,6 @@ export const getRoutesForSingleAgencyFrontEnd = async (
   url,
   transportAgencyId
 ) => {
-  // console.log(url)
-  // console.log(transportAgencyId)
-
   // Guard clauses
   if (url == null) return
   if (transportAgencyId == null) return
@@ -99,8 +96,6 @@ export const getShapesForSingleRouteFrontEnd = async (
       route_id: transportRouteId,
     },
   })
-
-  // console.log(resultData.data)
 
   // Now extract all unique shape_id and sort into ascending order
   const uniqueShapeIds = getShapeIDs(resultData.data)
