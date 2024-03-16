@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import {
   GoogleMap,
   useJsApiLoader,
-  // Marker,
+  Marker,
   Polyline,
   // InfoWindow,
 } from "@react-google-maps/api"
@@ -138,7 +138,7 @@ const TransportRoutesMap = (props) => {
                   />
                 ))
               : null}
-            {/* {busStopsCollection
+            {busStopsCollection
               ? busStopsCollection.map((busStop) => (
                   <Marker
                     key={busStop.stop_id}
@@ -150,11 +150,11 @@ const TransportRoutesMap = (props) => {
                       url: "http://maps.google.com/mapfiles/ms/icons/blue.png",
                     }}
                     onClick={() => {
-                      handleBusStopClick()
+                      // handleBusStopClick()
                     }}
                   />
                 ))
-              : null} */}
+              : null}
             {/* {busStopSelected ? (
               <InfoWindow
                 position={{

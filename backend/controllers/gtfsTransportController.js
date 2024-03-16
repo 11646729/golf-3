@@ -6,6 +6,7 @@ import {
   getAgencies,
   getRoutes,
   getShapes,
+  getStops,
 } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
@@ -92,9 +93,9 @@ export var importGtfsToSQLite = async () => {
 
 // -------------------------------------------------------
 // Get Transport Agencies
-// Path: localhost:4000/api/gtfs/agencynames
+// Path: localhost:4000/api/gtfs/agencies
 // -------------------------------------------------------
-export var getAllAgencyNames = (req, res) => {
+export var getAllAgencies = (req, res) => {
   const db = openDb(config)
 
   if (db !== null) {
@@ -169,33 +170,61 @@ export var getShapesForSingleRoute = (req, res) => {
 }
 
 // -------------------------------------------------------
-// Bus Stops
-// Path: localhost:4000/api/gtfs/stops
+// Get All Stops for a single Route
+// Path: localhost:4000/api/gtfs/stopsforsingleroute
 // -------------------------------------------------------
-export var getAllStops = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(config.sqlitePath)
+export var getStopsForSingleRoute = (req, res) => {
+  const db = openDb(config)
 
   if (db !== null) {
     try {
-      let sql = `SELECT stop_id, stop_lat, stop_lon FROM stops ORDER BY stop_id`
-      db.all(sql, [], (err, results) => {
-        if (err) {
-          return console.error(err.message)
-        }
+      const db = openDb(config)
 
-        res.send(results)
-      })
+      const transportStops = getStops(
+        { route_id: req.query.routeId }, // Query filters
+        ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
+        [["stop_id", "ASC"]] // Sort by this field and direction
+      )
 
-      // Close the Database Connection
-      closeSqlDbConnection(db)
+      res.send(transportStops)
     } catch (e) {
       console.error(e.message)
     }
+
+    closeDb(db)
   } else {
     console.error("Cannot connect to database")
   }
 }
+
+// -------------------------------------------------------
+// Bus Stops
+// Path: localhost:4000/api/gtfs/stops
+// -------------------------------------------------------
+// export var getAllStops = (req, res) => {
+//   // Open a Database Connection
+//   let db = null
+//   db = openSqlDbConnection(config.sqlitePath)
+
+//   if (db !== null) {
+//     try {
+//       let sql = `SELECT stop_id, stop_lat, stop_lon FROM stops ORDER BY stop_id`
+//       db.all(sql, [], (err, results) => {
+//         if (err) {
+//           return console.error(err.message)
+//         }
+
+//         res.send(results)
+//       })
+
+//       // Close the Database Connection
+//       closeSqlDbConnection(db)
+//     } catch (e) {
+//       console.error(e.message)
+//     }
+//   } else {
+//     console.error("Cannot connect to database")
+//   }
+// }
 
 export default index

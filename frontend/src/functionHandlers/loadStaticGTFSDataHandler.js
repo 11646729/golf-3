@@ -22,9 +22,21 @@ export const loadStaticGTFSDataHandler = async () => {
 // -------------------------------------------------------
 // Function to fetch Transport Agency
 // -------------------------------------------------------
-export const getAllAgencyNames = async (url) => {
+export const getAllAgenciesFrontEnd = async (url) => {
+  // Guard clauses
+  if (url == null) return
+
+  // Ok to headers
+  const params = {}
+  const config = {
+    timeout: 20000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
   return await axios
-    .get(url)
+    .get(url, params, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
@@ -63,13 +75,10 @@ export const getShapesForSingleRouteFrontEnd = async (
   transportRouteId,
   transportRoutesCollection
 ) => {
-  // console.log(url)
-  // console.log(transportRouteId)
-  console.log(transportRoutesCollection)
-
   // Guard clauses
   if (url == null) return
   if (transportRouteId == null) return
+  if (transportRoutesCollection.length === 0) return
 
   // Ok to headers
   const params = { route_id: transportRouteId }
@@ -190,15 +199,38 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
 // -------------------------------------------------------
 // Function to fetch Unique Gtfs Stops data
 // -------------------------------------------------------
-export const getAllStops = async () => {
-  const resultData = await axios({
-    url: "http://localhost:4000/api/gtfs/stops/",
-    method: "GET",
-    timeout: 8000,
+export const getStopsForSingleRouteFrontEnd = async (
+  url,
+  transportRouteId,
+  transportRoutesCollection
+) => {
+  // Guard clauses
+  if (url == null) return
+  if (transportRouteId == null) return
+  if (transportRoutesCollection.length === 0) return
+
+  // Ok to headers
+  const params = {}
+  const config = {
+    timeout: 20000,
     headers: {
       "Content-Type": "application/json",
     },
-  })
+  }
 
-  return resultData.data
+  return await axios
+    .get(url, params, config)
+    .then((response) => response.data)
+    .catch((err) => console.log(err))
+
+  // const resultData = await axios({
+  //   url: "http://localhost:4000/api/gtfs/stops/",
+  //   method: "GET",
+  //   timeout: 8000,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+
+  // return resultData.data
 }

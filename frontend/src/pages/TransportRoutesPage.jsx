@@ -4,10 +4,10 @@ import styled from "styled-components"
 // import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import {
-  getAllAgencyNames,
+  getAllAgenciesFrontEnd,
   getRoutesForSingleAgencyFrontEnd,
   getShapesForSingleRouteFrontEnd,
-  // getAllStops,
+  getStopsForSingleRouteFrontEnd,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 
 const TransportRoutesContainer = styled.div`
@@ -34,20 +34,24 @@ const TransportRoutesMapContainer = styled.div`
 const TransportRoutesPage = () => {
   const [transportAgencyId, setTransportAgencyId] = useState()
   const [transportAgencyName, setTransportAgencyName] = useState()
+  const [transportAgencyCollection, setTransportAgencyCollection] = useState([])
   const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
   const [transportShapesCollection, setTransportShapesCollection] = useState([])
   const [transportStopsCollection, setTransportStopsCollection] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   // build agenciesData Url
-  const agenciesDataUrl = "http://localhost:4000/api/gtfs/agencynames"
+  const transportAgenciesDataUrl =
+    "http://localhost:4000/api/gtfs/transportagencies"
   const routesDataBaseUrl =
     "http://localhost:4000/api/gtfs/routesforsingleagency?transportAgencyId="
   const shapesDataBaseUrl =
     "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId="
+  const stopsDataBaseUrl =
+    "http://localhost:4000/api/gtfs/stopsforsingleroute?routeId="
 
   useEffect(() => {
-    getAllAgencyNames(agenciesDataUrl)
+    getAllAgenciesFrontEnd(transportAgenciesDataUrl)
       .then((returnedData) => {
         setTransportAgencyId(returnedData[0].agency_id)
         setTransportAgencyName(returnedData[0].agency_name)
@@ -92,13 +96,24 @@ const TransportRoutesPage = () => {
     }
   }, [transportRoutesCollection])
 
-  // getAllStops()
-  //   .then((returnedData) => {
-  //     setBusStopsCollection(returnedData)
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
+  useEffect(() => {
+    setIsLoading(true)
+    if (transportRoutesCollection.length > 0) {
+      let transportRouteId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
+      const stopsDataUrl = stopsDataBaseUrl + transportRouteId
+      getStopsForSingleRouteFrontEnd(
+        stopsDataUrl,
+        transportRouteId,
+        transportRoutesCollection
+      )
+        .then((returnedData) => {
+          setTransportStopsCollection(returnedData)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [transportRoutesCollection])
 
   return (
     <TransportRoutesContainer>

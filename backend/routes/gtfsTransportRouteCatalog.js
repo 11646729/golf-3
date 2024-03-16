@@ -2,10 +2,10 @@ import express from "express"
 import {
   index,
   importGtfsToSQLite,
-  getAllAgencyNames,
+  getAllAgencies,
   getRoutesForSingleAgency,
   getShapesForSingleRoute,
-  getAllStops,
+  getStopsForSingleRoute,
 } from "../controllers/gtfsTransportController.js"
 
 var gtfsRouter = express.Router()
@@ -19,16 +19,16 @@ gtfsRouter.get("/", index)
 // POST all GTFS data into the SQL database
 gtfsRouter.post("/importStaticGTFSData", importGtfsToSQLite)
 
-// GET all Transport Route Agencies
-gtfsRouter.get("/agencynames", getAllAgencyNames)
+// GET all Transport Agencies
+gtfsRouter.get("/transportagencies", getAllAgencies)
 
-//  GET Transport Routes for one Agency
+//  GET Transport Routes for one Transport Agency
 gtfsRouter.get("/routesforsingleagency", getRoutesForSingleAgency)
 
-//  GET Shapes for one Route
+//  GET Shapes for one Transport Route
 gtfsRouter.get("/shapesforsingleroute", getShapesForSingleRoute)
 
-// GET all Translink Bus Stops
-gtfsRouter.get("/stops", getAllStops)
+// GET Stops for one Transport Route
+gtfsRouter.get("/stopsforsingleroute", getStopsForSingleRoute)
 
 export default gtfsRouter
