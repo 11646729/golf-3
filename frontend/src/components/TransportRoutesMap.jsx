@@ -147,7 +147,7 @@ const TransportRoutesMap = (props) => {
                       lng: busStop.stop_lon,
                     }}
                     icon={{
-                      url: "http://maps.google.com/mapfiles/ms/icons/blue.png",
+                      url: "https://maps.google.com/mapfiles/ms/icons/blue.png",
                     }}
                     onClick={() => {
                       // handleBusStopClick()

@@ -32,10 +32,11 @@ const TransportRoutesMapContainer = styled.div`
 // React Controller component
 // -------------------------------------------------------
 const TransportRoutesPage = () => {
-  const [transportAgencyId, setTransportAgencyId] = useState()
-  const [transportAgencyName, setTransportAgencyName] = useState()
   const [transportAgencyCollection, setTransportAgencyCollection] = useState([])
+  const [transportAgencyId, setTransportAgencyId] = useState("")
+  const [transportAgencyName, setTransportAgencyName] = useState("")
   const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
+  const [transportRouteId, setTransportRouteId] = useState("")
   const [transportShapesCollection, setTransportShapesCollection] = useState([])
   const [transportStopsCollection, setTransportStopsCollection] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -53,6 +54,7 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
       .then((returnedData) => {
+        setTransportAgencyCollection(returnedData)
         setTransportAgencyId(returnedData[0].agency_id)
         setTransportAgencyName(returnedData[0].agency_name)
 
@@ -65,11 +67,12 @@ const TransportRoutesPage = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    if (transportAgencyId != null) {
+    if (transportAgencyCollection.length > 0) {
       const routesDataUrl = routesDataBaseUrl + transportAgencyId
       getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
         .then((returnedData) => {
           setTransportRoutesCollection(returnedData)
+          setTransportRouteId(returnedData[6].route_id)
         })
         .catch((err) => {
           console.log(err)
@@ -80,7 +83,6 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     setIsLoading(true)
     if (transportRoutesCollection.length > 0) {
-      let transportRouteId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
       const shapesDataUrl = shapesDataBaseUrl + transportRouteId
       getShapesForSingleRouteFrontEnd(
         shapesDataUrl,
@@ -99,7 +101,6 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     setIsLoading(true)
     if (transportRoutesCollection.length > 0) {
-      let transportRouteId = transportRoutesCollection[6].route_id // transportRoutesCollection[0] does not give shapes for a route
       const stopsDataUrl = stopsDataBaseUrl + transportRouteId
       getStopsForSingleRouteFrontEnd(
         stopsDataUrl,
