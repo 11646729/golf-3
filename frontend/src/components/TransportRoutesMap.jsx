@@ -7,33 +7,26 @@ import {
   Polyline,
   // InfoWindow,
 } from "@react-google-maps/api"
-import styled from "styled-components"
+import "../styles/transportroutes.scss"
 
 import Title from "./Title"
-
-const TransportMapContainer = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 20px;
-  padding-top: 30px;
-`
 
 // -------------------------------------------------------
 // React View component
 // -------------------------------------------------------
 const TransportRoutesMap = (props) => {
   const {
-    busAgencyName,
-    busShapesCollection,
-    // busRoutesCollection,
-    busStopsCollection,
+    transportAgencyName,
+    transportShapesCollection,
+    // transportRoutesCollection,
+    transportStopsCollection,
   } = props
 
   TransportRoutesMap.propTypes = {
-    busAgencyName: PropTypes.string,
-    busShapesCollection: PropTypes.array,
-    busStopsCollection: PropTypes.array,
-    // busRoutesCollection: PropTypes.array,
+    transportAgencyName: PropTypes.string,
+    transportShapesCollection: PropTypes.array,
+    transportStopsCollection: PropTypes.array,
+    // transportRoutesCollection: PropTypes.array,
   }
 
   const [map, setMap] = useState(null)
@@ -72,109 +65,118 @@ const TransportRoutesMap = (props) => {
   // Now compute bounds of map to display
   useEffect(() => {
     if (map) {
-      if (busStopsCollection.length > 0) {
+      if (transportStopsCollection.length > 0) {
         const bounds = new window.google.maps.LatLngBounds()
 
-        busStopsCollection.map((busStop) =>
+        transportStopsCollection.map((transportStop) =>
           bounds.extend({
-            lat: busStop.stop_lat,
-            lng: busStop.stop_lon,
+            lat: transportStop.stop_lat,
+            lng: transportStop.stop_lon,
           })
         )
         map.fitBounds(bounds)
       }
     }
-  }, [map, busStopsCollection])
+  }, [map, transportStopsCollection])
 
-  // console.log(busStopsCollection)
-
-  // const handleBusStopClick = (event) => {
+  // const handleTransportStopClick = (event) => {
   //   console.log(event)
-  //   // console.log(busStopSelected)
-  //   // setBusStopSelected(busStop)
+  //   // console.log(transportStopSelected)
+  //   // setTransportStopSelected(transportStop)
   // }
 
-  const handleBusShapeClick = (event) => {
-    console.log(event)
+  // const handleTransportShapeClick = (event) => {
+  //   console.log(event)
+  // }
+
+  // const handleTransportRouteClick = (event) => {
+  //   console.log(event)
+  //   // console.log(transportRouteSelected)
+  //   // setTransportRouteSelected(transportRoute)
+  // }
+
+  const iconPin = {
+    path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
+    fillColor: "#6dbef1",
+    fillOpacity: 0.7,
+    scale: 0.02, // to reduce the size of icons
+    strokeColor: "#1342B4",
+    strokeWeight: 1,
   }
-
-  // const handleBusRouteClick = (event) => {
-  //   console.log(event)
-  //   // console.log(busRouteSelected)
-  //   // setBusRouteSelected(busRoute)
-  // }
 
   return isLoaded ? (
     <div>
-      <TransportMapContainer>
-        <Title>{busAgencyName}</Title>
-
-        <div>
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={mapCenter}
-            zoom={mapZoom}
-            options={{
-              // mapTypeId: "hybrid",
-              disableDefaultUI: true,
-              zoomControl: true,
-            }}
-            onLoad={onLoadHandler}
-            onUnmount={onUnmountHandler}
-          >
-            {busShapesCollection
-              ? busShapesCollection.map((busShape) => (
-                  <Polyline
-                    key={busShape.shapeKey}
-                    path={busShape.shapeCoordinates}
-                    options={{
-                      strokeColor: busShape.defaultColor,
-                      strokeOpacity: "1.0",
-                      strokeWeight: 2,
-                    }}
-                    onClick={() => {
-                      handleBusShapeClick()
-                    }}
-                  />
-                ))
-              : null}
-            {busStopsCollection
-              ? busStopsCollection.map((busStop) => (
-                  <Marker
-                    key={busStop.stop_id}
-                    position={{
-                      lat: busStop.stop_lat,
-                      lng: busStop.stop_lon,
-                    }}
-                    icon={{
-                      url: "https://maps.google.com/mapfiles/ms/icons/blue.png",
-                    }}
-                    onClick={() => {
-                      // handleBusStopClick()
-                    }}
-                  />
-                ))
-              : null}
-            {/* {busStopSelected ? (
+      <div>
+        <Title>{transportAgencyName}</Title>
+      </div>
+      <div classname="transportroutesmapcontainer">
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={mapCenter}
+          zoom={mapZoom}
+          options={{
+            // mapTypeId: "hybrid",
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
+          onLoad={onLoadHandler}
+          onUnmount={onUnmountHandler}
+        >
+          {transportShapesCollection
+            ? transportShapesCollection.map((transportShape) => (
+                <Polyline
+                  key={transportShape.shapeKey}
+                  path={transportShape.shapeCoordinates}
+                  options={{
+                    strokeColor: transportShape.defaultColor,
+                    strokeOpacity: "1.0",
+                    strokeWeight: 2,
+                  }}
+                  onClick={() => {
+                    // handleTransportShapeClick()
+                  }}
+                />
+              ))
+            : null}
+          {transportStopsCollection
+            ? transportStopsCollection.map((transportStop) => (
+                <Marker
+                  key={transportStop.stop_id}
+                  position={{
+                    lat: transportStop.stop_lat,
+                    lng: transportStop.stop_lon,
+                  }}
+                  icon={
+                    // {
+                    iconPin
+                    // url: "https://maps.google.com/mapfiles/ms/icons/blue.png",
+                    // }
+                  }
+                  onClick={() => {
+                    // handleBusStopClick()
+                  }}
+                />
+              ))
+            : null}
+          {/* {transportStopSelected ? (
               <InfoWindow
                 position={{
-                  lat: busStopSelected.stop_lat,
-                  lng: busStopSelected.stop_lon,
+                  lat: transportStopSelected.stop_lat,
+                  lng: transportStopSelected.stop_lon,
                 }}
                 onCloseClick={() => {
-                  setBusStopSelected(null)
+                  setTransportStopSelected(null)
                 }}
               >
                 <div style={classes.divStyle}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {busStopSelected.stop_name}
+                    {transportStopSelected.stop_name}
                   </Typography>
                 </div>
               </InfoWindow>
             ) : null} */}
-          </GoogleMap>
-        </div>
-      </TransportMapContainer>
+        </GoogleMap>
+      </div>
     </div>
   ) : null
 }

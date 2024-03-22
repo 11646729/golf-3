@@ -95,7 +95,7 @@ const CruisesMap = (props) => {
     fillColor: "#6dbef1",
     fillOpacity: 0.7,
     scale: 0.03, // to reduce the size of icons
-    strokeColor: "#2f4024",
+    strokeColor: "#1342B4",
     strokeWeight: 1,
   }
 

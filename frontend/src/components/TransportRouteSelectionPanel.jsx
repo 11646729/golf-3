@@ -23,10 +23,10 @@ const TransportRouteSelectionPanelListContainer = styled.div`
 `
 
 const TransportRouteSelectionPanel = (props) => {
-  const { busRoutesCollection } = props
+  const { transportRoutesCollection } = props
 
   TransportRouteSelectionPanel.propTypes = {
-    busRoutesCollection: PropTypes.array,
+    transportRoutesCollection: PropTypes.array,
   }
 
   return (
@@ -36,7 +36,7 @@ const TransportRouteSelectionPanel = (props) => {
       </TransportRoutesPanelContainer>
       <TransportRouteSelectionPanelListContainer>
         <TransportRouteSelectionList
-          busRoutesCollection={busRoutesCollection}
+          transportRoutesCollection={transportRoutesCollection}
         />
       </TransportRouteSelectionPanelListContainer>
     </div>

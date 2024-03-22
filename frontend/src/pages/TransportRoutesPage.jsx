@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react"
-import styled from "styled-components"
 
-// import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
+import TransportAgenciesTable from "../components/TransportAgenciesTable"
+import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import {
   getAllAgenciesFrontEnd,
@@ -9,24 +9,7 @@ import {
   getShapesForSingleRouteFrontEnd,
   getStopsForSingleRouteFrontEnd,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
-
-const TransportRoutesContainer = styled.div`
-  display: flex;
-`
-
-const TransportRoutesTableContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 500px;
-`
-
-const TransportRoutesMapContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 800px;
-`
+import "../styles/transportroutes.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -65,6 +48,8 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
+  // console.log(transportAgencyCollection.length)
+
   useEffect(() => {
     setIsLoading(true)
     if (transportAgencyCollection.length > 0) {
@@ -82,20 +67,18 @@ const TransportRoutesPage = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    if (transportRoutesCollection.length > 0) {
-      const shapesDataUrl = shapesDataBaseUrl + transportRouteId
-      getShapesForSingleRouteFrontEnd(
-        shapesDataUrl,
-        transportRouteId,
-        transportRoutesCollection
-      )
-        .then((returnedData) => {
-          setTransportShapesCollection(returnedData)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
+    const shapesDataUrl = shapesDataBaseUrl + transportRouteId
+    getShapesForSingleRouteFrontEnd(
+      shapesDataUrl,
+      transportRouteId,
+      transportRoutesCollection
+    )
+      .then((returnedData) => {
+        setTransportShapesCollection(returnedData)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [transportRoutesCollection])
 
   useEffect(() => {
@@ -117,20 +100,29 @@ const TransportRoutesPage = () => {
   }, [transportRoutesCollection])
 
   return (
-    <TransportRoutesContainer>
-      <TransportRoutesTableContainer>
-        {/* <TransportRouteSelectionPanel busRoutesCollection={busRoutesCollection} /> */}
-      </TransportRoutesTableContainer>
-      <TransportRoutesMapContainer>
+    <div className="transportroutescontainer">
+      {/* <div className="transportroutestablescontainer"> */}
+      <div className="transportagenciestablecontainer">
+        <TransportAgenciesTable
+          transportAgencyCollection={transportAgencyCollection}
+        />
+      </div>
+      {/* <div className="transportroutestablecontainer">
+          <TransportRouteSelectionPanel
+            transportRoutesCollection={transportRoutesCollection}
+          />
+        </div> */}
+      {/* </div> */}
+      <div className="transportroutesmapcontainer">
         <TransportRoutesMap
           isLoading={isLoading}
-          busAgencyName={transportAgencyName}
-          busShapesCollection={transportShapesCollection}
-          busRoutesCollection={transportRoutesCollection}
-          busStopsCollection={transportStopsCollection}
+          transportAgencyName={transportAgencyName}
+          transportShapesCollection={transportShapesCollection}
+          transportRoutesCollection={transportRoutesCollection}
+          transportStopsCollection={transportStopsCollection}
         />
-      </TransportRoutesMapContainer>
-    </TransportRoutesContainer>
+      </div>
+    </div>
   )
 }
 

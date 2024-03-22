@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
 
-import BandListItem from "./BandListItem"
+// import BandListItem from "./BandListItem"
 
 const RouteSelectionListContainer = styled.div`
   width: "100%";
@@ -10,25 +10,27 @@ const RouteSelectionListContainer = styled.div`
 `
 
 const RouteSelectionList = (props) => {
-  const { busRoutesCollection } = props
+  const { transportRoutesCollection } = props
 
   RouteSelectionList.propTypes = {
-    busRoutesCollection: PropTypes.array,
+    transportRoutesCollection: PropTypes.array,
   }
+
+  // console.log(transportRoutesCollection)
 
   return (
     <RouteSelectionListContainer>
-      {busRoutesCollection
-        ? busRoutesCollection.map((busRoute) => (
+      {/* {transportRoutesCollection
+        ? transportRoutesCollection.map((transportRoute) => (
             <BandListItem
-              key={busRoute.routeId}
-              routeColor={busRoute.routeColor}
-              routeNumber={busRoute.routeShortName}
-              routeName={busRoute.routeLongName}
-              routeVia={busRoute.routeLongName}
+              key={transportRoute.routeId}
+              routeColor={transportRoute.routeColor}
+              routeNumber={transportRoute.routeShortName}
+              routeName={transportRoute.routeLongName}
+              routeVia={transportRoute.routeLongName}
             />
           ))
-        : null}
+        : null} */}
     </RouteSelectionListContainer>
   )
 }
