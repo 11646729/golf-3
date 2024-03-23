@@ -48,7 +48,9 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
-  // console.log(transportAgencyCollection.length)
+  if (transportAgencyCollection.length > 0) {
+    console.log(transportAgencyCollection)
+  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -101,18 +103,20 @@ const TransportRoutesPage = () => {
 
   return (
     <div className="transportroutescontainer">
-      {/* <div className="transportroutestablescontainer"> */}
-      <div className="transportagenciestablecontainer">
-        <TransportAgenciesTable
-          transportAgencyCollection={transportAgencyCollection}
-        />
+      <div className="transportroutestablescontainer">
+        <div className="transportroutestables2container">
+          <div className="transportagenciestablecontainer">
+            <TransportAgenciesTable
+              transportAgencyCollection={transportAgencyCollection}
+            />
+          </div>
+          <div className="transportroutesroutescontainer">
+            <TransportRouteSelectionPanel
+              transportRoutesCollection={transportRoutesCollection}
+            />
+          </div>
+        </div>
       </div>
-      {/* <div className="transportroutestablecontainer">
-          <TransportRouteSelectionPanel
-            transportRoutesCollection={transportRoutesCollection}
-          />
-        </div> */}
-      {/* </div> */}
       <div className="transportroutesmapcontainer">
         <TransportRoutesMap
           isLoading={isLoading}

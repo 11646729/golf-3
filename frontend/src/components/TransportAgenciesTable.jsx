@@ -48,7 +48,7 @@ const TransportAgenciesTable = (props) => {
       </div>
       <TransportAgenciesTableStyle>
         <Box>
-          <List>
+          <List dense>
             {transportAgencyCollection.map((transportAgency) => (
               <ListItemButton
                 key={transportAgency.agency_id}

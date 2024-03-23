@@ -1,9 +1,29 @@
 .transportroutescontainer {
   display: flex;
 
-  // .transportroutestablescontainer {
-  //   display: flex;
-  // }
+  .transportroutestablescontainer {
+    flex: 2;
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 20px;
+    padding-top: 30px;
+    -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    min-height: 500px;
+
+    .transportroutestables2container {
+      display: flex;
+      flex-direction: column;
+
+      .transportroutesagenciescontained {
+        flex: 2;
+      }
+
+      .transportroutesroutescontainer {
+        flex: 2;
+      }
+    }
+  }
 
   .transportroutesmapcontainer {
     flex: 2;
@@ -15,15 +35,4 @@
     box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
     min-height: 800px;
   }
-}
-
-.transportagenciestablecontainer {
-  flex: 2;
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 20px;
-  padding-top: 30px;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 500px;
 }

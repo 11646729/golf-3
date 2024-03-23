@@ -109,7 +109,7 @@ const TransportRoutesMap = (props) => {
       <div>
         <Title>{transportAgencyName}</Title>
       </div>
-      <div classname="transportroutesmapcontainer">
+      <div className="transportroutesmapcontainer">
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={mapCenter}
