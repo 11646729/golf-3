@@ -1,8 +1,9 @@
 import React, { useState, useEffect, memo } from "react"
-
+import axios from "axios"
 import TransportAgenciesTable from "../components/TransportAgenciesTable"
 import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
 import TransportRoutesMap from "../components/TransportRoutesMap"
+import { Autocomplete, TextField } from "@mui/material"
 import {
   getAllAgenciesFrontEnd,
   getRoutesForSingleAgencyFrontEnd,
@@ -15,7 +16,8 @@ import "../styles/transportroutes.scss"
 // React Controller component
 // -------------------------------------------------------
 const TransportRoutesPage = () => {
-  const [transportAgencyCollection, setTransportAgencyCollection] = useState([])
+  const [transportAgencyArray, setTransportAgencyArray] = useState([])
+  const [value, setValue] = useState("")
   const [transportAgencyId, setTransportAgencyId] = useState("")
   const [transportAgencyName, setTransportAgencyName] = useState("")
   const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
@@ -36,11 +38,18 @@ const TransportRoutesPage = () => {
 
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
-      .then((returnedData) => {
-        setTransportAgencyCollection(returnedData)
-        setTransportAgencyId(returnedData[0].agency_id)
-        setTransportAgencyName(returnedData[0].agency_name)
+      .then((data) => {
+        data.forEach(function (data) {
+          data["id"] = data["agency_id"]
+          data["label"] = data["agency_name"]
+          delete data["agency_id"]
+          delete data["agency_name"]
+        })
 
+        setTransportAgencyArray(data)
+        setTransportAgencyId(data[0].id)
+        setTransportAgencyName(data[0].label)
+        setValue(data[0].id)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -48,13 +57,13 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
-  if (transportAgencyCollection.length > 0) {
-    console.log(transportAgencyCollection)
-  }
+  // if (transportAgencyArray.length > 0) {
+  //   console.log(transportAgencyArray)
+  // }
 
   useEffect(() => {
     setIsLoading(true)
-    if (transportAgencyCollection.length > 0) {
+    if (transportAgencyArray.length > 0) {
       const routesDataUrl = routesDataBaseUrl + transportAgencyId
       getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
         .then((returnedData) => {
@@ -101,19 +110,34 @@ const TransportRoutesPage = () => {
     }
   }, [transportRoutesCollection])
 
+  console.log(value.id)
+
   return (
     <div className="transportroutescontainer">
       <div className="transportroutestablescontainer">
         <div className="transportroutestables2container">
           <div className="transportagenciestablecontainer">
-            <TransportAgenciesTable
-              transportAgencyCollection={transportAgencyCollection}
+            <Autocomplete
+              // onChange={(_, agency_id) =>
+              //   getRoutesForSingleAgencyFrontEnd(agency_id)
+              // }
+              disablePortal
+              onChange={(event, newValue) => {
+                setValue(newValue)
+              }}
+              options={transportAgencyArray}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Agency" />}
+            />
+
+            {/* <TransportAgenciesTable
+              transportAgencyArray={transportAgencyArray}
             />
           </div>
           <div className="transportroutesroutescontainer">
             <TransportRouteSelectionPanel
               transportRoutesCollection={transportRoutesCollection}
-            />
+            /> */}
           </div>
         </div>
       </div>
