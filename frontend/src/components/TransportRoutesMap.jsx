@@ -18,7 +18,7 @@ const TransportRoutesMap = (props) => {
   const {
     transportAgencyName,
     transportShapesCollection,
-    // transportRoutesCollection,
+    // transportRoutesArray,
     transportStopsCollection,
   } = props
 
@@ -26,7 +26,7 @@ const TransportRoutesMap = (props) => {
     transportAgencyName: PropTypes.string,
     transportShapesCollection: PropTypes.array,
     transportStopsCollection: PropTypes.array,
-    // transportRoutesCollection: PropTypes.array,
+    // transportRoutesArray: PropTypes.array,
   }
 
   const [map, setMap] = useState(null)

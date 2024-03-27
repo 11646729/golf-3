@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo } from "react"
-import axios from "axios"
 import TransportAgenciesTable from "../components/TransportAgenciesTable"
 import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
 import TransportRoutesMap from "../components/TransportRoutesMap"
@@ -17,10 +16,9 @@ import "../styles/transportroutes.scss"
 // -------------------------------------------------------
 const TransportRoutesPage = () => {
   const [transportAgencyArray, setTransportAgencyArray] = useState([])
-  const [value, setValue] = useState("")
   const [transportAgencyId, setTransportAgencyId] = useState("")
   const [transportAgencyName, setTransportAgencyName] = useState("")
-  const [transportRoutesCollection, setTransportRoutesCollection] = useState([])
+  const [transportRoutesArray, setTransportRoutesArray] = useState([])
   const [transportRouteId, setTransportRouteId] = useState("")
   const [transportShapesCollection, setTransportShapesCollection] = useState([])
   const [transportStopsCollection, setTransportStopsCollection] = useState([])
@@ -39,17 +37,17 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
       .then((data) => {
-        data.forEach(function (data) {
-          data["id"] = data["agency_id"]
+        data.forEach((data) => {
+          data["agencyid"] = data["agency_id"]
           data["label"] = data["agency_name"]
           delete data["agency_id"]
           delete data["agency_name"]
         })
 
         setTransportAgencyArray(data)
-        setTransportAgencyId(data[0].id)
+        setTransportAgencyId(data[0].agencyid)
         setTransportAgencyName(data[0].label)
-        setValue(data[0].id)
+
         setIsLoading(false)
       })
       .catch((err) => {
@@ -57,18 +55,25 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
-  // if (transportAgencyArray.length > 0) {
-  //   console.log(transportAgencyArray)
-  // }
-
   useEffect(() => {
     setIsLoading(true)
     if (transportAgencyArray.length > 0) {
       const routesDataUrl = routesDataBaseUrl + transportAgencyId
       getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
-        .then((returnedData) => {
-          setTransportRoutesCollection(returnedData)
-          setTransportRouteId(returnedData[6].route_id)
+        .then((data) => {
+          data.forEach((data) => {
+            data["routeid"] = data["route_id"]
+            data["agencyid"] = data["agency_id"]
+            data["label"] = data["route_short_name"]
+            data["routelongname"] = data["route_long_name"]
+            delete data["route_id"]
+            delete data["agency_id"]
+            delete data["route_short_name"]
+            delete data["route_long_name"]
+          })
+
+          setTransportRoutesArray(data)
+          // setTransportRouteId(returnedData[6].route_id)
         })
         .catch((err) => {
           console.log(err)
@@ -82,7 +87,7 @@ const TransportRoutesPage = () => {
     getShapesForSingleRouteFrontEnd(
       shapesDataUrl,
       transportRouteId,
-      transportRoutesCollection
+      transportRoutesArray
     )
       .then((returnedData) => {
         setTransportShapesCollection(returnedData)
@@ -90,16 +95,16 @@ const TransportRoutesPage = () => {
       .catch((err) => {
         console.log(err)
       })
-  }, [transportRoutesCollection])
+  }, [transportRoutesArray])
 
   useEffect(() => {
     setIsLoading(true)
-    if (transportRoutesCollection.length > 0) {
+    if (transportRoutesArray.length > 0) {
       const stopsDataUrl = stopsDataBaseUrl + transportRouteId
       getStopsForSingleRouteFrontEnd(
         stopsDataUrl,
         transportRouteId,
-        transportRoutesCollection
+        transportRoutesArray
       )
         .then((returnedData) => {
           setTransportStopsCollection(returnedData)
@@ -108,9 +113,10 @@ const TransportRoutesPage = () => {
           console.log(err)
         })
     }
-  }, [transportRoutesCollection])
+  }, [transportRoutesArray])
 
-  console.log(value.id)
+  console.log(transportAgencyId)
+  console.log(transportRoutesArray)
 
   return (
     <div className="transportroutescontainer">
@@ -118,16 +124,26 @@ const TransportRoutesPage = () => {
         <div className="transportroutestables2container">
           <div className="transportagenciestablecontainer">
             <Autocomplete
-              // onChange={(_, agency_id) =>
-              //   getRoutesForSingleAgencyFrontEnd(agency_id)
-              // }
               disablePortal
               onChange={(event, newValue) => {
-                setValue(newValue)
+                setTransportAgencyId(newValue.agencyid)
+                // getRoutesForSingleAgencyFrontEnd(transportAgencyId)
               }}
               options={transportAgencyArray}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Agency" />}
+            />
+
+            <Autocomplete
+              disabled={!transportAgencyId}
+              onChange={(event, newValue) => {
+                console.log(transportRoutesArray[0].routeid)
+                // setTransportAgencyId(newValue.id)
+                // getRoutesForSingleAgencyFrontEnd(transportAgencyId)
+              }}
+              options={transportRoutesArray}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Routes" />}
             />
 
             {/* <TransportAgenciesTable
@@ -136,7 +152,7 @@ const TransportRoutesPage = () => {
           </div>
           <div className="transportroutesroutescontainer">
             <TransportRouteSelectionPanel
-              transportRoutesCollection={transportRoutesCollection}
+              transportRoutesArray={transportRoutesArray}
             /> */}
           </div>
         </div>
@@ -146,7 +162,7 @@ const TransportRoutesPage = () => {
           isLoading={isLoading}
           transportAgencyName={transportAgencyName}
           transportShapesCollection={transportShapesCollection}
-          transportRoutesCollection={transportRoutesCollection}
+          transportRoutesArray={transportRoutesArray}
           transportStopsCollection={transportStopsCollection}
         />
       </div>

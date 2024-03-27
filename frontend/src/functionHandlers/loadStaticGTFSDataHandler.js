@@ -73,12 +73,12 @@ export const getRoutesForSingleAgencyFrontEnd = async (
 export const getShapesForSingleRouteFrontEnd = async (
   url,
   transportRouteId,
-  transportRoutesCollection
+  transportRoutesArray
 ) => {
   // Guard clauses
   if (url == null) return
   if (transportRouteId == null) return
-  if (transportRoutesCollection.length === 0) return
+  if (transportRoutesArray.length === 0) return
 
   // Ok to headers
   const params = { route_id: transportRouteId }
@@ -202,12 +202,12 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
 export const getStopsForSingleRouteFrontEnd = async (
   url,
   transportRouteId,
-  transportRoutesCollection
+  transportRoutesArray
 ) => {
   // Guard clauses
   if (url == null) return
   if (transportRouteId == null) return
-  if (transportRoutesCollection.length === 0) return
+  if (transportRoutesArray.length === 0) return
 
   // Ok to headers
   const params = {}
