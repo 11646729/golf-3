@@ -241,19 +241,11 @@ export const getStopsForSingleRouteFrontEnd = async (
     },
   }
 
+  // ------------------
+  // ORIGINAL CODE
+  // ------------------
   return await axios
     .get(url, params, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
-
-  // const resultData = await axios({
-  //   url: "http://localhost:4000/api/gtfs/stops/",
-  //   method: "GET",
-  //   timeout: 8000,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // })
-
-  // return resultData.data
 }

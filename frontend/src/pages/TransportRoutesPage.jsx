@@ -17,9 +17,8 @@ import "../styles/transportroutes.scss"
 const TransportRoutesPage = () => {
   const [transportAgencyArray, setTransportAgencyArray] = useState([])
   const [transportAgencyId, setTransportAgencyId] = useState("")
-  const [transportAgencyName, setTransportAgencyName] = useState("")
+  // const [transportAgencyName, setTransportAgencyName] = useState("")
   const [transportRoutesArray, setTransportRoutesArray] = useState([])
-  const [transportRouteId, setTransportRouteId] = useState("")
   const [transportShapesArray, setTransportShapesArray] = useState([])
   const [transportStopsArray, setTransportStopsArray] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -37,49 +36,13 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
       .then((data) => {
-        // console.log(data)
         setTransportAgencyArray(data)
-
         setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
       })
   }, [])
-
-  useEffect(() => {
-    setIsLoading(true)
-    const shapesDataUrl = shapesDataBaseUrl + transportRouteId
-    getShapesForSingleRouteFrontEnd(
-      shapesDataUrl,
-      transportRouteId,
-      transportRoutesArray
-    )
-      .then((returnedData) => {
-        setTransportShapesArray(returnedData)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [transportRoutesArray])
-
-  useEffect(() => {
-    setIsLoading(true)
-    if (transportRoutesArray.length > 0) {
-      const stopsDataUrl = stopsDataBaseUrl + transportRouteId
-      getStopsForSingleRouteFrontEnd(
-        stopsDataUrl,
-        transportRouteId,
-        transportRoutesArray
-      )
-        .then((returnedData) => {
-          setTransportStopsArray(returnedData)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }, [transportRoutesArray])
 
   return (
     <div className="transportroutescontainer">
@@ -108,15 +71,21 @@ const TransportRoutesPage = () => {
             <Autocomplete
               disabled={!transportAgencyId}
               onChange={(event, newValue) => {
-                console.log(transportRoutesArray[0].routeid)
-
-                const shapesDataUrl = shapesDataBaseUrl + transportRouteId
+                const shapesDataUrl = shapesDataBaseUrl + newValue.routeid
                 getShapesForSingleRouteFrontEnd(
                   shapesDataUrl,
-                  transportRouteId,
+                  newValue.routeid,
                   transportRoutesArray
                 ).then((returnedData) => {
                   setTransportShapesArray(returnedData)
+                })
+                const stopsDataUrl = stopsDataBaseUrl + newValue.routeid
+                getStopsForSingleRouteFrontEnd(
+                  stopsDataUrl,
+                  newValue.routeid,
+                  transportRoutesArray
+                ).then((returnedData) => {
+                  setTransportStopsArray(returnedData)
                 })
               }}
               options={transportRoutesArray}
