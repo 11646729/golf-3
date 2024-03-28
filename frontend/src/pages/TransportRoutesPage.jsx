@@ -37,16 +37,8 @@ const TransportRoutesPage = () => {
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
       .then((data) => {
-        data.forEach((data) => {
-          data["agencyid"] = data["agency_id"]
-          data["label"] = data["agency_name"]
-          delete data["agency_id"]
-          delete data["agency_name"]
-        })
-
+        // console.log(data)
         setTransportAgencyArray(data)
-        setTransportAgencyId(data[0].agencyid)
-        setTransportAgencyName(data[0].label)
 
         setIsLoading(false)
       })
@@ -54,32 +46,6 @@ const TransportRoutesPage = () => {
         console.log(err)
       })
   }, [])
-
-  useEffect(() => {
-    setIsLoading(true)
-    if (transportAgencyArray.length > 0) {
-      const routesDataUrl = routesDataBaseUrl + transportAgencyId
-      getRoutesForSingleAgencyFrontEnd(routesDataUrl, transportAgencyId)
-        .then((data) => {
-          data.forEach((data) => {
-            data["routeid"] = data["route_id"]
-            data["agencyid"] = data["agency_id"]
-            data["label"] = data["route_short_name"]
-            data["routelongname"] = data["route_long_name"]
-            delete data["route_id"]
-            delete data["agency_id"]
-            delete data["route_short_name"]
-            delete data["route_long_name"]
-          })
-
-          setTransportRoutesArray(data)
-          // setTransportRouteId(returnedData[6].route_id)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }, [transportAgencyId])
 
   useEffect(() => {
     setIsLoading(true)
@@ -115,8 +81,8 @@ const TransportRoutesPage = () => {
     }
   }, [transportRoutesArray])
 
-  console.log(transportAgencyId)
-  console.log(transportRoutesArray)
+  // console.log(transportAgencyId)
+  // console.log(transportRoutesArray)
 
   return (
     <div className="transportroutescontainer">
@@ -127,10 +93,18 @@ const TransportRoutesPage = () => {
               disablePortal
               onChange={(event, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
-                // getRoutesForSingleAgencyFrontEnd(transportAgencyId)
+                setTransportAgencyName(newValue.label)
+
+                const routesDataUrl = routesDataBaseUrl + newValue.agencyid
+                getRoutesForSingleAgencyFrontEnd(
+                  routesDataUrl,
+                  transportAgencyId
+                ).then((returnedData) => {
+                  setTransportRoutesArray(returnedData)
+                })
               }}
               options={transportAgencyArray}
-              sx={{ width: 300 }}
+              sx={{ width: 300, color: "white" }}
               renderInput={(params) => <TextField {...params} label="Agency" />}
             />
 

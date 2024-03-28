@@ -35,10 +35,19 @@ export const getAllAgenciesFrontEnd = async (url) => {
     },
   }
 
-  return await axios
-    .get(url, params, config)
-    .then((response) => response.data)
-    .catch((err) => console.log(err))
+  const responseData = await axios.get(url, params, config)
+
+  return responseData.data.map(function (row) {
+    return { agencyid: row.agency_id, label: row.agency_name }
+  })
+
+  // ------------------
+  // ORIGINAL CODE
+  // ------------------
+  // return await axios
+  //   .get(url, params, config)
+  //   .then((response) => response.data)
+  //   .catch((err) => console.log(err))
 }
 
 // -------------------------------------------------------
@@ -61,10 +70,24 @@ export const getRoutesForSingleAgencyFrontEnd = async (
     },
   }
 
-  return await axios
-    .get(url, params, config)
-    .then((response) => response.data)
-    .catch((err) => console.log(err))
+  const responseData = await axios.get(url, params, config)
+
+  return responseData.data.map(function (row) {
+    return {
+      agencyid: row.agency_id,
+      routeid: row.route_id,
+      label: row.route_short_name,
+      // label: row.route_long_name,
+    }
+  })
+
+  // ------------------
+  // ORIGINAL CODE
+  // ------------------
+  // return await axios
+  //   .get(url, params, config)
+  //   .then((response) => response.data)
+  //   .catch((err) => console.log(err))
 }
 
 // -------------------------------------------------------
@@ -81,13 +104,13 @@ export const getShapesForSingleRouteFrontEnd = async (
   if (transportRoutesArray.length === 0) return
 
   // Ok to headers
-  const params = { route_id: transportRouteId }
-  const config = {
-    timeout: 20000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
+  // const params = { route_id: transportRouteId }
+  // const config = {
+  //   timeout: 20000,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // }
 
   // return await axios
   //   .get(url, params, config)
