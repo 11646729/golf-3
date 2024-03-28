@@ -1,6 +1,4 @@
 import React, { useState, useEffect, memo } from "react"
-import TransportAgenciesTable from "../components/TransportAgenciesTable"
-import TransportRouteSelectionPanel from "../components/TransportRouteSelectionPanel"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import { Autocomplete, TextField } from "@mui/material"
 import {
@@ -92,15 +90,6 @@ const TransportRoutesPage = () => {
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Routes" />}
             />
-
-            {/* <TransportAgenciesTable
-              transportAgencyArray={transportAgencyArray}
-            />
-          </div>
-          <div className="transportroutesroutescontainer">
-            <TransportRouteSelectionPanel
-              transportRoutesArray={transportRoutesArray}
-            /> */}
           </div>
         </div>
       </div>
