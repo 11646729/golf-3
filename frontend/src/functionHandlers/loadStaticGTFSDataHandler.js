@@ -132,7 +132,7 @@ export const getShapesForSingleRouteFrontEnd = async (
   // Now extract all unique shape_id and sort into ascending order
   const uniqueShapeIds = getShapeIDs(resultData.data)
 
-  // Now reformat busShapesCollection into a new array
+  // Now reformat busShapes into a new array
   const reformattedShapes = reformatShapesData(uniqueShapeIds, resultData.data)
 
   return reformattedShapes
@@ -141,10 +141,10 @@ export const getShapesForSingleRouteFrontEnd = async (
 // -------------------------------------------------------
 // Function to fetch all shape_ids
 // -------------------------------------------------------
-const getShapeIDs = (busShapesCollection) => {
+const getShapeIDs = (busShapesArray) => {
   // Now extract all unique shape_ids
   const uniqueShapeIds = [
-    ...new Set(busShapesCollection.map((item) => item.shape_id)),
+    ...new Set(busShapesArray.map((item) => item.shape_id)),
   ]
 
   // And sort into ascending order
@@ -156,7 +156,7 @@ const getShapeIDs = (busShapesCollection) => {
 // -------------------------------------------------------
 // Function to reformat coordinates into a new array
 // -------------------------------------------------------
-const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
+const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
   const modifiedShapeArray = []
 
   for (let k = 0; k < uniqueShapeIDs.length; k += 1) {
@@ -164,9 +164,9 @@ const reformatShapesData = (uniqueShapeIDs, busShapesCollection) => {
     const finalArray = []
 
     // Select all busShape objects with the same shape_id & store in tempArray
-    for (let i = 0; i < busShapesCollection.length; i += 1) {
-      if (busShapesCollection[i].shape_id === uniqueShapeIDs[k]) {
-        tempArray.push(busShapesCollection[i])
+    for (let i = 0; i < busShapesArray.length; i += 1) {
+      if (busShapesArray[i].shape_id === uniqueShapeIDs[k]) {
+        tempArray.push(busShapesArray[i])
       }
     }
 

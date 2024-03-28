@@ -20,8 +20,8 @@ const TransportRoutesPage = () => {
   const [transportAgencyName, setTransportAgencyName] = useState("")
   const [transportRoutesArray, setTransportRoutesArray] = useState([])
   const [transportRouteId, setTransportRouteId] = useState("")
-  const [transportShapesCollection, setTransportShapesCollection] = useState([])
-  const [transportStopsCollection, setTransportStopsCollection] = useState([])
+  const [transportShapesArray, setTransportShapesArray] = useState([])
+  const [transportStopsArray, setTransportStopsArray] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   // build agenciesData Url
@@ -56,7 +56,7 @@ const TransportRoutesPage = () => {
       transportRoutesArray
     )
       .then((returnedData) => {
-        setTransportShapesCollection(returnedData)
+        setTransportShapesArray(returnedData)
       })
       .catch((err) => {
         console.log(err)
@@ -73,16 +73,13 @@ const TransportRoutesPage = () => {
         transportRoutesArray
       )
         .then((returnedData) => {
-          setTransportStopsCollection(returnedData)
+          setTransportStopsArray(returnedData)
         })
         .catch((err) => {
           console.log(err)
         })
     }
   }, [transportRoutesArray])
-
-  // console.log(transportAgencyId)
-  // console.log(transportRoutesArray)
 
   return (
     <div className="transportroutescontainer">
@@ -93,7 +90,7 @@ const TransportRoutesPage = () => {
               disablePortal
               onChange={(event, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
-                setTransportAgencyName(newValue.label)
+                // setTransportAgencyName(newValue.label)
 
                 const routesDataUrl = routesDataBaseUrl + newValue.agencyid
                 getRoutesForSingleAgencyFrontEnd(
@@ -112,8 +109,15 @@ const TransportRoutesPage = () => {
               disabled={!transportAgencyId}
               onChange={(event, newValue) => {
                 console.log(transportRoutesArray[0].routeid)
-                // setTransportAgencyId(newValue.id)
-                // getRoutesForSingleAgencyFrontEnd(transportAgencyId)
+
+                const shapesDataUrl = shapesDataBaseUrl + transportRouteId
+                getShapesForSingleRouteFrontEnd(
+                  shapesDataUrl,
+                  transportRouteId,
+                  transportRoutesArray
+                ).then((returnedData) => {
+                  setTransportShapesArray(returnedData)
+                })
               }}
               options={transportRoutesArray}
               sx={{ width: 300 }}
@@ -135,9 +139,9 @@ const TransportRoutesPage = () => {
         <TransportRoutesMap
           isLoading={isLoading}
           transportAgencyName={transportAgencyName}
-          transportShapesCollection={transportShapesCollection}
           transportRoutesArray={transportRoutesArray}
-          transportStopsCollection={transportStopsCollection}
+          transportShapesArray={transportShapesArray}
+          transportStopsArray={transportStopsArray}
         />
       </div>
     </div>

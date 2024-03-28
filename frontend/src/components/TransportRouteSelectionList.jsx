@@ -10,18 +10,18 @@ const RouteSelectionListContainer = styled.div`
 `
 
 const RouteSelectionList = (props) => {
-  const { transportRoutesCollection } = props
+  const { transportRoutesArray } = props
 
   RouteSelectionList.propTypes = {
-    transportRoutesCollection: PropTypes.array,
+    transportRoutesArray: PropTypes.array,
   }
 
-  // console.log(transportRoutesCollection)
+  // console.log(transportRoutesArray)
 
   return (
     <RouteSelectionListContainer>
-      {/* {transportRoutesCollection
-        ? transportRoutesCollection.map((transportRoute) => (
+      {/* {transportRoutesArray
+        ? transportRoutesArray.map((transportRoute) => (
             <BandListItem
               key={transportRoute.routeId}
               routeColor={transportRoute.routeColor}

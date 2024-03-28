@@ -17,16 +17,16 @@ import Title from "./Title"
 const TransportRoutesMap = (props) => {
   const {
     transportAgencyName,
-    transportShapesCollection,
-    // transportRoutesArray,
-    transportStopsCollection,
+    transportRoutesArray,
+    transportShapesArray,
+    transportStopsArray,
   } = props
 
   TransportRoutesMap.propTypes = {
     transportAgencyName: PropTypes.string,
-    transportShapesCollection: PropTypes.array,
-    transportStopsCollection: PropTypes.array,
-    // transportRoutesArray: PropTypes.array,
+    transportRoutesArray: PropTypes.array,
+    transportShapesArray: PropTypes.array,
+    transportStopsArray: PropTypes.array,
   }
 
   const [map, setMap] = useState(null)
@@ -65,10 +65,10 @@ const TransportRoutesMap = (props) => {
   // Now compute bounds of map to display
   useEffect(() => {
     if (map) {
-      if (transportStopsCollection.length > 0) {
+      if (transportStopsArray.length > 0) {
         const bounds = new window.google.maps.LatLngBounds()
 
-        transportStopsCollection.map((transportStop) =>
+        transportStopsArray.map((transportStop) =>
           bounds.extend({
             lat: transportStop.stop_lat,
             lng: transportStop.stop_lon,
@@ -77,7 +77,7 @@ const TransportRoutesMap = (props) => {
         map.fitBounds(bounds)
       }
     }
-  }, [map, transportStopsCollection])
+  }, [map, transportStopsArray])
 
   // const handleTransportStopClick = (event) => {
   //   console.log(event)
@@ -122,8 +122,8 @@ const TransportRoutesMap = (props) => {
           onLoad={onLoadHandler}
           onUnmount={onUnmountHandler}
         >
-          {transportShapesCollection
-            ? transportShapesCollection.map((transportShape) => (
+          {transportShapesArray
+            ? transportShapesArray.map((transportShape) => (
                 <Polyline
                   key={transportShape.shapeKey}
                   path={transportShape.shapeCoordinates}
@@ -138,8 +138,8 @@ const TransportRoutesMap = (props) => {
                 />
               ))
             : null}
-          {transportStopsCollection
-            ? transportStopsCollection.map((transportStop) => (
+          {transportStopsArray
+            ? transportStopsArray.map((transportStop) => (
                 <Marker
                   key={transportStop.stop_id}
                   position={{

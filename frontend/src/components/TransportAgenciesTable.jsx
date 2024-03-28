@@ -28,10 +28,10 @@ const TransportAgenciesTableStyle = styled.div`
 const TransportAgenciesTable = (props) => {
   const [selectedIndex, setSelectedIndex] = React.useState(1)
 
-  const { transportAgencyCollection } = props
+  const { transportAgencyArray } = props
 
   TransportAgenciesTable.propTypes = {
-    transportAgencyCollection: PropTypes.array,
+    transportAgencyArray: PropTypes.array,
   }
 
   const TransportAgenciesTableTitle = "Transport Agencies"
@@ -49,7 +49,7 @@ const TransportAgenciesTable = (props) => {
       <TransportAgenciesTableStyle>
         <Box>
           <List dense>
-            {transportAgencyCollection.map((transportAgency) => (
+            {transportAgencyArray.map((transportAgency) => (
               <ListItemButton
                 key={transportAgency.agency_id}
                 selected={selectedIndex === transportAgency.agency_id}
