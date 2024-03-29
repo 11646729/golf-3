@@ -15,7 +15,7 @@ import "../styles/transportroutes.scss"
 const TransportRoutesPage = () => {
   const [transportAgencyArray, setTransportAgencyArray] = useState([])
   const [transportAgencyId, setTransportAgencyId] = useState("")
-  // const [transportAgencyName, setTransportAgencyName] = useState("")
+  const [transportAgencyName, setTransportAgencyName] = useState("")
   const [transportRoutesArray, setTransportRoutesArray] = useState([])
   const [transportShapesArray, setTransportShapesArray] = useState([])
   const [transportStopsArray, setTransportStopsArray] = useState([])
@@ -51,8 +51,7 @@ const TransportRoutesPage = () => {
               disablePortal
               onChange={(event, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
-                // setTransportAgencyName(newValue.label)
-
+                setTransportAgencyName(newValue.label)
                 const routesDataUrl = routesDataBaseUrl + newValue.agencyid
                 getRoutesForSingleAgencyFrontEnd(
                   routesDataUrl,
@@ -62,7 +61,7 @@ const TransportRoutesPage = () => {
                 })
               }}
               options={transportAgencyArray}
-              sx={{ width: 300, color: "white" }}
+              sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Agency" />}
             />
 
