@@ -99,7 +99,7 @@ const TransportRoutesMap = (props) => {
     path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
     fillColor: "#6dbef1",
     fillOpacity: 0.7,
-    scale: 0.02, // to reduce the size of icons
+    scale: 0.015, // to reduce the size of icons
     strokeColor: "#1342B4",
     strokeWeight: 1,
   }
