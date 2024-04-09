@@ -77,7 +77,6 @@ export const getRoutesForSingleAgencyFrontEnd = async (
       agencyid: row.agency_id,
       routeid: row.route_id,
       label: row.route_short_name + " " + row.route_long_name,
-      // label: row.route_long_name,
     }
   })
 

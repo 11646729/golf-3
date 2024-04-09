@@ -49,28 +49,39 @@ const TransportRoutesPage = () => {
           <div className="transportagenciestablecontainer">
             <Autocomplete
               disablePortal
-              onChange={(event, newValue) => {
+              onChange={(_, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
                 setTransportAgencyName(newValue.label)
-                const routesDataUrl = routesDataBaseUrl + newValue.agencyid
                 getRoutesForSingleAgencyFrontEnd(
-                  routesDataUrl,
+                  routesDataBaseUrl + newValue.agencyid,
                   transportAgencyId
                 ).then((returnedData) => {
                   setTransportRoutesArray(returnedData)
                 })
               }}
               options={transportAgencyArray}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Agency" />}
+              // renderOption={(props, option) => {
+              //   return (
+              //     <li {...props} key={option.agencyid}>
+              //       {option.label}
+              //     </li>
+              //   )
+              // }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ input: { color: "white" }, width: 580 }}
+                  label="Agency"
+                  // key={key}
+                />
+              )}
             />
 
             <Autocomplete
               disabled={!transportAgencyId}
-              onChange={(event, newValue) => {
-                const shapesDataUrl = shapesDataBaseUrl + newValue.routeid
+              onChange={(_, newValue) => {
                 getShapesForSingleRouteFrontEnd(
-                  shapesDataUrl,
+                  shapesDataBaseUrl + newValue.routeid,
                   newValue.routeid,
                   transportRoutesArray
                 ).then((returnedData) => {
@@ -86,8 +97,21 @@ const TransportRoutesPage = () => {
                 })
               }}
               options={transportRoutesArray}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Routes" />}
+              // renderOption={(props, option) => {
+              //   return (
+              //     <li {...props} key={option.routeid}>
+              //       {option.label}
+              //     </li>
+              //   )
+              // }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ input: { color: "white" }, width: 580 }}
+                  label="Routes"
+                  // key={key}
+                />
+              )}
             />
           </div>
         </div>
