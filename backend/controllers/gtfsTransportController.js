@@ -1,6 +1,7 @@
 import {
   importGtfs,
   // exportGtfs,
+  updateGtfsRealtime,
   closeDb,
   openDb,
   getAgencies,
@@ -12,6 +13,8 @@ import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
+import GtfsRealtimeBindings from "gtfs-realtime-bindings"
+import fetch from "node-fetch"
 import { promisify } from "util"
 
 // import config from "../configHamilton.js"
@@ -30,7 +33,7 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Function to import latest GTFS Static file data to SQLite database
 // -------------------------------------------------------
-export var importGtfsToSQLite = async () => {
+export var importStaticGtfsToSQLite = async () => {
   //  ----------------------------------------------------
   // THESE ARE SUSPECT AS THE TFI FORMATS HAVE CHANGED
   //  ----------------------------------------------------
@@ -92,7 +95,99 @@ export var importGtfsToSQLite = async () => {
 }
 
 // -------------------------------------------------------
-// Get Transport Agencies
+// Function to import latest GTFS Realtime file data to SQLite database
+// -------------------------------------------------------
+export var importRealtimeGtfsToSQLite = async () => {
+  // console.log("Here")
+
+  // -----------------------------------------------------
+  // ;(async () => {
+  try {
+    const response = await fetch(
+      "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
+      {
+        headers: {
+          "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
+          // replace with your GTFS-realtime source's auth token
+          // e.g. x-api-key is the header value used for NY's MTA GTFS APIs
+        },
+      }
+    )
+    if (!response.ok) {
+      const error = new Error(
+        `${response.url}: ${response.status} ${response.statusText}`
+      )
+      error.response = response
+      throw error
+      process.exit(1)
+    }
+    const buffer = await response.arrayBuffer()
+    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+      new Uint8Array(buffer)
+    )
+    feed.entity.forEach((entity) => {
+      if (entity.tripUpdate) {
+        console.log(entity.tripUpdate)
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    process.exit(1)
+  }
+}
+// })()
+// -----------------------------------------------------
+
+// var config1 = {
+//   agencies: [
+//     {
+//       agency_key: "Transport For Ireland",
+//       path: "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland",
+//       // url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
+//       realtimeUrls: "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
+//       realtimeHeaders: {
+//         "Content-Type": "application/json",
+//         // "Cache-Control": "no-cache",
+//         "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
+//       },
+//     },
+//   ],
+//   // realtimeUrls: "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
+//   verbose: true,
+//   sqlitePath:
+//     "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/gtfs.db",
+//   exportPath:
+//     "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/",
+//   tempFile: "/Users/briansmith/Desktop/GTFS_Realtime.zip",
+// }
+
+// // This function prepares an empty database & imports Realtime GTFS Data into local SQL database
+// const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr?format=json"
+// const params = {
+//   // format: "json",
+// }
+// const config1 = {
+//   timeout: 20000,
+//   headers: {
+//     "Cache-Control": "no-cache",
+//     "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
+//   },
+// }
+
+// await axios
+//   .get(url, params, config)
+//   .then((response) => {
+//     console.log(response.status)
+//     console.log(response.text())
+//   })
+//   .then(() => alert("Realtime GTFS data has been Imported to SQL database"))
+//   .catch((err) => console.log(err))
+
+//   await updateGtfsRealtime(config1)
+// }
+
+// -------------------------------------------------------
+// Get All Transport Agencies
 // Path: localhost:4000/api/gtfs/agencies
 // -------------------------------------------------------
 export var getAllAgencies = (req, res) => {
@@ -196,35 +291,5 @@ export var getStopsForSingleRoute = (req, res) => {
     console.error("Cannot connect to database")
   }
 }
-
-// -------------------------------------------------------
-// Bus Stops
-// Path: localhost:4000/api/gtfs/stops
-// -------------------------------------------------------
-// export var getAllStops = (req, res) => {
-//   // Open a Database Connection
-//   let db = null
-//   db = openSqlDbConnection(config.sqlitePath)
-
-//   if (db !== null) {
-//     try {
-//       let sql = `SELECT stop_id, stop_lat, stop_lon FROM stops ORDER BY stop_id`
-//       db.all(sql, [], (err, results) => {
-//         if (err) {
-//           return console.error(err.message)
-//         }
-
-//         res.send(results)
-//       })
-
-//       // Close the Database Connection
-//       closeSqlDbConnection(db)
-//     } catch (e) {
-//       console.error(e.message)
-//     }
-//   } else {
-//     console.error("Cannot connect to database")
-//   }
-// }
 
 export default index

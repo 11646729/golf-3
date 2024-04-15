@@ -1,7 +1,8 @@
 import express from "express"
 import {
   index,
-  importGtfsToSQLite,
+  importStaticGtfsToSQLite,
+  importRealtimeGtfsToSQLite,
   getAllAgencies,
   getRoutesForSingleAgency,
   getShapesForSingleRoute,
@@ -16,8 +17,11 @@ var gtfsRouter = express.Router()
 // GET catalogue home page
 gtfsRouter.get("/", index)
 
-// POST all GTFS data into the SQL database
-gtfsRouter.post("/importStaticGTFSData", importGtfsToSQLite)
+// POST all Static GTFS data into the SQL database
+gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToSQLite)
+
+// POST all Realtime GTFS data into the SQL database
+gtfsRouter.post("/importRealtimeGTFSData", importRealtimeGtfsToSQLite)
 
 // GET all Transport Agencies
 gtfsRouter.get("/transportagencies", getAllAgencies)

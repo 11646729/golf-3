@@ -1,5 +1,14 @@
 import React, { useState, useEffect, memo } from "react"
 import TransportRoutesMap from "../components/TransportRoutesMap"
+// import {
+//   // createStyles,
+//   // fade,
+//   // Theme,
+//   withStyles,
+//   // makeStyles,
+//   // createMuiTheme,
+// } from "@mui/styles"
+// // import { ThemeProvider } from "@mui/styles"
 import { Autocomplete, TextField } from "@mui/material"
 import {
   getAllAgenciesFrontEnd,
@@ -8,6 +17,32 @@ import {
   getStopsForSingleRouteFrontEnd,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 import "../styles/transportroutes.scss"
+
+// //declare the const and add the material UI style
+// const CssTextField = withStyles({
+//   root: {
+//     "& label": {
+//       color: "red",
+//     },
+//     "& label.Mui-focused": {
+//       color: "white",
+//     },
+//     "& .MuiInput-underline:after": {
+//       borderBottomColor: "yellow",
+//     },
+//     "& .MuiOutlinedInput-root": {
+//       "& fieldset": {
+//         borderColor: "white",
+//       },
+//       "&:hover fieldset": {
+//         borderColor: "white",
+//       },
+//       "&.Mui-focused fieldset": {
+//         borderColor: "yellow",
+//       },
+//     },
+//   },
+// })(TextField)
 
 // -------------------------------------------------------
 // React Controller component
@@ -60,18 +95,39 @@ const TransportRoutesPage = () => {
                 })
               }}
               options={transportAgencyArray}
-              // renderOption={(props, option) => {
-              //   return (
-              //     <li {...props} key={option.agencyid}>
-              //       {option.label}
-              //     </li>
-              //   )
+              renderOption={(props, option) => {
+                return (
+                  <li {...props} key={option.agencyid}>
+                    {option.label}
+                  </li>
+                )
+              }}
+              // sx={{
+              //   // border: "1px solid blue",
+              //   "& .MuiOutlinedInput-root": {
+              //     // border: "1px solid yellow",
+              //     borderRadius: "0",
+              //     padding: "0",
+              //   },
+              //   "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+              //     border: "1px solid #eee",
+              //   },
               // }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  sx={{ input: { color: "white" }, width: 580 }}
+                  sx={{ width: 580 }}
                   label="Agency"
+                  // inputProps={{
+                  //   ...params.inputProps,
+                  //   style: {
+                  //     padding: "calc(0.5vw + 5px)",
+                  //     fontSize: "calc(0.5vw + 5px)",
+                  //     // color: "white",
+                  //     backgroundColor: "wheat",
+                  //     // border: "1px solid red",
+                  //   },
+                  // }}
                   // key={key}
                 />
               )}

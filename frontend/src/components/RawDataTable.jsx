@@ -8,6 +8,7 @@ import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperature
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
+import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
@@ -106,21 +107,26 @@ const tableData = [
   },
   {
     id: 5,
+    datatype: "Realtime GTFS Transport Data",
+    buttontext: "Fetch Realtime Bus Data",
+  },
+  {
+    id: 6,
     datatype: "Crime Data",
     buttontext: "Fetch Crime Data",
   },
   {
-    id: 6,
+    id: 7,
     datatype: "Realtime Data",
     buttontext: "Start Realtime Data",
   },
   {
-    id: 7,
+    id: 8,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
   },
   {
-    id: 8,
+    id: 9,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
   },
@@ -143,15 +149,18 @@ function handleClick(id) {
       loadStaticGTFSDataHandler()
       break
     case 5:
-      loadCrimesDataHandler()
+      loadRealtimeGTFSDataHandler()
       break
     case 6:
-      startRealtimeDataHandler()
+      loadCrimesDataHandler()
       break
     case 7:
-      loadRTCalendarEventsHandler()
+      startRealtimeDataHandler()
       break
     case 8:
+      loadRTCalendarEventsHandler()
+      break
+    case 9:
       loadRTNewsItemsHandler()
       break
 
