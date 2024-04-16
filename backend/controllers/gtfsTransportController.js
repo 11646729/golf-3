@@ -98,93 +98,63 @@ export var importStaticGtfsToSQLite = async () => {
 // Function to import latest GTFS Realtime file data to SQLite database
 // -------------------------------------------------------
 export var importRealtimeGtfsToSQLite = async () => {
-  // console.log("Here")
-
-  // -----------------------------------------------------
-  // ;(async () => {
-  try {
-    const response = await fetch(
-      "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
+  var config1 = {
+    agencies: [
       {
-        headers: {
+        agency_key: "Transport For Ireland",
+        path: "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland",
+        // url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
+        realtimeUrls: ["https://api.nationaltransport.ie/gtfsr/v2/gtfsr"],
+        realtimeHeaders: {
+          "Cache-Control": "no-cache",
           "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
-          // replace with your GTFS-realtime source's auth token
-          // e.g. x-api-key is the header value used for NY's MTA GTFS APIs
         },
-      }
-    )
-    if (!response.ok) {
-      const error = new Error(
-        `${response.url}: ${response.status} ${response.statusText}`
-      )
-      error.response = response
-      throw error
-      process.exit(1)
-    }
-    const buffer = await response.arrayBuffer()
-    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-      new Uint8Array(buffer)
-    )
-    feed.entity.forEach((entity) => {
-      if (entity.tripUpdate) {
-        console.log(entity.tripUpdate)
-      }
-    })
-  } catch (error) {
-    console.log(error)
-    process.exit(1)
+      },
+    ],
+    verbose: true,
+    sqlitePath:
+      "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/gtfs.db",
+    exportPath:
+      "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/",
+    tempFile: "/Users/briansmith/Desktop/GTFS_Realtime.zip",
   }
+
+  await updateGtfsRealtime(config1)
+
+  // try {
+  //   const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
+  //   const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
+
+  //   const response = await fetch(url, {
+  //     method: "GET",
+  //     headers: {
+  //       "Cache-Control": "no-cache",
+  //       "x-api-key": primaryKey,
+  //     },
+  //   })
+
+  //   if (!response.ok) {
+  //     const error = new Error(
+  //       `${response.url}: ${response.status} ${response.statusText}`
+  //     )
+  //     error.response = response
+  //     throw error
+  //     process.exit(1)
+  //   }
+  //   const buffer = await response.arrayBuffer()
+  //   const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+  //     new Uint8Array(buffer)
+  //   )
+  //   feed.entity.forEach((entity) => {
+  //     if (entity.tripUpdate) {
+  //       console.log(entity.tripUpdate)
+  //     }
+  //   })
+  // } catch (error) {
+  //   console.log(error)
+  //   process.exit(1)
+  // }
 }
-// })()
-// -----------------------------------------------------
-
-// var config1 = {
-//   agencies: [
-//     {
-//       agency_key: "Transport For Ireland",
-//       path: "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland",
-//       // url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
-//       realtimeUrls: "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
-//       realtimeHeaders: {
-//         "Content-Type": "application/json",
-//         // "Cache-Control": "no-cache",
-//         "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
-//       },
-//     },
-//   ],
-//   // realtimeUrls: "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
-//   verbose: true,
-//   sqlitePath:
-//     "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/gtfs.db",
-//   exportPath:
-//     "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/",
-//   tempFile: "/Users/briansmith/Desktop/GTFS_Realtime.zip",
-// }
-
-// // This function prepares an empty database & imports Realtime GTFS Data into local SQL database
-// const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr?format=json"
-// const params = {
-//   // format: "json",
-// }
-// const config1 = {
-//   timeout: 20000,
-//   headers: {
-//     "Cache-Control": "no-cache",
-//     "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
-//   },
-// }
-
-// await axios
-//   .get(url, params, config)
-//   .then((response) => {
-//     console.log(response.status)
-//     console.log(response.text())
-//   })
-//   .then(() => alert("Realtime GTFS data has been Imported to SQL database"))
-//   .catch((err) => console.log(err))
-
-//   await updateGtfsRealtime(config1)
-// }
 
 // -------------------------------------------------------
 // Get All Transport Agencies
