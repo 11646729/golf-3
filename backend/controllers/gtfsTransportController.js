@@ -98,33 +98,11 @@ export var importStaticGtfsToSQLite = async () => {
 // Function to import latest GTFS Realtime file data to SQLite database
 // -------------------------------------------------------
 export var importRealtimeGtfsToSQLite = async () => {
-  var config1 = {
-    agencies: [
-      {
-        agency_key: "Transport For Ireland",
-        path: "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland",
-        // url: "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
-        realtimeUrls: ["https://api.nationaltransport.ie/gtfsr/v2/gtfsr"],
-        realtimeHeaders: {
-          "Cache-Control": "no-cache",
-          "x-api-key": "80d8d0ad2a844dd2a6dcc4c8ed702f8d",
-        },
-      },
-    ],
-    verbose: true,
-    sqlitePath:
-      "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/gtfs.db",
-    exportPath:
-      "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/",
-    tempFile: "/Users/briansmith/Desktop/GTFS_Realtime.zip",
-  }
-
-  await updateGtfsRealtime(config1)
+  await updateGtfsRealtime(config)
 
   // try {
   //   const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
   //   const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
-
   //   const response = await fetch(url, {
   //     method: "GET",
   //     headers: {
@@ -132,7 +110,6 @@ export var importRealtimeGtfsToSQLite = async () => {
   //       "x-api-key": primaryKey,
   //     },
   //   })
-
   //   if (!response.ok) {
   //     const error = new Error(
   //       `${response.url}: ${response.status} ${response.statusText}`
