@@ -8,6 +8,7 @@ import {
   getRoutes,
   getShapes,
   getStops,
+  getVehiclePositions,
 } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
@@ -99,6 +100,7 @@ export var importStaticGtfsToSQLite = async () => {
 // -------------------------------------------------------
 export var importRealtimeGtfsToSQLite = async () => {
   await updateGtfsRealtime(config)
+  getAllVehiclePositions()
 
   // try {
   //   const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
@@ -229,6 +231,38 @@ export var getStopsForSingleRoute = (req, res) => {
       )
 
       res.send(transportStops)
+    } catch (e) {
+      console.error(e.message)
+    }
+
+    closeDb(db)
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
+// Get All Vehicle Positions
+// Path: localhost:4000/api/gtfs/vehiclepositions
+// -------------------------------------------------------
+export var getAllVehiclePositions = (req, res) => {
+  const db = openDb(config)
+
+  if (db !== null) {
+    try {
+      const db = openDb(config)
+
+      const vehiclePositions = getVehiclePositions()
+      console.log("Here")
+      console.log(vehiclePositions)
+
+      // const transportStops = getStops(
+      //   { route_id: req.query.routeId }, // Query filters
+      //   ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
+      //   [["stop_id", "ASC"]] // Sort by this field and direction
+      // )
+
+      // res.send(transportStops)
     } catch (e) {
       console.error(e.message)
     }
