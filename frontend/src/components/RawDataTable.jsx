@@ -102,13 +102,13 @@ const tableData = [
   },
   {
     id: 4,
-    datatype: "Static GTFS Transport Data",
-    buttontext: "Fetch Static GTFS Data",
+    datatype: "Initialise Static & Realtime GTFS Transport Data",
+    buttontext: "Initialise All GTFS Data",
   },
   {
     id: 5,
-    datatype: "Realtime GTFS Transport Data",
-    buttontext: "Fetch Realtime Bus Data",
+    datatype: "Update Realtime GTFS Transport Data",
+    buttontext: "Update Realtime GTFS Data",
   },
   {
     id: 6,

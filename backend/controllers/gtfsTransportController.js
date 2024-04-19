@@ -9,6 +9,7 @@ import {
   getShapes,
   getStops,
   getVehiclePositions,
+  getTripUpdates,
 } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
@@ -56,11 +57,9 @@ export var importStaticGtfsToSQLite = async () => {
     .then(() => {
       // Getting information for a file
       fs.stat(config.tempFile, (err, stats) => {
-        console.log(stats)
         console.log(
           "Zip file containing Static GTFS files imported successfully. "
         )
-        console.log("Zip file created at: " + stats.birthtime)
 
         if (err) {
           console.log(err)
@@ -110,41 +109,10 @@ export var importRealtimeGtfsToSQLite = async () => {
   //   "utf8"
   // )
   // const config1 = JSON.parse(data)
-
   // updateGtfsRealtime(config1)
-  getAllVehiclePositions()
-  // const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
-  // const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
 
-  // try {
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     headers: {
-  //       "Cache-Control": "no-cache",
-  //       "x-api-key": primaryKey,
-  //     },
-  //   })
-  //   if (!response.ok) {
-  //     const error = new Error(
-  //       `${response.url}: ${response.status} ${response.statusText}`
-  //     )
-  //     error.response = response
-  //     throw error
-  //     process.exit(1)
-  //   }
-  //   const buffer = await response.arrayBuffer()
-  //   const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-  //     new Uint8Array(buffer)
-  //   )
-  //   feed.entity.forEach((entity) => {
-  //     if (entity.tripUpdate) {
-  //       console.log(entity.tripUpdate)
-  //     }
-  //   })
-  // } catch (error) {
-  //   console.log(error)
-  //   process.exit(1)
-  // }
+  getAllVehiclePositions()
+  getAllTripUpdates()
 }
 
 // -------------------------------------------------------
@@ -257,14 +225,36 @@ export var getStopsForSingleRoute = (req, res) => {
 // Get All Vehicle Positions
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
-export var getAllVehiclePositions = async (req, res) => {
+const getAllVehiclePositions = async (req, res) => {
   const db = openDb(config)
   if (db !== null) {
     try {
       const db = openDb(config)
-      const vehiclePositions = getVehiclePositions({ trip_id: "3931_8337" })
+      const vehiclePositions = getVehiclePositions({ trip_id: "3931_19330" })
+      // const vehiclePositions = getVehiclePositions()
       console.log(vehiclePositions)
       // res.send(vehiclePositions)
+    } catch (e) {
+      console.error(e.message)
+    }
+    closeDb(db)
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
+// Get All Trip Updates
+// Path: localhost:4000/api/gtfs/tripupdates
+// -------------------------------------------------------
+const getAllTripUpdates = async (req, res) => {
+  const db = openDb(config)
+  if (db !== null) {
+    try {
+      const db = openDb(config)
+      const tripUpdates = getTripUpdates()
+      console.log(tripUpdates)
+      // res.send(tripUpdates)
     } catch (e) {
       console.error(e.message)
     }
