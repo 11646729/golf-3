@@ -14,8 +14,7 @@ import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
-import GtfsRealtimeBindings from "gtfs-realtime-bindings"
-// import fetch from "node-fetch"
+// import GtfsRealtimeBindings from "gtfs-realtime-bindings"
 import { promisify } from "util"
 
 // import config from "../configHamilton.js"
@@ -56,17 +55,24 @@ export var importStaticGtfsToSQLite = async () => {
   await finishedDownload(writer)
     .then(() => {
       // Getting information for a file
-      fs.stat(config.tempFile, (error, stats) => {
-        if (error) {
-          console.log(error)
-        } else {
-          console.log(
-            "Zip file containing Static GTFS files imported successfully. "
-          )
-          console.log("Zip file created at: " + stats.birthtime)
+      fs.stat(config.tempFile, (err, stats) => {
+        console.log(stats)
+        console.log(
+          "Zip file containing Static GTFS files imported successfully. "
+        )
+        console.log("Zip file created at: " + stats.birthtime)
+
+        if (err) {
+          console.log(err)
         }
+
+        fs.unlink(config.tempFile, (err) => {
+          if (err) return console.log(err)
+          console.log("Temporary File deleted successfully")
+        })
       })
     })
+
     //  Secondly unzip the GTFS Static files from the zipfile
     .then(() => {
       decompress(config.tempFile, config.agencies[0].path)
@@ -252,39 +258,6 @@ export var getStopsForSingleRoute = (req, res) => {
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
 export var getAllVehiclePositions = async (req, res) => {
-  // try {
-  //   const url = "https://api.nationaltransport.ie/gtfsr/v2/Vehicles"
-  //   const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     headers: {
-  //       "Cache-Control": "no-cache",
-  //       "x-api-key": primaryKey,
-  //     },
-  //   })
-  //   if (!response.ok) {
-  //     const error = new Error(
-  //       `${response.url}: ${response.status} ${response.statusText}`
-  //     )
-  //     error.response = response
-  //     throw error
-  //     process.exit(1)
-  //   }
-  //   const buffer = await response.arrayBuffer()
-  //   const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-  //     new Uint8Array(buffer)
-  //   )
-  //   feed.entity.forEach((entity) => {
-  //     if (entity.vehicle) {
-  //       if (entity.vehicle.trip.tripId == "3950_46887")
-  //         console.log(entity.vehicle)
-  //     }
-  //   })
-  // } catch (error) {
-  //   console.log(error)
-  //   process.exit(1)
-  // }
-
   const db = openDb(config)
   if (db !== null) {
     try {
