@@ -15,7 +15,7 @@ import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
 import GtfsRealtimeBindings from "gtfs-realtime-bindings"
-import fetch from "node-fetch"
+// import fetch from "node-fetch"
 import { promisify } from "util"
 
 // import config from "../configHamilton.js"
@@ -38,8 +38,8 @@ export var importStaticGtfsToSQLite = async () => {
   //  ----------------------------------------------------
   // THESE ARE SUSPECT AS THE TFI FORMATS HAVE CHANGED
   //  ----------------------------------------------------
-  // await importGtfs(config)
-  // await exportGtfs(config)
+  // importGtfs(config)
+  // exportGtfs(config)
 
   //  Firstly download the most recent zip file of GTFS Static files
   const finishedDownload = promisify(stream.finished)
@@ -99,12 +99,18 @@ export var importStaticGtfsToSQLite = async () => {
 // Function to import latest GTFS Realtime file data to SQLite database
 // -------------------------------------------------------
 export var importRealtimeGtfsToSQLite = async () => {
-  await updateGtfsRealtime(config)
+  // const data = fs.readFileSync(
+  //   "/Users/briansmith/Documents/GTD/golf-3/backend/configTransportForIreland.json",
+  //   "utf8"
+  // )
+  // const config1 = JSON.parse(data)
+
+  // updateGtfsRealtime(config1)
   getAllVehiclePositions()
+  // const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
+  // const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
 
   // try {
-  //   const url = "https://api.nationaltransport.ie/gtfsr/v2/gtfsr"
-  //   const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
   //   const response = await fetch(url, {
   //     method: "GET",
   //     headers: {
@@ -245,28 +251,50 @@ export var getStopsForSingleRoute = (req, res) => {
 // Get All Vehicle Positions
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
-export var getAllVehiclePositions = (req, res) => {
-  const db = openDb(config)
+export var getAllVehiclePositions = async (req, res) => {
+  // try {
+  //   const url = "https://api.nationaltransport.ie/gtfsr/v2/Vehicles"
+  //   const primaryKey = "80d8d0ad2a844dd2a6dcc4c8ed702f8d"
+  //   const response = await fetch(url, {
+  //     method: "GET",
+  //     headers: {
+  //       "Cache-Control": "no-cache",
+  //       "x-api-key": primaryKey,
+  //     },
+  //   })
+  //   if (!response.ok) {
+  //     const error = new Error(
+  //       `${response.url}: ${response.status} ${response.statusText}`
+  //     )
+  //     error.response = response
+  //     throw error
+  //     process.exit(1)
+  //   }
+  //   const buffer = await response.arrayBuffer()
+  //   const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+  //     new Uint8Array(buffer)
+  //   )
+  //   feed.entity.forEach((entity) => {
+  //     if (entity.vehicle) {
+  //       if (entity.vehicle.trip.tripId == "3950_46887")
+  //         console.log(entity.vehicle)
+  //     }
+  //   })
+  // } catch (error) {
+  //   console.log(error)
+  //   process.exit(1)
+  // }
 
+  const db = openDb(config)
   if (db !== null) {
     try {
       const db = openDb(config)
-
-      const vehiclePositions = getVehiclePositions()
-      console.log("Here")
+      const vehiclePositions = getVehiclePositions({ trip_id: "3931_8337" })
       console.log(vehiclePositions)
-
-      // const transportStops = getStops(
-      //   { route_id: req.query.routeId }, // Query filters
-      //   ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
-      //   [["stop_id", "ASC"]] // Sort by this field and direction
-      // )
-
-      // res.send(transportStops)
+      // res.send(vehiclePositions)
     } catch (e) {
       console.error(e.message)
     }
-
     closeDb(db)
   } else {
     console.error("Cannot connect to database")

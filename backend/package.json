@@ -33,7 +33,7 @@
     "node-fetch": "^3.3.2",
     "normalize-url": "^8.0.0",
     "socket.io": "^4.6.1",
-    "sqlite3": "^5.1.6",
+    "sqlite3": "^5.1.7",
     "stream": "^0.0.2",
     "util": "^0.12.5",
     "xmlhttprequest-ssl": "^2.1.0"
