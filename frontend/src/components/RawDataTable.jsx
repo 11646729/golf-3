@@ -47,8 +47,6 @@ const TableHeader = styled.thead`
   font-size: 14px;
 `
 
-//  table tbody tr:hover { background-color: red; }
-
 const TableRow = styled.tr`
   &:hover {
     background-color: #ebeccd;

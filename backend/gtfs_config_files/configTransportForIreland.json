@@ -5,8 +5,8 @@
       "path": "/Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland",
       "url": "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip",
       "realtimeUrls": [
-        "https://api.nationaltransport.ie/gtfsr/v2/Vehicles",
         "https://api.nationaltransport.ie/gtfsr/v2/gtfsr",
+        "https://api.nationaltransport.ie/gtfsr/v2/Vehicles",
         "https://api.nationaltransport.ie/gtfsr/v2/TripUpdates"
       ],
       "realtimeHeaders": {

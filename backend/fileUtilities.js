@@ -5,7 +5,7 @@ import sqlite3 from "sqlite3"
 sqlite3.verbose()
 
 // -------------------------------------------------------
-// Local function to read the geojson filenames in a directory
+// Function to read the geojson filenames in a directory
 // -------------------------------------------------------
 export var readRouteDirectory = (dirPath, suffix) => {
   try {
@@ -23,9 +23,9 @@ export var readRouteDirectory = (dirPath, suffix) => {
 }
 
 // -------------------------------------------------------
-// Local function to read a Route file
+// Function to read a Route file
 // -------------------------------------------------------
-export var readRouteFile = (fileUrl) => {
+export const readRouteFile = (fileUrl) => {
   try {
     // Firstly read all existing Bus Stops in the file
     const data = fs.readFileSync(fileUrl, "utf8")
@@ -136,3 +136,5 @@ export var closeSqlDbConnection = (db) => {
   db.close()
   // console.log("Disconnected from the SQLite database")
 }
+
+export default readRouteFile
