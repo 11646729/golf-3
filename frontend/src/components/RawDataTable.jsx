@@ -8,7 +8,7 @@ import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperature
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
-import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
+import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
@@ -102,12 +102,12 @@ const tableData = [
   },
   {
     id: 4,
-    datatype: "Initialise Static & Realtime GTFS Transport Data",
-    buttontext: "Initialise All GTFS Data",
+    datatype: "GTFS Transport Data",
+    buttontext: "Initialise All Static & Realtime GTFS Data",
   },
   {
     id: 5,
-    datatype: "Update Realtime GTFS Transport Data",
+    datatype: "GTFS Transport Data",
     buttontext: "Update Realtime GTFS Data",
   },
   {

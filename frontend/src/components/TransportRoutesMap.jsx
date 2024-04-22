@@ -17,14 +17,14 @@ import Title from "./Title"
 const TransportRoutesMap = (props) => {
   const {
     transportAgencyName,
-    transportRoutesArray,
+    // transportRoutesArray,
     transportShapesArray,
     transportStopsArray,
   } = props
 
   TransportRoutesMap.propTypes = {
     transportAgencyName: PropTypes.string,
-    transportRoutesArray: PropTypes.array,
+    // transportRoutesArray: PropTypes.array,
     transportShapesArray: PropTypes.array,
     transportStopsArray: PropTypes.array,
   }
@@ -95,7 +95,7 @@ const TransportRoutesMap = (props) => {
   //   // setTransportRouteSelected(transportRoute)
   // }
 
-  const iconPin = {
+  const transportStopIcon = {
     path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
     fillColor: "#6dbef1",
     fillOpacity: 0.7,
@@ -132,9 +132,9 @@ const TransportRoutesMap = (props) => {
                     strokeOpacity: "1.0",
                     strokeWeight: 2,
                   }}
-                  onClick={() => {
-                    // handleTransportShapeClick()
-                  }}
+                  // onClick={() => {
+                  //   handleTransportShapeClick()
+                  // }}
                 />
               ))
             : null}
@@ -146,15 +146,10 @@ const TransportRoutesMap = (props) => {
                     lat: transportStop.stop_lat,
                     lng: transportStop.stop_lon,
                   }}
-                  icon={
-                    // {
-                    iconPin
-                    // url: "https://maps.google.com/mapfiles/ms/icons/blue.png",
-                    // }
-                  }
-                  onClick={() => {
-                    // handleBusStopClick()
-                  }}
+                  icon={transportStopIcon}
+                  // onClick={() => {
+                  //   handleBusStopClick()
+                  // }}
                 />
               ))
             : null}

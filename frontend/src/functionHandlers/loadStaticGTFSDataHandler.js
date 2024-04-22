@@ -21,25 +21,6 @@ export const loadStaticGTFSDataHandler = async () => {
 }
 
 // -------------------------------------------------------
-// Function to fetch Realtime GTFS data into the SQL database
-// -------------------------------------------------------
-export const loadRealtimeGTFSDataHandler = async () => {
-  // This function prepares an empty database & imports Realtime GTFS Data into local SQL database
-  const url = "http://localhost:4000/api/gtfs/importRealtimeGTFSData"
-  const params = {}
-  const config = {
-    timeout: 20000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-  await axios
-    .post(url, params, config)
-    .then(() => alert("Realtime GTFS data has been Imported to SQL database"))
-    .catch((err) => console.log(err))
-}
-
-// -------------------------------------------------------
 // Function to fetch Transport Agency
 // -------------------------------------------------------
 export const getAllAgenciesFrontEnd = async (url) => {
@@ -60,14 +41,6 @@ export const getAllAgenciesFrontEnd = async (url) => {
   return responseData.data.map(function (row) {
     return { agencyid: row.agency_id, label: row.agency_name }
   })
-
-  // ------------------
-  // ORIGINAL CODE
-  // ------------------
-  // return await axios
-  //   .get(url, params, config)
-  //   .then((response) => response.data)
-  //   .catch((err) => console.log(err))
 }
 
 // -------------------------------------------------------
@@ -99,14 +72,6 @@ export const getRoutesForSingleAgencyFrontEnd = async (
       label: row.route_short_name + " " + row.route_long_name,
     }
   })
-
-  // ------------------
-  // ORIGINAL CODE
-  // ------------------
-  // return await axios
-  //   .get(url, params, config)
-  //   .then((response) => response.data)
-  //   .catch((err) => console.log(err))
 }
 
 // -------------------------------------------------------
@@ -121,20 +86,6 @@ export const getShapesForSingleRouteFrontEnd = async (
   if (url == null) return
   if (transportRouteId == null) return
   if (transportRoutesArray.length === 0) return
-
-  // Ok to headers
-  // const params = { route_id: transportRouteId }
-  // const config = {
-  //   timeout: 20000,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // }
-
-  // return await axios
-  //   .get(url, params, config)
-  //   .then((response) => response.data)
-  //   .catch((err) => console.log(err))
 
   const resultData = await axios({
     url: url,
@@ -260,9 +211,6 @@ export const getStopsForSingleRouteFrontEnd = async (
     },
   }
 
-  // ------------------
-  // ORIGINAL CODE
-  // ------------------
   return await axios
     .get(url, params, config)
     .then((response) => response.data)
