@@ -15,10 +15,9 @@ import * as fs from "fs"
 import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
-// import GtfsRealtimeBindings from "gtfs-realtime-bindings"
 import { promisify } from "util"
 import readRouteFile from "../fileUtilities.js"
-// import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -37,8 +36,6 @@ export var importStaticGtfsToSQLite = async () => {
   //  ----------------------------------------------------
   // importGtfs(config)
   // exportGtfs(config)
-
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
 
   //  Firstly download the most recent zip file of GTFS Static files
   const finishedDownload = promisify(stream.finished)
@@ -103,11 +100,9 @@ export var importStaticGtfsToSQLite = async () => {
 // Function to import latest GTFS Realtime file data to SQLite database
 // -------------------------------------------------------
 export var importRealtimeGtfsToSQLite = async () => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
-
   updateGtfsRealtime(config)
-  getAllTripUpdates()
-  getAllVehiclePositions()
+  // getAllTripUpdates()
+  // getAllVehiclePositions()
 }
 
 // -------------------------------------------------------
@@ -115,7 +110,6 @@ export var importRealtimeGtfsToSQLite = async () => {
 // Path: localhost:4000/api/gtfs/agencies
 // -------------------------------------------------------
 export var getAllAgencies = (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
 
   if (db !== null) {
@@ -141,12 +135,10 @@ export var getAllAgencies = (req, res) => {
 // Path: localhost:4000/api/gtfs/routesforsingleagency
 // -------------------------------------------------------
 export var getRoutesForSingleAgency = (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
 
   if (db !== null) {
     try {
-      // const db = openDb(config)
       const transportRoutes = getRoutes(
         { agency_id: req.query.transportAgencyId }, // Query filters
         ["route_id", "agency_id", "route_short_name", "route_long_name"] // Only return these fields
@@ -168,12 +160,10 @@ export var getRoutesForSingleAgency = (req, res) => {
 // Path: localhost:4000/api/gtfs/shapesforsingleroute
 // -------------------------------------------------------
 export var getShapesForSingleRoute = (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
 
   if (db !== null) {
     try {
-      // const db = openDb(config)
       const transportShapes = getShapes(
         { route_id: req.query.routeId }, // Query filters
         ["shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence"] // Only return these fields
@@ -195,12 +185,10 @@ export var getShapesForSingleRoute = (req, res) => {
 // Path: localhost:4000/api/gtfs/stopsforsingleroute
 // -------------------------------------------------------
 export var getStopsForSingleRoute = (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
 
   if (db !== null) {
     try {
-      // const db = openDb(config)
       const transportStops = getStops(
         { route_id: req.query.routeId }, // Query filters
         ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
@@ -223,14 +211,14 @@ export var getStopsForSingleRoute = (req, res) => {
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
 const getAllVehiclePositions = async (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
+
   if (db !== null) {
     try {
-      // const db = openDb(config)
-      const vehiclePositions = getVehiclePositions({ trip_id: "3931_19330" })
-      // const vehiclePositions = getVehiclePositions()
-      // console.log(vehiclePositions)
+      // const vehiclePositions = getVehiclePositions({ trip_id: "3931_19330" })
+      const vehiclePositions = getVehiclePositions()
+      console.log(vehiclePositions)
+
       // res.send(vehiclePositions)
     } catch (e) {
       console.error(e.message)
@@ -246,13 +234,13 @@ const getAllVehiclePositions = async (req, res) => {
 // Path: localhost:4000/api/gtfs/tripupdates
 // -------------------------------------------------------
 const getAllTripUpdates = async (req, res) => {
-  const config = readRouteFile(process.env.TRANSPORT_FOR_IRELAND_FILEPATH)
   const db = openDb(config)
+
   if (db !== null) {
     try {
-      // const db = openDb(config)
       const tripUpdates = getTripUpdates()
       console.log(tripUpdates)
+
       // res.send(tripUpdates)
     } catch (e) {
       console.error(e.message)

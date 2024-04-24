@@ -25,7 +25,6 @@
     "fs": "^0.0.1-security",
     "googleapis": "^126.0.1",
     "gtfs": "^4.10.2",
-    "gtfs-realtime-bindings": "^1.1.1",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "newsapi": "^2.4.1",
