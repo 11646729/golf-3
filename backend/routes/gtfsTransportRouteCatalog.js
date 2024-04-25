@@ -21,7 +21,7 @@ gtfsRouter.get("/", index)
 gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToSQLite)
 
 // POST all Realtime GTFS data into the SQL database
-gtfsRouter.post("/importRealtimeGTFSData", updateRealtimeGtfsToSQLite)
+gtfsRouter.post("/updateRealtimeGTFSData", updateRealtimeGtfsToSQLite)
 
 // GET all Transport Agencies
 gtfsRouter.get("/transportagencies", getAllAgencies)
