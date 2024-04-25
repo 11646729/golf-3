@@ -2,7 +2,7 @@ import express from "express"
 import {
   index,
   importStaticGtfsToSQLite,
-  importRealtimeGtfsToSQLite,
+  updateRealtimeGtfsToSQLite,
   getAllAgencies,
   getRoutesForSingleAgency,
   getShapesForSingleRoute,
@@ -21,7 +21,7 @@ gtfsRouter.get("/", index)
 gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToSQLite)
 
 // POST all Realtime GTFS data into the SQL database
-gtfsRouter.post("/importRealtimeGTFSData", importRealtimeGtfsToSQLite)
+gtfsRouter.post("/importRealtimeGTFSData", updateRealtimeGtfsToSQLite)
 
 // GET all Transport Agencies
 gtfsRouter.get("/transportagencies", getAllAgencies)

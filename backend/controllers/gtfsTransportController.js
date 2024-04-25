@@ -99,7 +99,7 @@ export var importStaticGtfsToSQLite = async () => {
 // -------------------------------------------------------
 // Function to import latest GTFS Realtime file data to SQLite database
 // -------------------------------------------------------
-export var importRealtimeGtfsToSQLite = async () => {
+export var updateRealtimeGtfsToSQLite = async () => {
   updateGtfsRealtime(config)
   // getAllTripUpdates()
   // getAllVehiclePositions()
@@ -215,8 +215,8 @@ const getAllVehiclePositions = async (req, res) => {
 
   if (db !== null) {
     try {
-      // const vehiclePositions = getVehiclePositions({ trip_id: "3931_19330" })
-      const vehiclePositions = getVehiclePositions()
+      const vehiclePositions = getVehiclePositions({ trip_id: "3950_45489" })
+      // const vehiclePositions = getVehiclePositions()
       console.log(vehiclePositions)
 
       // res.send(vehiclePositions)
