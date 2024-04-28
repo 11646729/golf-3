@@ -70,7 +70,7 @@ const TransportRoutesPage = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  sx={{ width: 580 }}
+                  sx={{ input: { color: "white" }, width: 580 }}
                   label="Agency"
                   // inputProps={{
                   //   ...params.inputProps,

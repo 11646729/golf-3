@@ -7,6 +7,8 @@ import {
   getRoutesForSingleAgency,
   getShapesForSingleRoute,
   getStopsForSingleRoute,
+  startRegularUpdatesOfRealtimeGTFSData,
+  getAllVehiclePositions,
 } from "../controllers/gtfsTransportController.js"
 
 var gtfsRouter = express.Router()
@@ -23,6 +25,12 @@ gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToSQLite)
 // POST all Realtime GTFS data into the SQL database
 gtfsRouter.post("/updateRealtimeGTFSData", updateRealtimeGtfsToSQLite)
 
+// POST all Realtime GTFS data into the SQL database
+gtfsRouter.post(
+  "/startRegularUpdatesOfRealtimeGTFSData",
+  startRegularUpdatesOfRealtimeGTFSData
+)
+
 // GET all Transport Agencies
 gtfsRouter.get("/transportagencies", getAllAgencies)
 
@@ -34,5 +42,8 @@ gtfsRouter.get("/shapesforsingleroute", getShapesForSingleRoute)
 
 // GET Stops for one Transport Route
 gtfsRouter.get("/stopsforsingleroute", getStopsForSingleRoute)
+
+// GET Vehicle Positions for one Transport Trip
+gtfsRouter.get("/vehiclepositions", getAllVehiclePositions)
 
 export default gtfsRouter

@@ -101,8 +101,15 @@ export var importStaticGtfsToSQLite = async () => {
 // -------------------------------------------------------
 export var updateRealtimeGtfsToSQLite = async () => {
   updateGtfsRealtime(config)
+}
+
+// -------------------------------------------------------
+// Function to start Regular Updates of GTFS Realtime data
+// -------------------------------------------------------
+export var startRegularUpdatesOfRealtimeGTFSData = async () => {
+  // console.log("Here - Backend")
   // getAllTripUpdates()
-  // getAllVehiclePositions()
+  getAllVehiclePositions()
 }
 
 // -------------------------------------------------------
@@ -210,15 +217,23 @@ export var getStopsForSingleRoute = (req, res) => {
 // Get All Vehicle Positions
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
-const getAllVehiclePositions = async (req, res) => {
+export const getAllVehiclePositions = async (req, res) => {
   const db = openDb(config)
 
   if (db !== null) {
     try {
-      const vehiclePositions = getVehiclePositions({ trip_id: "3950_45489" })
-      // const vehiclePositions = getVehiclePositions()
-      console.log(vehiclePositions)
+      // const vehiclePositions = getVehiclePositions({ trip_id: "3950_45489" })
+      const vehiclePositions = getVehiclePositions(
+        { trip_id: "4039_7117" },
+        [
+          // { route_id: req.query.routeId }, // Query filters
+          "vehicle_id",
+          "latitude",
+          "longitude",
+        ] // Only return these fields
+      )
 
+      console.log(vehiclePositions)
       // res.send(vehiclePositions)
     } catch (e) {
       console.error(e.message)

@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
 import Title from "./Title"
@@ -9,6 +9,7 @@ import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesD
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
 import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
+import { startRegularUpdatesOfRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
@@ -64,15 +65,6 @@ const TableHead = styled.th`
 
 const TableBody = styled.tbody``
 
-// const TableCellLeft = styled.td`
-//   height: 34px;
-//   margin: 0;
-//   padding: 0.5rem;
-//   border-bottom: 1px solid lightgray;
-//   border-right: 1px solid lightgray;
-//   text-align: left;
-// `
-
 const TableCell = styled.td`
   height: 34px;
   margin: 0;
@@ -87,91 +79,113 @@ const tableData = [
     id: 1,
     datatype: "Temperatures Data",
     buttontext: "Fetch Temperatures",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 2,
     datatype: "Golf Course Data",
     buttontext: "Fetch Golf Courses",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 3,
     datatype: "Cruise Ship Arrivals Data",
     buttontext: "Fetch Cruise Ships",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 4,
     datatype: "GTFS Transport Data",
     buttontext: "Initialise All Static & Realtime GTFS Data",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 5,
     datatype: "GTFS Transport Data",
     buttontext: "Update Realtime GTFS Data",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 6,
-    datatype: "Crime Data",
-    buttontext: "Fetch Crime Data",
+    datatype: "GTFS Transport Data",
+    buttontext: "Update GTFS Trip & Vehicle Position Data",
+    buttonbackgroundcolor: "darkblue",
   },
   {
     id: 7,
-    datatype: "Realtime Data",
-    buttontext: "Start Realtime Data",
+    datatype: "Crime Data",
+    buttontext: "Fetch Crime Data",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 8,
-    datatype: "Realtime Calendar Data",
-    buttontext: "Fetch Realtime Calendar Data",
+    datatype: "Realtime Calendar & News Data",
+    buttontext: "Start Calendar & News Realtime Data",
+    buttonbackgroundcolor: "darkred",
   },
   {
     id: 9,
+    datatype: "Realtime Calendar Data",
+    buttontext: "Fetch Realtime Calendar Data",
+    buttonbackgroundcolor: "darkred",
+  },
+  {
+    id: 10,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
+    buttonbackgroundcolor: "darkred",
   },
 ]
-
-function handleClick(id) {
-  // Define the logic for handling the button click here
-
-  switch (id) {
-    case 1:
-      loadTemperaturesDataHandler()
-      break
-    case 2:
-      loadGolfCoursesDataHandler()
-      break
-    case 3:
-      loadCruiseShipArrivalsDataHandler()
-      break
-    case 4:
-      loadStaticGTFSDataHandler()
-      break
-    case 5:
-      loadRealtimeGTFSDataHandler()
-      break
-    case 6:
-      loadCrimesDataHandler()
-      break
-    case 7:
-      startRealtimeDataHandler()
-      break
-    case 8:
-      loadRTCalendarEventsHandler()
-      break
-    case 9:
-      loadRTNewsItemsHandler()
-      break
-
-    default:
-    // code block
-  }
-}
 
 const RawDataTable = (props) => {
   const { rawDataTableTitle } = props
 
   RawDataTable.propTypes = {
     rawDataTableTitle: PropTypes.string,
+  }
+
+  // const [toggle, setToggle] = useState(false)
+  // const [buttonBackgroundColor, setButtonBackgroundColor] = useState("darkred")
+
+  const handleClick = (id) => {
+    // Define the logic for handling the button click here
+
+    switch (id) {
+      case 1:
+        loadTemperaturesDataHandler()
+        break
+      case 2:
+        loadGolfCoursesDataHandler()
+        break
+      case 3:
+        loadCruiseShipArrivalsDataHandler()
+        break
+      case 4:
+        loadStaticGTFSDataHandler()
+        break
+      case 5:
+        loadRealtimeGTFSDataHandler()
+        break
+      case 6:
+        // setToggle(!toggle)
+        startRegularUpdatesOfRealtimeGTFSDataHandler()
+        break
+      case 7:
+        loadCrimesDataHandler()
+        break
+      case 8:
+        startRealtimeDataHandler()
+        break
+      case 9:
+        loadRTCalendarEventsHandler()
+        break
+      case 10:
+        loadRTNewsItemsHandler()
+        break
+
+      default:
+      // code block
+    }
   }
 
   return (
@@ -199,6 +213,7 @@ const RawDataTable = (props) => {
                     sx={{
                       ml: 6,
                       textTransform: "capitalize",
+                      backgroundColor: row.buttonbackgroundcolor,
                     }}
                     variant="contained"
                     onClick={() => handleClick(row.id)}
