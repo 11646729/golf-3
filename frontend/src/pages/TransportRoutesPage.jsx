@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from "react"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import { Autocomplete, TextField } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import {
   getAllAgenciesFrontEnd,
   getRoutesForSingleAgencyFrontEnd,
@@ -8,6 +9,35 @@ import {
   getStopsForSingleRouteFrontEnd,
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 import "../styles/transportroutes.scss"
+
+const StyledAutocomplete = styled(Autocomplete)({
+  "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+    // Default transform is "translate(14px, 20px) scale(1)""
+    // This lines up the label with the initial cursor position in the input
+    // after changing its padding-left.
+    transform: "translate(34px, 20px) scale(1);",
+  },
+  "&.Mui-focused .MuiInputLabel-outlined": {
+    color: "purple",
+  },
+  "& .MuiAutocomplete-inputRoot": {
+    // color: "purple",
+    // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
+    '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-of-type': {
+      // Default left padding is 6px
+      paddingLeft: 26,
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "green",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "red",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "purple",
+    },
+  },
+})
 
 // -------------------------------------------------------
 // React Controller component
@@ -47,7 +77,7 @@ const TransportRoutesPage = () => {
       <div className="transportroutestablescontainer">
         <div className="transportroutestables2container">
           <div className="transportagenciestablecontainer">
-            <Autocomplete
+            <StyledAutocomplete
               disablePortal
               onChange={(_, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
@@ -70,33 +100,34 @@ const TransportRoutesPage = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  sx={{ input: { color: "white" }, width: 580 }}
+                  sx={{
+                    input: { color: "white" },
+                    width: 580,
+                  }}
                   label="Agency"
-                  // inputProps={{
-                  //   ...params.inputProps,
-                  //   style: {
-                  //     padding: "calc(0.5vw + 5px)",
-                  //     fontSize: "calc(0.5vw + 5px)",
-                  //     // color: "white",
-                  //     backgroundColor: "wheat",
-                  //     // border: "1px solid red",
-                  //   },
-                  // }}
+                  InputLabelProps={{
+                    ...params.InputLabelProps,
+                    style: {
+                      color: "white",
+                    },
+                  }}
                   // key={key}
                 />
               )}
             />
 
-            <Autocomplete
+            <StyledAutocomplete
               disabled={!transportAgencyId}
               onChange={(_, newValue) => {
                 getShapesForSingleRouteFrontEnd(
                   shapesDataBaseUrl + newValue.routeid,
                   newValue.routeid,
                   transportRoutesArray
-                ).then((returnedData) => {
-                  setTransportShapesArray(returnedData)
-                })
+                )
+                  .then((returnedData) => {
+                    setTransportShapesArray(returnedData)
+                  })
+                  .then(console.log(newValue.routeid))
                 const stopsDataUrl = stopsDataBaseUrl + newValue.routeid
                 getStopsForSingleRouteFrontEnd(
                   stopsDataUrl,
@@ -119,6 +150,12 @@ const TransportRoutesPage = () => {
                   {...params}
                   sx={{ input: { color: "white" }, width: 580 }}
                   label="Routes"
+                  InputLabelProps={{
+                    ...params.InputLabelProps,
+                    style: {
+                      color: "white",
+                    },
+                  }}
                   // key={key}
                 />
               )}
