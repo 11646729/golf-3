@@ -21,7 +21,7 @@ const StyledAutocomplete = styled(Autocomplete)({
     color: "purple",
   },
   "& .MuiAutocomplete-inputRoot": {
-    // color: "purple",
+    color: "purple",
     // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-of-type': {
       // Default left padding is 6px
@@ -78,6 +78,7 @@ const TransportRoutesPage = () => {
         <div className="transportroutestables2container">
           <div className="transportagenciestablecontainer">
             <StyledAutocomplete
+              id="agency-box"
               disablePortal
               onChange={(_, newValue) => {
                 setTransportAgencyId(newValue.agencyid)
@@ -103,6 +104,7 @@ const TransportRoutesPage = () => {
                   sx={{
                     input: { color: "white" },
                     width: 580,
+                    marginBottom: 4,
                   }}
                   label="Agency"
                   InputLabelProps={{
@@ -117,6 +119,7 @@ const TransportRoutesPage = () => {
             />
 
             <StyledAutocomplete
+              id="routes-box"
               disabled={!transportAgencyId}
               onChange={(_, newValue) => {
                 getShapesForSingleRouteFrontEnd(
