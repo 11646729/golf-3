@@ -160,19 +160,6 @@ const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
         j += 1
       } while (j < tempArray.length)
 
-      // const colors = [
-      //   "#C2272D",
-      //   "#F8931F",
-      //   "#FFFF01",
-      //   "#009245",
-      //   "#0193D9",
-      //   "#0C04ED",
-      //   "#612F90",
-      // ]
-      // for (var i = 0; i < colors.length; i++) {
-      //   listItems[i].style.color = colors[i]
-      // }
-
       // Add other relevant values into the object
       const modifiedShape = {
         shapeKey: uniqueShapeIDs[k],

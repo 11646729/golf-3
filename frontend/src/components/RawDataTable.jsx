@@ -1,8 +1,10 @@
 import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
-import styled from "styled-components"
+import mystyled from "styled-components"
+import { styled } from "@mui/material/styles"
 import Title from "./Title"
 import { Button } from "@mui/material"
+import MuiToggleButton from "@mui/material/ToggleButton"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
@@ -15,21 +17,28 @@ import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataH
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
 
-const TableTitleContainer = styled.div`
+const ToggleButton = styled(MuiToggleButton)({
+  "&.Mui-selected, &.Mui-selected:hover": {
+    color: "white",
+    backgroundColor: "#00ff00",
+  },
+})
+
+const TableTitleContainer = mystyled.div`
   margin-top: 35px;
   margin-left: 20px;
   margin-right: 20px;
   width: "97%";
 `
 
-const TableContainer = styled.div`
+const TableContainer = mystyled.div`
   min-width: 200px;
   margin-left: 20px;
   margin-right: 10px;
   margin-bottom: 20px;
 `
 
-const TableStyle = styled.table`
+const TableStyle = mystyled.table`
   width: 94%;
   margin-left: 20px;
   margin-right: 20px;
@@ -43,19 +52,19 @@ const TableStyle = styled.table`
     sans-serif;
 `
 
-const TableHeader = styled.thead`
+const TableHeader = mystyled.thead`
   /* text-align: left; */
   font-size: 14px;
 `
 
-const TableRow = styled.tr`
+const TableRow = mystyled.tr`
   &:hover {
     background-color: #ebeccd;
     color: black;
   }
 `
 
-const TableHead = styled.th`
+const TableHead = mystyled.th`
   height: 34px;
   margin: 0;
   padding: 0.5rem;
@@ -63,9 +72,9 @@ const TableHead = styled.th`
   border-right: 1px solid lightgray;
 `
 
-const TableBody = styled.tbody``
+const TableBody = mystyled.tbody``
 
-const TableCell = styled.td`
+const TableCell = mystyled.td`
   height: 34px;
   margin: 0;
   padding: 0.5rem;
@@ -209,17 +218,20 @@ const RawDataTable = (props) => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.datatype}</TableCell>
                 <TableCell>
-                  <Button
-                    sx={{
-                      ml: 6,
-                      textTransform: "capitalize",
-                      backgroundColor: row.buttonbackgroundcolor,
-                    }}
-                    variant="contained"
-                    onClick={() => handleClick(row.id)}
-                  >
-                    {row.buttontext}
-                  </Button>
+                  if(true)
+                  {
+                    <ToggleButton
+                      sx={{
+                        ml: 6,
+                        textTransform: "capitalize",
+                        backgroundColor: row.buttonbackgroundcolor,
+                      }}
+                      variant="contained"
+                      onClick={() => handleClick(row.id)}
+                    >
+                      {row.buttontext}
+                    </ToggleButton>
+                  }
                 </TableCell>
               </TableRow>
             ))}

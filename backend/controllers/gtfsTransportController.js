@@ -108,9 +108,10 @@ export var updateRealtimeGtfsToSQLite = async () => {
 // Function to start Regular Updates of GTFS Realtime data
 // -------------------------------------------------------
 export var startRegularUpdatesOfRealtimeGTFSData = async () => {
-  // console.log("Here - Backend")
-  getAllTripUpdates()
+  console.log("Here - Backend")
   // getAllVehiclePositions()
+  // getAllTrips()
+  // getAllTripUpdates()
 }
 
 // -------------------------------------------------------
@@ -240,6 +241,31 @@ export const getAllVehiclePositions = async (req, res) => {
 }
 
 // -------------------------------------------------------
+// Get All Trips
+// Path: localhost:4000/api/gtfs/trips
+// -------------------------------------------------------
+const getAllTrips = async (req, res) => {
+  const db = openDb(config)
+
+  if (db !== null) {
+    try {
+      const trips = getTrips({
+        route_id: "4039_66613",
+        direction_id: 1,
+      })
+      console.log(trips)
+
+      // res.send(trips)
+    } catch (e) {
+      console.error(e.message)
+    }
+    closeDb(db)
+  } else {
+    console.error("Cannot connect to database")
+  }
+}
+
+// -------------------------------------------------------
 // Get All Trip Updates
 // Path: localhost:4000/api/gtfs/tripupdates
 // -------------------------------------------------------
@@ -248,11 +274,6 @@ const getAllTripUpdates = async (req, res) => {
 
   if (db !== null) {
     try {
-      // const trips = getTrips({
-      //   route_id: "3778_48887",
-      //   direction_id: 1,
-      // })
-      // console.log(trips)
       const tripUpdates = getTripUpdates()
       console.log(tripUpdates)
 
