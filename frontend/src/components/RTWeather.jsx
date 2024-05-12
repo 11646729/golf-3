@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import moment from "moment"
-import "../styles/weather.scss"
+import "../styles/rtweather.scss"
 
 // -------------------------------------------------------
 // Real Time News component

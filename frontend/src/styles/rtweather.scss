@@ -1,0 +1,55 @@
+@import "./variables.scss";
+
+.loadingnotice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: $main-bg;
+
+  .caption {
+    font-weight: 1000;
+  }
+
+  // .tr {
+  //   display: flex;
+  //   flex-flow: row;
+  //   color: red;
+  // }
+
+  .thead {
+    display: flex;
+    flex-flow: row;
+    padding-top: 5px;
+
+    .th {
+      font-size: 12px;
+      padding-right: 20px;
+    }
+  }
+
+  .tbody {
+    display: flex;
+    flex-flow: row;
+
+    .readingtime {
+      padding-top: 5px;
+    }
+
+    .readinglocation {
+      padding-top: 5px;
+      padding-left: 20px;
+    }
+
+    .temperaturevalue {
+      padding-top: 5px;
+      padding-left: 20px;
+    }
+  }
+}
