@@ -15,16 +15,9 @@ import {
   Link,
   CardActions,
 } from "@mui/material"
-import styled from "styled-components"
+import "../styles/cruisesmap.scss"
 
 import Title from "./Title"
-
-const CruisesMapContainer = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 20px;
-  padding-top: 30px;
-`
 
 const CruiseMapTitle = "Cruise Ship Positions Now"
 
@@ -100,7 +93,7 @@ const CruisesMap = (props) => {
   }
 
   return isLoaded ? (
-    <CruisesMapContainer>
+    <div className="cruisesmapcontainer">
       <Title>{CruiseMapTitle}</Title>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
@@ -174,7 +167,7 @@ const CruisesMap = (props) => {
           </InfoWindow>
         ) : null}
       </GoogleMap>
-    </CruisesMapContainer>
+    </div>
   ) : null
 }
 
