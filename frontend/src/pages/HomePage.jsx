@@ -9,6 +9,9 @@ import TransportRoutesCard from "../cards/TransportRoutesCard"
 import SeismicDesignCard from "../cards/SeismicDesignCard"
 import "../styles/home.scss"
 
+// -------------------------------------------------------
+// React Controller component
+// -------------------------------------------------------
 const HomePage = () => {
   return (
     <div className="homecontainer">

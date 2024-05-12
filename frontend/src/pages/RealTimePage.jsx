@@ -1,10 +1,13 @@
-import React, { useEffect, useState, memo } from "react"
+import React, { useState, useEffect, memo } from "react"
 import socketIOClient from "socket.io-client"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
 
+// -------------------------------------------------------
+// React Controller component
+// -------------------------------------------------------
 const RealTimeHomePage = () => {
   const [loadClient, setLoadClient] = useState(false)
 
