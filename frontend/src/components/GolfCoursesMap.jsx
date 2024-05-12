@@ -16,24 +16,16 @@ import {
   Link,
   CardActions,
 } from "@mui/material"
-import styled from "styled-components"
-
 import Title from "./Title"
+import "../styles/golfcoursesmap.scss"
 
 const GolfCoursesMapTitle = "Golf Course Locations"
 
-const GolfCoursesMapContainer = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 20px;
-  padding-top: 30px;
-`
-
 const GolfCoursesMap = (props) => {
-  const { golfCourses } = props
+  const { golfcourses } = props
 
   GolfCoursesMap.propTypes = {
-    golfCourses: PropTypes.array,
+    golfcourses: PropTypes.array,
   }
 
   const [map, setMap] = useState(null)
@@ -71,10 +63,10 @@ const GolfCoursesMap = (props) => {
 
   useEffect(() => {
     if (map) {
-      if (golfCourses.length > 0) {
+      if (golfcourses.length > 0) {
         const bounds = new window.google.maps.LatLngBounds(mapCenter)
 
-        golfCourses.map((golfCourse) =>
+        golfcourses.map((golfCourse) =>
           bounds.extend({
             lat: golfCourse.lat,
             lng: golfCourse.lng,
@@ -83,7 +75,7 @@ const GolfCoursesMap = (props) => {
         map.fitBounds(bounds)
       }
     }
-  }, [map, golfCourses, mapCenter])
+  }, [map, golfcourses, mapCenter])
 
   const iconPin = {
     path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
@@ -105,37 +97,38 @@ const GolfCoursesMap = (props) => {
   // }
 
   return isLoaded ? (
-    <GolfCoursesMapContainer>
-      <Title>{GolfCoursesMapTitle}</Title>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={mapCenter}
-        zoom={mapZoom}
-        options={{
-          // mapTypeId: "hybrid",
-          disableDefaultUI: true,
-          zoomControl: true,
-        }}
-        onLoad={onLoadHandler}
-        onUnmount={onUnmountHandler}
-      >
-        {golfCourses
-          ? golfCourses.map((golfcourse) => (
-              <Marker
-                key={golfcourse.name}
-                position={{
-                  lat: golfcourse.lat,
-                  lng: golfcourse.lng,
-                }}
-                icon={iconPin}
-                onClick={() => {
-                  setSelected(golfcourse)
-                }}
-              />
-            ))
-          : null}
+    <div>
+      <div className="golfcoursesmapcontainer">
+        <Title>{GolfCoursesMapTitle}</Title>
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={mapCenter}
+          zoom={mapZoom}
+          options={{
+            // mapTypeId: "hybrid",
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
+          onLoad={onLoadHandler}
+          onUnmount={onUnmountHandler}
+        >
+          {golfcourses
+            ? golfcourses.map((golfcourse) => (
+                <Marker
+                  key={golfcourse.name}
+                  position={{
+                    lat: golfcourse.lat,
+                    lng: golfcourse.lng,
+                  }}
+                  icon={iconPin}
+                  onClick={() => {
+                    setSelected(golfcourse)
+                  }}
+                />
+              ))
+            : null}
 
-        {/* <OverlayView
+          {/* <OverlayView
           position={mapCenter}
           mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
         >
@@ -147,47 +140,48 @@ const GolfCoursesMap = (props) => {
             </button>
           </div>
         </OverlayView> */}
-        {selected ? (
-          <InfoWindow
-            position={{
-              lat: selected.lat,
-              lng: selected.lng,
-            }}
-            onCloseClick={() => {
-              setSelected(null)
-            }}
-          >
-            <Card>
-              <CardMedia
-                style={{
-                  height: 0,
-                  paddingTop: "40%",
-                  marginTop: "30",
-                }}
-                image={selected.photourl}
-                title={selected.phototitle}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {selected.name}
-                </Typography>
-                <Typography component="p">{selected.description}</Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="primary"
-                  component={Link}
-                  // to="/golfcoursespage"
-                >
-                  View
-                </Button>
-              </CardActions>
-            </Card>
-          </InfoWindow>
-        ) : null}
-      </GoogleMap>
-    </GolfCoursesMapContainer>
+          {selected ? (
+            <InfoWindow
+              position={{
+                lat: selected.lat,
+                lng: selected.lng,
+              }}
+              onCloseClick={() => {
+                setSelected(null)
+              }}
+            >
+              <Card>
+                <CardMedia
+                  style={{
+                    height: 0,
+                    paddingTop: "40%",
+                    marginTop: "30",
+                  }}
+                  image={selected.photourl}
+                  title={selected.phototitle}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {selected.name}
+                  </Typography>
+                  <Typography component="p">{selected.description}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    component={Link}
+                    // to="/golfcoursespage"
+                  >
+                    View
+                  </Button>
+                </CardActions>
+              </Card>
+            </InfoWindow>
+          ) : null}
+        </GoogleMap>
+      </div>
+    </div>
   ) : null
 }
 

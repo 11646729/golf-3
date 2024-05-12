@@ -223,10 +223,6 @@ export const getGolfCourses = (req, res) => {
           res.status(400).json({ error: err.message })
           return
         }
-        // res.json({
-        //   message: "success",
-        //   data: results,
-        // })
         res.send(results)
       })
 

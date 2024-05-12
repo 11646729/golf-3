@@ -8,7 +8,7 @@ import "../styles/golfcourses.scss"
 // React Controller component
 // -------------------------------------------------------
 const GolfCoursesPage = () => {
-  const [golfCourses, setGolfCoursesData] = useState([])
+  const [golfcourses, setGolfCoursesData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const golfDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
@@ -25,13 +25,15 @@ const GolfCoursesPage = () => {
       })
   }, [])
 
+  console.log(golfcourses)
+
   return (
     <div className="golfcoursescontainer">
       <div className="golfcoursestablecontainer">
-        <GolfCoursesTable golfCourses={golfCourses} />
+        <GolfCoursesTable golfcourses={golfcourses} />
       </div>
       <div className="golfcoursesmapcontainer">
-        <GolfCoursesMap isLoading={isLoading} golfCourses={golfCourses} />
+        <GolfCoursesMap isLoading={isLoading} golfcourses={golfcourses} />
       </div>
     </div>
   )
