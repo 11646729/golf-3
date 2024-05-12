@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
 import moment from "moment"
-import "../styles/calendar.scss"
+import "../styles/rtcalendar.scss"
 
 // -------------------------------------------------------
 // Real Time Calendar component
