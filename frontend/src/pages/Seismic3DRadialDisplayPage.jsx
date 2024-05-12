@@ -1,16 +1,12 @@
 import React, { memo } from "react"
-import styled from "styled-components"
-
 import Seismic3DRadialDisplay from "../components/Seismic3DRadialDisplay"
+import "../styles/seismic3dradialdisplay.scss"
 
-const Seismic3DRadialDisplayContainer = styled.div`
-  display: flex;
-`
 const SeismicArrayDesignPage = () => {
   return (
-    <Seismic3DRadialDisplayContainer>
+    <div className="seismic3dradialdisplaycontainer">
       <Seismic3DRadialDisplay />
-    </Seismic3DRadialDisplayContainer>
+    </div>
   )
 }
 

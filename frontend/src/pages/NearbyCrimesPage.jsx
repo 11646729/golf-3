@@ -1,27 +1,8 @@
 import React, { useState, useEffect, memo } from "react"
-import styled from "styled-components"
-
 import NearbyCrimesInputPanel from "../components/NearbyCrimesInputPanel"
 import NearbyCrimesMap from "../components/NearbyCrimesMap"
 import { getCrimesData } from "../functionHandlers/loadCrimesDataHandler"
-
-const NearbyCrimesContainer = styled.div`
-  display: flex;
-`
-
-const NearbyCrimesInputPanelContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 150px;
-`
-
-const NearbyCrimesMapContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 800px;
-`
+import "../styles/nearbycrimes.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -59,18 +40,18 @@ const NearbyCrimesPage = () => {
   }, [crimesUrl])
 
   return (
-    <NearbyCrimesContainer>
-      <NearbyCrimesInputPanelContainer>
+    <div className="nearbycrimescontainer">
+      <div className="nearbycrimesinputpanelcontainer">
         <NearbyCrimesInputPanel
           isLoading={isLoading}
           homeCheckboxStatus // Leaving it blank means true, "={false} otherwise"
           latestCheckboxStatus
         />
-      </NearbyCrimesInputPanelContainer>
-      <NearbyCrimesMapContainer>
+      </div>
+      <div className="nearbycrimesmapcontainer">
         <NearbyCrimesMap crimesData={rawCrimesData} />
-      </NearbyCrimesMapContainer>
-    </NearbyCrimesContainer>
+      </div>
+    </div>
   )
 }
 
