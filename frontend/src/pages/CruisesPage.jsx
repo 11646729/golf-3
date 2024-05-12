@@ -1,30 +1,11 @@
 import React, { useState, useEffect, memo } from "react"
-import styled from "styled-components"
-
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import {
   getPortArrivalsData,
   getCruiseVesselPositionData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
-
-const CruisesContainer = styled.div`
-  display: flex;
-`
-
-const CruisesTableContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 500px;
-`
-
-const CruisesMapContainer = styled.div`
-  flex: 2;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  min-height: 500px;
-`
+import "../styles/cruises.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -77,19 +58,19 @@ const CruisesPage = () => {
   }, [portArrivals])
 
   return (
-    <CruisesContainer>
-      <CruisesTableContainer>
+    <div className="cruisescontainer">
+      <div className="cruisestablecontainer">
         <CruisesTable portArrivals={portArrivals} />
-      </CruisesTableContainer>
-      <CruisesMapContainer>
+      </div>
+      <div className="cruisesmapcontainer">
         <CruisesMap
           isLoading={isLoading}
           cruisesHomePosition={homePosition}
           vesselPositions={vesselPositions}
           vesselDetails={portArrivals}
         />
-      </CruisesMapContainer>
-    </CruisesContainer>
+      </div>
+    </div>
   )
 }
 

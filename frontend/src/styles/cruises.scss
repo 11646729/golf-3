@@ -1,0 +1,11 @@
+.cruisescontainer {
+  display: flex;
+
+  .cruisestablecontainer {
+    flex: 2;
+  }
+
+  .cruisesmapcontainer {
+    flex: 2;
+  }
+}
