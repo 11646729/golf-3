@@ -218,20 +218,17 @@ const RawDataTable = (props) => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.datatype}</TableCell>
                 <TableCell>
-                  if(true)
-                  {
-                    <ToggleButton
-                      sx={{
-                        ml: 6,
-                        textTransform: "capitalize",
-                        backgroundColor: row.buttonbackgroundcolor,
-                      }}
-                      variant="contained"
-                      onClick={() => handleClick(row.id)}
-                    >
-                      {row.buttontext}
-                    </ToggleButton>
-                  }
+                  <ToggleButton
+                    sx={{
+                      ml: 6,
+                      textTransform: "capitalize",
+                      backgroundColor: row.buttonbackgroundcolor,
+                    }}
+                    variant="contained"
+                    onClick={() => handleClick(row.id)}
+                  >
+                    {row.buttontext}
+                  </ToggleButton>
                 </TableCell>
               </TableRow>
             ))}

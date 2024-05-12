@@ -1,0 +1,11 @@
+.rawdatacontainer {
+  display: flex;
+
+  .rawdatatablecontainer {
+    flex: 2;
+  }
+
+  .rawdatastatusboxcontainer {
+    flex: 2;
+  }
+}

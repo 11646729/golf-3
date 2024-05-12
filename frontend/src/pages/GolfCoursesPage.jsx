@@ -25,8 +25,6 @@ const GolfCoursesPage = () => {
       })
   }, [])
 
-  console.log(golfCourses)
-
   return (
     <div className="golfcoursescontainer">
       <div className="golfcoursestablecontainer">

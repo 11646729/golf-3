@@ -10,7 +10,7 @@ import {
   getStops,
   getVehiclePositions,
   getTripUpdates,
-  // getTrips,
+  getTrips,
 } from "gtfs"
 import * as fs from "fs"
 import * as stream from "stream"
@@ -110,7 +110,7 @@ export var updateRealtimeGtfsToSQLite = async () => {
 export var startRegularUpdatesOfRealtimeGTFSData = async () => {
   console.log("Here - Backend")
   // getAllVehiclePositions()
-  // getAllTrips()
+  getAllTrips()
   // getAllTripUpdates()
 }
 
@@ -250,7 +250,7 @@ const getAllTrips = async (req, res) => {
   if (db !== null) {
     try {
       const trips = getTrips({
-        route_id: "4039_66613",
+        route_id: "4021_65706",
         direction_id: 1,
       })
       console.log(trips)
