@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react"
-// import "../styles/golfcourses.scss"
+import "../styles/rtcalendar.scss"
 
 // -------------------------------------------------------
 // React Controller component
@@ -25,14 +25,9 @@ const RTCalendarPage = () => {
   console.log("Here I am")
 
   return (
-    <div className="golfcoursescontainer">
-      <div className="golfcoursestablecontainer">
+    <div className="rtcalendarcontainer">
+      <div className="rtcalendartablecontainer">
         This is the RT Calendar Page - Live Data
-        {/* <GolfCoursesTable golfCourses={golfCourses} /> */}
-      </div>
-      <div className="golfcoursesmapcontainer">
-        This is the RT Calendar Page - Dummy Data
-        {/* <GolfCoursesMap isLoading={isLoading} golfCourses={golfCourses} /> */}
       </div>
     </div>
   )
