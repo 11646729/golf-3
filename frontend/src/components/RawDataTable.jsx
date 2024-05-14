@@ -1,10 +1,10 @@
 import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-import { muiStyled } from "@mui/material/styles"
+// import { styled } from "@mui/material/styles"
 import Title from "./Title"
 import { Button } from "@mui/material"
-import MuiToggleButton from "@mui/material/ToggleButton"
+// import MuiToggleButton from "@mui/material/ToggleButton"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
@@ -17,12 +17,12 @@ import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataH
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
 
-const ToggleButton = muiStyled(MuiToggleButton)({
-  "&.Mui-selected, &.Mui-selected:hover": {
-    color: "white",
-    backgroundColor: "#00ff00",
-  },
-})
+// const ToggleButton = styled(MuiToggleButton)({
+//   "&.Mui-selected, &.Mui-selected:hover": {
+//     color: "white",
+//     backgroundColor: "#00ff00",
+//   },
+// })
 
 const TableTitleContainer = styled.div`
   margin-top: 35px;
@@ -218,7 +218,7 @@ const RawDataTable = (props) => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.datatype}</TableCell>
                 <TableCell>
-                  <ToggleButton
+                  <Button
                     sx={{
                       ml: 6,
                       textTransform: "capitalize",
@@ -228,7 +228,18 @@ const RawDataTable = (props) => {
                     onClick={() => handleClick(row.id)}
                   >
                     {row.buttontext}
-                  </ToggleButton>
+                  </Button>
+                  {/* <ToggleButton
+                    sx={{
+                      ml: 6,
+                      textTransform: "capitalize",
+                      backgroundColor: row.buttonbackgroundcolor,
+                    }}
+                    variant="contained"
+                    onClick={() => handleClick(row.id)}
+                  >
+                    {row.buttontext}
+                  </ToggleButton> */}
                 </TableCell>
               </TableRow>
             ))}

@@ -1,0 +1,64 @@
+@import "./variables.scss";
+
+.headercontainer {
+  width: 100%;
+  height: 50px;
+  background-color: $main-bg;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+
+  .topbarcontainer {
+    height: 100%;
+    padding: 0px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .topbarlogo {
+      font-weight: bold;
+      font-size: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+      color: $main-color;
+      cursor: pointer;
+    }
+
+    .topright {
+      display: flex;
+      align-items: center;
+
+      .topbariconcontainer {
+        position: relative;
+        cursor: pointer;
+        margin-right: 10px;
+        color: $main-color;
+
+        .topiconbadge {
+          height: 15px;
+          width: 15px;
+          position: absolute;
+          top: -5px;
+          right: 0px;
+          background-color: red;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+        }
+
+        .topavatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

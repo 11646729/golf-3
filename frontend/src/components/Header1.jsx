@@ -1,10 +1,42 @@
 import React, { memo, useState } from "react"
 import styled from "styled-components"
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
-import LanguageIcon from "@mui/icons-material/Language"
-import SettingsIcon from "@mui/icons-material/Settings"
+import { NotificationsNone, Language, Settings } from "@mui/icons-material"
 import StatusIcon from "./StatusIcon"
 import "../styles/header.scss"
+
+const Container = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: $main-bg;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+`
+
+const TopBarWrapper = styled.div`
+  height: 100%;
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const Logo = styled.span`
+  font-weight: bold;
+  font-size: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  color: $main-color;
+  cursor: pointer;
+`
+
+const TopRight = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 const TopBarIconContainer = styled.div`
   position: relative;
@@ -40,12 +72,12 @@ const Header = () => {
   const [isActiveStatus2, setIsActiveStatus2] = useState(false)
 
   return (
-    <div className="headercontainer">
-      <div className="topbarcontainer">
-        <div className="topbarlogo">My Dashboard</div>
-        <div className="topright">
+    <Container>
+      <TopBarWrapper>
+        <Logo>My Dashboard</Logo>
+        <TopRight>
           <TopBarIconContainer>
-            <NotificationsNoneIcon />
+            <NotificationsNone />
             <TopIconBadge>1</TopIconBadge>
           </TopBarIconContainer>
           <TopBarIconContainer>
@@ -59,16 +91,16 @@ const Header = () => {
               status={isActiveStatus2}
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
             />
-            <LanguageIcon />
+            <Language />
             <TopIconBadge>2</TopIconBadge>
           </TopBarIconContainer>
           <TopBarIconContainer>
-            <SettingsIcon />
+            <Settings />
           </TopBarIconContainer>
           <TopAvatar src="/static/images/brian.jpeg" alt="" />
-        </div>
-      </div>
-    </div>
+        </TopRight>
+      </TopBarWrapper>
+    </Container>
   )
 }
 
