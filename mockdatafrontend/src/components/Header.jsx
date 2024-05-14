@@ -1,9 +1,39 @@
 import React, { memo, useState } from "react"
+import styled from "styled-components"
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
 import LanguageIcon from "@mui/icons-material/Language"
 import SettingsIcon from "@mui/icons-material/Settings"
 import StatusIcon from "./StatusIcon"
 import "../styles/header.scss"
+
+const TopBarIconContainer = styled.div`
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+  color: $main-color;
+`
+
+const TopIconBadge = styled.div`
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+`
+
+const TopAvatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+`
 
 const Header = () => {
   const [isActiveStatus1, setIsActiveStatus1] = useState(true)
@@ -14,11 +44,11 @@ const Header = () => {
       <div className="topbarcontainer">
         <div className="topbarlogo">Real-time Data Simulator</div>
         <div className="topright">
-          <div className="topbariconcontainer">
+          <TopBarIconContainer>
             <NotificationsNoneIcon />
-            <div className="topbariconbadge">1</div>
-          </div>
-          <div className="topbariconcontainer">
+            <TopIconBadge>1</TopIconBadge>
+          </TopBarIconContainer>
+          <TopBarIconContainer>
             <StatusIcon
               size={5}
               status={isActiveStatus1}
@@ -30,12 +60,12 @@ const Header = () => {
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
             />
             <LanguageIcon />
-            <div className="topbariconbadge">2</div>
-          </div>
-          <div className="topbariconcontainer">
+            <TopIconBadge>2</TopIconBadge>
+          </TopBarIconContainer>
+          <TopBarIconContainer>
             <SettingsIcon />
-          </div>
-          <div className="topavatar" src="/static/images/brian.jpeg" alt="" />
+          </TopBarIconContainer>
+          <TopAvatar src="/static/images/brian.jpeg" alt="" />
         </div>
       </div>
     </div>
