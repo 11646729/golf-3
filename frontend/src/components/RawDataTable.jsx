@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
-import mystyled from "styled-components"
-import { styled } from "@mui/material/styles"
+import styled from "styled-components"
+import { muiStyled } from "@mui/material/styles"
 import Title from "./Title"
 import { Button } from "@mui/material"
 import MuiToggleButton from "@mui/material/ToggleButton"
@@ -17,28 +17,28 @@ import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataH
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
 
-const ToggleButton = styled(MuiToggleButton)({
+const ToggleButton = muiStyled(MuiToggleButton)({
   "&.Mui-selected, &.Mui-selected:hover": {
     color: "white",
     backgroundColor: "#00ff00",
   },
 })
 
-const TableTitleContainer = mystyled.div`
+const TableTitleContainer = styled.div`
   margin-top: 35px;
   margin-left: 20px;
   margin-right: 20px;
   width: "97%";
 `
 
-const TableContainer = mystyled.div`
+const TableContainer = styled.div`
   min-width: 200px;
   margin-left: 20px;
   margin-right: 10px;
   margin-bottom: 20px;
 `
 
-const TableStyle = mystyled.table`
+const TableStyle = styled.table`
   width: 94%;
   margin-left: 20px;
   margin-right: 20px;
@@ -52,19 +52,19 @@ const TableStyle = mystyled.table`
     sans-serif;
 `
 
-const TableHeader = mystyled.thead`
+const TableHeader = styled.thead`
   /* text-align: left; */
   font-size: 14px;
 `
 
-const TableRow = mystyled.tr`
+const TableRow = styled.tr`
   &:hover {
     background-color: #ebeccd;
     color: black;
   }
 `
 
-const TableHead = mystyled.th`
+const TableHead = styled.th`
   height: 34px;
   margin: 0;
   padding: 0.5rem;
@@ -72,9 +72,9 @@ const TableHead = mystyled.th`
   border-right: 1px solid lightgray;
 `
 
-const TableBody = mystyled.tbody``
+const TableBody = styled.tbody``
 
-const TableCell = mystyled.td`
+const TableCell = styled.td`
   height: 34px;
   margin: 0;
   padding: 0.5rem;

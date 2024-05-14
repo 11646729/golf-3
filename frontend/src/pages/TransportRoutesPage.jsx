@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import { Autocomplete, TextField } from "@mui/material"
-import { styled } from "@mui/material/styles"
+import { muiStyled } from "@mui/material/styles"
 import {
   getAllAgenciesFrontEnd,
   getRoutesForSingleAgencyFrontEnd,
@@ -10,7 +10,7 @@ import {
 } from "../functionHandlers/loadStaticGTFSDataHandler"
 import "../styles/transportroutes.scss"
 
-const StyledAutocomplete = styled(Autocomplete)({
+const StyledAutocomplete = muiStyled(Autocomplete)({
   "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
     // Default transform is "translate(14px, 20px) scale(1)""
     // This lines up the label with the initial cursor position in the input

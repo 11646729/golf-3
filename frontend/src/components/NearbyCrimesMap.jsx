@@ -6,18 +6,10 @@ import {
   Marker,
   useJsApiLoader,
 } from "@react-google-maps/api"
-import styled from "styled-components"
-
 import Title from "./Title"
+import "../styles/nearbycrimesmap.scss"
 
 const NearbyCrimesMapTitle = "Crimes Location Map"
-
-const NearbyCrimesMapContainer = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 20px;
-  padding-top: 30px;
-`
 
 const options = {
   imagePath: "../../static/images/m", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
@@ -57,7 +49,7 @@ const NearbyCrimesMap = (props) => {
   })
 
   return isLoaded ? (
-    <NearbyCrimesMapContainer>
+    <div className="nearbycrimesmapcontainer">
       <Title>{NearbyCrimesMapTitle}</Title>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
@@ -90,7 +82,7 @@ const NearbyCrimesMap = (props) => {
           }
         </MarkerClusterer>
       </GoogleMap>
-    </NearbyCrimesMapContainer>
+    </div>
   ) : null
 }
 
