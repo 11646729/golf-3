@@ -1,39 +1,9 @@
 import React, { memo, useState } from "react"
-import styled from "styled-components"
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
 import LanguageIcon from "@mui/icons-material/Language"
 import SettingsIcon from "@mui/icons-material/Settings"
 import StatusIcon from "./StatusIcon"
 import "../styles/header.scss"
-
-const TopBarIconContainer = styled.div`
-  position: relative;
-  cursor: pointer;
-  margin-right: 10px;
-  color: $main-color;
-`
-
-const TopIconBadge = styled.div`
-  height: 15px;
-  width: 15px;
-  position: absolute;
-  top: -5px;
-  right: 0px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-`
-
-const TopAvatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-`
 
 const Header = () => {
   const [isActiveStatus1, setIsActiveStatus1] = useState(true)
@@ -42,13 +12,13 @@ const Header = () => {
   return (
     <div className="headercontainer">
       <div className="topbarcontainer">
-        <div className="topbarlogo">Real-time Data Simulator</div>
+        <div className="topbarlogo">My Dashboard</div>
         <div className="topright">
-          <TopBarIconContainer>
+          <div className="topbariconcontainer">
             <NotificationsNoneIcon />
-            <TopIconBadge>1</TopIconBadge>
-          </TopBarIconContainer>
-          <TopBarIconContainer>
+            <span class="topiconbadge">1</span>
+          </div>
+          <div className="topbariconcontainer">
             <StatusIcon
               size={5}
               status={isActiveStatus1}
@@ -60,12 +30,12 @@ const Header = () => {
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
             />
             <LanguageIcon />
-            <TopIconBadge>2</TopIconBadge>
-          </TopBarIconContainer>
-          <TopBarIconContainer>
+            <span class="topiconbadge">2</span>
+          </div>
+          <div className="topbariconcontainer">
             <SettingsIcon />
-          </TopBarIconContainer>
-          <TopAvatar src="/static/images/brian.jpeg" alt="" />
+          </div>
+          <img className="topavatar" src="/static/images/brian.jpeg" />
         </div>
       </div>
     </div>
