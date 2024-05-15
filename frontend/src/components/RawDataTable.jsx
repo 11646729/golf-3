@@ -1,10 +1,7 @@
 import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
-import styled from "styled-components"
-// import { styled } from "@mui/material/styles"
 import Title from "./Title"
 import { Button } from "@mui/material"
-// import MuiToggleButton from "@mui/material/ToggleButton"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
@@ -16,72 +13,7 @@ import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
-
-// const ToggleButton = styled(MuiToggleButton)({
-//   "&.Mui-selected, &.Mui-selected:hover": {
-//     color: "white",
-//     backgroundColor: "#00ff00",
-//   },
-// })
-
-const TableTitleContainer = styled.div`
-  margin-top: 35px;
-  margin-left: 20px;
-  margin-right: 20px;
-  width: "97%";
-`
-
-const TableContainer = styled.div`
-  min-width: 200px;
-  margin-left: 20px;
-  margin-right: 10px;
-  margin-bottom: 20px;
-`
-
-const TableStyle = styled.table`
-  width: 94%;
-  margin-left: 20px;
-  margin-right: 20px;
-  border-spacing: 20px;
-  border: 1px solid lightgray;
-  border-collapse: collapse;
-  font-weight: normal;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-`
-
-const TableHeader = styled.thead`
-  /* text-align: left; */
-  font-size: 14px;
-`
-
-const TableRow = styled.tr`
-  &:hover {
-    background-color: #ebeccd;
-    color: black;
-  }
-`
-
-const TableHead = styled.th`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-`
-
-const TableBody = styled.tbody``
-
-const TableCell = styled.td`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  text-align: center;
-`
+import "../styles/rawdatatable.scss"
 
 const tableData = [
   {
@@ -199,25 +131,25 @@ const RawDataTable = (props) => {
 
   return (
     <div>
-      <TableTitleContainer>
+      <div className="tabletitlecontainer">
         <Title>{rawDataTableTitle}</Title>
-      </TableTitleContainer>
+      </div>
 
-      <TableContainer>
-        <TableStyle>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Import Raw Data Types</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      <div className="tablecontainer">
+        <table className="tablestyle">
+          <thead className="tableheader">
+            <tr className="tablerow">
+              <th className="tablehead">ID</th>
+              <th className="tablehead">Import Raw Data Types</th>
+              <th className="tablehead">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="tablebody">
             {tableData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.datatype}</TableCell>
-                <TableCell>
+              <tr key={row.id}>
+                <td className="tablecell">{row.id}</td>
+                <td className="tablecell">{row.datatype}</td>
+                <td className="tablecell">
                   <Button
                     sx={{
                       ml: 6,
@@ -229,23 +161,12 @@ const RawDataTable = (props) => {
                   >
                     {row.buttontext}
                   </Button>
-                  {/* <ToggleButton
-                    sx={{
-                      ml: 6,
-                      textTransform: "capitalize",
-                      backgroundColor: row.buttonbackgroundcolor,
-                    }}
-                    variant="contained"
-                    onClick={() => handleClick(row.id)}
-                  >
-                    {row.buttontext}
-                  </ToggleButton> */}
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </TableStyle>
-      </TableContainer>
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
