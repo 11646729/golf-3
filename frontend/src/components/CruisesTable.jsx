@@ -1,130 +1,8 @@
 import React, { memo } from "react"
 import PropTypes from "prop-types"
-import styled from "styled-components"
-
 import Title from "./Title"
+import "../styles/cruisestable.scss"
 
-const CruisesTableTitleContainer = styled.div`
-  margin-top: 35px;
-  margin-left: 20px;
-  margin-right: 20px;
-  width: "97%";
-`
-
-const CruisesTableContainer = styled.div`
-  min-width: 200px;
-  margin-left: 20px;
-  margin-right: 10px;
-  margin-bottom: 20px;
-`
-
-const CruisesTableStyle = styled.table`
-  width: 94%;
-  margin-left: 20px;
-  margin-right: 20px;
-  border-spacing: 20px;
-  border: 1px solid lightgray;
-  border-collapse: collapse;
-  font-weight: normal;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-`
-
-const CruisesTableHeaderStyle = styled.thead`
-  /* text-align: left; */
-  font-size: 14px;
-`
-
-const TableRow = styled.tr`
-  &:hover {
-    background-color: #ebeccd;
-  }
-`
-
-const TableHeader = styled.th`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-`
-
-const TableDataCell = styled.td`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-`
-
-const TableDataCellCenter = styled.td`
-  height: 34px;
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  text-align: center;
-`
-
-const CruisesTableBodyStyle = styled.tbody``
-
-const CruiseShip = styled.div`
-  display: flex;
-  flex-direction: row;
-  background-color: white;
-`
-
-const CruiseLineLogo = styled.img`
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  margin-left: 70px;
-`
-
-const CruiseShipName = styled.div`
-  text-decoration: underline;
-  color: blue;
-  cursor: pointer;
-  margin-left: 10px;
-`
-
-const CruiseShipArrivalTime = styled.div``
-
-const DateOfArrival = styled.div`
-  // font-weight: 600;
-  text-align: center;
-`
-
-const DayOfTheWeek = styled.div`
-  font-weight: 600;
-  text-align: center;
-`
-
-const ArrivalTime = styled.div`
-  text-align: center;
-`
-
-const DepartureTime = styled.div`
-  text-align: center;
-`
-
-const Button = styled.button`
-  padding: 5px 7px;
-  border: none;
-  border-radius: 10px;
-  background-color: lightgreen;
-  color: darkgreen;
-  margin: auto;
-  display: block;
-
-  &:hover {
-    background-color: #105b72c2;
-    color: white;
-    cursor: pointer;
-  }
-`
 const CruisesTableTitle = "Cruise Ships Arriving Soon"
 
 const CruisesTable = (props) => {
@@ -136,55 +14,58 @@ const CruisesTable = (props) => {
 
   return (
     <div>
-      <CruisesTableTitleContainer>
+      <div className="cruisestabletitlecontainer">
         <Title>{CruisesTableTitle}</Title>
-      </CruisesTableTitleContainer>
+      </div>
 
-      <CruisesTableContainer>
-        <CruisesTableStyle>
-          <CruisesTableHeaderStyle>
-            <TableRow>
-              <TableHeader>Day</TableHeader>
-              <TableHeader>Ship</TableHeader>
-              <TableHeader>Arrival</TableHeader>
-              <TableHeader>Departure</TableHeader>
-              <TableHeader>Itinerary</TableHeader>
-            </TableRow>
-          </CruisesTableHeaderStyle>
-          <CruisesTableBodyStyle>
-            {portArrivals.map((portArrival) => (
-              <TableRow key={portArrival.portarrivalid}>
-                <TableDataCell>
-                  <CruiseShipArrivalTime>
-                    <DateOfArrival>{portArrival.arrivalDate}</DateOfArrival>
-                    <DayOfTheWeek>{portArrival.weekday}</DayOfTheWeek>
-                  </CruiseShipArrivalTime>
-                </TableDataCell>
-                <TableDataCellCenter>
-                  <CruiseShip>
-                    <CruiseLineLogo
-                      src={portArrival.cruiselinelogo}
-                      alt="Cruise Line Logo"
-                    />
-                    <CruiseShipName>
-                      {portArrival.vesselshortcruisename}
-                    </CruiseShipName>
-                  </CruiseShip>
-                </TableDataCellCenter>
-                <TableDataCell>
-                  <ArrivalTime>{portArrival.vesseletatime}</ArrivalTime>
-                </TableDataCell>
-                <TableDataCell>
-                  <DepartureTime>{portArrival.vesseletdtime}</DepartureTime>
-                </TableDataCell>
-                <TableDataCell>
-                  <Button>Show</Button>
-                </TableDataCell>
-              </TableRow>
-            ))}
-          </CruisesTableBodyStyle>
-        </CruisesTableStyle>
-      </CruisesTableContainer>
+      <div className="cruisestablecontainer">
+        <table className="cruisestablestyle">
+          <thead className="cruisestableheader">
+            <tr className="cruisestablerow">
+              <th className="cruisestablehead">Day</th>
+              <th className="cruisestablehead">Ship</th>
+              <th className="cruisestablehead">Arrival</th>
+              <th className="cruisestablehead">Departure</th>
+              <th className="cruisestablehead">Itinerary</th>
+            </tr>
+          </thead>
+          {portArrivals.map((portArrival) => (
+            <tr className="cruisestablerow" key={portArrival.portarrivalid}>
+              <td className="cruisestabledatacell">
+                <div className="cruisescellcenter">
+                  {portArrival.arrivalDate}
+                </div>
+                <div className="cruisescellcenter">{portArrival.weekday}</div>
+              </td>
+              <td className="cruisestabledatacellcenter">
+                <div className="cruisesship">
+                  <img
+                    className="cruisesshiplogo"
+                    src={portArrival.cruiselinelogo}
+                    alt="Cruise Line Logo"
+                  />
+                  <div className="cruisesshipname">
+                    {portArrival.vesselshortcruisename}
+                  </div>
+                </div>
+              </td>
+              <td className="cruisestabledatacell">
+                <div className="cruisescellcenter">
+                  {portArrival.vesseletatime}
+                </div>
+              </td>
+              <td className="cruisestabledatacell">
+                <div className="cruisescellcenter">
+                  {portArrival.vesseletdtime}
+                </div>
+              </td>
+              <td className="cruisestabledatacell">
+                <button className="cruisesbutton">Show</button>
+              </td>
+            </tr>
+          ))}
+        </table>
+      </div>
     </div>
   )
 }
