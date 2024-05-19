@@ -1,5 +1,6 @@
 import React, { useState, useEffect, memo } from "react"
-import CruisesTable from "../components/CruisesTable"
+// import CruisesTable from "../components/CruisesTable"
+import CruisesTable from "../components/CruisesTable2"
 import CruisesMap from "../components/CruisesMap"
 import {
   getPortArrivalsData,
@@ -62,14 +63,14 @@ const CruisesPage = () => {
       <div className="cruisestablecontainer">
         <CruisesTable portArrivals={portArrivals} />
       </div>
-      <div className="cruisesmapcontainer">
-        <CruisesMap
-          isLoading={isLoading}
-          cruisesHomePosition={homePosition}
-          vesselPositions={vesselPositions}
-          vesselDetails={portArrivals}
-        />
-      </div>
+      {/* <div className="cruisesmapcontainer"> */}
+      <CruisesMap
+        isLoading={isLoading}
+        cruisesHomePosition={homePosition}
+        vesselPositions={vesselPositions}
+        vesselDetails={portArrivals}
+      />
+      {/* </div> */}
     </div>
   )
 }

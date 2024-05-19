@@ -16,7 +16,7 @@ const Header = () => {
         <div className="topright">
           <div className="topbariconcontainer">
             <NotificationsNoneIcon />
-            <span class="topiconbadge">1</span>
+            <span className="topiconbadge">1</span>
           </div>
           <div className="topbariconcontainer">
             <StatusIcon
@@ -30,7 +30,7 @@ const Header = () => {
               onShow={() => setIsActiveStatus2(!isActiveStatus2)}
             />
             <LanguageIcon />
-            <span class="topiconbadge">2</span>
+            <span className="topiconbadge">2</span>
           </div>
           <div className="topbariconcontainer">
             <SettingsIcon />
