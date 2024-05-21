@@ -55,6 +55,10 @@ const CruisesTable = (props) => {
     setPage(0)
   }
 
+  const handleClick = (event) => {
+    console.info("I have been clicked! " + event)
+  }
+
   return (
     <div>
       <div className="cruisestabletitlecontainer">
@@ -118,7 +122,12 @@ const CruisesTable = (props) => {
                       </div>
                     </td>
                     <td className="cruisestabledatacell">
-                      <button className="cruisesbutton">Show</button>
+                      <button
+                        className="cruisesbutton"
+                        onClick={() => handleClick(portArrival.portarrivalid)}
+                      >
+                        Show
+                      </button>
                     </td>
                   </tr>
                 ))}
