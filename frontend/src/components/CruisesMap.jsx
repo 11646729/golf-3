@@ -146,7 +146,11 @@ const CruisesMap = (props) => {
                 // title={selected.phototitle}
               />
               <CardContent>
-                {/* <Typography gutterBottom variant="h5" component="h2"> */}
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                ></Typography>
                 <Typography component="p">{selected.vesselName}</Typography>
                 <Typography component="p">{selected.timestamp}</Typography>
                 <Typography component="p">
