@@ -3,7 +3,8 @@ import PropTypes from "prop-types"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
-import TableCell from "@mui/material/TableCell"
+// import TableCell from "@mui/material/TableCell"
+import TableCell, { tableCellClasses } from "@mui/material/TableCell"
 import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
@@ -69,7 +70,16 @@ const CruisesTable = (props) => {
         sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
       >
         <TableContainer>
-          <Table stickyHeader aria-label="sticky table">
+          <Table
+            stickyHeader
+            aria-label="sticky table"
+            // sx={{
+            //   [`& .${tableCellClasses.root}`]: {
+            //     borderLeft: "1px solid #d9d9d6",
+            //     // borderBottom: "none",
+            //   },
+            // }}
+          >
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
@@ -83,7 +93,15 @@ const CruisesTable = (props) => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody
+              sx={{
+                // fontSize: 20,
+                // borderBottom: "1px solid #d9d9d6",
+                // borderTop: "1px solid #d9d9d6",
+                borderLeft: "1px solid #d9d9d6",
+                // borderRight: "1px solid #d9d9d6",
+              }}
+            >
               {portArrivals
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((portArrival) => (
