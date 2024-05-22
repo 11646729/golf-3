@@ -44,6 +44,9 @@ export const importPortArrivalsAndVessels = async (req, res) => {
       let scrapedVessel = await scrapeVesselDetails(
         DeduplicatedVesselUrlArray[loop]
       )
+
+      // console.log(DeduplicatedVesselUrlArray[loop])
+
       saveVessel(scrapedVessel)
 
       loop++

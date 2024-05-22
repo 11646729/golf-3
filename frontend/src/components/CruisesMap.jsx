@@ -15,9 +15,9 @@ import {
   Link,
   CardActions,
 } from "@mui/material"
-import "../styles/cruisesmap.scss"
-
+import Paper from "@mui/material/Paper"
 import Title from "./Title"
+import "../styles/cruisesmap.scss"
 
 const CruiseMapTitle = "Cruise Ship Positions Now"
 
@@ -43,12 +43,12 @@ const CruisesMap = (props) => {
   )
 
   const mapContainerStyle = {
-    height: "450px",
-    width: "94%",
+    height: "600px",
+    width: "100%",
     border: "1px solid #ccc",
-    marginLeft: 20,
-    marginRight: 10,
-    marginBottom: 20,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
   }
 
   const { isLoaded } = useJsApiLoader({
@@ -93,84 +93,96 @@ const CruisesMap = (props) => {
   }
 
   return isLoaded ? (
-    <div className="cruisesmapcontainer">
-      <Title>{CruiseMapTitle}</Title>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={mapCenter}
-        zoom={mapZoom}
-        options={{
-          // mapTypeId: "hybrid",
-          disableDefaultUI: true,
-          zoomControl: true,
+    <div>
+      <div className="cruisesmaptitlecontainer">
+        <Title>{CruiseMapTitle}</Title>
+      </div>
+
+      <Paper
+        sx={{
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          paddingTop: "20px",
+          paddingBottom: "20px",
         }}
-        onLoad={onLoadHandler}
-        onUnmount={onUnmountHandler}
       >
-        <Marker position={cruisesHomePosition} />
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={mapCenter}
+          zoom={mapZoom}
+          options={{
+            // mapTypeId: "hybrid",
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
+          onLoad={onLoadHandler}
+          onUnmount={onUnmountHandler}
+        >
+          <Marker position={cruisesHomePosition} />
 
-        {vesselPositions
-          ? vesselPositions.map((vesselPosition) => (
-              <Marker
-                key={vesselPosition.index}
-                position={{
-                  lat: vesselPosition.lat,
-                  lng: vesselPosition.lng,
-                }}
-                icon={iconPin}
-                onClick={() => {
-                  setSelected(vesselPosition)
-                }}
-              />
-            ))
-          : null}
+          {vesselPositions
+            ? vesselPositions.map((vesselPosition) => (
+                <Marker
+                  key={vesselPosition.index}
+                  position={{
+                    lat: vesselPosition.lat,
+                    lng: vesselPosition.lng,
+                  }}
+                  icon={iconPin}
+                  onClick={() => {
+                    setSelected(vesselPosition)
+                  }}
+                />
+              ))
+            : null}
 
-        {selected ? (
-          <InfoWindow
-            position={{
-              lat: selected.lat,
-              lng: selected.lng,
-            }}
-            onCloseClick={() => {
-              setSelected(null)
-            }}
-          >
-            <Card>
-              <CardMedia
-                style={{
-                  height: 0,
-                  paddingTop: "40%",
-                  marginTop: "30",
-                }}
-                // image={selected.photourl}
-                // title={selected.phototitle}
-              />
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                ></Typography>
-                <Typography component="p">{selected.vesselName}</Typography>
-                <Typography component="p">{selected.timestamp}</Typography>
-                <Typography component="p">
-                  En Route to {selected.destination}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="primary"
-                  component={Link}
-                  // to="/golfcoursespage"
-                >
-                  View
-                </Button>
-              </CardActions>
-            </Card>
-          </InfoWindow>
-        ) : null}
-      </GoogleMap>
+          {selected ? (
+            <InfoWindow
+              position={{
+                lat: selected.lat,
+                lng: selected.lng,
+              }}
+              onCloseClick={() => {
+                setSelected(null)
+              }}
+            >
+              <Card>
+                <CardMedia
+                  style={{
+                    height: 0,
+                    paddingTop: "40%",
+                    marginTop: "30",
+                  }}
+                  // image={selected.photourl}
+                  // title={selected.phototitle}
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                  ></Typography>
+                  <Typography component="p">{selected.vesselName}</Typography>
+                  <Typography component="p">{selected.timestamp}</Typography>
+                  <Typography component="p">
+                    En Route to {selected.destination}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    component={Link}
+                    // to="/golfcoursespage"
+                  >
+                    View
+                  </Button>
+                </CardActions>
+              </Card>
+            </InfoWindow>
+          ) : null}
+        </GoogleMap>
+      </Paper>
     </div>
   ) : null
 }
