@@ -6,15 +6,13 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api"
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Link,
-  CardActions,
-} from "@mui/material"
+import Card from "@mui/material/Card"
+import CardContent from "@mui/material/CardContent"
+import CardMedia from "@mui/material/CardMedia"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import Link from "@mui/material/Link"
+import CardActions from "@mui/material/CardActions"
 import Paper from "@mui/material/Paper"
 import Title from "./Title"
 import "../styles/cruisesmap.scss"
