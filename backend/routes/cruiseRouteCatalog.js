@@ -21,7 +21,7 @@ var cruiseRouter = express.Router()
 cruiseRouter.get("/", index)
 
 // ---------------------------------------------------
-// Port Arrivals
+// PortArrivals Routes
 // ---------------------------------------------------
 // Prepare the Port Arrivals table in the database
 cruiseRouter.post("/preparePortArrivalsTable", prepareEmptyPortArrivalsTable)
@@ -30,7 +30,7 @@ cruiseRouter.post("/preparePortArrivalsTable", prepareEmptyPortArrivalsTable)
 cruiseRouter.post("/portArrivals", savePortArrival)
 
 // GET all Port Arrivals from the database
-cruiseRouter.get("/portArrivals", getPortArrivals)
+cruiseRouter.get("/getPortArrivals", getPortArrivals)
 
 // ---------------------------------------------------
 // Vessel Routes

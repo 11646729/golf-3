@@ -16,13 +16,13 @@ const CruisesTableTitle = "Cruise Ships Arriving Soon"
 
 const columns = [
   { id: "date", label: "Date", minWidth: 10, align: "center" },
-  { id: "ship", label: "Ship", minWidth: 10, align: "center" },
   {
     id: "arrival",
     label: "Arrival",
     minWidth: 10,
     align: "center",
   },
+  { id: "ship", label: "Ship", minWidth: 10, align: "center" },
   {
     id: "departure",
     label: "Departure",
@@ -57,7 +57,8 @@ const CruisesTable = (props) => {
   }
 
   const handleClick = (event) => {
-    console.info("I have been clicked! " + event)
+    // console.info("I have been clicked! " + event)
+    alert("I have been clicked! " + event)
   }
 
   return (
@@ -116,7 +117,12 @@ const CruisesTable = (props) => {
                         {portArrival.arrivalDate}
                       </div>
                     </TableCell>
-
+                    <TableCell
+                      align="center"
+                      className="cruisestabledatacellcenter"
+                    >
+                      {portArrival.vesseletatime}
+                    </TableCell>
                     <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
                         <img
@@ -128,12 +134,6 @@ const CruisesTable = (props) => {
                           {portArrival.vesselshortcruisename}
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="cruisestabledatacellcenter"
-                    >
-                      {portArrival.vesseletatime}
                     </TableCell>
                     <TableCell
                       align="center"

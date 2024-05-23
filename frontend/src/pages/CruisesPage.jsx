@@ -21,7 +21,7 @@ const CruisesPage = () => {
   }
 
   // build portArrivalsData Url
-  const portArrivalsDataUrl = "http://localhost:4000/api/cruise/portArrivals"
+  const portArrivalsDataUrl = "http://localhost:4000/api/cruise/getPortArrivals"
 
   // This routine gets Port Arrivals data
   useEffect(() => {
@@ -56,6 +56,8 @@ const CruisesPage = () => {
         })
     }
   }, [portArrivals])
+
+  console.log(portArrivals)
 
   return (
     <div className="cruisescontainer">
