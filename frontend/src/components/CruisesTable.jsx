@@ -73,12 +73,19 @@ const CruisesTable = (props) => {
           <Table
             stickyHeader
             aria-label="sticky table"
-            // sx={{
-            //   [`& .${tableCellClasses.root}`]: {
-            //     borderLeft: "1px solid #d9d9d6",
-            //     // borderBottom: "none",
-            //   },
-            // }}
+            size="small"
+            sx={{
+              borderCollapse: "separate",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              // "&:last-child td, &:last-child th": { border: 0 },
+              // [`& .${tableCellClasses.root}`]: {
+              //   borderLeft: "1px solid #d9d9d6",
+              //   borderRight: "1px solid #d9d9d6",
+              //   borderTop: "1px solid #d9d9d6",
+              //   borderBottom: "1px solid #d9d9d6",
+              // },
+            }}
           >
             <TableHead>
               <TableRow>
@@ -93,31 +100,24 @@ const CruisesTable = (props) => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody
-              sx={{
-                // fontSize: 20,
-                // borderBottom: "1px solid #d9d9d6",
-                // borderTop: "1px solid #d9d9d6",
-                borderLeft: "1px solid #d9d9d6",
-                // borderRight: "1px solid #d9d9d6",
-              }}
-            >
+            <TableBody>
               {portArrivals
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((portArrival) => (
-                  <tr
+                  <TableRow
                     className="cruisestablerow"
                     key={portArrival.portarrivalid}
                   >
-                    <td className="cruisestabledatacell">
-                      <div className="cruisescellcenter">
-                        {portArrival.arrivalDate}
-                      </div>
+                    <TableCell className="cruisestabledatacell">
                       <div className="cruisescellcenter">
                         {portArrival.weekday}
                       </div>
-                    </td>
-                    <td className="cruisestabledatacellcenter">
+                      <div className="cruisescellcenter">
+                        {portArrival.arrivalDate}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
                         <img
                           className="cruisesshiplogo"
@@ -128,32 +128,37 @@ const CruisesTable = (props) => {
                           {portArrival.vesselshortcruisename}
                         </div>
                       </div>
-                    </td>
-                    <td className="cruisestabledatacell">
-                      <div className="cruisescellcenter">
-                        {portArrival.vesseletatime}
-                      </div>
-                    </td>
-                    <td className="cruisestabledatacell">
-                      <div className="cruisescellcenter">
-                        {portArrival.vesseletdtime}
-                      </div>
-                    </td>
-                    <td className="cruisestabledatacell">
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="cruisestabledatacellcenter"
+                    >
+                      {portArrival.vesseletatime}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="cruisestabledatacellcenter"
+                    >
+                      {portArrival.vesseletdtime}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="cruisestabledatacellcenter"
+                    >
                       <button
                         className="cruisesbutton"
                         onClick={() => handleClick(portArrival.portarrivalid)}
                       >
                         Show
                       </button>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={[10]}
           component="div"
           count={portArrivals.length}
           rowsPerPage={rowsPerPage}
