@@ -245,11 +245,9 @@ export const getAndSavePortArrivals = async (
 // -----------------------------------------------------
 export const getSingleMonthPortArrival = async (db, period, port, portName) => {
   let arrivalUrl =
-    process.env.CRUISE_MAPPER_URL +
-    portName +
-    "?tab=schedule&month=" +
-    period +
-    "#schedule"
+    process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
+
+  console.log(arrivalUrl)
 
   const { data: html } = await axios.get(arrivalUrl)
 
