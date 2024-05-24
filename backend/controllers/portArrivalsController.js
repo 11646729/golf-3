@@ -125,7 +125,9 @@ export const deletePortArrivals = (db) => {
 // -------------------------------------------------------
 export const getPortArrivals = (req, res, next) => {
   const sql =
-    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+6 month') AND vesseletd != 'Not Known'"
+    // "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+6 month') AND vesseletd != 'Not Known'"
+    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+6 month')"
+  // "SELECT * FROM portarrivals WHERE vesseleta = 'Not Known' AND vesseleta = 'Not Known'"
   let params = []
 
   // Open a Database Connection

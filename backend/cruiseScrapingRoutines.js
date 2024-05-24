@@ -53,7 +53,6 @@ export const importPortArrivalsAndVessels = async (req, res) => {
     // Length of vesselUrls array is the Number of Vessel Arrivals
     console.log(vesselUrls.length + " Port Arrivals added")
     console.log(DeduplicatedVesselUrlArray.length + " Vessels added")
-    // res.send(vesselUrls.length + " Port Arrivals added")
   }
 }
 

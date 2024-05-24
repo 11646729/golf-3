@@ -27,9 +27,8 @@ const CruisesPage = () => {
   useEffect(() => {
     getPortArrivalsData(portArrivalsDataUrl)
       .then((returnedData) => {
-        // DOES NOT WORK
-        // Sort by date because returnedData is not always in timestamp order
-        // returnedData.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
+        // Sort by date & time because returnedData is not always in timestamp order
+        returnedData.data.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
 
         setPortArrivals(returnedData.data)
 
@@ -56,8 +55,6 @@ const CruisesPage = () => {
         })
     }
   }, [portArrivals])
-
-  console.log(portArrivals)
 
   return (
     <div className="cruisescontainer">
