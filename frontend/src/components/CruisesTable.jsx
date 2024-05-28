@@ -127,7 +127,7 @@ const CruisesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {portArrivals
+              {modifiedPortArrivals
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((modifiedPortArrivals) => (
                   <TableRow
