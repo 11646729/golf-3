@@ -1,10 +1,9 @@
-import React, { useState, memo } from "react"
+import React, { useState, memo, useEffect } from "react"
 import PropTypes from "prop-types"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
-// import TableCell from "@mui/material/TableCell"
-import TableCell, { tableCellClasses } from "@mui/material/TableCell"
+import TableCell from "@mui/material/TableCell"
 import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
@@ -43,6 +42,22 @@ const CruisesTable = (props) => {
   CruisesTable.propTypes = {
     portArrivals: PropTypes.array,
   }
+
+  const [modifiedPortArrivals, setModifiedPortArrivals] = useState([])
+
+  useEffect(() => {
+    portArrivals.forEach((element) => {
+      if (element.vesseletatime == "23:59") {
+        element.vesseletatime = "Not Known"
+      }
+
+      if (element.vesseletdtime == "23:59") {
+        element.vesseletdtime = "Not Known"
+      }
+    })
+
+    setModifiedPortArrivals(portArrivals)
+  }, [portArrivals])
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -104,34 +119,34 @@ const CruisesTable = (props) => {
             <TableBody>
               {portArrivals
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((portArrival) => (
+                .map((modifiedPortArrivals) => (
                   <TableRow
                     className="cruisestablerow"
-                    key={portArrival.portarrivalid}
+                    key={modifiedPortArrivals.portarrivalid}
                   >
                     <TableCell className="cruisestabledatacell">
                       <div className="cruisescellcenter">
-                        {portArrival.weekday}
+                        {modifiedPortArrivals.weekday}
                       </div>
                       <div className="cruisescellcenter">
-                        {portArrival.arrivalDate}
+                        {modifiedPortArrivals.arrivalDate}
                       </div>
                     </TableCell>
                     <TableCell
                       align="center"
                       className="cruisestabledatacellcenter"
                     >
-                      {portArrival.vesseletatime}
+                      {modifiedPortArrivals.vesseletatime}
                     </TableCell>
                     <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
                         <img
                           className="cruisesshiplogo"
-                          src={portArrival.cruiselinelogo}
+                          src={modifiedPortArrivals.cruiselinelogo}
                           alt="Cruise Line Logo"
                         />
                         <div className="cruisesshipname">
-                          {portArrival.vesselshortcruisename}
+                          {modifiedPortArrivals.vesselshortcruisename}
                         </div>
                       </div>
                     </TableCell>
@@ -139,7 +154,7 @@ const CruisesTable = (props) => {
                       align="center"
                       className="cruisestabledatacellcenter"
                     >
-                      {portArrival.vesseletdtime}
+                      {modifiedPortArrivals.vesseletdtime}
                     </TableCell>
                     <TableCell
                       align="center"
@@ -147,7 +162,9 @@ const CruisesTable = (props) => {
                     >
                       <button
                         className="cruisesbutton"
-                        onClick={() => handleClick(portArrival.portarrivalid)}
+                        onClick={() =>
+                          handleClick(modifiedPortArrivals.portarrivalid)
+                        }
                       >
                         Show
                       </button>

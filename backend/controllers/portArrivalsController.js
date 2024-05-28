@@ -125,9 +125,7 @@ export const deletePortArrivals = (db) => {
 // -------------------------------------------------------
 export const getPortArrivals = (req, res, next) => {
   const sql =
-    // "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+6 month') AND vesseletd != 'Not Known'"
-    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+6 month')"
-  // "SELECT * FROM portarrivals WHERE vesseleta = 'Not Known' AND vesseleta = 'Not Known'"
+    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
   let params = []
 
   // Open a Database Connection
@@ -139,15 +137,15 @@ export const getPortArrivals = (req, res, next) => {
       db.all(sql, params, (err, results) => {
         if (err) {
           res.status(400).json({ error: err.message })
-          // return console.error(err.message)
           return
         }
+
+        // Code here to convert 23:59 to Not Known
 
         res.json({
           message: "success",
           data: results,
         })
-        // res.send(results)
       })
 
       // Close the Database Connection
@@ -249,8 +247,6 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
   let arrivalUrl =
     process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
 
-  console.log(arrivalUrl)
-
   const { data: html } = await axios.get(arrivalUrl)
 
   // load up cheerio
@@ -283,56 +279,54 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
       // Name of Vessel
       const vessel_short_cruise_name = $(item).find("a").text()
 
-      // -------------------------------------------------------
-      var weekdayArray = new Array(7)
-      weekdayArray[0] = "Sunday"
-      weekdayArray[1] = "Monday"
-      weekdayArray[2] = "Tuesday"
-      weekdayArray[3] = "Wednesday"
-      weekdayArray[4] = "Thursday"
-      weekdayArray[5] = "Friday"
-      weekdayArray[6] = "Saturday"
+      let weekdayArray = new Array(
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      )
       // -------------------------------------------------------
 
-      //  Date of Arrival
+      //  Scrape Date of Arrival
       let arrivalDate = $(item)
         .children("td")
         .children("span")
         .html()
         .replace(/,/, "") // Removes the comma
 
+      // -------------------------------------------------------
       // Expected Time of Arrival
       let vessel_eta_time = $(item).children("td").next("td").next("td").html()
-
       let vessel_eta = ""
-      let weekday = ""
 
       // If No Arrival Time Given
       if (vessel_eta_time == "") {
-        vessel_eta = "Not Known"
-        vessel_eta_time = "Not Known"
-        weekday = "NA"
-      } else {
-        vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
-        var d = new Date(vessel_eta)
-        vessel_eta = d.toISOString()
-
-        weekday = weekdayArray[d.getDay()]
+        vessel_eta_time = "23:59"
       }
 
+      vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
+      let a = new Date(vessel_eta)
+      vessel_eta = a.toISOString()
+
+      // Expected Weekday of Arrival
+      // let weekday = ""
+      let weekday = weekdayArray[a.getDay()]
+
+      // -------------------------------------------------------
       // Expected Time of Departure
       let vessel_etd_time = $(item).children("td").last("td").html()
       let vessel_etd = ""
 
-      // If No Departure Time Given
       if (vessel_etd_time == "") {
-        vessel_etd = "Not Known"
-        vessel_etd_time = "Not Known"
-      } else {
-        vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
-        var d = new Date(vessel_etd)
-        vessel_etd = d.toISOString()
+        vessel_etd_time = "23:59"
       }
+
+      vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
+      vessel_etd = new Date(vessel_etd).toISOString()
+      // -------------------------------------------------------
 
       // Url of Cruise Line Logo image
       const cruise_line_logo_url = $(item).find("img").attr("src")
