@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
+import Link from "@mui/material/Link"
 import Title from "./Title"
 import "../styles/cruisestable.scss"
 
@@ -156,7 +157,14 @@ const CruisesTable = (props) => {
                           alt="Cruise Line Logo"
                         />
                         <div className="cruisesshipname">
-                          {modifiedPortArrivals.vesselshortcruisename}
+                          <Link
+                            component="button"
+                            onClick={() => {
+                              alert("I'm a picture")
+                            }}
+                          >
+                            {modifiedPortArrivals.vesselshortcruisename}
+                          </Link>
                         </div>
                       </div>
                     </TableCell>
