@@ -309,19 +309,36 @@ export const scrapeVesselDetails = async (vessel_url) => {
   const $ = cheerio.load(html)
 
   // Title
-  let vessel_title = $("#review .title").text().trim()
+  // let vessel_title = $("#review .title").text().trim()
+  let vessel_title = $("#container > main > section > article > header > h1")
+    .text()
+    .trim()
+  // console.log(vessel_title)
 
   // Photo Title
   let vessel_photo_title = "photo title here"
 
   // Photo Url
-  let vessel_photourl = "photourl address here"
+  const vessel_photourl = $(
+    "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
+  ).html()
+  console.log(vessel_photourl)
+
+  // WORKING CODE
+  // const link = $(
+  //   "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
+  // ).get(0)
+  // const vessel_photourl = link.attribs.href
+  // console.log(vessel_photourl)
+
+  // getVesselPicture("https://www.cruisemapper.com/ships/Norwegian-Pearl-693")
 
   // Vessel Type
   let vessel_type = "Passenger Ship"
 
   // Remove " Review" from title to get vessel_name
-  let vessel_name = vessel_title.substring(0, vessel_title.length - 7)
+  // let vessel_name = vessel_title.substring(0, vessel_title.length - 7)
+  let vessel_name = "Removed"
 
   // Vessel Flag
   let vessel_flag = $("td")
@@ -443,9 +460,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
   // )
 
   // If No Vessel Average Speed Available
-  // if (vessel_average_speed_knots == "") {
   let vessel_average_speed_knots = "Not Known"
-  // }
 
   // Vessel Maximum Speed
   const vessel_max_speed_knots_temp = $("td")
@@ -523,6 +538,32 @@ export const scrapeVesselDetails = async (vessel_url) => {
   ]
 
   return scrapedVessel
+}
+
+// -------------------------------------------------------
+// Fetch Picture of Vessel shown in Vessel Arrival Data
+// Path: Local function called by importPortArrivalsAndVessels - NOT YET CONFIRMED
+// -------------------------------------------------------
+const getVesselPicture = async (vesselUrl) => {
+  // console.log(vesselUrl)
+
+  // Fetch the initial data
+  const { data: html } = await axios.get(vesselUrl)
+
+  // Load up cheerio
+  const $ = cheerio.load(html)
+  // console.log($.html())
+
+  let temp = $(
+    "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
+  )
+    .text()
+    .trim()
+  // .html()
+  console.log(temp)
+
+  // const photograph = temp.attr("src")
+  // console.log(photograph)
 }
 
 export default saveVessel

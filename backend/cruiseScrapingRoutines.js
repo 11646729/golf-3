@@ -64,7 +64,6 @@ const getScheduleMonths = async (portName) => {
   let scheduledPeriods = []
 
   let initialPeriod = new Date().toISOString().slice(0, 7)
-  // console.log(initialPeriod)
 
   let initialUrl =
     process.env.CRUISE_MAPPER_URL +
