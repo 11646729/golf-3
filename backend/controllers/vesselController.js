@@ -51,7 +51,7 @@ export const createVesselsTable = (db) => {
   try {
     // IF NOT EXISTS isn't really necessary in next line
     const sql =
-      "CREATE TABLE IF NOT EXISTS vessels (vesselid INTEGER PRIMARY KEY AUTOINCREMENT, databaseversion INTEGER, vesselnameurl TEXT NOT NULL, title TEXT NOT NULL, phototitle TEXT NOT NULL, photourl TEXT NOT NULL, vesseltype TEXT NOT NULL, vesselname TEXT NOT NULL, vesselflag TEXT NOT NULL, vesselshortoperator TEXT NOT NULL, vessellongoperator TEXT NOT NULL, vesselyearbuilt TEXT NOT NULL, vessellengthmetres INTEGER, vesselwidthmetres INTEGER, vesselgrosstonnage INTEGER, vesselaveragespeedknots REAL, vesselmaxspeedknots REAL, vesselaveragedraughtmetres REAL, vesselimonumber INTEGER, vesselmmsnumber INTEGER, vesselcallsign TEXT NOT NULL, vesseltypicalpassengers TEXT, vesseltypicalcrew INTEGER, currentpositionlng REAL CHECK( currentpositionlng >= -180 AND currentpositionlng <= 180 ), currentpositionlat REAL CHECK( currentpositionlat >= -90 AND currentpositionlat <= 90 ), currentpositiontime TEXT)"
+      "CREATE TABLE IF NOT EXISTS vessels (vesselid INTEGER PRIMARY KEY AUTOINCREMENT, databaseversion INTEGER, vesselnameurl TEXT NOT NULL, vesselname TEXT NOT NULL, phototitle TEXT NOT NULL, photourl TEXT NOT NULL, vesseltype TEXT NOT NULL, vesselflag TEXT NOT NULL, vesselshortoperator TEXT NOT NULL, vessellongoperator TEXT NOT NULL, vesselyearbuilt TEXT NOT NULL, vessellengthmetres INTEGER, vesselwidthmetres INTEGER, vesselgrosstonnage INTEGER, vesselaveragespeedknots REAL, vesselmaxspeedknots REAL, vesselaveragedraughtmetres REAL, vesselimonumber INTEGER, vesselmmsnumber INTEGER, vesselcallsign TEXT NOT NULL, vesseltypicalpassengers TEXT, vesseltypicalcrew INTEGER, currentpositionlng REAL CHECK( currentpositionlng >= -180 AND currentpositionlng <= 180 ), currentpositionlat REAL CHECK( currentpositionlat >= -90 AND currentpositionlat <= 90 ), currentpositiontime TEXT)"
 
     db.run(sql, [], (err) => {
       if (err) {
@@ -136,7 +136,7 @@ export const saveVessel = (newVessel) => {
 
     // Don't change the routine below
     const sql_insert =
-      "INSERT INTO vessels (databaseversion, vesselnameurl, title, phototitle, photourl, vesseltype, vesselname, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)"
+      "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, phototitle, photourl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)"
 
     db.run(sql_insert, newVessel, (err) => {
       if (err) {
@@ -309,27 +309,24 @@ export const scrapeVesselDetails = async (vessel_url) => {
   const $ = cheerio.load(html)
 
   // Title
-  // let vessel_title = $("#review .title").text().trim()
   let vessel_title = $("#container > main > section > article > header > h1")
     .text()
     .trim()
-  // console.log(vessel_title)
 
   // Photo Title
-  let vessel_photo_title = "photo title here"
+  const link1 = $(
+    "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
+  ).get(0)
+  let vessel_photo_title = link1.attribs.title
 
   // Photo Url
-  const vessel_photourl = $(
+  const link = $(
     "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
-  ).html()
-  console.log(vessel_photourl)
+  ).get(0)
+  let vessel_photourl = "https://www.cruisemapper.com" + link.attribs.href
 
-  // WORKING CODE
-  // const link = $(
-  //   "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
-  // ).get(0)
-  // const vessel_photourl = link.attribs.href
-  // console.log(vessel_photourl)
+  // BELFAST HARBOUR WEBSITE
+  // #showRem1501 > td:nth-child(1) > img
 
   // getVesselPicture("https://www.cruisemapper.com/ships/Norwegian-Pearl-693")
 
@@ -516,7 +513,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
     vessel_photourl,
     vessel_type, // From where?
     // vessel_ais_name,
-    vessel_name,
+    // vessel_name,
     vessel_flag,
     vessel_short_operator,
     vessel_long_operator,
