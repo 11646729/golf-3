@@ -9,8 +9,28 @@ import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import Link from "@mui/material/Link"
+import Box from "@mui/material/Box"
+// import Card from "@mui/material/Card"
+// import CardContent from "@mui/material/CardContent"
+// import CardMedia from "@mui/material/CardMedia"
+// import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+// import CardActions from "@mui/material/CardActions"
+import Modal from "@mui/material/Modal"
 import Title from "./Title"
 import "../styles/cruisestable.scss"
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+}
 
 const CruisesTableTitle = "Cruise Ships Arriving Soon"
 
@@ -72,6 +92,8 @@ const CruisesTable = (props) => {
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [open, setOpen] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -82,9 +104,17 @@ const CruisesTable = (props) => {
     setPage(0)
   }
 
-  const handleClick = (event) => {
-    // console.info("I have been clicked! " + event)
-    alert("I have been clicked! " + event)
+  const handleOpen = (imageUrl) => {
+    // setSelectedImage(imageUrl)
+    setSelectedImage(
+      "https://www.cruisemapper.com/images/ships/693-large-53e3a7161e428b65688f14b84d61c610.jpg"
+    )
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    setSelectedImage(null)
   }
 
   return (
@@ -105,13 +135,6 @@ const CruisesTable = (props) => {
               borderCollapse: "separate",
               paddingLeft: "10px",
               paddingRight: "10px",
-              // "&:last-child td, &:last-child th": { border: 0 },
-              // [`& .${tableCellClasses.root}`]: {
-              //   borderLeft: "1px solid #d9d9d6",
-              //   borderRight: "1px solid #d9d9d6",
-              //   borderTop: "1px solid #d9d9d6",
-              //   borderBottom: "1px solid #d9d9d6",
-              // },
             }}
           >
             <TableHead>
@@ -160,7 +183,8 @@ const CruisesTable = (props) => {
                           <Link
                             component="button"
                             onClick={() => {
-                              alert("I'm a picture")
+                              setOpen(true)
+                              handleOpen(modifiedPortArrivals.portarrivalid)
                             }}
                           >
                             {modifiedPortArrivals.vesselshortcruisename}
@@ -181,7 +205,7 @@ const CruisesTable = (props) => {
                       <button
                         className="cruisesbutton"
                         onClick={() =>
-                          handleClick(modifiedPortArrivals.portarrivalid)
+                          handleOpen(modifiedPortArrivals.portarrivalid)
                         }
                       >
                         Show
@@ -191,6 +215,21 @@ const CruisesTable = (props) => {
                 ))}
             </TableBody>
           </Table>
+
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              {selectedImage && (
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  style={{ width: "100%" }}
+                />
+              )}
+              <Button onClick={handleClose} style={{ marginTop: "10px" }}>
+                Close
+              </Button>
+            </Box>
+          </Modal>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[10]}
@@ -207,3 +246,36 @@ const CruisesTable = (props) => {
 }
 
 export default memo(CruisesTable)
+
+//  Display Card
+// <Card>
+//   <CardMedia
+//     style={{
+//       height: 0,
+//       paddingTop: "40%",
+//       marginTop: "30",
+//     }}
+//     // image={selected.photourl}
+//     // title={selected.phototitle}
+//   />
+//   <CardContent>
+//     <Typography gutterBottom variant="h5" component="h2">
+//       "Name"
+//       {selected.name}
+//     </Typography>
+//     <Typography component="p">
+//       "Description"
+//       {selected.description}
+//     </Typography>
+//   </CardContent>
+//   <CardActions>
+//     <Button
+//       size="small"
+//       color="primary"
+//       component={Link}
+//       // to="/golfcoursespage"
+//     >
+//       View
+//     </Button>
+//   </CardActions>
+// </Card>
