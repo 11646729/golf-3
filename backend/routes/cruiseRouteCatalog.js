@@ -8,7 +8,7 @@ import {
 import {
   prepareEmptyVesselsTable,
   getVesselPosition,
-  saveVesselDetails,
+  // saveVesselDetails,
 } from "../controllers/vesselController.js"
 import { importPortArrivalsAndVessels } from "../cruiseScrapingRoutines.js"
 
