@@ -93,6 +93,18 @@ const RawDataTable = (props) => {
     rawDataTableTitle: PropTypes.string,
   }
 
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value)
+    setPage(0)
+  }
+
   // const [toggle, setToggle] = useState(false)
   // const [buttonBackgroundColor, setButtonBackgroundColor] = useState("darkred")
 
@@ -187,39 +199,15 @@ const RawDataTable = (props) => {
             </TableBody>
           </Table>
         </TableContainer>
-
-        {/* <div className="tablecontainer">
-            <table className="tablestyle">
-              <thead className="tableheader">
-                <tr className="tablerow">
-                  <th className="tablehead">ID</th>
-                  <th className="tablehead">Import Raw Data Types</th>
-                  <th className="tablehead">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="tablebody">
-                {tableData.map((row) => (
-                  <tr key={row.id}>
-                    <td className="tablecell">{row.id}</td>
-                    <td className="tablecell">{row.datatype}</td>
-                    <td className="tablecell">
-                      <Button
-                        sx={{
-                          ml: 6,
-                          textTransform: "capitalize",
-                          backgroundColor: row.buttonbackgroundcolor,
-                        }}
-                        variant="contained"
-                        onClick={() => handleClick(row.id)}
-                      >
-                        {row.buttontext}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
+        <TablePagination
+          rowsPerPageOptions={[10]}
+          component="div"
+          count={tableData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
     </div>
   )
