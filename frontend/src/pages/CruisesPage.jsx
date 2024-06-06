@@ -1,10 +1,8 @@
 import React, { useState, useEffect, memo } from "react"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
-import {
-  getPortArrivalsData,
-  getCruiseVesselPositionData,
-} from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
+import { getPortArrivalsData } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
+import { getLiveVesselPositionData } from "../functionHandlers/getLiveVesselPositionData"
 import "../styles/cruises.scss"
 
 // -------------------------------------------------------
@@ -44,7 +42,7 @@ const CruisesPage = () => {
     setIsLoading(true)
 
     if (portArrivals.length !== 0) {
-      getCruiseVesselPositionData(portArrivals)
+      getLiveVesselPositionData(portArrivals)
         .then((returnedData) => {
           setVesselPositions(returnedData)
 
@@ -63,10 +61,10 @@ const CruisesPage = () => {
       </div>
       <div className="cruisesmapcontainer">
         <CruisesMap
-          isLoading={isLoading}
+          // isLoading={isLoading}
           cruisesHomePosition={homePosition}
           vesselPositions={vesselPositions}
-          vesselDetails={portArrivals}
+          // vesselDetails={portArrivals}
         />
       </div>
     </div>

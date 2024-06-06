@@ -325,12 +325,10 @@ export const scrapeVesselDetails = async (vessel_url) => {
   ).get(0)
   let vessel_photourl = "https://www.cruisemapper.com" + link.attribs.href
 
-  console.log(vessel_photourl)
+  // console.log(vessel_photourl)
 
   // BELFAST HARBOUR WEBSITE
   // #showRem1501 > td:nth-child(1) > img
-
-  // getVesselPicture("https://www.cruisemapper.com/ships/Norwegian-Pearl-693")
 
   // Vessel Type
   let vessel_type = "Passenger Ship"
@@ -537,32 +535,6 @@ export const scrapeVesselDetails = async (vessel_url) => {
   ]
 
   return scrapedVessel
-}
-
-// -------------------------------------------------------
-// Fetch Picture of Vessel shown in Vessel Arrival Data
-// Path: Local function called by importPortArrivalsAndVessels - NOT YET CONFIRMED
-// -------------------------------------------------------
-const getVesselPicture = async (vesselUrl) => {
-  // console.log(vesselUrl)
-
-  // Fetch the initial data
-  const { data: html } = await axios.get(vesselUrl)
-
-  // Load up cheerio
-  const $ = cheerio.load(html)
-  // console.log($.html())
-
-  let temp = $(
-    "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
-  )
-    .text()
-    .trim()
-  // .html()
-  console.log(temp)
-
-  // const photograph = temp.attr("src")
-  // console.log(photograph)
 }
 
 export default saveVessel
