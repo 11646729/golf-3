@@ -119,7 +119,7 @@ const CruisesTable = (props) => {
       </div>
 
       <Paper
-        sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
+      // sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
       >
         <TableContainer>
           <Table

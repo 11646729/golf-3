@@ -2,6 +2,13 @@ import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
 import Button from "@mui/material/Button"
 import Paper from "@mui/material/Paper"
+import Table from "@mui/material/Table"
+import TableBody from "@mui/material/TableBody"
+import TableCell from "@mui/material/TableCell"
+import TableContainer from "@mui/material/TableContainer"
+import TableHead from "@mui/material/TableHead"
+import TablePagination from "@mui/material/TablePagination"
+import TableRow from "@mui/material/TableRow"
 import Title from "./Title"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
@@ -139,24 +146,33 @@ const RawDataTable = (props) => {
       <Paper
         sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
       >
-        <div className="tablecontainer">
-          <table className="tablestyle">
-            <thead className="tableheader">
-              <tr className="tablerow">
-                <th className="tablehead">ID</th>
-                <th className="tablehead">Import Raw Data Types</th>
-                <th className="tablehead">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="tablebody">
+        <TableContainer>
+          <Table
+            stickyHeader
+            aria-label="sticky table"
+            size="small"
+            sx={{
+              borderCollapse: "separate",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Import Raw Data Types</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {tableData.map((row) => (
-                <tr key={row.id}>
-                  <td className="tablecell">{row.id}</td>
-                  <td className="tablecell">{row.datatype}</td>
-                  <td className="tablecell">
+                <TableRow key={row.id}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.datatype}</TableCell>
+                  <TableCell>
                     <Button
                       sx={{
-                        ml: 6,
+                        // ml: 6,
                         textTransform: "capitalize",
                         backgroundColor: row.buttonbackgroundcolor,
                       }}
@@ -165,12 +181,45 @@ const RawDataTable = (props) => {
                     >
                       {row.buttontext}
                     </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* <div className="tablecontainer">
+            <table className="tablestyle">
+              <thead className="tableheader">
+                <tr className="tablerow">
+                  <th className="tablehead">ID</th>
+                  <th className="tablehead">Import Raw Data Types</th>
+                  <th className="tablehead">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="tablebody">
+                {tableData.map((row) => (
+                  <tr key={row.id}>
+                    <td className="tablecell">{row.id}</td>
+                    <td className="tablecell">{row.datatype}</td>
+                    <td className="tablecell">
+                      <Button
+                        sx={{
+                          ml: 6,
+                          textTransform: "capitalize",
+                          backgroundColor: row.buttonbackgroundcolor,
+                        }}
+                        variant="contained"
+                        onClick={() => handleClick(row.id)}
+                      >
+                        {row.buttontext}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div> */}
       </Paper>
     </div>
   )
