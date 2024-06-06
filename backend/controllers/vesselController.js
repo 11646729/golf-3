@@ -113,7 +113,7 @@ export const deleteVessels = (db) => {
 // -------------------------------------------------------
 // Save Vessel details to SQLite database
 // -------------------------------------------------------
-export const saveVessel = (newVessel) => {
+export const saveVesselDetails = (newVessel) => {
   // Open a Database Connection
   let db = null
   db = openSqlDbConnection(process.env.SQL_URI)
@@ -537,4 +537,4 @@ export const scrapeVesselDetails = async (vessel_url) => {
   return scrapedVessel
 }
 
-export default saveVessel
+export default saveVesselDetails

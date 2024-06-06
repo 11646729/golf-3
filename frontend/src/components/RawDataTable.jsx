@@ -1,7 +1,8 @@
 import React, { memo, useState } from "react"
 import PropTypes from "prop-types"
+import Button from "@mui/material/Button"
+import Paper from "@mui/material/Paper"
 import Title from "./Title"
-import { Button } from "@mui/material"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
@@ -135,38 +136,42 @@ const RawDataTable = (props) => {
         <Title>{rawDataTableTitle}</Title>
       </div>
 
-      <div className="tablecontainer">
-        <table className="tablestyle">
-          <thead className="tableheader">
-            <tr className="tablerow">
-              <th className="tablehead">ID</th>
-              <th className="tablehead">Import Raw Data Types</th>
-              <th className="tablehead">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="tablebody">
-            {tableData.map((row) => (
-              <tr key={row.id}>
-                <td className="tablecell">{row.id}</td>
-                <td className="tablecell">{row.datatype}</td>
-                <td className="tablecell">
-                  <Button
-                    sx={{
-                      ml: 6,
-                      textTransform: "capitalize",
-                      backgroundColor: row.buttonbackgroundcolor,
-                    }}
-                    variant="contained"
-                    onClick={() => handleClick(row.id)}
-                  >
-                    {row.buttontext}
-                  </Button>
-                </td>
+      <Paper
+        sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
+      >
+        <div className="tablecontainer">
+          <table className="tablestyle">
+            <thead className="tableheader">
+              <tr className="tablerow">
+                <th className="tablehead">ID</th>
+                <th className="tablehead">Import Raw Data Types</th>
+                <th className="tablehead">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="tablebody">
+              {tableData.map((row) => (
+                <tr key={row.id}>
+                  <td className="tablecell">{row.id}</td>
+                  <td className="tablecell">{row.datatype}</td>
+                  <td className="tablecell">
+                    <Button
+                      sx={{
+                        ml: 6,
+                        textTransform: "capitalize",
+                        backgroundColor: row.buttonbackgroundcolor,
+                      }}
+                      variant="contained"
+                      onClick={() => handleClick(row.id)}
+                    >
+                      {row.buttontext}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Paper>
     </div>
   )
 }

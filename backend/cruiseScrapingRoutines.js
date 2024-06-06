@@ -2,7 +2,7 @@ import axios from "axios"
 import * as cheerio from "cheerio"
 import { getAndSavePortArrivals } from "./controllers/portArrivalsController.js"
 import {
-  saveVessel,
+  saveVesselDetails,
   scrapeVesselDetails,
 } from "./controllers/vesselController.js"
 
@@ -45,7 +45,7 @@ export const importPortArrivalsAndVessels = async (req, res) => {
         DeduplicatedVesselUrlArray[loop]
       )
 
-      saveVessel(scrapedVessel)
+      saveVesselDetails(scrapedVessel)
 
       loop++
     } while (loop < DeduplicatedVesselUrlArray.length)

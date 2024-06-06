@@ -8,7 +8,7 @@ import {
 import {
   prepareEmptyVesselsTable,
   getVesselPosition,
-  saveVessel,
+  saveVesselDetails,
 } from "../controllers/vesselController.js"
 import { importPortArrivalsAndVessels } from "../cruiseScrapingRoutines.js"
 
@@ -45,7 +45,7 @@ cruiseRouter.post(
 )
 
 // POST a vessel to the database
-cruiseRouter.post("/vessel", saveVessel)
+// cruiseRouter.post("/vesselDetails", saveVesselDetails)
 
 // GET all vessel positions
 cruiseRouter.get("/vesselPositions", getVesselPosition)
