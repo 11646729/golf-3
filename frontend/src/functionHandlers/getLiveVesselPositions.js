@@ -1,13 +1,13 @@
 import axios from "axios"
 
 // -------------------------------------------------------
-// Function to fetch Cruise Vessel Position data
+// Function to fetch Live Vessel Positions
 // -------------------------------------------------------
-export const getLiveVesselPositionData = async (portArrivals) => {
+export const getLiveVesselPositions = async (portArrivals) => {
   // Guard clause
   if (portArrivals == null) {
     console.log(
-      "Error: portArrivals == null in getVesselPositionData in utilities.js"
+      "Error: portArrivals == null in getVesselPositions in utilities.js"
     )
     return
   }

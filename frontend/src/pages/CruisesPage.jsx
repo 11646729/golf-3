@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from "react"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import { getPortArrivalsData } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
-import { getLiveVesselPositionData } from "../functionHandlers/getLiveVesselPositionData"
+import { getLiveVesselPositions } from "../functionHandlers/getLiveVesselPositions"
 import "../styles/cruises.scss"
 
 // -------------------------------------------------------
@@ -42,7 +42,7 @@ const CruisesPage = () => {
     setIsLoading(true)
 
     if (portArrivals.length !== 0) {
-      getLiveVesselPositionData(portArrivals)
+      getLiveVesselPositions(portArrivals)
         .then((returnedData) => {
           setVesselPositions(returnedData)
 
