@@ -325,11 +325,6 @@ export const scrapeVesselDetails = async (vessel_url) => {
   ).get(0)
   let vessel_photourl = "https://www.cruisemapper.com" + link.attribs.href
 
-  // console.log(vessel_photourl)
-
-  // BELFAST HARBOUR WEBSITE
-  // #showRem1501 > td:nth-child(1) > img
-
   // Vessel Type
   let vessel_type = "Passenger Ship"
 
