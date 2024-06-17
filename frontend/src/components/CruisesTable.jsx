@@ -133,7 +133,7 @@ const CruisesTable = (props) => {
             }}
           >
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ height: "60px" }}>
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
