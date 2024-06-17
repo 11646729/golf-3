@@ -1,4 +1,3 @@
-import axios from "axios"
 import * as cheerio from "cheerio"
 import { getAndSavePortArrivals } from "./controllers/portArrivalsController.js"
 import {
@@ -76,11 +75,12 @@ const getScheduleMonths = async (portName) => {
     initialPeriod +
     "#schedule"
 
-  // Fetch the initial data
-  const { data: html } = await axios.get(initialUrl)
+  // Fetch the initial html page
+  const response = await fetch(initialUrl)
+  const data = await response.text()
 
-  // Load up cheerio
-  const $ = cheerio.load(html)
+  // Load cheerio
+  const $ = cheerio.load(data)
 
   $("#schedule > div:nth-child(2) > div.col-xs-8.thisMonth option").each(
     (i, item) => {
@@ -149,9 +149,11 @@ const scrapeBelfastHarbourCruiseShips = async (selector) => {
     const initialUrl = "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
 
     try {
+      // Fetch the initial html page
       const response = await fetch(initialUrl)
       const data = await response.text()
 
+      // Load cheerio
       const $ = cheerio.load(data)
 
       // const table = $(
@@ -218,13 +220,13 @@ const scrapeBelfastHarbourCruiseShips = async (selector) => {
 const booksUrl =
   "https://books.toscrape.com/catalogue/category/books/historical-fiction_4/index.html"
 
-async function getGenre() {
+const getGenre = async () => {
   try {
+    // Fetch the initial html page
     const response = await fetch(booksUrl)
-    // const response = await axios.get(booksUrl)
     const data = await response.text()
-    console.log(data)
 
+    // Load cheerio
     const $ = cheerio.load(data)
 
     const genre = $("h1").text()
