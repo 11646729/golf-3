@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const CruiseCard = () => {
+const BelfastHarbourCard = () => {
   return (
     <Card
       sx={{
@@ -30,7 +30,12 @@ const CruiseCard = () => {
         <Typography>Cruise Ships Movements</Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color="primary" component={Link} to="/cruisespage">
+        <Button
+          size="small"
+          color="primary"
+          component={Link}
+          to="/belfastharbourpage"
+        >
           View
         </Button>
       </CardActions>
@@ -38,4 +43,4 @@ const CruiseCard = () => {
   )
 }
 
-export default memo(CruiseCard)
+export default memo(BelfastHarbourCard)
