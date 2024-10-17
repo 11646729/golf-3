@@ -50,7 +50,7 @@ export const importPortArrivalsAndVessels = async (req, res) => {
     } while (loop < DeduplicatedVesselUrlArray.length)
 
     // scrapeBelfastHarbourCruiseShips("tbody") //  ".post"
-    // scrapeBelfastHarbourCruiseShips()
+    scrapeBelfastHarbourCruiseShips()
     // getGenre()
 
     // Length of vesselUrls array is the Number of Vessel Arrivals
@@ -143,10 +143,10 @@ const scrapeBelfastHarbourCruiseShips = async (selector) => {
     // "ins",
   ]
 
-  const vessels_data = []
-
   const getHTMLContent = async (selector) => {
     const initialUrl = "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
+
+    const vessels_data = []
 
     try {
       // Fetch the initial html page
@@ -156,19 +156,44 @@ const scrapeBelfastHarbourCruiseShips = async (selector) => {
       // Load cheerio
       const $ = cheerio.load(data)
 
-      // const table = $(
-      //   "body > main > div.page-content > div.elementor.elementor-2472"
-      // ).html()
-
       const table = $(
-        "#content > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div"
+        "body > main > div.page-content > div.elementor.elementor-2472 > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div.elementor-widget-container > div.elementor-shortcode > table"
       ).html()
-      // const genre = $("h1.entry-title").html()
 
       console.log(table)
 
-      // table.each(function () {
-      //   let vesselName = $(this).find("#load_data").text()
+      // -------------------------------------------------------
+      // This produces:
+      //   <thead>
+      //     <tr>
+      //         <th></th>
+      //         <th>ARRIVAL<br>DATE &amp; TIME</th>
+      //         <th></th>
+      //         <th>DEPARTURE<br>DATE &amp; TIME</th>
+      //         <th>COMPANY</th>
+      //         <th>SHIP NAME</th>
+      //         <th></th>
+      //     </tr>
+      // </thead>
+      // <tbody id="load_data">
+      // </tbody>
+      // -------------------------------------------------------
+      // Selecting thead works as expected but selecting tbody does not work
+      // -------------------------------------------------------
+
+      // #load_data > tr:nth-child(1) > td.day-call
+
+      // $(
+      //   "body > main > div.page-content > div.elementor.elementor-2472 > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div.elementor-widget-container > div.elementor-shortcode > table#shortcodeTable > tbody#load_data"
+      // )
+      //   .find("tr#desktopTr")
+      //   .each((index, element) => {
+      //     console.log($(element).find("td.day-call")).text()
+      //     // scraping logic...
+      //   })
+
+      // $(table).each(function () {
+      //   let vesselName = $(this).find("tr#desktopTr > td.day-call").text()
 
       //   console.log(vesselName)
       //   // vessels_data.push({ vesselName })
@@ -217,10 +242,10 @@ const scrapeBelfastHarbourCruiseShips = async (selector) => {
 // -------------------------------------------------------
 // Test scraping function taken from YouTube
 // -------------------------------------------------------
-const booksUrl =
-  "https://books.toscrape.com/catalogue/category/books/historical-fiction_4/index.html"
-
 const getGenre = async () => {
+  const booksUrl =
+    "https://books.toscrape.com/catalogue/category/books/historical-fiction_4/index.html"
+
   try {
     // Fetch the initial html page
     const response = await fetch(booksUrl)
