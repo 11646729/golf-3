@@ -69,6 +69,12 @@ export const menu = [
         url: "/cruisespage",
         icon: "/static/images/user.svg",
       },
+      {
+        id: 2,
+        title: "Belfast Harbour Movements",
+        url: "/belfastharbourpage",
+        icon: "/static/images/user.svg",
+      },
     ],
   },
   {

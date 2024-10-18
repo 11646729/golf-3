@@ -18,8 +18,6 @@ const BelfastHarbourPage = () => {
     lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   }
 
-  console.log("Here I am")
-
   // build portArrivalsData Url
   const portArrivalsDataUrl = "http://localhost:4000/api/cruise/getPortArrivals"
 
