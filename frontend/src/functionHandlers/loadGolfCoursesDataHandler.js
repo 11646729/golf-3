@@ -4,8 +4,15 @@ import axios from "axios"
 // Function to prepare the golfcourses table in the SQL database
 // -------------------------------------------------------
 const prepareGolfCoursesTable = async (url) => {
+  const config = {
+    timeout: 20000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
   return await axios
-    .post(url)
+    .post(url, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
@@ -14,8 +21,16 @@ const prepareGolfCoursesTable = async (url) => {
 // Function to instruct backend to load Golf Club Data into the database
 // -------------------------------------------------------
 const initialImportOfGolfCoursesData = async (url) => {
+  const config = {
+    timeout: 20000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
   return await axios
-    .get(url)
+    .get(url, config)
+    // .post(url, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
@@ -24,8 +39,15 @@ const initialImportOfGolfCoursesData = async (url) => {
 // Function to fetch all Golf Course data - DON'T TRY TO REFACTOR THIS
 // -------------------------------------------------------
 export const getGolfCoursesData = async (url) => {
+  const config = {
+    timeout: 20000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
   return await axios
-    .get(url)
+    .get(url, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }

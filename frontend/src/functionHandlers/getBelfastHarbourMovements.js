@@ -4,7 +4,6 @@ import axios from "axios"
 // Function to fetch Cruise Vessel Movements to/from Belfast Harbour fromm the SQL database
 // -------------------------------------------------------
 export const getBelfastHarbourMovementData = async (url) => {
-  const params = { portName: import.meta.env.VITE_PORT_NAME }
   const config = {
     timeout: 20000,
     headers: {
@@ -13,7 +12,7 @@ export const getBelfastHarbourMovementData = async (url) => {
   }
 
   return await axios
-    .get(url, params, config)
+    .get(url, config)
     .then((returnedData) => returnedData.data)
     .catch((err) => console.log(err))
 }
