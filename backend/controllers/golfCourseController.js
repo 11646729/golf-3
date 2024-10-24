@@ -146,6 +146,7 @@ export const importGolfCoursesData = (req, res) => {
 
         // Save the data in the golfcourses Table in the SQLite database
         const courses = JSON.parse(data)
+
         populateGolfCoursesTable(courses)
       }
     )

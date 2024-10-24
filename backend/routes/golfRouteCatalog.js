@@ -18,8 +18,7 @@ golfRouter.get("/", index)
 golfRouter.post("/prepareGolfCoursesTable", prepareEmptyGolfCoursesTable)
 
 // POST all Golf Courses data into the database
-golfRouter.get("/importGolfCoursesData", importGolfCoursesData)
-// golfRouter.post("/importGolfCoursesData", importGolfCoursesData)
+golfRouter.post("/importGolfCoursesData", importGolfCoursesData)
 
 // GET all Golf Courses data from the database
 golfRouter.get("/getGolfCourses", getGolfCourses)

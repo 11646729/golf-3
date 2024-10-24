@@ -29,8 +29,7 @@ const initialImportOfGolfCoursesData = async (url) => {
   }
 
   return await axios
-    .get(url, config)
-    // .post(url, config)
+    .post(url, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }
