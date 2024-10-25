@@ -1,34 +1,26 @@
 import React, { useState, useEffect, memo } from "react"
-import CruisesTable from "../components/CruisesTable"
-import CruisesMap from "../components/CruisesMap"
-import { getPortArrivalsData } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
-import { getLiveVesselPositions } from "../functionHandlers/getLiveVesselPositions"
+// import CruisesTable from "../components/CruisesTable"
+import { getBelfastHarbourMovementsData } from "../functionHandlers/getBelfastHarbourMovements"
 import "../styles/cruises.scss"
 
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
 const BelfastHarbourPage = () => {
-  const [portArrivals, setPortArrivals] = useState([])
-  const [vesselPositions, setVesselPositions] = useState([])
+  const [belfastHarbourMovements, setBelfastHarbourMovements] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const homePosition = {
-    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
-    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
-  }
-
-  // build portArrivalsData Url
-  const portArrivalsDataUrl = "http://localhost:4000/api/cruise/getPortArrivals"
+  const belfastHarbourMovementsDataUrl =
+    "http://localhost:4000/api/belfastharbourmovements/getBelfastHarbourMovements"
 
   // This routine gets Port Arrivals data
   useEffect(() => {
-    getPortArrivalsData(portArrivalsDataUrl)
+    getBelfastHarbourMovementsData(belfastHarbourMovementsDataUrl)
       .then((returnedData) => {
         // Sort by date & time because returnedData is not always in timestamp order
         returnedData.data.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
 
-        setPortArrivals(returnedData.data)
+        setBelfastHarbourMovements(returnedData.data)
 
         setIsLoading(false)
       })
@@ -37,35 +29,10 @@ const BelfastHarbourPage = () => {
       })
   }, [])
 
-  // This routine gets Cruise Vessel position data - after portArrivals array has been filled
-  useEffect(() => {
-    setIsLoading(true)
-
-    if (portArrivals.length !== 0) {
-      getLiveVesselPositions(portArrivals)
-        .then((returnedData) => {
-          setVesselPositions(returnedData)
-
-          setIsLoading(false)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }, [portArrivals])
-
   return (
     <div className="cruisescontainer">
       <div className="cruisestablecontainer">
-        <CruisesTable portArrivals={portArrivals} />
-      </div>
-      <div className="cruisesmapcontainer">
-        <CruisesMap
-          // isLoading={isLoading}
-          cruisesHomePosition={homePosition}
-          vesselPositions={vesselPositions}
-          // vesselDetails={portArrivals}
-        />
+        {/* <CruisesTable belfastHarbourMovements={belfastHarbourMovements} /> */}
       </div>
     </div>
   )

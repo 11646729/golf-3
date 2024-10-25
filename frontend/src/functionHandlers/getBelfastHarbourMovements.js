@@ -3,7 +3,7 @@ import axios from "axios"
 // -------------------------------------------------------
 // Function to fetch Cruise Vessel Movements to/from Belfast Harbour fromm the SQL database
 // -------------------------------------------------------
-export const getBelfastHarbourMovementData = async (url) => {
+export const getBelfastHarbourMovementsData = async (url) => {
   const config = {
     timeout: 20000,
     headers: {
