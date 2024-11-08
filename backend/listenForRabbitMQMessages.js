@@ -1,5 +1,7 @@
 // Management Console
 // http://localhost:15672
+// username: guest
+// password: guest
 
 import amqp from "amqplib/callback_api.js"
 import { rabbitMQ } from "./rtNewsMSconfig.js"
@@ -20,9 +22,8 @@ export const listenForRabbitMQMessages = (io) => {
         console.log("Fatal Error - Cannot create a channel to exchange")
         throw error1
       }
-
       channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType, {
-        durable: false,
+        durable: true, // false causes a crash
       })
 
       channel.assertQueue(
@@ -36,7 +37,6 @@ export const listenForRabbitMQMessages = (io) => {
             throw error2
           }
           console.log("heartbeatQueue created & bound to exchange")
-
           channel.bindQueue(qh.queue, rabbitMQ.exchangeName, "heartbeat")
         }
       )
@@ -52,7 +52,6 @@ export const listenForRabbitMQMessages = (io) => {
             throw error2
           }
           console.log("calendarQueue created & bound to exchange")
-
           channel.bindQueue(qc.queue, rabbitMQ.exchangeName, "calendar")
         }
       )
@@ -68,7 +67,6 @@ export const listenForRabbitMQMessages = (io) => {
             throw error2
           }
           console.log("newsQueue created & bound to exchange")
-
           channel.bindQueue(qn.queue, rabbitMQ.exchangeName, "news")
         }
       )
@@ -84,113 +82,107 @@ export const listenForRabbitMQMessages = (io) => {
             throw error2
           }
           console.log("weatherQueue created & bound to exchange")
-
           channel.bindQueue(qw.queue, rabbitMQ.exchangeName, "weather")
         }
       )
 
-      io.on("connection", (socket) => {
-        console.log("New RabbitMQ client connected")
+      // ---------------------------------------------------------
+      // COMMENT OUT THE NEXT LINE TO TEST RECEIPT OF THE MESSAGES
+      // io.on("connection", (socket) => {
+      // ---------------------------------------------------------
 
-        channel.consume(
-          "heartbeatQueue",
-          (payload) => {
-            if (payload != null) {
-              let contents = JSON.parse(payload.content)
-
-              // Emit 2 events isLoading & sendData to client
-              try {
-                if (contents != null) {
-                  // Emit 2 events isLoading & sendData to client
-                  emitHeartbeatData(socket, contents.message, false)
-
-                  // console.log("===== Receive =====")
-                  // console.log(contents.message)
-                }
-              } catch (error) {
-                console.log("Error in listenForRabbitMQMessages: ", error)
+      console.log("New RabbitMQ client connected")
+      channel.consume(
+        "heartbeatQueue",
+        (payload) => {
+          if (payload != null) {
+            let contents = JSON.parse(payload.content)
+            // Emit 2 events isLoading & sendData to client
+            try {
+              if (contents != null) {
+                // Emit 2 events isLoading & sendData to client
+                // emitHeartbeatData(socket, contents.message, false)
+                console.log("===== Receive =====")
+                console.log(contents.message)
               }
+            } catch (error) {
+              console.log("Error in listenForRabbitMQMessages: ", error)
             }
-          },
-          {
-            noAck: true,
           }
-        )
+        },
+        {
+          noAck: true,
+        }
+      )
 
-        channel.consume(
-          "calendarQueue",
-          (payload) => {
-            if (payload != null) {
-              let contents = JSON.parse(payload.content)
-
-              // Emit 2 events isLoading & sendData to client
-              try {
-                if (contents != null) {
-                  // Emit 2 events isLoading & sendData to client
-                  emitCalendarEventsData(socket, contents.message, false)
-
-                  // console.log("===== Receive =====")
-                  // console.log(contents.message)
-                }
-              } catch (error) {
-                console.log("Error in listenForRabbitMQMessages: ", error)
+      channel.consume(
+        "calendarQueue",
+        (payload) => {
+          if (payload != null) {
+            let contents = JSON.parse(payload.content)
+            // Emit 2 events isLoading & sendData to client
+            try {
+              if (contents != null) {
+                // Emit 2 events isLoading & sendData to client
+                // emitCalendarEventsData(socket, contents.message, false)
+                console.log("===== Receive =====")
+                console.log(contents.message)
               }
+            } catch (error) {
+              console.log("Error in listenForRabbitMQMessages: ", error)
             }
-          },
-          {
-            noAck: true,
           }
-        )
+        },
+        {
+          noAck: true,
+        }
+      )
 
-        channel.consume(
-          "newsQueue",
-          (payload) => {
-            if (payload != null) {
-              let contents = JSON.parse(payload.content)
-
-              // Emit 2 events isLoading & sendData to client
-              try {
-                if (contents != null) {
-                  // Emit 2 events isLoading & sendData to client
-                  emitNewsHeadlinesData(socket, contents.message, false)
-
-                  // console.log("===== Receive =====")
-                  // console.log(contents.message)
-                }
-              } catch (error) {
-                console.log("Error in listenForRabbitMQMessages: ", error)
+      channel.consume(
+        "newsQueue",
+        (payload) => {
+          if (payload != null) {
+            let contents = JSON.parse(payload.content)
+            // Emit 2 events isLoading & sendData to client
+            try {
+              if (contents != null) {
+                // Emit 2 events isLoading & sendData to client
+                // emitNewsHeadlinesData(socket, contents.message, false)
+                console.log("===== Receive =====")
+                console.log(contents.message)
               }
+            } catch (error) {
+              console.log("Error in listenForRabbitMQMessages: ", error)
             }
-          },
-          {
-            noAck: true,
           }
-        )
+        },
+        {
+          noAck: true,
+        }
+      )
 
-        channel.consume(
-          "weatherQueue",
-          (payload) => {
-            if (payload != null) {
-              let contents = JSON.parse(payload.content)
-
-              // Emit 2 events isLoading & sendData to client
-              try {
-                if (contents != null) {
-                  emitTemperatureData(socket, contents.message, false)
-
-                  // console.log("===== Receive =====")
-                  // console.log(contents.message)
-                }
-              } catch (error) {
-                console.log("Error in listenForRabbitMQMessages: ", error)
+      channel.consume(
+        "weatherQueue",
+        (payload) => {
+          if (payload != null) {
+            let contents = JSON.parse(payload.content)
+            // Emit 2 events isLoading & sendData to client
+            try {
+              if (contents != null) {
+                // emitTemperatureData(socket, contents.message, false)
+                console.log("===== Receive =====")
+                console.log(contents.message)
               }
+            } catch (error) {
+              console.log("Error in listenForRabbitMQMessages: ", error)
             }
-          },
-          {
-            noAck: true,
           }
-        )
-      })
+        },
+        {
+          noAck: true,
+        }
+      )
     })
+    // })
   })
 }

@@ -13,8 +13,10 @@ export const publishMessage = (routingKey, message) => {
       }
 
       channel.assertExchange(rabbitMQ.exchangeName, rabbitMQ.exchangeType, {
-        durable: false,
+        durable: true,
       })
+
+      console.log(message)
 
       const envelopeDetails = {
         messageType: routingKey,

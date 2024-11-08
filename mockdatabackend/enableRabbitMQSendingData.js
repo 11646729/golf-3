@@ -1,5 +1,5 @@
 import nodeCron from "node-cron"
-import { publishMessage } from "./producer.js"
+import { publishMessage } from "./publishMessage.js"
 import { generateMockWeatherData } from "./generateMockWeatherData.js"
 import { generateMockNewsData } from "./generateMockNewsData.js"
 import { generateMockCalendarData } from "./generateMockCalendarData.js"
