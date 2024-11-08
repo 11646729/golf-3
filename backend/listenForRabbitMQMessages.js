@@ -91,8 +91,6 @@ export const listenForRabbitMQMessages = (io) => {
       // io.on("connection", (socket) => {
       // ---------------------------------------------------------
 
-      // test
-
       console.log("New RabbitMQ client connected")
       channel.consume(
         "heartbeatQueue",
