@@ -108,7 +108,6 @@ export var updateRealtimeGtfsToSQLite = async () => {
 // Function to start Regular Updates of GTFS Realtime data
 // -------------------------------------------------------
 export var startRegularUpdatesOfRealtimeGTFSData = async () => {
-  console.log("Here - Backend")
   // getAllVehiclePositions()
   getAllTrips()
   // getAllTripUpdates()

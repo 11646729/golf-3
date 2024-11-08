@@ -4,7 +4,7 @@ import axios from "axios"
 // Function to fetch all Google Calendar data
 // -------------------------------------------------------
 export const getGoogleCalendarEvents = async (url) => {
-  console.log("Here")
+  console.log("in the getGoogleCalendarEvents function")
 
   // return await axios
   //   .get(url)

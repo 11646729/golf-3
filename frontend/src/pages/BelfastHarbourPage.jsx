@@ -20,8 +20,6 @@ const BelfastHarbourPage = () => {
         // Sort by date & time because returnedData is not always in timestamp order
         // returnedData.data.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
 
-        // console.log("Here")
-
         setBelfastHarbourMovements(returnedData.data)
 
         setIsLoading(false)

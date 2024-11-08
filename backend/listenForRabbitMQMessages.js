@@ -88,101 +88,104 @@ export const listenForRabbitMQMessages = (io) => {
 
       // ---------------------------------------------------------
       // COMMENT OUT THE NEXT LINE TO TEST RECEIPT OF THE MESSAGES
-      // io.on("connection", (socket) => {
+      io.on("connection", (socket) => {
+        // ---------------------------------------------------------
+
+        console.log("New RabbitMQ client connected")
+        channel.consume(
+          "heartbeatQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  // emitHeartbeatData(socket, contents.message, false)
+                  console.log("===== Receive =====")
+                  console.log(contents.message)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
+
+        channel.consume(
+          "calendarQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  // emitCalendarEventsData(socket, contents.message, false)
+                  console.log("===== Receive =====")
+                  console.log(contents.message)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
+
+        channel.consume(
+          "newsQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // Emit 2 events isLoading & sendData to client
+                  // emitNewsHeadlinesData(socket, contents.message, false)
+                  console.log("===== Receive =====")
+                  console.log(contents.message)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
+
+        channel.consume(
+          "weatherQueue",
+          (payload) => {
+            if (payload != null) {
+              let contents = JSON.parse(payload.content)
+              // Emit 2 events isLoading & sendData to client
+              try {
+                if (contents != null) {
+                  // emitTemperatureData(socket, contents.message, false)
+                  console.log("===== Receive =====")
+                  console.log(contents.message)
+                }
+              } catch (error) {
+                console.log("Error in listenForRabbitMQMessages: ", error)
+              }
+            }
+          },
+          {
+            noAck: true,
+          }
+        )
+      })
+
       // ---------------------------------------------------------
-
-      console.log("New RabbitMQ client connected")
-      channel.consume(
-        "heartbeatQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            // Emit 2 events isLoading & sendData to client
-            try {
-              if (contents != null) {
-                // Emit 2 events isLoading & sendData to client
-                // emitHeartbeatData(socket, contents.message, false)
-                console.log("===== Receive =====")
-                console.log(contents.message)
-              }
-            } catch (error) {
-              console.log("Error in listenForRabbitMQMessages: ", error)
-            }
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
-
-      channel.consume(
-        "calendarQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            // Emit 2 events isLoading & sendData to client
-            try {
-              if (contents != null) {
-                // Emit 2 events isLoading & sendData to client
-                // emitCalendarEventsData(socket, contents.message, false)
-                console.log("===== Receive =====")
-                console.log(contents.message)
-              }
-            } catch (error) {
-              console.log("Error in listenForRabbitMQMessages: ", error)
-            }
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
-
-      channel.consume(
-        "newsQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            // Emit 2 events isLoading & sendData to client
-            try {
-              if (contents != null) {
-                // Emit 2 events isLoading & sendData to client
-                // emitNewsHeadlinesData(socket, contents.message, false)
-                console.log("===== Receive =====")
-                console.log(contents.message)
-              }
-            } catch (error) {
-              console.log("Error in listenForRabbitMQMessages: ", error)
-            }
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
-
-      channel.consume(
-        "weatherQueue",
-        (payload) => {
-          if (payload != null) {
-            let contents = JSON.parse(payload.content)
-            // Emit 2 events isLoading & sendData to client
-            try {
-              if (contents != null) {
-                // emitTemperatureData(socket, contents.message, false)
-                console.log("===== Receive =====")
-                console.log(contents.message)
-              }
-            } catch (error) {
-              console.log("Error in listenForRabbitMQMessages: ", error)
-            }
-          }
-        },
-        {
-          noAck: true,
-        }
-      )
     })
-    // })
+    // ---------------------------------------------------------
   })
 }

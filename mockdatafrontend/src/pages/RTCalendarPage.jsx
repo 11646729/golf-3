@@ -22,7 +22,7 @@ const RTCalendarPage = () => {
   //     })
   // }, [])
 
-  console.log("Here I am")
+  console.log("on RTCalendarPage")
 
   return (
     <div className="rtcalendarcontainer">
