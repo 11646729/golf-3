@@ -4,23 +4,8 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import { enableRealtimeData } from "./enableRealtimeData.js"
+// import { enableRealtimeData } from "./enableRealtimeData.js"
 import { listenForRabbitMQMessages } from "./listenForRabbitMQMessages.js"
-
-const port = process.env.EXPRESS_SERVER_PORT || 4000
-
-const app = express()
-const httpServer = createServer(app)
-
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:" + process.env.REACT_SERVER_PORT,
-    methods: "GET, POST, PUT, DELETE",
-    allowedHeaders: "Content-Type, Authorization",
-  },
-})
-
-const __dirname = path.resolve()
 
 // Routers use Controllers as per Express Tutorial
 import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
@@ -32,8 +17,25 @@ import belfastHarbourMovementsRouter from "./routes/belfastHarbourMovementsRoute
 import gtfsTransportRouter from "./routes/gtfsTransportRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
 
+const port = process.env.EXPRESS_SERVER_PORT || 4000
+
+const app = express()
+const httpServer = createServer(app)
+
+// Implementing CORS on Socket.io
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:" + process.env.REACT_SERVER_PORT,
+    methods: "GET, POST, PUT, DELETE",
+    allowedHeaders: "Content-Type, Authorization",
+  },
+})
+
+const __dirname = path.resolve()
+
 dotenv.config()
 
+// Implementing CORS on Express
 // cors settings from https://blog.jscrambler.com/setting-up-5-useful-middlewares-for-an-express-api/
 app.use(
   cors({

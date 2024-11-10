@@ -26,6 +26,8 @@ export const listenForRabbitMQMessages = (io) => {
         durable: true, // false causes a crash
       })
 
+      console.log(channel)
+
       channel.assertQueue(
         "heartbeatQueue",
         {
@@ -101,9 +103,9 @@ export const listenForRabbitMQMessages = (io) => {
               try {
                 if (contents != null) {
                   // Emit 2 events isLoading & sendData to client
-                  // emitHeartbeatData(socket, contents.message, false)
-                  console.log("===== Receive =====")
-                  console.log(contents.message)
+                  emitHeartbeatData(socket, contents.message, false)
+                  // console.log("===== Receive =====")
+                  // console.log(contents.message)
                 }
               } catch (error) {
                 console.log("Error in listenForRabbitMQMessages: ", error)
@@ -124,9 +126,9 @@ export const listenForRabbitMQMessages = (io) => {
               try {
                 if (contents != null) {
                   // Emit 2 events isLoading & sendData to client
-                  // emitCalendarEventsData(socket, contents.message, false)
-                  console.log("===== Receive =====")
-                  console.log(contents.message)
+                  emitCalendarEventsData(socket, contents.message, false)
+                  // console.log("===== Receive =====")
+                  // console.log(contents.message)
                 }
               } catch (error) {
                 console.log("Error in listenForRabbitMQMessages: ", error)
@@ -147,9 +149,9 @@ export const listenForRabbitMQMessages = (io) => {
               try {
                 if (contents != null) {
                   // Emit 2 events isLoading & sendData to client
-                  // emitNewsHeadlinesData(socket, contents.message, false)
-                  console.log("===== Receive =====")
-                  console.log(contents.message)
+                  emitNewsHeadlinesData(socket, contents.message, false)
+                  // console.log("===== Receive =====")
+                  // console.log(contents.message)
                 }
               } catch (error) {
                 console.log("Error in listenForRabbitMQMessages: ", error)
@@ -169,9 +171,9 @@ export const listenForRabbitMQMessages = (io) => {
               // Emit 2 events isLoading & sendData to client
               try {
                 if (contents != null) {
-                  // emitTemperatureData(socket, contents.message, false)
-                  console.log("===== Receive =====")
-                  console.log(contents.message)
+                  emitTemperatureData(socket, contents.message, false)
+                  // console.log("===== Receive =====")
+                  // console.log(contents.message)
                 }
               } catch (error) {
                 console.log("Error in listenForRabbitMQMessages: ", error)
