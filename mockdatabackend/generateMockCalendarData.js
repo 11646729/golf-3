@@ -54,7 +54,7 @@ export const generateMockCalendarData = (indexCount) => {
     }
 
     mockCalendarMessageBody.push(latestReading1)
-    mockCalendarMessageBody.push(latestReading2)
+    // mockCalendarMessageBody.push(latestReading2)
 
     return mockCalendarMessageBody
   } catch (error) {

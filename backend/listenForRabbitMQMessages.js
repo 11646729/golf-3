@@ -26,8 +26,6 @@ export const listenForRabbitMQMessages = (io) => {
         durable: true, // false causes a crash
       })
 
-      console.log(channel)
-
       channel.assertQueue(
         "heartbeatQueue",
         {
