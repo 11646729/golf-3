@@ -16,8 +16,6 @@ export const publishMessage = (routingKey, message) => {
         durable: true,
       })
 
-      console.log(message)
-
       const envelopeDetails = {
         messageType: routingKey,
         message: message,
