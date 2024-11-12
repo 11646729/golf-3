@@ -5,7 +5,7 @@ import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
 // import { enableRealtimeData } from "./enableRealtimeData.js"
-import { listenForRabbitMQMessages } from "./listenForRabbitMQMessages.js"
+import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
 import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
@@ -74,7 +74,7 @@ app.use((req, res) => {
 
 // Enable Realtime data sending system
 // enableRealtimeData(io)
-listenForRabbitMQMessages(io) // This was uncommented on 08-11-24 BDS
+setupRabbitMQAndEmitMessages(io) // This was uncommented on 08-11-24 BDS
 
 // Start Express server
 httpServer.listen(port, (err) => {

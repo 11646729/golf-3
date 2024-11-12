@@ -108,7 +108,7 @@ const ClientComponent = () => {
     <>
       <p>
         {/* It's <time dateTime={heartbeatEvents}>{heartbeatEvents}</time> */}
-        It's <time>{heartbeatEvents}</time>
+        The time is: <time> {heartbeatEvents}</time>
       </p>
       <div className="home">
         <div className="box box1">
