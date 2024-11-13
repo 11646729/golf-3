@@ -15,12 +15,25 @@ export const pagePreparationObject = {
     console.log(`Navigating to ${url} ...`)
     await page.goto(url)
 
+    // Enter username & password then click Submit button
+    await page.waitForSelector("#memberid")
+    await page.type("#memberid", "4168")
+
+    await page.waitForSelector("#pin")
+    await page.type("#pin", "6052")
+
+    // Submit the form
+    page.click('.btn[type="submit"]')
+
+    // <a href="/memberbooking/" class="button">Book a tee time</a>
+
+    // Wait for the login to complete
+    // await page.waitForNavigation()
+
     // // Wait for the div to load if necessary
     // await page.waitForSelector(
     //   "#content > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div"
     // )
-
-    // document.querySelector("#memberid")
 
     return page
   },
