@@ -1,0 +1,29 @@
+All Information captured on Wednesday 13th November at 19:00 - 20:00 hrs
+
+Wednesday 13th November Booking
+
+<tr class="   teetime-mins-20 teetime-hours-11 cantreserve odd"     data-availability='143'><th class='slot-time teetime_mins_20 teetime_hours_11' style="padding-left:10px">11:20</th><td class="row-content"><div class="slot-content"><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>Brian Smith</span> <a href="?edit=4331124" class="button">View Booking</a></span><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>David Laird</span></span></div></td><td class="slot-actions"></td></tr>
+
+Thursday 14th November Slot Available for 1 person
+
+<tr class="future  bookable  teetime-mins-00 teetime-hours-08 cantreserve odd"     data-availability='143'><th class='slot-time teetime_mins_00 teetime_hours_08' style="padding-left:10px">08:00</th><td class="row-content"><div class="slot-content"><span class='player-name '><span>Paul Trevor Mccallum</span></span><span class='player-name '><span>George Neill</span></span><span class='player-name '><span>Nigel Forsythe</span></span></div></td><td class="slot-actions"><a href="?date=14-11-2024&course=1&group=1&book=08:00:00" class="button inlineBooking btn btn-success" rel=".tipForm">Book</a><div class="tipForm" style="display:none"><form method="get">
+            <fieldset><div class="form-group"><label>Players:</label><div class="btn-group"><label class="btn btn-primary active"><input type="radio" name="numslots" value="1" checked="checked"/> 1</label></div></div><input type="hidden" name="date" value="14-11-2024" /><input type="hidden" name="course" value="1" /><input type="hidden" name="group" value="1" /><input type="hidden" name="book" value="08:00:00" /><input type="hidden" name="3df791ecf06d24826dfa127bd0026c37950a60d2dd275c3cdadb897e70c5ef1b" value="39313cd8bfbf033c11cd58c5c9bd13db51a83752ec805bd66bf70548f7620ee7" /><div class="form-group"><label>Length:</label> <div class="btn-group"><label class="btn"><input type="radio" name="holes" value="9">9 holes</label><label class="btn"><input type="radio" name="holes" value="18" checked="checked">18 holes</label></div></div></fieldset><button type="submit" class="btn button">Book teetime at 08:00</button>
+          </form>
+           </div></td></tr>
+
+Thursday 14th November Slot Available for 4 persons
+
+<tr class="future  bookable  teetime-mins-30 teetime-hours-08 cantreserve odd"     data-availability='143'><th class='slot-time teetime_mins_30 teetime_hours_08' style="padding-left:10px">08:30</th><td class="row-content"><div class="slot-content"><div class="empty-row-info"><i class="fa fa-check"></i> 4 slots available</div></div></td><td class="slot-actions"><a href="?date=14-11-2024&course=1&group=1&book=08:30:00" class="button inlineBooking btn btn-success" rel=".tipForm">Book</a><div class="tipForm" style="display:none"><form method="get">
+            <fieldset><div class="form-group"><label>Players:</label><div class="btn-group"><label class="btn btn-primary active"><input type="radio" name="numslots" value="1" checked="checked"/> 1</label><label class="btn "><input type="radio" name="numslots" value="2" /> 2</label><label class="btn "><input type="radio" name="numslots" value="3" /> 3</label><label class="btn "><input type="radio" name="numslots" value="4" /> 4</label></div></div><input type="hidden" name="date" value="14-11-2024" /><input type="hidden" name="course" value="1" /><input type="hidden" name="group" value="1" /><input type="hidden" name="book" value="08:30:00" /><input type="hidden" name="d1f21b46d2aae01074ae61b741b8290c3b65a2e55bd50cfd62badc1f9bd43ad7" value="4d9ff653f4f3fa22ec024ecbcc3e14310dacff8e75e38235a8e66c910c6e887a" /><div class="form-group"><label>Length:</label> <div class="btn-group"><label class="btn"><input type="radio" name="holes" value="9">9 holes</label><label class="btn"><input type="radio" name="holes" value="18" checked="checked">18 holes</label></div></div></fieldset><button type="submit" class="btn button">Book teetime at 08:30</button>
+          </form>
+           </div></td></tr>
+
+           Scan of Number of People, Number of Holes here
+
+Monday 18th November Booking
+
+<tr class="future   teetime-mins-00 teetime-hours-11 cantreserve odd"     data-availability='143'><th class='slot-time teetime_mins_00 teetime_hours_11' style="padding-left:10px">11:00</th><td class="row-content"><div class="slot-content"><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>David Laird</span></span><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>Brian Smith</span></span><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>Rodney Ross</span></span></div></td><td class="slot-actions"></td></tr>
+
+Wednesday 27th November Booking
+
+<tr class="future   teetime-mins-40 teetime-hours-10 cantreserve odd"     data-availability='143'><th class='slot-time teetime_mins_40 teetime_hours_10' style="padding-left:10px">10:40</th><td class="row-content"><div class="slot-content"><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>Brian Smith</span> <a href="?edit=4337988" class="button"><i class="fa fa-edit"></i> Edit Booking</a></span><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>David Laird</span></span><span class='player-name '><span class="pull-left nine-hole-info"><span class="label label-info">9</span>&nbsp;</span><span>Rodney Ross</span></span></div></td><td class="slot-actions"></td></tr>

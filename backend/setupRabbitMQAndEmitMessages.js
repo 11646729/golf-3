@@ -11,12 +11,14 @@ import { emitCalendarEventsData } from "./controllers/rtCalendarController.js"
 import { emitHeartbeatData } from "./controllers/rtHeartbeatController.js"
 
 export const setupRabbitMQAndEmitMessages = (io) => {
+  // Connect  to RabbitMQ server
   amqp.connect(rabbitMQ.exchangeUrl, (error, connection) => {
     if (error) {
       console.log("Fatal Error - Cannot connect to exchange")
       throw error
     }
 
+    // Create channel where most of the API for getting things done resides
     connection.createChannel((error1, channel) => {
       if (error1) {
         console.log("Fatal Error - Cannot create a channel to exchange")
@@ -26,12 +28,13 @@ export const setupRabbitMQAndEmitMessages = (io) => {
         durable: true, // false causes a crash
       })
 
-      // bind queues
+      // Bind queues to the channel
       bindQueue(channel, "heartbeat")
       bindQueue(channel, "calendar")
       bindQueue(channel, "news")
       bindQueue(channel, "weather")
 
+      // Emit messages to the channel
       emitRabbitMQMessages(io, channel)
     })
   })
@@ -71,7 +74,7 @@ const emitRabbitMQMessages = (io, channel) => {
               // Emit 2 events isLoading & sendData to client
               emitHeartbeatData(socket, contents.message, false)
               // console.log("===== Receive =====")
-              // console.log(contents.message)
+              console.log(contents.message)
             }
           } catch (error) {
             console.log("Error in listenForRabbitMQMessages: ", error)
