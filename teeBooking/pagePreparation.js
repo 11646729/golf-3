@@ -23,12 +23,26 @@ export const pagePreparationObject = {
     await page.type("#pin", "6052")
 
     // Submit the form
-    page.click('.btn[type="submit"]')
+    // await page.click('.btn[type="submit"]')
 
-    // <a href="/memberbooking/" class="button">Book a tee time</a>
+    // click and wait for navigation
+    await Promise.all([
+      await page.click('.btn[type="submit"]'),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+    ])
 
-    // Wait for the login to complete
-    // await page.waitForNavigation()
+    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
+    // await page.goto(bookingUrl)
+
+    // await page.waitForSelector(
+    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
+    // )
+
+    // let applicationLink = "/memberbooking/"
+    // await page.click(`a[href='${applicationLink}']`)
+
+    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
+    // await page.goto(bookingUrl)
 
     // // Wait for the div to load if necessary
     // await page.waitForSelector(

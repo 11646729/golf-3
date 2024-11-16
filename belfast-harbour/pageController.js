@@ -4,19 +4,16 @@ import { writeFile } from "fs"
 import moment from "moment"
 
 const scraperController = async (browserInstance) => {
-  // url of Web Page
+  // Url of Initial Web Page
   const urlString = "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
 
-  // Load initial Web page
-  let browser = await browserInstance
-
-  // Load initial Web page
+  // Load Initial Web Page
   let pageVariable = await pagePreparationObject.loadInitialWebPage(
-    browser,
+    browserInstance,
     urlString
   )
 
-  // Accept all cookies
+  // Accept all Cookies
   await pagePreparationObject.acceptCookies(pageVariable)
 
   // Load all Next Pages
@@ -52,7 +49,7 @@ const scraperController = async (browserInstance) => {
   })
 
   // Close the browser
-  await browser.close()
+  await browserInstance.close()
 }
 
 // ------------------------------------------------------------------

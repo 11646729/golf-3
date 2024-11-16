@@ -2,33 +2,23 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 export const pagePreparationObject = {
   async loadInitialWebPage(browserInstance, urlString) {
     // Load initial Web page
-    let browser = await browserInstance
+    let page = await browserInstance.newPage()
 
-    let page = await browser.newPage()
     await page.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15"
     )
 
-    const url = urlString
-
-    // Navigate to the selected page & wait for it to download
-    console.log(`Navigating to ${url} ...`)
-    await page.goto(url)
-
-    // Wait for the div to load if necessary
-    await page.waitForSelector(
-      "#content > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div"
-    )
+    // Navigate to Initial Web page & wait for it to load
+    await page.goto(urlString, { waitUntil: "load" })
+    console.log(`Navigated to ${urlString} ...`)
 
     return page
   },
 
   // ------------------------------------------------------------------
 
-  async acceptCookies(pageInstance) {
-    let page = await pageInstance
-
-    // Now Accept all Cookies
+  async acceptCookies(page) {
+    // Load Cookies window
     const acceptCookiesButtonString = "#wt-cli-accept-all-btn"
     const acceptCookiesButton = await page.$(acceptCookiesButtonString)
 
@@ -41,7 +31,7 @@ export const pagePreparationObject = {
     // If the Accept Cookies button exists then press it
     if (!isAcceptCookiesDisabled) {
       await acceptCookiesButton.click()
-      console.log("Accept button pressed")
+      console.log("Accept cookies button pressed")
     }
   },
 
