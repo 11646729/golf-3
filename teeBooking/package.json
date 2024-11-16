@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "fs": "^0.0.1-security",
-    "puppeteer": "^23.8.0"
+    "puppeteer": "^23.8.0",
+    "yarn": "^1.22.22"
   }
 }

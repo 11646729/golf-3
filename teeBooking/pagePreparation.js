@@ -32,6 +32,7 @@ export const pagePreparationObject = {
     await Promise.all([
       await pageInstance.click('.btn[type="submit"]'),
       pageInstance.waitForNavigation({ waitUntil: "networkidle0" }),
+      console.log(`Logged In ...`),
     ])
 
     // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
