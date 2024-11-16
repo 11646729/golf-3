@@ -35,74 +35,25 @@ export const pagePreparationObject = {
       console.log(`Logged In ...`),
     ])
 
-    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
-    // await page.goto(bookingUrl, { waitUntil: "load" })
-
-    // await page.waitForSelector(
-    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
-    // )
-    // let applicationLink = "/memberbooking/"
-    // await page.click(`a[href='${applicationLink}']`)
-    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
-    // await page.goto(bookingUrl)
-    // // Wait for the div to load if necessary
-    // await page.waitForSelector(
-    //   "#content > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div"
-    // )
-    // let page = await pageInstance
-    // // Now Accept all Cookies
-    // const acceptCookiesButtonString = ".cc-cookie-accept"
-    // const acceptCookiesButton = await page.$(acceptCookiesButtonString)
-    // // Check if the Accept Cookies button is disabled or non-existent
-    // const isAcceptCookiesDisabled = await page.$eval(
-    //   acceptCookiesButtonString,
-    //   (button) => button.disabled
-    // )
-    // // If the Accept Cookies button exists then press it
-    // if (!isAcceptCookiesDisabled) {
-    //   await acceptCookiesButton.click()
-    //   console.log("Accept cookies button pressed")
-    // }
+    const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
+    await pageInstance.goto(bookingUrl, { waitUntil: "load" })
   },
 
   // ------------------------------------------------------------------
 
-  async loadNextPages(pageInstance) {
-    let page = await pageInstance
-    let hasLoadMoreButton = true
+  async loadTodaysTeeBookingPage(pageInstance) {
+    console.log("In loadTodaysTeeBookingPage function")
 
-    // Now load more data
-    const loadMoreButtonString =
-      "#content > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-7999ad4.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div.elementor-element.elementor-element-1397594.elementor-widget.elementor-widget-shortcode > div > div > div > button"
+    // // Now load more data
+    // const BookATeeTimeLink =
+    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
+    // const loadMoreButton = await pageInstance.$(BookATeeTimeLink)
 
-    const loadMoreButton = await page.$(loadMoreButtonString)
-
-    while (hasLoadMoreButton)
-      try {
-        // Check if the Load More button is disabled or non-existent
-        const isLoadMoreButtonDisabled = await page.$eval(
-          loadMoreButtonString,
-          (button) => button.disabled
-        )
-
-        // If the Load More button exists then press it
-        if (isLoadMoreButtonDisabled) {
-          console.log(
-            "Load More button is disabled or missing, stopping navigation"
-          )
-          hasLoadMoreButton = false
-        } else {
-          // Click the Load More button
-          await loadMoreButton.click()
-          console.log("Load More button pressed")
-        }
-
-        // Wait for the page to load new content
-        await sleep(1000)
-      } catch {
-        console.log("Load More button not found, stopping navigation")
-        hasLoadMoreButton = false
-      }
+    // await Promise.all([
+    //   await pageInstance.click('.button[type="submit"]'),
+    //   pageInstance.waitForNavigation({ waitUntil: "networkidle0" }),
+    //   console.log(`Logged In ...`),
+    // ])
   },
 
   // ------------------------------------------------------------------

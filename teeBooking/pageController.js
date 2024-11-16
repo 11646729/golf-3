@@ -18,9 +18,10 @@ const scraperController = async (browserInstance) => {
   await pagePreparationObject.login(pageVariable)
 
   // Navigate to Tee Booking Page
+  await pagePreparationObject.loadTodaysTeeBookingPage()
 
   // Close the browser
-  // await browser.close()
+  await browser.close()
 }
 
 // ------------------------------------------------------------------
