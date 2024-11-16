@@ -7,9 +7,12 @@ const scraperController = async (browserInstance) => {
   // Url of Initial Web Page
   const urlString = "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
 
+  // Assign browserInstance to browser variable
+  let browser = await browserInstance
+
   // Load Initial Web Page
   let pageVariable = await pagePreparationObject.loadInitialWebPage(
-    browserInstance,
+    browser,
     urlString
   )
 
@@ -49,7 +52,7 @@ const scraperController = async (browserInstance) => {
   })
 
   // Close the browser
-  await browserInstance.close()
+  await browser.close()
 }
 
 // ------------------------------------------------------------------
