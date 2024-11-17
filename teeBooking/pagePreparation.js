@@ -1,3 +1,5 @@
+import "dotenv/config.js"
+
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 export const pagePreparationObject = {
   async loadInitialWebPage(browserInstance, urlString) {
@@ -23,10 +25,10 @@ export const pagePreparationObject = {
   async login(pageInstance) {
     // Enter Username & Password
     await pageInstance.waitForSelector("#memberid")
-    await pageInstance.type("#memberid", "4168")
+    await pageInstance.type("#memberid", process.env.MEMBERID)
 
     await pageInstance.waitForSelector("#pin")
-    await pageInstance.type("#pin", "6052")
+    await pageInstance.type("#pin", process.env.PIN)
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
@@ -35,8 +37,19 @@ export const pagePreparationObject = {
       console.log(`Logged In ...`),
     ])
 
+    // let hasLoadMoreButton = true
+
+    // // Now load more data
+    // const loadMoreButtonString =
+    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
+    // const loadMoreButton = await pageInstance.$(loadMoreButtonString)
+
+    // if (hasLoadMoreButton) {
+    //   console.log("Tee Booking Button exists")
+
     const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
     await pageInstance.goto(bookingUrl, { waitUntil: "load" })
+    // }
   },
 
   // ------------------------------------------------------------------
@@ -44,16 +57,8 @@ export const pagePreparationObject = {
   async loadTodaysTeeBookingPage(pageInstance) {
     console.log("In loadTodaysTeeBookingPage function")
 
-    // // Now load more data
-    // const BookATeeTimeLink =
-    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
-    // const loadMoreButton = await pageInstance.$(BookATeeTimeLink)
-
-    // await Promise.all([
-    //   await pageInstance.click('.button[type="submit"]'),
-    //   pageInstance.waitForNavigation({ waitUntil: "networkidle0" }),
-    //   console.log(`Logged In ...`),
-    // ])
+    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
+    // await pageInstance.goto(bookingUrl, { waitUntil: "load" })
   },
 
   // ------------------------------------------------------------------

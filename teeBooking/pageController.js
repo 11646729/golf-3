@@ -21,7 +21,7 @@ const scraperController = async (browserInstance) => {
   await pagePreparationObject.loadTodaysTeeBookingPage()
 
   // Close the browser
-  await browser.close()
+  // await browser.close()
 }
 
 // ------------------------------------------------------------------
