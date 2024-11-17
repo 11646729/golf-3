@@ -50,6 +50,10 @@ export const pagePreparationObject = {
     const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
     await pageInstance.goto(bookingUrl, { waitUntil: "load" })
     // }
+
+    // await pageInstance.$eval("#date", (el) => (el.value = "01-12-2024"))
+
+    return pageInstance
   },
 
   // ------------------------------------------------------------------
@@ -57,8 +61,10 @@ export const pagePreparationObject = {
   async loadTodaysTeeBookingPage(pageInstance) {
     console.log("In loadTodaysTeeBookingPage function")
 
-    // const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
-    // await pageInstance.goto(bookingUrl, { waitUntil: "load" })
+    // Click on today's date to dropdown calendar if it exists
+    const dateToday = "#date"
+    await pageInstance.waitForSelector(dateToday)
+    await pageInstance.click(dateToday)
   },
 
   // ------------------------------------------------------------------
