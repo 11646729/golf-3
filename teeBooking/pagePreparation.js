@@ -62,9 +62,25 @@ export const pagePreparationObject = {
     console.log("In loadTodaysTeeBookingPage function")
 
     // Click on today's date to dropdown calendar if it exists
-    const dateToday = "#date"
+
+    await pageInstance.$eval(
+      ".datepicker.hasDatepicker",
+      (el) => (el.value = "02-12-2024")
+    )
+
+    const dateToday = ".datepicker.hasDatepicker"
     await pageInstance.waitForSelector(dateToday)
     await pageInstance.click(dateToday)
+
+    const dateTomorrow =
+      "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(3) > i"
+    await pageInstance.waitForSelector(dateTomorrow)
+    await pageInstance.click(dateTomorrow)
+
+    const dateBeforeArrow =
+      "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
+    await pageInstance.waitForSelector(dateBeforeArrow)
+    await pageInstance.click(dateBeforeArrow)
   },
 
   // ------------------------------------------------------------------
