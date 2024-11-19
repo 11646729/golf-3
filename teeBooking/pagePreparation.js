@@ -52,7 +52,14 @@ export const pagePreparationObject = {
     await pageInstance.goto(bookingUrl, { waitUntil: "load" })
     // }
 
-    // await pageInstance.$eval("#date", (el) => (el.value = "01-12-2024"))
+    // Scroll to 11:00 tee time
+    // Locating the target element using a selector
+    const targetElement = await pageInstance.$(
+      "#member_teetimes > tbody > tr:nth-child(27)"
+    )
+
+    // Scrolling the target element into view
+    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
 
     return pageInstance
   },
