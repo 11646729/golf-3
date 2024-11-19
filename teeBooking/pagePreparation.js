@@ -1,4 +1,5 @@
 import "dotenv/config.js"
+import moment from "moment"
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 export const pagePreparationObject = {
@@ -59,29 +60,46 @@ export const pagePreparationObject = {
   // ------------------------------------------------------------------
 
   async loadTodaysTeeBookingPage(pageInstance) {
-    console.log("In loadTodaysTeeBookingPage function")
+    // Goto booking page 14 days ahead of today
+    const bookingDate = await addTwoWeeks()
 
     // Click on today's date to dropdown calendar if it exists
+    await pageInstance.waitForSelector(".datepicker.hasDatepicker")
 
     await pageInstance.$eval(
       ".datepicker.hasDatepicker",
-      (el) => (el.value = "02-12-2024")
+      (el, value) => (el.value = value),
+      bookingDate
     )
 
-    const dateToday = ".datepicker.hasDatepicker"
-    await pageInstance.waitForSelector(dateToday)
-    await pageInstance.click(dateToday)
+    // const dateToday = ".datepicker.hasDatepicker"
+    // await pageInstance.waitForSelector(dateToday)
+    // await pageInstance.click(dateToday)
 
-    const dateTomorrow =
+    const dateTomorrowArrow =
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(3) > i"
-    await pageInstance.waitForSelector(dateTomorrow)
-    await pageInstance.click(dateTomorrow)
+    await pageInstance.waitForSelector(dateTomorrowArrow)
+    await pageInstance.click(dateTomorrowArrow)
 
     const dateBeforeArrow =
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
     await pageInstance.waitForSelector(dateBeforeArrow)
     await pageInstance.click(dateBeforeArrow)
   },
+}
+// ------------------------------------------------------------------
+
+const addTwoWeeks = async () => {
+  const twoWeeks = 1000 * 60 * 60 * 24 * 14
+  const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
+  const bookingDate =
+    ("0" + twoWeeksTime.getDate()).slice(-2) +
+    "-" +
+    ("0" + (twoWeeksTime.getMonth() + 1)).slice(-2) +
+    "-" +
+    twoWeeksTime.getFullYear()
+
+  return bookingDate
 
   // ------------------------------------------------------------------
 }
