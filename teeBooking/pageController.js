@@ -16,7 +16,7 @@ const scraperController = async (browserInstance) => {
   await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
 
   // Scroll to Tee Slot that we want to target for booking
-  // SEPERATE PROGRAM
+  await pagePreparationObject.scrollToTeeBookingDateTime(pageVariable)
 
   // Close the browser
   // await browser.close()

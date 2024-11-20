@@ -13,55 +13,58 @@ export const pagePreparationObject = {
     let browser = await browserInstance
 
     // // Load Browser Instance
-    let page = await browser.newPage()
+    let pageVariable = await browser.newPage()
 
-    await page.setUserAgent(
+    await pageVariable.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15"
     )
 
     // Navigate to Initial Web page & wait for it to load
-    await page.goto(urlString, { waitUntil: "load" })
+    await pageVariable.goto(urlString, { waitUntil: "load" })
     console.log(`Opened ${urlString} ...`)
 
-    return page
+    return pageVariable
   },
 
   // ------------------------------------------------------------------
 
-  async loginToTeeBookingSubsystem(pageInstance) {
+  async loginToTeeBookingSubsystem(pageVariable) {
     // Enter Username & Password
-    await pageInstance.waitForSelector("#memberid")
-    await pageInstance.type("#memberid", process.env.MEMBERID)
+    await pageVariable.waitForSelector("#memberid")
+    await pageVariable.type("#memberid", process.env.MEMBERID)
 
-    await pageInstance.waitForSelector("#pin")
-    await pageInstance.type("#pin", process.env.PIN)
+    await pageVariable.waitForSelector("#pin")
+    await pageVariable.type("#pin", process.env.PIN)
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
       // await pageInstance.waitForSelector('.btn[type="submit"]'),
-      await pageInstance.click('.btn[type="submit"]'),
-      pageInstance.waitForNavigation({ waitUntil: "networkidle0" }),
+      await pageVariable.click('.btn[type="submit"]'),
+      pageVariable.waitForNavigation({ waitUntil: "networkidle0" }),
       console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
 
     // Load Today's Date for Golf Club Tee Booking Subsystem
-    await pageInstance.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
+    await pageVariable.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
       waitUntil: "load",
     })
 
-    return pageInstance
+    return pageVariable
   },
 
   // ------------------------------------------------------------------
 
-  async loadTodaysTeeBookingPage(pageInstance) {
-    // Goto booking page 14 days ahead of today
-    const bookingDate = await addTwoWeeks()
+  async loadTodaysTeeBookingPage(pageVariable) {
+    // Number of Days From Today for Booking
+    const daysFromToday = 14
+
+    // Goto booking page daysFromToday days ahead of today
+    const bookingDate = await addTwoWeeks(daysFromToday)
 
     // Click on today's date to dropdown calendar if it exists
-    await pageInstance.waitForSelector(".datepicker.hasDatepicker")
+    await pageVariable.waitForSelector(".datepicker.hasDatepicker")
 
-    await pageInstance.$eval(
+    await pageVariable.$eval(
       ".datepicker.hasDatepicker",
       (el, value) => (el.value = value),
       bookingDate
@@ -69,36 +72,44 @@ export const pagePreparationObject = {
 
     const dateTomorrowArrow =
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(3) > i"
-    await pageInstance.waitForSelector(dateTomorrowArrow)
-    await pageInstance.click(dateTomorrowArrow)
+    await pageVariable.waitForSelector(dateTomorrowArrow)
+    await pageVariable.click(dateTomorrowArrow)
 
     const dateBeforeArrow =
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
-    await pageInstance.waitForSelector(dateBeforeArrow)
-    await pageInstance.click(dateBeforeArrow)
+    await pageVariable.waitForSelector(dateBeforeArrow)
+    await pageVariable.click(dateBeforeArrow)
+  },
+
+  // ------------------------------------------------------------------
+
+  async scrollToTeeBookingDateTime(pageVariable) {
+    console.log(pageVariable)
 
     // Scroll to 11:00 tee time
     // Locating the target element using a selector
-    const targetElement = await pageInstance.$(
-      "#member_teetimes > tbody > tr:nth-child(27)"
-      // ".slot-time.teetime_mins_00.teetime_hours_18"
-    )
+    const bookTeeSlot =
+      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
 
     // Scrolling the target element into view
-    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
+    // await bookTeeSlot.scrollIntoView({ behavior: "smooth", block: "center" })
 
-    // Check if bookTeeTime button exists
-    const dateToday =
-      "#member_teetimes > tbody > tr:nth-child(27) > td.slot-actions > a"
-    // ".slot-time.teetime_mins_00.teetime_hours_18 > td.slot-actions > a"
-    await pageInstance.waitForSelector(dateToday)
-    await pageInstance.click(dateToday)
+    await pageVariable.waitForSelector(bookTeeSlot)
+    await pageVariable.click(bookTeeSlot)
+
+    // NEED TO SELECT 3 PLAYERS HERE
+
+    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
+    const numberOfHoles =
+      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
+    await pageVariable.waitForSelector(numberOfHoles)
+    await pageVariable.click(numberOfHoles)
   },
 }
 // ------------------------------------------------------------------
 
-const addTwoWeeks = async () => {
-  const twoWeeks = 1000 * 60 * 60 * 24 * 14
+const addTwoWeeks = async (daysFromToday) => {
+  const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
   const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
   const bookingDate =
     ("0" + twoWeeksTime.getDate()).slice(-2) +
