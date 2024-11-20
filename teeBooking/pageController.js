@@ -12,8 +12,8 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  // Navigate to Tee Booking Page on the Golf Club Web Site
-  // await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
+  // Navigate to Tee Booking Page 14 Days Ahead
+  await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
 
   // Scroll to Tee Slot that we want to target for booking
   // SEPERATE PROGRAM

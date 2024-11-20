@@ -80,19 +80,17 @@ export const pagePreparationObject = {
     // Scroll to 11:00 tee time
     // Locating the target element using a selector
     const targetElement = await pageInstance.$(
-      // "#member_teetimes > tbody > tr:nth-child(27)"
-      ".slot-time.teetime_mins_00.teetime_hours_18"
+      "#member_teetimes > tbody > tr:nth-child(27)"
+      // ".slot-time.teetime_mins_00.teetime_hours_18"
     )
-    // "#member_teetimes > tbody > tr:nth-child(27)"
 
     // Scrolling the target element into view
     await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
 
     // Check if bookTeeTime button exists
-    // "slot-time teetime_mins_00 teetime_hours_18"
     const dateToday =
-      // "#member_teetimes > tbody > tr:nth-child(27) > td.slot-actions > a"
-      ".slot-time.teetime_mins_00.teetime_hours_18 > td.slot-actions > a"
+      "#member_teetimes > tbody > tr:nth-child(27) > td.slot-actions > a"
+    // ".slot-time.teetime_mins_00.teetime_hours_18 > td.slot-actions > a"
     await pageInstance.waitForSelector(dateToday)
     await pageInstance.click(dateToday)
   },
