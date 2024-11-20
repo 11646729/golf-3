@@ -1,9 +1,14 @@
 import "dotenv/config.js"
-import moment from "moment"
 
-const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+// const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+
 export const pagePreparationObject = {
-  async loadInitialWebPage(browserInstance, urlString) {
+  // ------------------------------------------------------------------
+
+  async loadHomeWebPage(browserInstance) {
+    // Url of Golf Club Home Web Page
+    const urlString = process.env.GOLF_CLUB_HOME_URL
+
     // Assign browserInstance to browser variable
     let browser = await browserInstance
 
@@ -16,14 +21,14 @@ export const pagePreparationObject = {
 
     // Navigate to Initial Web page & wait for it to load
     await page.goto(urlString, { waitUntil: "load" })
-    console.log(`Navigated to ${urlString} ...`)
+    console.log(`Opened ${urlString} ...`)
 
     return page
   },
 
   // ------------------------------------------------------------------
 
-  async login(pageInstance) {
+  async loginToTeeBookingSubsystem(pageInstance) {
     // Enter Username & Password
     await pageInstance.waitForSelector("#memberid")
     await pageInstance.type("#memberid", process.env.MEMBERID)
@@ -33,33 +38,16 @@ export const pagePreparationObject = {
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
+      // await pageInstance.waitForSelector('.btn[type="submit"]'),
       await pageInstance.click('.btn[type="submit"]'),
       pageInstance.waitForNavigation({ waitUntil: "networkidle0" }),
-      console.log(`Logged In ...`),
+      console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
 
-    // let hasLoadMoreButton = true
-
-    // // Now load more data
-    // const loadMoreButtonString =
-    //   "#myteetimes > table > tbody > tr:nth-child(7) > td > a"
-    // const loadMoreButton = await pageInstance.$(loadMoreButtonString)
-
-    // if (hasLoadMoreButton) {
-    //   console.log("Tee Booking Button exists")
-
-    const bookingUrl = "https://www.cgc-ni.com/memberbooking/"
-    await pageInstance.goto(bookingUrl, { waitUntil: "load" })
-    // }
-
-    // Scroll to 11:00 tee time
-    // Locating the target element using a selector
-    const targetElement = await pageInstance.$(
-      "#member_teetimes > tbody > tr:nth-child(27)"
-    )
-
-    // Scrolling the target element into view
-    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
+    // Load Today's Date for Golf Club Tee Booking Subsystem
+    await pageInstance.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
+      waitUntil: "load",
+    })
 
     return pageInstance
   },
@@ -79,10 +67,6 @@ export const pagePreparationObject = {
       bookingDate
     )
 
-    // const dateToday = ".datepicker.hasDatepicker"
-    // await pageInstance.waitForSelector(dateToday)
-    // await pageInstance.click(dateToday)
-
     const dateTomorrowArrow =
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(3) > i"
     await pageInstance.waitForSelector(dateTomorrowArrow)
@@ -92,6 +76,25 @@ export const pagePreparationObject = {
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
     await pageInstance.waitForSelector(dateBeforeArrow)
     await pageInstance.click(dateBeforeArrow)
+
+    // Scroll to 11:00 tee time
+    // Locating the target element using a selector
+    const targetElement = await pageInstance.$(
+      // "#member_teetimes > tbody > tr:nth-child(27)"
+      ".slot-time.teetime_mins_00.teetime_hours_18"
+    )
+    // "#member_teetimes > tbody > tr:nth-child(27)"
+
+    // Scrolling the target element into view
+    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
+
+    // Check if bookTeeTime button exists
+    // "slot-time teetime_mins_00 teetime_hours_18"
+    const dateToday =
+      // "#member_teetimes > tbody > tr:nth-child(27) > td.slot-actions > a"
+      ".slot-time.teetime_mins_00.teetime_hours_18 > td.slot-actions > a"
+    await pageInstance.waitForSelector(dateToday)
+    await pageInstance.click(dateToday)
   },
 }
 // ------------------------------------------------------------------

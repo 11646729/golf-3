@@ -2,23 +2,21 @@ import { pagePreparationObject } from "./pagePreparation.js"
 // import { pageScraperObject } from "./pageScraper.js"
 
 const scraperController = async (browserInstance) => {
-  // Url of Initial Web Page
-  const urlString = "https://www.cgc-ni.com/members_login"
-
-  // Assign browserInstance to browser variable
-  let browser = await browserInstance
-
-  // Load Initial Web Page
-  let pageVariable = await pagePreparationObject.loadInitialWebPage(
-    browser,
-    urlString
+  // Load Home Web Page
+  let pageVariable = await pagePreparationObject.loadHomeWebPage(
+    browserInstance
   )
 
-  // Login to Web Site
-  pageVariable = await pagePreparationObject.login(pageVariable)
+  // Login to Tee Booking section of the Golf Club Web Site
+  pageVariable = await pagePreparationObject.loginToTeeBookingSubsystem(
+    pageVariable
+  )
 
-  // Navigate to Tee Booking Page
-  await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
+  // Navigate to Tee Booking Page on the Golf Club Web Site
+  // await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
+
+  // Scroll to Tee Slot that we want to target for booking
+  // SEPERATE PROGRAM
 
   // Close the browser
   // await browser.close()
