@@ -56,7 +56,7 @@ export const pagePreparationObject = {
 
   async loadTodaysTeeBookingPage(pageVariable) {
     // Number of Days From Today for Booking
-    const daysFromToday = 14
+    const daysFromToday = 13
 
     // Goto booking page daysFromToday days ahead of today
     const bookingDate = await addTwoWeeks(daysFromToday)
@@ -91,19 +91,25 @@ export const pagePreparationObject = {
     const bookTeeSlot =
       "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
 
-    // Scrolling the target element into view
-    // await bookTeeSlot.scrollIntoView({ behavior: "smooth", block: "center" })
-
     await pageVariable.waitForSelector(bookTeeSlot)
     await pageVariable.click(bookTeeSlot)
 
-    // NEED TO SELECT 3 PLAYERS HERE
+    // Select 3 Players
+    const numberOfPlayers =
+      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(1) > div > label:nth-child(3) > input[type=radio]"
+    await pageVariable.waitForSelector(numberOfPlayers)
+    await pageVariable.click(numberOfPlayers)
 
-    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
+    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes - WORKS OK
     const numberOfHoles =
       "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
     await pageVariable.waitForSelector(numberOfHoles)
     await pageVariable.click(numberOfHoles)
+
+    //  Now click Booking Button - THIS WORKS OK
+    // const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
+    // await pageVariable.waitForSelector(bookTeetime)
+    // await pageVariable.click(bookTeetime)
   },
 }
 // ------------------------------------------------------------------
