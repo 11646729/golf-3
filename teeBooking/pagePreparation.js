@@ -79,18 +79,27 @@ export const pagePreparationObject = {
       "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
     await pageVariable.waitForSelector(dateBeforeArrow)
     await pageVariable.click(dateBeforeArrow)
+
+    const chooseDatepickerMonth =
+      "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
+    await pageVariable.waitForSelector(chooseDatepickerMonth)
+    await pageVariable.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
   },
 
   // ------------------------------------------------------------------
 
   async scrollToTeeBookingDateTime(pageVariable) {
-    console.log(pageVariable)
-
     // Scroll to 11:00 tee time
     // Locating the target element using a selector
+    const targetElement = await pageVariable.$(
+      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd"
+    )
+
+    // Scrolling the target element into view
+    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
+
     const bookTeeSlot =
       "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
-
     await pageVariable.waitForSelector(bookTeeSlot)
     await pageVariable.click(bookTeeSlot)
 
@@ -107,9 +116,9 @@ export const pagePreparationObject = {
     await pageVariable.click(numberOfHoles)
 
     //  Now click Booking Button - THIS WORKS OK
-    // const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
-    // await pageVariable.waitForSelector(bookTeetime)
-    // await pageVariable.click(bookTeetime)
+    const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
+    await pageVariable.waitForSelector(bookTeetime)
+    await pageVariable.click(bookTeetime)
   },
 }
 // ------------------------------------------------------------------
