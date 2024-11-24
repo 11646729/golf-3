@@ -106,9 +106,17 @@ export const pagePreparationObject = {
     await pageVariable.click(numberOfHoles)
 
     //  Now click Booking Button to bring up the Booking Details page
+    // THIS RESERVES THE TEE BOOKING
     const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
     await pageVariable.waitForSelector(bookTeetime)
     await pageVariable.click(bookTeetime)
+
+    // Now click Add Buggy Booking Service link on the Booking Details page
+    const addBuggy =
+      "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
+    await pageVariable.waitForSelector(addBuggy)
+    await pageVariable.click(addBuggy)
+    await pageVariable.click(addBuggy)
   },
 }
 // ------------------------------------------------------------------

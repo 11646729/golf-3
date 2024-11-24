@@ -11,9 +11,11 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  const requestedTeeBookingTime = new Date.now()
-  console.log(requestedTeeBookingTime)
-  const daysFromToday = 13
+  const daysFromToday = 12 // Today - 2024-11-24T09:41:18.939Z
+
+  // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
+  // const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
+  // console.log(twoWeeksTime) // 2024-12-08T09:40:13.189Z
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
