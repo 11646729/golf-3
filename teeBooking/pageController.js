@@ -1,5 +1,4 @@
 import { pagePreparationObject } from "./pagePreparation.js"
-// import { pageScraperObject } from "./pageScraper.js"
 
 const scraperController = async (browserInstance) => {
   // Load Home Web Page
@@ -12,11 +11,18 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  // Navigate to Tee Booking Page 14 Days Ahead
-  await pagePreparationObject.loadTodaysTeeBookingPage(pageVariable)
+  const requestedTeeBookingTime = new Date.now()
+  console.log(requestedTeeBookingTime)
+  const daysFromToday = 13
+
+  // Navigate to Tee Booking Page daysFromToday Days Ahead
+  await pagePreparationObject.loadTodaysTeeBookingPage(
+    pageVariable,
+    daysFromToday
+  )
 
   // Scroll to Tee Slot that we want to target for booking
-  // await pagePreparationObject.scrollToTeeBookingDateTime(pageVariable)
+  await pagePreparationObject.scrollToTeeBookingDateTime(pageVariable)
 
   // Close the browser
   // await browser.close()

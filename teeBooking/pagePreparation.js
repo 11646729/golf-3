@@ -54,50 +54,40 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async loadTodaysTeeBookingPage(pageVariable) {
-    // Number of Days From Today for Booking
-    const daysFromToday = 13
-
-    // Goto booking page daysFromToday days ahead of today
-    const bookingDate = await addTwoWeeks(daysFromToday)
+  async loadTodaysTeeBookingPage(pageVariable, bookingDaysFromToday) {
+    // Create bookingDate
+    const bookingDate = await addTwoWeeks(bookingDaysFromToday)
 
     // Click on today's date to dropdown calendar if it exists
     await pageVariable.waitForSelector(".datepicker.hasDatepicker")
 
+    // Move to display bookingDate e.g. 07-12-24
+    // Does this function amend the current-day to be displayed ???
     await pageVariable.$eval(
       ".datepicker.hasDatepicker",
       (el, value) => (el.value = value),
       bookingDate
     )
 
-    const dateTomorrowArrow =
-      "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(3) > i"
-    await pageVariable.waitForSelector(dateTomorrowArrow)
-    await pageVariable.click(dateTomorrowArrow)
-
-    const dateBeforeArrow =
-      "#teetimes_nav_form > div > div:nth-child(1) > div > a:nth-child(1) > i"
-    await pageVariable.waitForSelector(dateBeforeArrow)
-    await pageVariable.click(dateBeforeArrow)
-
+    // Selects the month for selected bookingDate
     const chooseDatepickerMonth =
       "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
     await pageVariable.waitForSelector(chooseDatepickerMonth)
     await pageVariable.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
+
+    // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
+    const chooseDatepickerDate =
+      "#ui-datepicker-div > table > tbody > tr:nth-child(2) > td.ui-datepicker-current-day"
+    await pageVariable.waitForSelector(chooseDatepickerDate)
+    await pageVariable.click(chooseDatepickerDate)
   },
 
   // ------------------------------------------------------------------
 
   async scrollToTeeBookingDateTime(pageVariable) {
     // Scroll to 11:00 tee time
-    // Locating the target element using a selector
-    const targetElement = await pageVariable.$(
-      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd"
-    )
 
-    // Scrolling the target element into view
-    await targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
-
+    // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
     const bookTeeSlot =
       "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
     await pageVariable.waitForSelector(bookTeeSlot)
@@ -109,13 +99,13 @@ export const pagePreparationObject = {
     await pageVariable.waitForSelector(numberOfPlayers)
     await pageVariable.click(numberOfPlayers)
 
-    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes - WORKS OK
+    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
     const numberOfHoles =
       "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
     await pageVariable.waitForSelector(numberOfHoles)
     await pageVariable.click(numberOfHoles)
 
-    //  Now click Booking Button - THIS WORKS OK
+    //  Now click Booking Button to bring up the Booking Details page
     const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
     await pageVariable.waitForSelector(bookTeetime)
     await pageVariable.click(bookTeetime)
@@ -126,6 +116,7 @@ export const pagePreparationObject = {
 const addTwoWeeks = async (daysFromToday) => {
   const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
   const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
+
   const bookingDate =
     ("0" + twoWeeksTime.getDate()).slice(-2) +
     "-" +
