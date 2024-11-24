@@ -11,11 +11,19 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  const daysFromToday = 12 // Today - 2024-11-24T09:41:18.939Z
+  const daysFromToday = 12
 
-  // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
-  // const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
-  // console.log(twoWeeksTime) // 2024-12-08T09:40:13.189Z
+  const requestedBooking = new Date("2024-12-06T18:00:00.000Z")
+
+  // Extract Hours of Tee Booking and convert to String
+  const h = requestedBooking.getHours()
+  const hoursOfTeeBooking = h.toString()
+
+  // Extract Minutes of Tee Booking and convert to String of 2 chars length
+  const m = requestedBooking.getMinutes()
+  const minutesOfTeeBooking = ("0" + m).slice(-2)
+
+  const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
@@ -24,7 +32,11 @@ const scraperController = async (browserInstance) => {
   )
 
   // Scroll to Tee Slot that we want to target for booking
-  await pagePreparationObject.scrollToTeeBookingDateTime(pageVariable)
+  await pagePreparationObject.scrollToTeeBookingDateTime(
+    pageVariable,
+    hoursOfTeeBooking,
+    minutesOfTeeBooking
+  )
 
   // Close the browser
   // await browser.close()

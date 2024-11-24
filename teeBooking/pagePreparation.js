@@ -84,12 +84,18 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async scrollToTeeBookingDateTime(pageVariable) {
-    // Scroll to 11:00 tee time
-
+  async scrollToTeeBookingDateTime(
+    pageVariable,
+    hoursOfTeeBooking,
+    minutesOfTeeBooking
+  ) {
     // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
     const bookTeeSlot =
-      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
+      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
+      minutesOfTeeBooking +
+      ".teetime-hours-" +
+      hoursOfTeeBooking +
+      ".cantreserve.odd > td.slot-actions > a"
     await pageVariable.waitForSelector(bookTeeSlot)
     await pageVariable.click(bookTeeSlot)
 
@@ -109,16 +115,17 @@ export const pagePreparationObject = {
     // THIS RESERVES THE TEE BOOKING
     const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
     await pageVariable.waitForSelector(bookTeetime)
-    await pageVariable.click(bookTeetime)
+    // await pageVariable.click(bookTeetime)
 
-    // Now click Add Buggy Booking Service link on the Booking Details page
-    const addBuggy =
-      "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
-    await pageVariable.waitForSelector(addBuggy)
-    await pageVariable.click(addBuggy)
-    await pageVariable.click(addBuggy)
+    // // Now click Add Buggy Booking Service link on the Booking Details page
+    // const addBuggy =
+    //   "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
+    // await pageVariable.waitForSelector(addBuggy)
+    // await pageVariable.click(addBuggy)
+    // await pageVariable.click(addBuggy)
   },
 }
+
 // ------------------------------------------------------------------
 
 const addTwoWeeks = async (daysFromToday) => {
