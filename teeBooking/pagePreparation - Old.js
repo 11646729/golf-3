@@ -56,14 +56,13 @@ export const pagePreparationObject = {
 
   async loadTodaysTeeBookingPage(
     pageVariable,
-    daysOfTeeBooking,
-    monthsOfTeeBooking,
     yearsOfTeeBooking,
+    daysOfTeeBooking,
     bookingDaysFromToday
   ) {
     // Create bookingDate
-    const bookingDate =
-      daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
+    const bookingDate = await addTwoWeeks(bookingDaysFromToday)
+    console.log("Booking Date: " + bookingDate)
 
     // Click on today's date to dropdown calendar if it exists
     await pageVariable.waitForSelector(".datepicker.hasDatepicker")
@@ -82,13 +81,9 @@ export const pagePreparationObject = {
     await pageVariable.waitForSelector(chooseDatepickerMonth)
     await pageVariable.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
 
-    // -----------------------
-    // nth-child(?) depends on row containing day
-    // -----------------------
-
     // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
     const chooseDatepickerDate =
-      "#ui-datepicker-div > table > tbody > tr:nth-child(3) > td.ui-datepicker-current-day"
+      "#ui-datepicker-div > table > tbody > tr:nth-child(2) > td.ui-datepicker-current-day"
     await pageVariable.waitForSelector(chooseDatepickerDate)
     await pageVariable.click(chooseDatepickerDate)
   },
@@ -101,39 +96,45 @@ export const pagePreparationObject = {
     hoursOfTeeBooking
   ) {
     // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
+    // const bookTeeSlot =
+    //   "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
+    //   minutesOfTeeBooking +
+    //   ".teetime-hours-" +
+    //   hoursOfTeeBooking +
+    //   ".cantreserve.odd > td.slot-actions > a"
+
+    console.log(minutesOfTeeBooking)
+    console.log(hoursOfTeeBooking)
+
     const bookTeeSlot =
-      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
-      minutesOfTeeBooking +
-      ".teetime-hours-" +
-      hoursOfTeeBooking +
-      ".cantreserve.odd > td.slot-actions > a"
+      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-00.teetime-hours-18.cantreserve.odd > td.slot-actions > a"
     await pageVariable.waitForSelector(bookTeeSlot)
     await pageVariable.click(bookTeeSlot)
 
-    // Select 3 Players
-    const numberOfPlayers =
-      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(1) > div > label:nth-child(3) > input[type=radio]"
-    await pageVariable.waitForSelector(numberOfPlayers)
-    await pageVariable.click(numberOfPlayers)
+    // // Select 3 Players
+    // const numberOfPlayers =
+    //   "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(1) > div > label:nth-child(3) > input[type=radio]"
+    // await pageVariable.waitForSelector(numberOfPlayers)
+    // await pageVariable.click(numberOfPlayers)
 
-    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
-    const numberOfHoles =
-      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
-    await pageVariable.waitForSelector(numberOfHoles)
-    await pageVariable.click(numberOfHoles)
+    // // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
+    // const numberOfHoles =
+    //   "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
+    // await pageVariable.waitForSelector(numberOfHoles)
+    // await pageVariable.click(numberOfHoles)
 
-    //  Now click Booking Button to bring up the Booking Details page
-    // THIS RESERVES THE TEE BOOKING
-    const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
-    await pageVariable.waitForSelector(bookTeetime)
-    await pageVariable.click(bookTeetime)
+    // //  Now click Booking Button to bring up the Booking Details page
+    // // THIS RESERVES THE TEE BOOKING
+    // const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
+    // await pageVariable.waitForSelector(bookTeetime)
+    // await pageVariable.click(bookTeetime)
 
-    // Now click Add Buggy Booking Service link on the Booking Details page
-    const addBuggy =
-      "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
-    await pageVariable.waitForSelector(addBuggy)
-    await pageVariable.click(addBuggy)
-    await pageVariable.click(addBuggy)
+    // // Now click Add Buggy Booking Service link on the Booking Details page
+    // const addBuggy =
+    //   "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
+    // await pageVariable.waitForSelector(addBuggy)
+    // await pageVariable.click(addBuggy)
+    // await pageVariable.click(addBuggy)
   },
 }
 

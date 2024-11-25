@@ -12,39 +12,37 @@ const scraperController = async (browserInstance) => {
   )
 
   const daysFromToday = 14
-  const requestedBooking = new Date("2024-12-09T18:00:00.000Z")
 
-  // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
-  // const requestedBooking = new Date(new Date().getTime() + twoWeeks)
-  // console.log("Two Weeks Time: " + requestedBooking.toISOString())
+  const requestedBooking = new Date("2024-12-09T18:00:00.000Z")
 
   // Extract Minutes of Tee Booking and convert to String of 2 chars length
   const m = requestedBooking.getMinutes()
   const minutesOfTeeBooking = ("0" + m).slice(-2)
 
   // Extract Days of Tee Booking and convert to String
-  const d = requestedBooking.getDate()
-  const daysOfTeeBooking = ("0" + d).slice(-2)
+  const daysOfTeeBooking = requestedBooking.getDate().toString()
 
   // Extract Hours of Tee Booking and convert to String
-  const h = requestedBooking.getHours()
-  const hoursOfTeeBooking = ("0" + h).slice(-2)
+  const hoursOfTeeBooking = requestedBooking.getHours().toString()
 
-  // Extract Months of Tee Booking and convert to String
   const mo = requestedBooking.getMonth() + 1
   const monthsOfTeeBooking = ("0" + mo).slice(-2)
 
-  // Extract Years of Tee Booking and convert to String
   const yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
+
+  // console.log("Minutes is: " + minutesOfTeeBooking)
+  // console.log("Hours is: " + hoursOfTeeBooking)
+  // console.log("Days is: " + daysOfTeeBooking)
+  // console.log("Months is: " + monthsOfTeeBooking)
+  // console.log("Years is: " + yearsOfTeeBooking)
 
   const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
     pageVariable,
-    daysOfTeeBooking,
-    monthsOfTeeBooking,
     yearsOfTeeBooking,
+    daysOfTeeBooking,
     daysFromToday
   )
 
