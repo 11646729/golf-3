@@ -54,9 +54,15 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async loadTodaysTeeBookingPage(pageVariable, bookingDaysFromToday) {
+  async loadTodaysTeeBookingPage(
+    pageVariable,
+    yearsOfTeeBooking,
+    daysOfTeeBooking,
+    bookingDaysFromToday
+  ) {
     // Create bookingDate
     const bookingDate = await addTwoWeeks(bookingDaysFromToday)
+    console.log("Booking Date: " + bookingDate)
 
     // Click on today's date to dropdown calendar if it exists
     await pageVariable.waitForSelector(".datepicker.hasDatepicker")
@@ -86,8 +92,8 @@ export const pagePreparationObject = {
 
   async scrollToTeeBookingDateTime(
     pageVariable,
-    hoursOfTeeBooking,
-    minutesOfTeeBooking
+    minutesOfTeeBooking,
+    hoursOfTeeBooking
   ) {
     // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
     const bookTeeSlot =
