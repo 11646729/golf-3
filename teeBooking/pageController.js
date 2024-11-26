@@ -11,9 +11,9 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  const daysFromToday = 14
   const requestedBooking = new Date("2024-12-09T18:00:00.000Z")
 
+  // const daysFromToday = 14
   // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
   // const requestedBooking = new Date(new Date().getTime() + twoWeeks)
   // console.log("Two Weeks Time: " + requestedBooking.toISOString())
@@ -44,8 +44,7 @@ const scraperController = async (browserInstance) => {
     pageVariable,
     daysOfTeeBooking,
     monthsOfTeeBooking,
-    yearsOfTeeBooking,
-    daysFromToday
+    yearsOfTeeBooking
   )
 
   // Scroll to Tee Slot that we want to target for booking

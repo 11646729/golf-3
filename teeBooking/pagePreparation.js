@@ -58,8 +58,7 @@ export const pagePreparationObject = {
     pageVariable,
     daysOfTeeBooking,
     monthsOfTeeBooking,
-    yearsOfTeeBooking,
-    bookingDaysFromToday
+    yearsOfTeeBooking
   ) {
     // Create bookingDate
     const bookingDate =
