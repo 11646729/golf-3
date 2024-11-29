@@ -38,7 +38,6 @@ export const pagePreparationObject = {
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
-      // await pageInstance.waitForSelector('.btn[type="submit"]'),
       await pageVariable.click('.btn[type="submit"]'),
       pageVariable.waitForNavigation({ waitUntil: "networkidle0" }),
       console.log(`Logged In To Tee Booking Subsystem ...`),
@@ -133,12 +132,55 @@ export const pagePreparationObject = {
     await pageVariable.waitForSelector(addBuggy)
     await pageVariable.click(addBuggy)
     await pageVariable.click(addBuggy)
+
+    // // Now enter Name of 2nd Person
+    // const addPartner2 =
+    //   "#teebooking_players > table > tbody > tr:nth-child(2) > td:nth-child(2) > i > a"
+    // await pageVariable.waitForSelector(addPartner2)
+    // await pageVariable.click(addPartner2)
+
+    // // Choose Name of 2nd Player
+    // const nameOfSecondPlayer =
+    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div:nth-child(1) > a.button.btn.btn-success.dontremoveconfirm.addmember"
+    // await pageVariable.waitForSelector(nameOfSecondPlayer)
+    // await pageVariable.click(nameOfSecondPlayer)
+
+    // const threeLettersOfSecondPlayer =
+    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > span.memberdiv > form > input.keypartner"
+    // await pageVariable.waitForSelector(threeLettersOfSecondPlayer)
+    // await pageVariable.type(threeLettersOfSecondPlayer, "LAI")
+
+    // const selectAllSecondPlayers =
+    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > span.memberdiv > form > input.button"
+    // await pageVariable.waitForSelector(selectAllSecondPlayers)
+    // await pageVariable.click(selectAllSecondPlayers)
+
+    // const secondPlayer =
+    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div > div.candidate.playerButton.playerButtonD > a"
+    // await pageVariable.waitForSelector(secondPlayer)
+    // // await pageVariable.click(secondPlayer)
+
+    // -----------------------
+    // SELECT DAVID LAIRD HERE
+    // -----------------------
+
+    // // Now enter Name of 3rd Person
+    // const addPartner3 =
+    //   "#teebooking_players > table > tbody > tr:nth-child(3) > td:nth-child(2) > i > a"
+    // await pageVariable.waitForSelector(addPartner3)
+    // await pageVariable.click(addPartner3)
+
+    // // // Select Rodney Ross
+    // const selectPartner3 =
+    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div.content > p:nth-child(1) > a:nth-child(2)"
+    // await pageVariable.waitForSelector(selectPartner3)
+    // await pageVariable.click(selectPartner3)
   },
 }
 
 // ------------------------------------------------------------------
 
-const addTwoWeeks = async (daysFromToday) => {
+const addTwoWeeks = (daysFromToday) => {
   const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
   const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
 
@@ -152,4 +194,29 @@ const addTwoWeeks = async (daysFromToday) => {
   return bookingDate
 
   // ------------------------------------------------------------------
+}
+
+export class extractedBookingTimes {
+  constructor(requestedBooking) {
+    this.fullDate = requestedBooking
+
+    // Extract Minutes of Tee Booking and convert to String
+    const m = requestedBooking.getMinutes()
+    this.minutesOfTeeBooking = ("0" + m).slice(-2)
+
+    // Extract Hours of Tee Booking and convert to String
+    const h = requestedBooking.getHours()
+    this.hoursOfTeeBooking = ("0" + h).slice(-2)
+
+    // Extract Days of Tee Booking and convert to String
+    const d = requestedBooking.getDate()
+    this.daysOfTeeBooking = ("0" + d).slice(-2)
+
+    // Extract Months of Tee Booking and convert to String
+    const mo = requestedBooking.getMonth() + 1
+    this.monthsOfTeeBooking = ("0" + mo).slice(-2)
+
+    // Extract Years of Tee Booking and convert to String
+    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
+  }
 }

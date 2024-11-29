@@ -1,4 +1,7 @@
-import { pagePreparationObject } from "./pagePreparation.js"
+import {
+  pagePreparationObject,
+  extractedBookingTimes,
+} from "./pagePreparation.js"
 
 const scraperController = async (browserInstance) => {
   // Load Home Web Page
@@ -11,47 +14,41 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  const requestedBooking = new Date("2024-12-09T18:00:00.000Z")
+  const requestedBooking = new Date("2024-12-06T18:00:00.000Z")
 
   // const daysFromToday = 14
   // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
   // const requestedBooking = new Date(new Date().getTime() + twoWeeks)
   // console.log("Two Weeks Time: " + requestedBooking.toISOString())
 
-  // Extract Minutes of Tee Booking and convert to String of 2 chars length
-  const m = requestedBooking.getMinutes()
-  const minutesOfTeeBooking = ("0" + m).slice(-2)
+  // --------------------
+  // SHOULD BE 00 MINUTES OR EITHER EVERY 10 MINUTES OR EVERY 8 MINUTES IN SUMMER
+  // --------------------
 
-  // Extract Days of Tee Booking and convert to String
-  const d = requestedBooking.getDate()
-  const daysOfTeeBooking = ("0" + d).slice(-2)
+  const mins = new extractedBookingTimes(requestedBooking)
 
-  // Extract Hours of Tee Booking and convert to String
-  const h = requestedBooking.getHours()
-  const hoursOfTeeBooking = ("0" + h).slice(-2)
-
-  // Extract Months of Tee Booking and convert to String
-  const mo = requestedBooking.getMonth() + 1
-  const monthsOfTeeBooking = ("0" + mo).slice(-2)
-
-  // Extract Years of Tee Booking and convert to String
-  const yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
+  // console.log(mins.fullDate)
+  // console.log(mins.minutesOfTeeBooking)
+  // console.log(mins.hoursOfTeeBooking)
+  // console.log(mins.daysOfTeeBooking)
+  // console.log(mins.monthsOfTeeBooking)
+  // console.log(mins.yearsOfTeeBooking)
 
   const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
     pageVariable,
-    daysOfTeeBooking,
-    monthsOfTeeBooking,
-    yearsOfTeeBooking
+    mins.daysOfTeeBooking,
+    mins.monthsOfTeeBooking,
+    mins.yearsOfTeeBooking
   )
 
   // Scroll to Tee Slot that we want to target for booking
   await pagePreparationObject.scrollToTeeBookingDateTime(
     pageVariable,
-    minutesOfTeeBooking,
-    hoursOfTeeBooking
+    mins.minutesOfTeeBooking,
+    mins.hoursOfTeeBooking
   )
 
   // Close the browser
