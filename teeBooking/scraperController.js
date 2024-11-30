@@ -1,6 +1,6 @@
 import {
   pagePreparationObject,
-  extractedBookingTimes,
+  breakdownBookingTimes,
 } from "./pagePreparation.js"
 
 const scraperController = async (browserInstance) => {
@@ -25,30 +25,30 @@ const scraperController = async (browserInstance) => {
   // SHOULD BE 00 MINUTES OR EITHER EVERY 10 MINUTES OR EVERY 8 MINUTES IN SUMMER
   // --------------------
 
-  const mins = new extractedBookingTimes(requestedBooking)
+  const bookingDateTime = new breakdownBookingTimes(requestedBooking)
 
-  // console.log(mins.fullDate)
-  // console.log(mins.minutesOfTeeBooking)
-  // console.log(mins.hoursOfTeeBooking)
-  // console.log(mins.daysOfTeeBooking)
-  // console.log(mins.monthsOfTeeBooking)
-  // console.log(mins.yearsOfTeeBooking)
+  // console.log(bookingDateTime.fullDate)
+  // console.log(bookingDateTime.minutesOfTeeBooking)
+  // console.log(bookingDateTime.hoursOfTeeBooking)
+  // console.log(bookingDateTime.daysOfTeeBooking)
+  // console.log(bookingDateTime.monthsOfTeeBooking)
+  // console.log(bookingDateTime.yearsOfTeeBooking)
 
   const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
     pageVariable,
-    mins.daysOfTeeBooking,
-    mins.monthsOfTeeBooking,
-    mins.yearsOfTeeBooking
+    bookingDateTime.daysOfTeeBooking,
+    bookingDateTime.monthsOfTeeBooking,
+    bookingDateTime.yearsOfTeeBooking
   )
 
   // Scroll to Tee Slot that we want to target for booking
   await pagePreparationObject.scrollToTeeBookingDateTime(
     pageVariable,
-    mins.minutesOfTeeBooking,
-    mins.hoursOfTeeBooking
+    bookingDateTime.minutesOfTeeBooking,
+    bookingDateTime.hoursOfTeeBooking
   )
 
   // Close the browser

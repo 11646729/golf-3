@@ -196,7 +196,7 @@ const addTwoWeeks = (daysFromToday) => {
   // ------------------------------------------------------------------
 }
 
-export class extractedBookingTimes {
+export class breakdownBookingTimes {
   constructor(requestedBooking) {
     this.fullDate = requestedBooking
 
