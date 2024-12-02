@@ -110,3 +110,75 @@ import puppeteer from "puppeteer"
 
   // await browser.close()
 })()
+
+const puppeteer = require("puppeteer")
+;(async () => {
+  const browser = await puppeteer.launch({
+    // headless: false, slowMo: 100, // Uncomment to visualize test
+  })
+  const page = await browser.newPage()
+
+  // Load "https://www.cgc-ni.com/memberbooking/?edit=4346420&newbooking=1"
+  await page.goto(
+    "https://www.cgc-ni.com/memberbooking/?edit=4346420&newbooking=1"
+  )
+
+  // Resize window to 1728 x 835
+  await page.setViewport({ width: 1728, height: 835 })
+
+  // Click on <a> "Enter Details"
+  await page.waitForSelector('tr:nth-child(2) [href="#"]')
+  await page.click('tr:nth-child(2) [href="#"]')
+
+  // Click on <a> "ANOTHER MEMBER"
+  await page.waitForSelector(
+    '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
+  )
+  await page.click('[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]')
+
+  // Fill "LAI" on <input> .content [name="partner"]
+  await page.waitForSelector('.content [name="partner"]:not([disabled])')
+  await page.type('.content [name="partner"]', "LAI")
+
+  // Click on <input> .content [name="submit"]
+  await page.waitForSelector('.content [name="submit"]')
+  await page.click('.content [name="submit"]')
+
+  // Click on <a> "David Laird (40.5)"
+  await page.waitForSelector(
+    '[href="?edit=4346420&addpartner=10712&partnerslot=2"]'
+  )
+  await Promise.all([
+    page.click('[href="?edit=4346420&addpartner=10712&partnerslot=2"]'),
+    page.waitForNavigation(),
+  ])
+
+  // Click on <a> "Enter Details"
+  await page.waitForSelector('[href="#"]')
+  await page.click('[href="#"]')
+
+  // Click on <a> "Rodney Ross"
+  await page.waitForSelector(
+    '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
+  )
+  await Promise.all([
+    page.click('[href="?edit=4346420&addpartner=11206&partnerslot=3"]'),
+    page.waitForNavigation(),
+  ])
+
+  // Click on <a> "Buggy Booking (£0.00)"
+  await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
+  await Promise.all([
+    page.click('[href="?edit=4346420&addservice=19"]'),
+    page.waitForNavigation(),
+  ])
+
+  // Click on <a> "Buggy Booking (£0.00)"
+  await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
+  await Promise.all([
+    page.click('[href="?edit=4346420&addservice=19"]'),
+    page.waitForNavigation(),
+  ])
+
+  await browser.close()
+})()

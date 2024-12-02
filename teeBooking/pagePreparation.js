@@ -132,15 +132,6 @@ export const pagePreparationObject = {
     ])
 
     // -----------------------
-    // Now click Add Buggy Booking Service link on the Booking Details page
-    // -----------------------
-    const addBuggy =
-      "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
-    await pageVariable.waitForSelector(addBuggy)
-    await pageVariable.click(addBuggy)
-    await pageVariable.click(addBuggy)
-
-    // -----------------------
     // Now Enter Second Player
     // -----------------------
 
@@ -175,17 +166,42 @@ export const pagePreparationObject = {
       pageVariable.waitForNavigation(),
     ])
 
-    // // Now enter Name of 3rd Person
-    // const addPartner3 =
-    //   "#teebooking_players > table > tbody > tr:nth-child(3) > td:nth-child(2) > i > a"
-    // await pageVariable.waitForSelector(addPartner3)
-    // await pageVariable.click(addPartner3)
+    // -----------------------
+    // Now Enter Third Player
+    // -----------------------
 
-    // // Select Rodney Ross
-    // const selectPartner3 =
-    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div.content > p:nth-child(1) > a:nth-child(2)"
-    // await pageVariable.waitForSelector(selectPartner3)
-    // await pageVariable.click(selectPartner3)
+    // Click on <a> "Enter Details"
+    await pageVariable.waitForSelector('[href="#"]')
+    await pageVariable.click('[href="#"]')
+
+    // Click on <a> "Rodney Ross"
+    await pageVariable.waitForSelector(
+      '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
+    )
+    await Promise.all([
+      pageVariable.click(
+        '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
+      ),
+      pageVariable.waitForNavigation(),
+    ])
+
+    // -----------------------
+    // Now reserve two buggies
+    // -----------------------
+
+    // Click on <a> "Buggy Booking (£0.00)"
+    await pageVariable.waitForSelector('[href="?edit=4346420&addservice=19"]')
+    await Promise.all([
+      pageVariable.click('[href="?edit=4346420&addservice=19"]'),
+      pageVariable.waitForNavigation(),
+    ])
+
+    // Click on <a> "Buggy Booking (£0.00)"
+    await pageVariable.waitForSelector('[href="?edit=4346420&addservice=19"]')
+    await Promise.all([
+      pageVariable.click('[href="?edit=4346420&addservice=19"]'),
+      pageVariable.waitForNavigation(),
+    ])
   },
 }
 
