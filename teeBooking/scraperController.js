@@ -14,7 +14,7 @@ const scraperController = async (browserInstance) => {
     pageVariable
   )
 
-  const requestedBooking = new Date("2024-12-06T18:00:00.000Z")
+  const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
 
   // const daysFromToday = 14
   // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday

@@ -121,48 +121,59 @@ export const pagePreparationObject = {
     await pageVariable.click(numberOfHoles)
 
     //  Now click Booking Button to bring up the Booking Details page
-    // THIS RESERVES THE TEE BOOKING
-    const bookTeetime = "#cluetip-inner > div.tipForm > form > button"
-    await pageVariable.waitForSelector(bookTeetime)
-    await pageVariable.click(bookTeetime)
 
+    // Click on <button> "Book teetime at 18:00"
+    // THIS RESERVES THE TEE BOOKING
+    const bookTeetime = "#cluetip-inner form > .btn"
+    await pageVariable.waitForSelector(bookTeetime)
+    await Promise.all([
+      pageVariable.click(bookTeetime),
+      pageVariable.waitForNavigation(),
+    ])
+
+    // -----------------------
     // Now click Add Buggy Booking Service link on the Booking Details page
+    // -----------------------
     const addBuggy =
       "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
     await pageVariable.waitForSelector(addBuggy)
     await pageVariable.click(addBuggy)
     await pageVariable.click(addBuggy)
 
-    // // Now enter Name of 2nd Person
-    // const addPartner2 =
-    //   "#teebooking_players > table > tbody > tr:nth-child(2) > td:nth-child(2) > i > a"
-    // await pageVariable.waitForSelector(addPartner2)
-    // await pageVariable.click(addPartner2)
-
-    // // Choose Name of 2nd Player
-    // const nameOfSecondPlayer =
-    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div:nth-child(1) > a.button.btn.btn-success.dontremoveconfirm.addmember"
-    // await pageVariable.waitForSelector(nameOfSecondPlayer)
-    // await pageVariable.click(nameOfSecondPlayer)
-
-    // const threeLettersOfSecondPlayer =
-    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > span.memberdiv > form > input.keypartner"
-    // await pageVariable.waitForSelector(threeLettersOfSecondPlayer)
-    // await pageVariable.type(threeLettersOfSecondPlayer, "LAI")
-
-    // const selectAllSecondPlayers =
-    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > span.memberdiv > form > input.button"
-    // await pageVariable.waitForSelector(selectAllSecondPlayers)
-    // await pageVariable.click(selectAllSecondPlayers)
-
-    // const secondPlayer =
-    //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div > div.candidate.playerButton.playerButtonD > a"
-    // await pageVariable.waitForSelector(secondPlayer)
-    // // await pageVariable.click(secondPlayer)
-
     // -----------------------
-    // SELECT DAVID LAIRD HERE
+    // Now Enter Second Player
     // -----------------------
+
+    // Click on <a> "Enter Details"
+    await pageVariable.waitForSelector('tr:nth-child(2) [href="#"]')
+    await pageVariable.click('tr:nth-child(2) [href="#"]')
+
+    // Click on <a> "ANOTHER MEMBER"
+    await pageVariable.waitForSelector(
+      '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
+    )
+    await pageVariable.click(
+      '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
+    )
+
+    // Fill "LAI" on <input> .content [name="partner"]
+    await pageVariable.waitForSelector(
+      '.content [name="partner"]:not([disabled])'
+    )
+    await pageVariable.type('.content [name="partner"]', "LAI")
+
+    // Click on <input> .content [name="submit"]
+    await pageVariable.waitForSelector('.content [name="submit"]')
+    await pageVariable.click('.content [name="submit"]')
+
+    // Click on <a> "David Laird (40.5)"
+    const partner1 = '[href="?edit=4346420&addpartner=10712&partnerslot=2"]'
+    await pageVariable.waitForSelector(partner1, { visible: true })
+
+    await Promise.all([
+      pageVariable.click(partner1),
+      pageVariable.waitForNavigation(),
+    ])
 
     // // Now enter Name of 3rd Person
     // const addPartner3 =
@@ -170,7 +181,7 @@ export const pagePreparationObject = {
     // await pageVariable.waitForSelector(addPartner3)
     // await pageVariable.click(addPartner3)
 
-    // // // Select Rodney Ross
+    // // Select Rodney Ross
     // const selectPartner3 =
     //   "#facebox > div > table > tbody > tr:nth-child(2) > td.body > div > div.content > p:nth-child(1) > a:nth-child(2)"
     // await pageVariable.waitForSelector(selectPartner3)

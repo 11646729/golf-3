@@ -9,6 +9,7 @@ const startBrowser = async () => {
       args: ["--start-maximized"],
       defaultViewport: null,
       ignoreHTTPSErrors: true,
+      // slowMo: 100,
     })
   } catch (err) {
     console.log("Could not create a browser instance => : ", err)
