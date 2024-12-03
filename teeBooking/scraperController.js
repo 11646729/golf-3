@@ -23,13 +23,6 @@ const scraperController = async (browserInstance) => {
 
   const bookingDateTime = new breakdownBookingTimes(requestedBooking)
 
-  // console.log(bookingDateTime.fullDate)
-  // console.log(bookingDateTime.minutesOfTeeBooking)
-  // console.log(bookingDateTime.hoursOfTeeBooking)
-  // console.log(bookingDateTime.daysOfTeeBooking)
-  // console.log(bookingDateTime.monthsOfTeeBooking)
-  // console.log(bookingDateTime.yearsOfTeeBooking)
-
   const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
@@ -43,8 +36,12 @@ const scraperController = async (browserInstance) => {
   // Scroll to Tee Slot that we want to target for booking
   await pagePreparationObject.scrollToTeeBookingDateTime(
     page,
+    bookingDateTime.yearsOfTeeBooking,
+    bookingDateTime.monthsOfTeeBooking,
+    bookingDateTime.daysOfTeeBooking,
+    bookingDateTime.hoursOfTeeBooking,
     bookingDateTime.minutesOfTeeBooking,
-    bookingDateTime.hoursOfTeeBooking
+    bookingDateTime.secondsOfTeeBooking
   )
 
   // Close the browser

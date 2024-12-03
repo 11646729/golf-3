@@ -43,10 +43,17 @@ export const pagePreparationObject = {
       console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
 
-    // Load Today's Date for Golf Club Tee Booking Subsystem
-    await page.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
-      waitUntil: "load",
-    })
+    // Click on <a> "Book a tee time"
+    await page.waitForSelector(
+      'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]',
+      { visible: true }
+    )
+    await Promise.all([
+      page.click(
+        'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]'
+      ),
+      page.waitForNavigation(),
+    ])
 
     return page
   },
@@ -63,54 +70,75 @@ export const pagePreparationObject = {
     const bookingDate =
       daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
 
-    // Click on today's date to dropdown calendar if it exists
-    await page.waitForSelector(".datepicker.hasDatepicker")
+    // Click on <input> #date
+    await page.waitForSelector("#date")
+    await page.click("#date")
 
-    // Move to display bookingDate e.g. 07-12-24
-    // Does this function amend the current-day to be displayed ???
-    await page.$eval(
-      ".datepicker.hasDatepicker",
-      (el, value) => (el.value = value),
-      bookingDate
-    )
+    // Click on <a> "13" - row 3 column 5
+    await page.waitForSelector('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
+    await page.click('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
 
-    // Selects the month for selected bookingDate
-    const chooseDatepickerMonth =
-      "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
-    await page.waitForSelector(chooseDatepickerMonth)
-    await page.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
+    // // Click on today's date to dropdown calendar if it exists
+    // await page.waitForSelector(".datepicker.hasDatepicker")
 
-    // -----------------------
-    // nth-child(?) depends on row containing day
-    // -----------------------
+    //   // Move to display bookingDate e.g. 07-12-24
+    //   // Does this function amend the current-day to be displayed ???
+    //   await page.$eval(
+    //     ".datepicker.hasDatepicker",
+    //     (el, value) => (el.value = value),
+    //     bookingDate
+    //   )
 
-    // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
-    const chooseDatepickerDate =
-      "#ui-datepicker-div > table > tbody > tr:nth-child(3) > td.ui-datepicker-current-day"
-    await page.waitForSelector(chooseDatepickerDate)
-    await page.click(chooseDatepickerDate)
+    //   // Selects the month for selected bookingDate
+    //   const chooseDatepickerMonth =
+    //     "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
+    //   await page.waitForSelector(chooseDatepickerMonth)
+    //   await page.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
+
+    //   // -----------------------
+    //   // nth-child(?) depends on row containing day
+    //   // -----------------------
+
+    //   // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
+    //   const chooseDatepickerDate =
+    //     "#ui-datepicker-div > table > tbody > tr:nth-child(3) > td.ui-datepicker-current-day"
+    //   await page.waitForSelector(chooseDatepickerDate)
+    //   await page.click(chooseDatepickerDate)
   },
 
   // ------------------------------------------------------------------
 
   async scrollToTeeBookingDateTime(
     page,
+    yearsOfTeeBooking,
+    monthsOfTeeBooking,
+    daysOfTeeBooking,
+    hoursOfTeeBooking,
     minutesOfTeeBooking,
-    hoursOfTeeBooking
+    secondsOfTeeBooking
   ) {
-    // // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
-    // const bookTeeSlot =
-    //   "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
-    //   minutesOfTeeBooking +
-    //   ".teetime-hours-" +
-    //   hoursOfTeeBooking +
-    //   ".cantreserve.odd > td.slot-actions > a"
-    // await page.waitForSelector(bookTeeSlot)
-    // await page.click(bookTeeSlot)
-
     // Click on <a> "Book"
+    // const bookTeeSlot1 =
+    //   '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
+
     const bookTeeSlot =
-      '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
+      '[href="?date=' +
+      daysOfTeeBooking +
+      "-" +
+      monthsOfTeeBooking +
+      "-20" +
+      yearsOfTeeBooking +
+      "&course=1&group=1&book=" +
+      hoursOfTeeBooking +
+      ":" +
+      minutesOfTeeBooking +
+      ":" +
+      secondsOfTeeBooking +
+      '"]'
+
+    console.log(bookTeeSlot) // [href="?date=13-12-2024&course=1&group=1&book=18:00:00"] WORKS OK
+    // console.log(bookTeeSlot1) // [href="?date=13-12-2024&course=1&group=1&book=18:00:00"] WORKS OK
+
     await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
 
@@ -219,6 +247,9 @@ const addTwoWeeks = (daysFromToday) => {
 export class breakdownBookingTimes {
   constructor(requestedBooking) {
     this.fullDate = requestedBooking
+
+    // Use 00 for seconds & describe as a String
+    this.secondsOfTeeBooking = "00"
 
     // Extract Minutes of Tee Booking and convert to String
     const m = requestedBooking.getMinutes()

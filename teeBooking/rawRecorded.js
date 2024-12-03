@@ -27,27 +27,27 @@ import puppeteer from "puppeteer"
   await page.waitForSelector("#memberid")
   await page.keyboard.press("Tab")
 
-  // Fill "6052" on <input> #pin
-  await page.waitForSelector("#pin:not([disabled])")
-  await page.type("#pin", "6052")
+  // // Fill "6052" on <input> #pin
+  // await page.waitForSelector("#pin:not([disabled])")
+  // await page.type("#pin", "6052")
 
-  // Click on <input> [name="Submit"]
-  await page.waitForSelector('[name="Submit"]')
-  await Promise.all([page.click('[name="Submit"]'), page.waitForNavigation()])
+  // // Click on <input> [name="Submit"]
+  // await page.waitForSelector('[name="Submit"]')
+  // await Promise.all([page.click('[name="Submit"]'), page.waitForNavigation()])
 
   // Scroll wheel by X:0, Y:1580
   await page.evaluate(() => window.scrollBy(0, 1580))
 
-  // Click on <a> "Book a tee time"
-  await page.waitForSelector('td > [href="/memberbooking/"]')
-  await Promise.all([
-    page.click('td > [href="/memberbooking/"]'),
-    page.waitForNavigation(),
-  ])
+  // // Click on <a> "Book a tee time"
+  // await page.waitForSelector('td > [href="/memberbooking/"]')
+  // await Promise.all([
+  //   page.click('td > [href="/memberbooking/"]'),
+  //   page.waitForNavigation(),
+  // ])
 
-  // Click on <input> #date
-  await page.waitForSelector("#date")
-  await page.click("#date")
+  // // Click on <input> #date
+  // await page.waitForSelector("#date")
+  // await page.click("#date")
 
   // Click on <a> "13"
   await page.waitForSelector('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
