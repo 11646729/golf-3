@@ -45,7 +45,7 @@ const scraperController = async (browserInstance) => {
   )
 
   // Close the browser
-  // await browser.close()
+  // closeBrowser(browserInstance)
 }
 
 // ------------------------------------------------------------------

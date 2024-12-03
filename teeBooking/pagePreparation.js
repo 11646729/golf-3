@@ -145,7 +145,10 @@ export const pagePreparationObject = {
 
     // Fill "LAI" on <input> .content [name="partner"]
     await page.waitForSelector('.content [name="partner"]:not([disabled])')
-    await page.type('.content [name="partner"]', "LAI")
+    await page.type(
+      '.content [name="partner"]',
+      process.env.DAVID_LAIRD_INITIALS
+    )
 
     // Click on <input> .content [name="submit"]
     await page.waitForSelector('.content [name="submit"]')

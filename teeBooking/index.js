@@ -1,19 +1,31 @@
-import startBrowser from "./browser.js"
+import puppeteer from "puppeteer"
 import scraperController from "./scraperController.js"
 
-// Start the browser and create a browser instance
-let browserInstance = startBrowser()
+try {
+  // Start the browser and create a browser instance
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--start-maximized"],
+    defaultViewport: null,
+    ignoreHTTPSErrors: true,
+  })
 
-// -----------------------------------------
-// RELOAD PAGE BASED ON A SPECIFIC TIME HERE
-// -----------------------------------------
-// and this is how you log out the current date at 6:01 every day:
-// runAtSpecificTimeOfDay(6, 1, () => {
-//   console.log(new Date())
-// })
+  // -----------------------------------------
+  // RELOAD PAGE BASED ON A SPECIFIC TIME HERE
+  // -----------------------------------------
+  // and this is how you log out the current date at 6:01 every day:
+  // runAtSpecificTimeOfDay(6, 1, () => {
+  //   console.log(new Date())
+  // })
 
-// Pass the browser instance to the scraper controller
-scraperController(browserInstance)
+  // Pass the browser instance to the scraper controller
+  await scraperController(browser)
+
+  // Now close the browser
+  await browser.close()
+} catch (err) {
+  console.log("Could not resolve the browser instance => ", err)
+}
 
 // some scenarios require us to run a piece of code at a specific time of day, the following method allows us to do this:
 const runAtSpecificTimeOfDay = (hour, minutes, func) => {
