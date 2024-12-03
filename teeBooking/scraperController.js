@@ -11,6 +11,7 @@ const scraperController = async (browserInstance) => {
   page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
 
   const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
+  const numberOfBuggiesRequested = 2
 
   // const daysFromToday = 14
   // const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
@@ -22,8 +23,6 @@ const scraperController = async (browserInstance) => {
   // --------------------
 
   const bookingDateTime = new breakdownBookingTimes(requestedBooking)
-
-  const numberOfBuggiesRequested = 2
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
@@ -41,7 +40,8 @@ const scraperController = async (browserInstance) => {
     bookingDateTime.daysOfTeeBooking,
     bookingDateTime.hoursOfTeeBooking,
     bookingDateTime.minutesOfTeeBooking,
-    bookingDateTime.secondsOfTeeBooking
+    bookingDateTime.secondsOfTeeBooking,
+    numberOfBuggiesRequested
   )
 
   // Close the browser

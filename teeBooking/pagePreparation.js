@@ -66,44 +66,18 @@ export const pagePreparationObject = {
     monthsOfTeeBooking,
     yearsOfTeeBooking
   ) {
-    // Create bookingDate
-    const bookingDate =
-      daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
+    // // Create bookingDate
+    // const bookingDate =
+    //   daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
 
     // Click on <input> #date
     await page.waitForSelector("#date")
     await page.click("#date")
 
     // Click on <a> "13" - row 3 column 5
+    // TODO - MODIFY THIS
     await page.waitForSelector('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
     await page.click('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
-
-    // // Click on today's date to dropdown calendar if it exists
-    // await page.waitForSelector(".datepicker.hasDatepicker")
-
-    //   // Move to display bookingDate e.g. 07-12-24
-    //   // Does this function amend the current-day to be displayed ???
-    //   await page.$eval(
-    //     ".datepicker.hasDatepicker",
-    //     (el, value) => (el.value = value),
-    //     bookingDate
-    //   )
-
-    //   // Selects the month for selected bookingDate
-    //   const chooseDatepickerMonth =
-    //     "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
-    //   await page.waitForSelector(chooseDatepickerMonth)
-    //   await page.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
-
-    //   // -----------------------
-    //   // nth-child(?) depends on row containing day
-    //   // -----------------------
-
-    //   // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
-    //   const chooseDatepickerDate =
-    //     "#ui-datepicker-div > table > tbody > tr:nth-child(3) > td.ui-datepicker-current-day"
-    //   await page.waitForSelector(chooseDatepickerDate)
-    //   await page.click(chooseDatepickerDate)
   },
 
   // ------------------------------------------------------------------
@@ -115,12 +89,10 @@ export const pagePreparationObject = {
     daysOfTeeBooking,
     hoursOfTeeBooking,
     minutesOfTeeBooking,
-    secondsOfTeeBooking
+    secondsOfTeeBooking,
+    numberOfBuggiesRequested
   ) {
     // Click on <a> "Book"
-    // const bookTeeSlot1 =
-    //   '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
-
     const bookTeeSlot =
       '[href="?date=' +
       daysOfTeeBooking +
@@ -135,10 +107,6 @@ export const pagePreparationObject = {
       ":" +
       secondsOfTeeBooking +
       '"]'
-
-    console.log(bookTeeSlot) // [href="?date=13-12-2024&course=1&group=1&book=18:00:00"] WORKS OK
-    // console.log(bookTeeSlot1) // [href="?date=13-12-2024&course=1&group=1&book=18:00:00"] WORKS OK
-
     await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
 
@@ -206,23 +174,30 @@ export const pagePreparationObject = {
       page.waitForNavigation(),
     ])
 
-    // -----------------------
-    // Now reserve two buggies
-    // -----------------------
+    // -------------------
+    // Now reserve buggies
+    // -------------------
 
     // Click on <a> "Buggy Booking (£0.00)"
-    await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
+    const buggyBookingString = '[href="?edit=4346420&addservice=19"]'
+    for (let step = 0; step < numberOfBuggiesRequested; step++) {
+      await page.waitForSelector(buggyBookingString)
+      await Promise.all([
+        page.click(buggyBookingString),
+        page.waitForNavigation(),
+      ])
+    }
+
+    // Click on <a> " Finish"
+    await page.waitForSelector('[href="?edit=4346420&redirectToHome=1"]')
     await Promise.all([
-      page.click('[href="?edit=4346420&addservice=19"]'),
+      page.click('[href="?edit=4346420&redirectToHome=1"]'),
       page.waitForNavigation(),
     ])
 
-    // Click on <a> "Buggy Booking (£0.00)"
-    await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
-    await Promise.all([
-      page.click('[href="?edit=4346420&addservice=19"]'),
-      page.waitForNavigation(),
-    ])
+    // Click on <a> "Logout"
+    await page.waitForSelector("#logoutbtn")
+    await Promise.all([page.click("#logoutbtn"), page.waitForNavigation()])
   },
 }
 
