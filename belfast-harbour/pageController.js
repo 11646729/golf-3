@@ -11,29 +11,20 @@ const scraperController = async (browserInstance) => {
   let browser = await browserInstance
 
   // Load Initial Web Page
-  let pageVariable = await pagePreparationObject.loadInitialWebPage(
-    browser,
-    urlString
-  )
+  let page = await pagePreparationObject.loadInitialWebPage(browser, urlString)
 
   // Accept all Cookies
-  await pagePreparationObject.acceptCookies(pageVariable)
+  await pagePreparationObject.acceptCookies(page)
 
   // Load all Next Pages
-  await pagePreparationObject.loadNextPages(pageVariable)
+  await pagePreparationObject.loadNextPages(page)
 
   // Scrape all the vessel details
-  let scrapedArray1 = await pageScraperObject.scrapeVesselArrivalDetails1(
-    pageVariable
-  )
+  let scrapedArray1 = await pageScraperObject.scrapeVesselArrivalDetails1(page)
 
-  let scrapedArray2 = await pageScraperObject.scrapeVesselArrivalDetails2(
-    pageVariable
-  )
+  let scrapedArray2 = await pageScraperObject.scrapeVesselArrivalDetails2(page)
 
-  let scrapedArray3 = await pageScraperObject.scrapeVesselArrivalDetails3(
-    pageVariable
-  )
+  let scrapedArray3 = await pageScraperObject.scrapeVesselArrivalDetails3(page)
 
   let finalArray = await scraperArrayFormatter(
     scrapedArray1,

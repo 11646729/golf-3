@@ -13,48 +13,48 @@ export const pagePreparationObject = {
     let browser = await browserInstance
 
     // // Load Browser Instance
-    let pageVariable = await browser.newPage()
+    let page = await browser.newPage()
 
-    await pageVariable.setUserAgent(
+    await page.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15"
     )
 
     // Navigate to Initial Web page & wait for it to load
-    await pageVariable.goto(urlString, { waitUntil: "load" })
+    await page.goto(urlString, { waitUntil: "load" })
     console.log(`Opened ${urlString} ...`)
 
-    return pageVariable
+    return page
   },
 
   // ------------------------------------------------------------------
 
-  async loginToTeeBookingSubsystem(pageVariable) {
+  async loginToTeeBookingSubsystem(page) {
     // Enter Username & Password
-    await pageVariable.waitForSelector("#memberid")
-    await pageVariable.type("#memberid", process.env.MEMBERID)
+    await page.waitForSelector("#memberid")
+    await page.type("#memberid", process.env.MEMBERID)
 
-    await pageVariable.waitForSelector("#pin")
-    await pageVariable.type("#pin", process.env.PIN)
+    await page.waitForSelector("#pin")
+    await page.type("#pin", process.env.PIN)
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
-      await pageVariable.click('.btn[type="submit"]'),
-      pageVariable.waitForNavigation({ waitUntil: "networkidle0" }),
+      await page.click('.btn[type="submit"]'),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
       console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
 
     // Load Today's Date for Golf Club Tee Booking Subsystem
-    await pageVariable.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
+    await page.goto(process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM, {
       waitUntil: "load",
     })
 
-    return pageVariable
+    return page
   },
 
   // ------------------------------------------------------------------
 
   async loadTodaysTeeBookingPage(
-    pageVariable,
+    page,
     daysOfTeeBooking,
     monthsOfTeeBooking,
     yearsOfTeeBooking
@@ -64,11 +64,11 @@ export const pagePreparationObject = {
       daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
 
     // Click on today's date to dropdown calendar if it exists
-    await pageVariable.waitForSelector(".datepicker.hasDatepicker")
+    await page.waitForSelector(".datepicker.hasDatepicker")
 
     // Move to display bookingDate e.g. 07-12-24
     // Does this function amend the current-day to be displayed ???
-    await pageVariable.$eval(
+    await page.$eval(
       ".datepicker.hasDatepicker",
       (el, value) => (el.value = value),
       bookingDate
@@ -77,8 +77,8 @@ export const pagePreparationObject = {
     // Selects the month for selected bookingDate
     const chooseDatepickerMonth =
       "#teetimes_nav_form > div > div:nth-child(1) > div > span > span.date-display"
-    await pageVariable.waitForSelector(chooseDatepickerMonth)
-    await pageVariable.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
+    await page.waitForSelector(chooseDatepickerMonth)
+    await page.click(chooseDatepickerMonth) // Works & drops down calendar for today's date
 
     // -----------------------
     // nth-child(?) depends on row containing day
@@ -87,102 +87,95 @@ export const pagePreparationObject = {
     // Drops down the monthly calendar for selected bookingDate, moves to the day & clicks it
     const chooseDatepickerDate =
       "#ui-datepicker-div > table > tbody > tr:nth-child(3) > td.ui-datepicker-current-day"
-    await pageVariable.waitForSelector(chooseDatepickerDate)
-    await pageVariable.click(chooseDatepickerDate)
+    await page.waitForSelector(chooseDatepickerDate)
+    await page.click(chooseDatepickerDate)
   },
 
   // ------------------------------------------------------------------
 
   async scrollToTeeBookingDateTime(
-    pageVariable,
+    page,
     minutesOfTeeBooking,
     hoursOfTeeBooking
   ) {
-    // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
+    // // Bring up the dialog asking for the Number of Players & 9 or 18 Holes
+    // const bookTeeSlot =
+    //   "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
+    //   minutesOfTeeBooking +
+    //   ".teetime-hours-" +
+    //   hoursOfTeeBooking +
+    //   ".cantreserve.odd > td.slot-actions > a"
+    // await page.waitForSelector(bookTeeSlot)
+    // await page.click(bookTeeSlot)
+
+    // Click on <a> "Book"
     const bookTeeSlot =
-      "#member_teetimes > tbody > tr.future.bookable.teetime-mins-" +
-      minutesOfTeeBooking +
-      ".teetime-hours-" +
-      hoursOfTeeBooking +
-      ".cantreserve.odd > td.slot-actions > a"
-    await pageVariable.waitForSelector(bookTeeSlot)
-    await pageVariable.click(bookTeeSlot)
+      '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
+    await page.waitForSelector(bookTeeSlot)
+    await page.click(bookTeeSlot)
 
-    // Select 3 Players
-    const numberOfPlayers =
-      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(1) > div > label:nth-child(3) > input[type=radio]"
-    await pageVariable.waitForSelector(numberOfPlayers)
-    await pageVariable.click(numberOfPlayers)
+    // Click on <label> "3"
+    const numberOfPlayers = "#cluetip-inner .btn:nth-child(3)"
+    await page.waitForSelector(numberOfPlayers)
+    await page.click(numberOfPlayers)
 
-    // Select 9 Holes - change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
+    // Click on <label> "9 holes"
+    // Change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
     const numberOfHoles =
-      "#cluetip-inner > div.tipForm > form > fieldset > div:nth-child(7) > div > label:nth-child(1) > input[type=radio]"
-    await pageVariable.waitForSelector(numberOfHoles)
-    await pageVariable.click(numberOfHoles)
+      "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(1)"
+    await page.waitForSelector(numberOfHoles)
+    await page.click(numberOfHoles)
 
     //  Now click Booking Button to bring up the Booking Details page
-
     // Click on <button> "Book teetime at 18:00"
     // THIS RESERVES THE TEE BOOKING
     const bookTeetime = "#cluetip-inner form > .btn"
-    await pageVariable.waitForSelector(bookTeetime)
-    await Promise.all([
-      pageVariable.click(bookTeetime),
-      pageVariable.waitForNavigation(),
-    ])
+    await page.waitForSelector(bookTeetime)
+    await Promise.all([page.click(bookTeetime), page.waitForNavigation()])
 
     // -----------------------
     // Now Enter Second Player
     // -----------------------
 
     // Click on <a> "Enter Details"
-    await pageVariable.waitForSelector('tr:nth-child(2) [href="#"]')
-    await pageVariable.click('tr:nth-child(2) [href="#"]')
+    await page.waitForSelector('tr:nth-child(2) [href="#"]')
+    await page.click('tr:nth-child(2) [href="#"]')
 
     // Click on <a> "ANOTHER MEMBER"
-    await pageVariable.waitForSelector(
+    await page.waitForSelector(
       '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
     )
-    await pageVariable.click(
-      '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
-    )
+    await page.click('[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]')
 
     // Fill "LAI" on <input> .content [name="partner"]
-    await pageVariable.waitForSelector(
-      '.content [name="partner"]:not([disabled])'
-    )
-    await pageVariable.type('.content [name="partner"]', "LAI")
+    await page.waitForSelector('.content [name="partner"]:not([disabled])')
+    await page.type('.content [name="partner"]', "LAI")
 
     // Click on <input> .content [name="submit"]
-    await pageVariable.waitForSelector('.content [name="submit"]')
-    await pageVariable.click('.content [name="submit"]')
+    await page.waitForSelector('.content [name="submit"]')
+    await page.click('.content [name="submit"]')
 
     // Click on <a> "David Laird (40.5)"
     const partner1 = '[href="?edit=4346420&addpartner=10712&partnerslot=2"]'
-    await pageVariable.waitForSelector(partner1, { visible: true })
+    await page.waitForSelector(partner1, { visible: true })
 
-    await Promise.all([
-      pageVariable.click(partner1),
-      pageVariable.waitForNavigation(),
-    ])
+    await Promise.all([page.click(partner1), page.waitForNavigation()])
 
     // -----------------------
     // Now Enter Third Player
     // -----------------------
 
     // Click on <a> "Enter Details"
-    await pageVariable.waitForSelector('[href="#"]')
-    await pageVariable.click('[href="#"]')
+    await page.waitForSelector('[href="#"]')
+    await page.click('[href="#"]')
 
     // Click on <a> "Rodney Ross"
-    await pageVariable.waitForSelector(
+    await page.waitForSelector(
       '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
     )
     await Promise.all([
-      pageVariable.click(
-        '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
-      ),
-      pageVariable.waitForNavigation(),
+      page.click('[href="?edit=4346420&addpartner=11206&partnerslot=3"]'),
+      page.waitForNavigation(),
     ])
 
     // -----------------------
@@ -190,17 +183,17 @@ export const pagePreparationObject = {
     // -----------------------
 
     // Click on <a> "Buggy Booking (£0.00)"
-    await pageVariable.waitForSelector('[href="?edit=4346420&addservice=19"]')
+    await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
     await Promise.all([
-      pageVariable.click('[href="?edit=4346420&addservice=19"]'),
-      pageVariable.waitForNavigation(),
+      page.click('[href="?edit=4346420&addservice=19"]'),
+      page.waitForNavigation(),
     ])
 
     // Click on <a> "Buggy Booking (£0.00)"
-    await pageVariable.waitForSelector('[href="?edit=4346420&addservice=19"]')
+    await page.waitForSelector('[href="?edit=4346420&addservice=19"]')
     await Promise.all([
-      pageVariable.click('[href="?edit=4346420&addservice=19"]'),
-      pageVariable.waitForNavigation(),
+      page.click('[href="?edit=4346420&addservice=19"]'),
+      page.waitForNavigation(),
     ])
   },
 }

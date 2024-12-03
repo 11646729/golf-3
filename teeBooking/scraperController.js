@@ -5,14 +5,10 @@ import {
 
 const scraperController = async (browserInstance) => {
   // Load Home Web Page
-  let pageVariable = await pagePreparationObject.loadHomeWebPage(
-    browserInstance
-  )
+  let page = await pagePreparationObject.loadHomeWebPage(browserInstance)
 
   // Login to Tee Booking section of the Golf Club Web Site
-  pageVariable = await pagePreparationObject.loginToTeeBookingSubsystem(
-    pageVariable
-  )
+  page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
 
   const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
 
@@ -38,7 +34,7 @@ const scraperController = async (browserInstance) => {
 
   // Navigate to Tee Booking Page daysFromToday Days Ahead
   await pagePreparationObject.loadTodaysTeeBookingPage(
-    pageVariable,
+    page,
     bookingDateTime.daysOfTeeBooking,
     bookingDateTime.monthsOfTeeBooking,
     bookingDateTime.yearsOfTeeBooking
@@ -46,7 +42,7 @@ const scraperController = async (browserInstance) => {
 
   // Scroll to Tee Slot that we want to target for booking
   await pagePreparationObject.scrollToTeeBookingDateTime(
-    pageVariable,
+    page,
     bookingDateTime.minutesOfTeeBooking,
     bookingDateTime.hoursOfTeeBooking
   )
