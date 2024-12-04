@@ -60,16 +60,7 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async loadTodaysTeeBookingPage(
-    page,
-    daysOfTeeBooking,
-    monthsOfTeeBooking,
-    yearsOfTeeBooking
-  ) {
-    // // Create bookingDate
-    // const bookingDate =
-    //   daysOfTeeBooking + "-" + monthsOfTeeBooking + "-" + yearsOfTeeBooking
-
+  async loadTodaysTeeBookingPage(page, bookingDateTime) {
     // Click on <input> #date
     await page.waitForSelector("#date")
     await page.click("#date")
@@ -84,36 +75,55 @@ export const pagePreparationObject = {
 
   async scrollToTeeBookingDateTime(
     page,
-    yearsOfTeeBooking,
-    monthsOfTeeBooking,
-    daysOfTeeBooking,
-    hoursOfTeeBooking,
-    minutesOfTeeBooking,
-    secondsOfTeeBooking,
-    numberOfBuggiesRequested
+    numberOfPlayingPartners,
+    numberOfBuggiesRequested,
+    bookingDateTime
   ) {
     // Click on <a> "Book"
     const bookTeeSlot =
       '[href="?date=' +
-      daysOfTeeBooking +
+      bookingDateTime.daysOfTeeBooking +
       "-" +
-      monthsOfTeeBooking +
+      bookingDateTime.monthsOfTeeBooking +
       "-20" +
-      yearsOfTeeBooking +
+      bookingDateTime.yearsOfTeeBooking +
       "&course=1&group=1&book=" +
-      hoursOfTeeBooking +
+      bookingDateTime.hoursOfTeeBooking +
       ":" +
-      minutesOfTeeBooking +
+      bookingDateTime.minutesOfTeeBooking +
       ":" +
-      secondsOfTeeBooking +
+      bookingDateTime.secondsOfTeeBooking +
       '"]'
     await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
 
+    // -------------------------
+    // Select Number of Partners
+    // -------------------------
+
+    // Click on <label> "2"
+    if (numberOfPlayingPartners == 1) {
+      const numberOfPlayers =
+        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(2)"
+      await page.waitForSelector(numberOfPlayers)
+      await page.click(numberOfPlayers)
+    }
+
     // Click on <label> "3"
-    const numberOfPlayers = "#cluetip-inner .btn:nth-child(3)"
-    await page.waitForSelector(numberOfPlayers)
-    await page.click(numberOfPlayers)
+    if (numberOfPlayingPartners == 2) {
+      const numberOfPlayers =
+        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(3)"
+      await page.waitForSelector(numberOfPlayers)
+      await page.click(numberOfPlayers)
+    }
+
+    // Click on <label> "4"
+    if (numberOfPlayingPartners == 3) {
+      const numberOfPlayers =
+        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(4)"
+      await page.waitForSelector(numberOfPlayers)
+      await page.click(numberOfPlayers)
+    }
 
     // Click on <label> "9 holes"
     // Change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
@@ -133,49 +143,54 @@ export const pagePreparationObject = {
     // Now Enter Second Player
     // -----------------------
 
-    // Click on <a> "Enter Details"
-    await page.waitForSelector('tr:nth-child(2) [href="#"]')
-    await page.click('tr:nth-child(2) [href="#"]')
+    if (numberOfPlayingPartners == 1) {
+      // Click on <a> "Enter Details"
+      await page.waitForSelector('tr:nth-child(2) [href="#"]')
+      await page.click('tr:nth-child(2) [href="#"]')
 
-    // Click on <a> "ANOTHER MEMBER"
-    await page.waitForSelector(
-      '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
-    )
-    await page.click('[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]')
+      // Click on <a> "ANOTHER MEMBER"
+      await page.waitForSelector(
+        '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
+      )
+      await page.click(
+        '[href="?edit=4346420&memdiv=1#memberdiv&partnerslot=2"]'
+      )
 
-    // Fill "LAI" on <input> .content [name="partner"]
-    await page.waitForSelector('.content [name="partner"]:not([disabled])')
-    await page.type(
-      '.content [name="partner"]',
-      process.env.DAVID_LAIRD_INITIALS
-    )
+      // Fill "LAI" on <input> .content [name="partner"]
+      await page.waitForSelector('.content [name="partner"]:not([disabled])')
+      await page.type(
+        '.content [name="partner"]',
+        process.env.DAVID_LAIRD_INITIALS
+      )
 
-    // Click on <input> .content [name="submit"]
-    await page.waitForSelector('.content [name="submit"]')
-    await page.click('.content [name="submit"]')
+      // Click on <input> .content [name="submit"]
+      await page.waitForSelector('.content [name="submit"]')
+      await page.click('.content [name="submit"]')
 
-    // Click on <a> "David Laird (40.5)"
-    const partner1 = '[href="?edit=4346420&addpartner=10712&partnerslot=2"]'
-    await page.waitForSelector(partner1, { visible: true })
-
-    await Promise.all([page.click(partner1), page.waitForNavigation()])
+      // Click on <a> "David Laird (40.5)"
+      const partner1 = '[href="?edit=4346420&addpartner=10712&partnerslot=2"]'
+      await page.waitForSelector(partner1, { visible: true })
+      await Promise.all([page.click(partner1), page.waitForNavigation()])
+    }
 
     // -----------------------
     // Now Enter Third Player
     // -----------------------
 
-    // Click on <a> "Enter Details"
-    await page.waitForSelector('[href="#"]')
-    await page.click('[href="#"]')
+    if (numberOfPlayingPartners == 2) {
+      // Click on <a> "Enter Details"
+      await page.waitForSelector('[href="#"]')
+      await page.click('[href="#"]')
 
-    // Click on <a> "Rodney Ross"
-    await page.waitForSelector(
-      '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
-    )
-    await Promise.all([
-      page.click('[href="?edit=4346420&addpartner=11206&partnerslot=3"]'),
-      page.waitForNavigation(),
-    ])
+      // Click on <a> "Rodney Ross"
+      await page.waitForSelector(
+        '[href="?edit=4346420&addpartner=11206&partnerslot=3"]'
+      )
+      await Promise.all([
+        page.click('[href="?edit=4346420&addpartner=11206&partnerslot=3"]'),
+        page.waitForNavigation(),
+      ])
+    }
 
     // -------------------
     // Now reserve buggies
@@ -218,34 +233,4 @@ const addTwoWeeks = (daysFromToday) => {
     twoWeeksTime.getFullYear()
 
   return bookingDate
-
-  // ------------------------------------------------------------------
-}
-
-export class breakdownBookingTimes {
-  constructor(requestedBooking) {
-    this.fullDate = requestedBooking
-
-    // Use 00 for seconds & describe as a String
-    this.secondsOfTeeBooking = "00"
-
-    // Extract Minutes of Tee Booking and convert to String
-    const m = requestedBooking.getMinutes()
-    this.minutesOfTeeBooking = ("0" + m).slice(-2)
-
-    // Extract Hours of Tee Booking and convert to String
-    const h = requestedBooking.getHours()
-    this.hoursOfTeeBooking = ("0" + h).slice(-2)
-
-    // Extract Days of Tee Booking and convert to String
-    const d = requestedBooking.getDate()
-    this.daysOfTeeBooking = ("0" + d).slice(-2)
-
-    // Extract Months of Tee Booking and convert to String
-    const mo = requestedBooking.getMonth() + 1
-    this.monthsOfTeeBooking = ("0" + mo).slice(-2)
-
-    // Extract Years of Tee Booking and convert to String
-    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
-  }
 }
