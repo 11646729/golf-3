@@ -1,18 +1,15 @@
 import { pagePreparationObject } from "./pagePreparation.js"
 
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+
 export const scraperController = async (browser) => {
-  // Load Home Web Page
-  let page = await pagePreparationObject.loadHomeWebPage(browser)
-
-  // Login to Tee Booking section of the Golf Club Web Site
-  page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
-
+  // Tee Booking Parameters
   const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
   const numberOfPlayingPartners = 0
-  const numberOfBuggiesRequested = 1
+  let numberOfBuggiesRequested = 0
 
   if (numberOfPlayingPartners > 1) {
-    const numberOfBuggiesRequested = 2
+    numberOfBuggiesRequested = 2
   }
 
   // const daysFromToday = 14
@@ -26,16 +23,29 @@ export const scraperController = async (browser) => {
 
   const bookingDateTime = new breakdownBookingTimes(requestedBooking)
 
-  // Navigate to Tee Booking Page daysFromToday Days Ahead
+  // Load Home Web Page
+  let page = await pagePreparationObject.loadHomePage(browser)
+
+  // Login to Tee Booking section of the Golf Club Web Site
+  page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
+
+  // Click Book a Tee Time link
+  page = await pagePreparationObject.clickBookTeeTimePage(page)
+
+  // Navigate to Tee Booking Date Time Page
   await pagePreparationObject.loadTodaysTeeBookingPage(page, bookingDateTime)
+
+  // Press Tee Booking Button - if it exists
+  await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
 
   // Scroll to Tee Slot that we want to target for booking
   await pagePreparationObject.scrollToTeeBookingDateTime(
     page,
     numberOfPlayingPartners,
-    numberOfBuggiesRequested,
-    bookingDateTime
+    numberOfBuggiesRequested
   )
+
+  // await sleep(10000)
 }
 
 // ------------------------------------------------------------------

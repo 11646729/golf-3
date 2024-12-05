@@ -1,17 +1,11 @@
 import "dotenv/config.js"
 
-// const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
 export const pagePreparationObject = {
   // ------------------------------------------------------------------
 
-  async loadHomeWebPage(browserInstance) {
-    // Url of Golf Club Home Web Page
-    const urlString = process.env.GOLF_CLUB_HOME_URL
-
-    // Assign browserInstance to browser variable
-    let browser = await browserInstance
-
+  async loadHomePage(browser) {
     // // Load Browser Instance
     let page = await browser.newPage()
 
@@ -20,8 +14,9 @@ export const pagePreparationObject = {
     )
 
     // Navigate to Initial Web page & wait for it to load
-    await page.goto(urlString, { waitUntil: "load" })
-    console.log(`Opened ${urlString} ...`)
+    await page.goto(process.env.GOLF_CLUB_HOME_URL, { waitUntil: "load" })
+
+    console.log(`Opened Home Page: ${process.env.GOLF_CLUB_HOME_URL}`)
 
     return page
   },
@@ -43,6 +38,12 @@ export const pagePreparationObject = {
       console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
 
+    return page
+  },
+
+  // ------------------------------------------------------------------
+
+  async clickBookTeeTimePage(page) {
     // Click on <a> "Book a tee time"
     await page.waitForSelector(
       'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]',
@@ -52,7 +53,8 @@ export const pagePreparationObject = {
       page.click(
         'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]'
       ),
-      page.waitForNavigation(),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      console.log(`Click To Book Tee Time ...`),
     ])
 
     return page
@@ -65,20 +67,18 @@ export const pagePreparationObject = {
     await page.waitForSelector("#date")
     await page.click("#date")
 
+    // ----------------------------------------------
+    // TODO - CONVERT bookingDateTime to row & column
+    // ----------------------------------------------
+
     // Click on <a> "13" - row 3 column 5
-    // TODO - MODIFY THIS
     await page.waitForSelector('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
     await page.click('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
   },
 
   // ------------------------------------------------------------------
 
-  async scrollToTeeBookingDateTime(
-    page,
-    numberOfPlayingPartners,
-    numberOfBuggiesRequested,
-    bookingDateTime
-  ) {
+  async pressTeeBookingButton(page, bookingDateTime) {
     // Click on <a> "Book"
     const bookTeeSlot =
       '[href="?date=' +
@@ -97,6 +97,16 @@ export const pagePreparationObject = {
     await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
 
+    await sleep(10000)
+  },
+
+  // ------------------------------------------------------------------
+
+  async scrollToTeeBookingDateTime(
+    page,
+    numberOfPlayingPartners,
+    numberOfBuggiesRequested
+  ) {
     // -------------------------
     // Select Number of Partners
     // -------------------------
@@ -135,9 +145,9 @@ export const pagePreparationObject = {
     //  Now click Booking Button to bring up the Booking Details page
     // Click on <button> "Book teetime at 18:00"
     // THIS RESERVES THE TEE BOOKING
-    const bookTeetime = "#cluetip-inner form > .btn"
-    await page.waitForSelector(bookTeetime)
-    await Promise.all([page.click(bookTeetime), page.waitForNavigation()])
+    const bookTeetimeButton = "#cluetip-inner form > .btn"
+    await page.waitForSelector(bookTeetimeButton)
+    await Promise.all([page.click(bookTeetimeButton), page.waitForNavigation()])
 
     // -----------------------
     // Now Enter Second Player

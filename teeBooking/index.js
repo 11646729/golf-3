@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer"
 import { scraperController } from "./scraperController.js"
+
+// ------------------------------------------------------------------
 ;(async () => {
   try {
     // Start the browser and create a browser instance
@@ -28,6 +30,8 @@ import { scraperController } from "./scraperController.js"
   }
 })()
 
+// ------------------------------------------------------------------
+
 // some scenarios require us to run a piece of code at a specific time of day, the following method allows us to do this:
 const runAtSpecificTimeOfDay = (hour, minutes, func) => {
   const twentyFourHours = 86400000
@@ -54,3 +58,5 @@ const runAtSpecificTimeOfDay = (hour, minutes, func) => {
     setInterval(func, twentyFourHours)
   }, eta_ms)
 }
+
+// ------------------------------------------------------------------
