@@ -7,7 +7,7 @@ export const scraperController = async (browser) => {
   const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
   const numberOfPlayingPartners = 0
   const numberOfHoles = 9
-  let numberOfBuggiesRequested = 0
+  let numberOfBuggiesRequested = 1
 
   if (numberOfPlayingPartners > 1) {
     numberOfBuggiesRequested = 2
@@ -54,10 +54,12 @@ export const scraperController = async (browser) => {
     numberOfBuggiesRequested
   )
 
-  await sleep(10000)
-
+  // Finish the Tee Booking process
   await pagePreparationObject.pressFinishTeeBooking(page)
 
+  // await sleep(1000)
+
+  // Log out of the Web Site
   await pagePreparationObject.logoutOfGolfClubWebSite(page)
 }
 

@@ -6,7 +6,7 @@ export const pagePreparationObject = {
   // ------------------------------------------------------------------
 
   async loadHomePage(browser) {
-    // // Load Browser Instance
+    // Load Browser Instance
     let page = await browser.newPage()
 
     await page.setUserAgent(
@@ -225,17 +225,28 @@ export const pagePreparationObject = {
     }
   },
 
+  // --------------------------
+  // Now finish the Tee Booking
+  // --------------------------
+
   async pressFinishTeeBooking(page) {
     // Click on <a> " Finish"
-    const finish = '[href="?edit=4346420&redirectToHome=1"]'
-    await page.waitForSelector(finish)
-    await Promise.all([page.click(finish), page.waitForNavigation()])
+    await page.waitForSelector('[href="?edit=4346420&redirectToHome=1"]')
+    await Promise.all([
+      page.click('[href="?edit=4346420&redirectToHome=1"]'),
+      page.waitForNavigation(),
+    ])
   },
+
+  // ---------------------------
+  // Now log out of the Web Site
+  // ---------------------------
 
   async logoutOfGolfClubWebSite(page) {
     // Click on <a> "Logout"
-    await page.waitForSelector("#logoutbtn")
-    await Promise.all([page.click("#logoutbtn"), page.waitForNavigation()])
+    const logoutlink = "#logoutbtn"
+    await page.waitForSelector(logoutlink)
+    await Promise.all([page.click(logoutlink), page.waitForNavigation()])
   },
 }
 
