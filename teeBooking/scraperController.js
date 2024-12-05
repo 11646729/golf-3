@@ -6,6 +6,7 @@ export const scraperController = async (browser) => {
   // Tee Booking Parameters
   const requestedBooking = new Date("2024-12-13T18:00:00.000Z")
   const numberOfPlayingPartners = 0
+  const numberOfHoles = 9
   let numberOfBuggiesRequested = 0
 
   if (numberOfPlayingPartners > 1) {
@@ -38,14 +39,26 @@ export const scraperController = async (browser) => {
   // Press Tee Booking Button - if it exists
   await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
 
-  // Scroll to Tee Slot that we want to target for booking
-  await pagePreparationObject.scrollToTeeBookingDateTime(
+  // Enter Tee Booking Partner Numbers & Number Of Holes to Play
+  page =
+    await pagePreparationObject.enterTeeBookingNumberOfPartnersNumberOfHoles(
+      page,
+      numberOfPlayingPartners,
+      numberOfHoles
+    )
+
+  // Enter Tee Booking Partner Names & Number of Buggies
+  await pagePreparationObject.enterTeeBookingPartnersNames(
     page,
     numberOfPlayingPartners,
     numberOfBuggiesRequested
   )
 
-  // await sleep(10000)
+  await sleep(10000)
+
+  await pagePreparationObject.pressFinishTeeBooking(page)
+
+  await pagePreparationObject.logoutOfGolfClubWebSite(page)
 }
 
 // ------------------------------------------------------------------

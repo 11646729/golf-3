@@ -1,6 +1,6 @@
 import "dotenv/config.js"
 
-const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+// const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
 export const pagePreparationObject = {
   // ------------------------------------------------------------------
@@ -96,16 +96,14 @@ export const pagePreparationObject = {
       '"]'
     await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
-
-    await sleep(10000)
   },
 
   // ------------------------------------------------------------------
 
-  async scrollToTeeBookingDateTime(
+  async enterTeeBookingNumberOfPartnersNumberOfHoles(
     page,
     numberOfPlayingPartners,
-    numberOfBuggiesRequested
+    numberOfHoles
   ) {
     // -------------------------
     // Select Number of Partners
@@ -137,10 +135,12 @@ export const pagePreparationObject = {
 
     // Click on <label> "9 holes"
     // Change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
-    const numberOfHoles =
-      "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(1)"
-    await page.waitForSelector(numberOfHoles)
-    await page.click(numberOfHoles)
+    if (numberOfHoles == 9) {
+      const numHoles =
+        "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(1)"
+      await page.waitForSelector(numHoles)
+      await page.click(numHoles)
+    }
 
     //  Now click Booking Button to bring up the Booking Details page
     // Click on <button> "Book teetime at 18:00"
@@ -149,6 +149,14 @@ export const pagePreparationObject = {
     await page.waitForSelector(bookTeetimeButton)
     await Promise.all([page.click(bookTeetimeButton), page.waitForNavigation()])
 
+    return page
+  },
+
+  async enterTeeBookingPartnersNames(
+    page,
+    numberOfPlayingPartners,
+    numberOfBuggiesRequested
+  ) {
     // -----------------------
     // Now Enter Second Player
     // -----------------------
@@ -215,14 +223,16 @@ export const pagePreparationObject = {
         page.waitForNavigation(),
       ])
     }
+  },
 
+  async pressFinishTeeBooking(page) {
     // Click on <a> " Finish"
-    await page.waitForSelector('[href="?edit=4346420&redirectToHome=1"]')
-    await Promise.all([
-      page.click('[href="?edit=4346420&redirectToHome=1"]'),
-      page.waitForNavigation(),
-    ])
+    const finish = '[href="?edit=4346420&redirectToHome=1"]'
+    await page.waitForSelector(finish)
+    await Promise.all([page.click(finish), page.waitForNavigation()])
+  },
 
+  async logoutOfGolfClubWebSite(page) {
     // Click on <a> "Logout"
     await page.waitForSelector("#logoutbtn")
     await Promise.all([page.click("#logoutbtn"), page.waitForNavigation()])
