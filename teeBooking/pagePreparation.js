@@ -79,6 +79,8 @@ export const pagePreparationObject = {
   // ------------------------------------------------------------------
 
   async pressTeeBookingButton(page, bookingDateTime) {
+    // '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
+
     // Click on <a> "Book"
     const bookTeeSlot =
       '[href="?date=' +
@@ -94,7 +96,10 @@ export const pagePreparationObject = {
       ":" +
       bookingDateTime.secondsOfTeeBooking +
       '"]'
-    await page.waitForSelector(bookTeeSlot)
+
+    await waitForSelectorWithReload(page, bookTeeSlot)
+
+    // await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
   },
 
@@ -143,7 +148,6 @@ export const pagePreparationObject = {
     }
 
     //  Now click Booking Button to bring up the Booking Details page
-    // Click on <button> "Book teetime at 18:00"
     // THIS RESERVES THE TEE BOOKING
     const bookTeetimeButton = "#cluetip-inner form > .btn"
     await page.waitForSelector(bookTeetimeButton)
@@ -248,20 +252,85 @@ export const pagePreparationObject = {
     await page.waitForSelector(logoutlink)
     await Promise.all([page.click(logoutlink), page.waitForNavigation()])
   },
+
+  // -----------------------------------------
+  // Now wait for button on new page to appear
+  // -----------------------------------------
+
+  async waitForSelectorWithReload(page, selector) {
+    const MAX_TRIES = 5
+    let tries = 0
+    while (tries <= MAX_TRIES) {
+      try {
+        const element = await page.waitForSelector(selector, {
+          timeout: 5000,
+        })
+        return element
+      } catch (error) {
+        if (tries === MAX_TRIES) throw error
+
+        tries += 1
+        await page.reload()
+        await page.waitForNavigation({ waitUntil: "networkidle0" })
+      }
+    }
+  },
 }
 
 // ------------------------------------------------------------------
 
-const addTwoWeeks = (daysFromToday) => {
-  const twoWeeks = 1000 * 60 * 60 * 24 * daysFromToday
-  const twoWeeksTime = new Date(new Date().getTime() + twoWeeks)
+export class breakdownBookingTimes {
+  constructor(requestedBooking) {
+    this.fullDate = requestedBooking
 
-  const bookingDate =
-    ("0" + twoWeeksTime.getDate()).slice(-2) +
-    "-" +
-    ("0" + (twoWeeksTime.getMonth() + 1)).slice(-2) +
-    "-" +
-    twoWeeksTime.getFullYear()
+    // Use 00 for seconds & describe as a String
+    this.secondsOfTeeBooking = "00"
 
-  return bookingDate
+    // Extract Minutes of Tee Booking and convert to String
+    const m = requestedBooking.getMinutes()
+    this.minutesOfTeeBooking = ("0" + m).slice(-2)
+
+    // Extract Hours of Tee Booking and convert to String
+    const h = requestedBooking.getHours()
+    this.hoursOfTeeBooking = ("0" + h).slice(-2)
+
+    // Extract Days of Tee Booking and convert to String
+    const d = requestedBooking.getDate()
+    this.daysOfTeeBooking = ("0" + d).slice(-2)
+
+    // Extract Months of Tee Booking and convert to String
+    const mo = requestedBooking.getMonth() + 1
+    this.monthsOfTeeBooking = ("0" + mo).slice(-2)
+
+    // Extract Years of Tee Booking and convert to String
+    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
+  }
+}
+
+// ------------------------------------------------------------------
+
+const waitForSelectorWithReload = async (page, selector) => {
+  const MAX_TRIES = 5
+  let tries = 0
+  while (tries <= MAX_TRIES) {
+    console.log("Attempt")
+
+    try {
+      const element = await page.waitForSelector(selector, {
+        timeout: 5000,
+      })
+
+      console.log("Attempt: " + element)
+
+      return element
+    } catch (error) {
+      if (tries === MAX_TRIES) throw error
+
+      tries += 1
+      await page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] })
+      await page.waitForNavigation({ waitUntil: "networkidle0" })
+
+      console.log("Attempt error")
+    }
+  }
 }
