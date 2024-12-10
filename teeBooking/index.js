@@ -12,16 +12,14 @@ import { scraperController } from "./scraperController.js"
       ignoreHTTPSErrors: true,
     })
 
-    // -----------------------------------------
-    // RELOAD PAGE BASED ON A SPECIFIC TIME HERE
-    // -----------------------------------------
-    // and this is how you log out the current date at 6:01 every day:
-    // runAtSpecificTimeOfDay(6, 1, () => {
-    //   console.log(new Date())
+    let requestedBooking = new Date("2024-12-13T18:00:00.000Z")
+
+    // runAtSpecificTimeOfDay(requestedBooking, () => {
+    //   scraperController(browser, requestedBooking)
     // })
 
     // Pass the browser instance to the scraper controller
-    await scraperController(browser)
+    await scraperController(browser, requestedBooking)
 
     // Now close the browser
     await browser.close()
@@ -30,33 +28,24 @@ import { scraperController } from "./scraperController.js"
   }
 })()
 
-// ------------------------------------------------------------------
+// ----------------------------------------------
+// This runs a function at a specific time & date
+// ----------------------------------------------
+const runAtSpecificTimeOfDay = (requestedBooking, cb) => {
+  ;(function loop() {
+    var now = new Date()
+    if (
+      now.getDate() === 10 &&
+      now.getHours() === 20 &&
+      now.getMinutes() === 45
+    ) {
+      console.log("Now: " + now)
 
-// some scenarios require us to run a piece of code at a specific time of day, the following method allows us to do this:
-const runAtSpecificTimeOfDay = (hour, minutes, func) => {
-  const twentyFourHours = 86400000
-  const now = new Date()
-  let eta_ms =
-    new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      hour,
-      minutes,
-      0,
-      0
-    ).getTime() - now
+      // cb()
+    }
 
-  if (eta_ms < 0) {
-    eta_ms += twentyFourHours
-  }
-
-  setTimeout(function () {
-    //run once
-    func()
-    // run every 24 hours from now on
-    setInterval(func, twentyFourHours)
-  }, eta_ms)
+    now = new Date() // allow for time passing
+    var delay = 60000 - (now % 60000) // exact ms to next minute interval
+    setTimeout(loop, delay)
+  })()
 }
-
-// ------------------------------------------------------------------

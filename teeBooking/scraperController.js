@@ -5,9 +5,9 @@ import {
 
 // ---------------------------------------------------------------------
 
-export const scraperController = async (browser) => {
+export const scraperController = async (browser, requestedBooking) => {
   // Tee Booking Parameters
-  let requestedBooking = new Date("2024-12-13T18:00:00.000Z")
+  // let requestedBooking = new Date("2024-12-13T18:00:00.000Z")
   let numberOfPlayingPartners = 0 // Should be 2
   let numberOfHoles = 9
   let numberOfBuggiesRequested = 1
@@ -15,6 +15,8 @@ export const scraperController = async (browser) => {
   if (numberOfPlayingPartners >= 2) {
     numberOfBuggiesRequested = 2
   }
+
+  console.log(requestedBooking)
 
   // ---------------------------------------------------------------------
 

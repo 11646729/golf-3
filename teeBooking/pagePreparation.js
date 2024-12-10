@@ -87,7 +87,7 @@ export const pagePreparationObject = {
       bookingDateTime.daysOfTeeBooking +
       "-" +
       bookingDateTime.monthsOfTeeBooking +
-      "-20" +
+      "-" +
       bookingDateTime.yearsOfTeeBooking +
       "&course=1&group=1&book=" +
       bookingDateTime.hoursOfTeeBooking +
@@ -97,7 +97,13 @@ export const pagePreparationObject = {
       bookingDateTime.secondsOfTeeBooking +
       '"]'
 
+    console.log(bookTeeSlot)
+
+    console.log(Date())
+
     await waitForSelectorWithReload(page, bookTeeSlot)
+
+    console.log(Date())
 
     // await page.waitForSelector(bookTeeSlot)
     await page.click(bookTeeSlot)
@@ -303,7 +309,8 @@ export class breakdownBookingTimes {
     this.monthsOfTeeBooking = ("0" + mo).slice(-2)
 
     // Extract Years of Tee Booking and convert to String
-    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString().slice(-2)
+    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
+    // .slice(-2)
   }
 }
 
@@ -317,7 +324,7 @@ const waitForSelectorWithReload = async (page, selector) => {
 
     try {
       const element = await page.waitForSelector(selector, {
-        timeout: 5000,
+        timeout: 1000,
       })
 
       console.log("Attempt: " + element)
