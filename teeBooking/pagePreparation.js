@@ -79,8 +79,6 @@ export const pagePreparationObject = {
   // ------------------------------------------------------------------
 
   async pressTeeBookingButton(page, bookingDateTime) {
-    // '[href="?date=13-12-2024&course=1&group=1&book=18:00:00"]'
-
     // Click on <a> "Book"
     const bookTeeSlot =
       '[href="?date=' +
@@ -97,15 +95,17 @@ export const pagePreparationObject = {
       bookingDateTime.secondsOfTeeBooking +
       '"]'
 
-    console.log(bookTeeSlot)
-
-    console.log(Date())
+    const beforeBooking = new Date()
+    let textBefore = beforeBooking.toISOString()
+    console.log("Time before booking: " + textBefore)
 
     await waitForSelectorWithReload(page, bookTeeSlot)
-
-    console.log(Date())
-
     // await page.waitForSelector(bookTeeSlot)
+
+    const afterBooking = new Date()
+    let textAfter = afterBooking.toISOString()
+    console.log("Time after booking: " + textAfter)
+
     await page.click(bookTeeSlot)
   },
 
@@ -258,76 +258,24 @@ export const pagePreparationObject = {
     await page.waitForSelector(logoutlink)
     await Promise.all([page.click(logoutlink), page.waitForNavigation()])
   },
-
-  // -----------------------------------------
-  // Now wait for button on new page to appear
-  // -----------------------------------------
-
-  async waitForSelectorWithReload(page, selector) {
-    const MAX_TRIES = 5
-    let tries = 0
-    while (tries <= MAX_TRIES) {
-      try {
-        const element = await page.waitForSelector(selector, {
-          timeout: 5000,
-        })
-        return element
-      } catch (error) {
-        if (tries === MAX_TRIES) throw error
-
-        tries += 1
-        await page.reload()
-        await page.waitForNavigation({ waitUntil: "networkidle0" })
-      }
-    }
-  },
 }
 
 // ------------------------------------------------------------------
 
-export class breakdownBookingTimes {
-  constructor(requestedBooking) {
-    this.fullDate = requestedBooking
-
-    // Use 00 for seconds & describe as a String
-    this.secondsOfTeeBooking = "00"
-
-    // Extract Minutes of Tee Booking and convert to String
-    const m = requestedBooking.getMinutes()
-    this.minutesOfTeeBooking = ("0" + m).slice(-2)
-
-    // Extract Hours of Tee Booking and convert to String
-    const h = requestedBooking.getHours()
-    this.hoursOfTeeBooking = ("0" + h).slice(-2)
-
-    // Extract Days of Tee Booking and convert to String
-    const d = requestedBooking.getDate()
-    this.daysOfTeeBooking = ("0" + d).slice(-2)
-
-    // Extract Months of Tee Booking and convert to String
-    const mo = requestedBooking.getMonth() + 1
-    this.monthsOfTeeBooking = ("0" + mo).slice(-2)
-
-    // Extract Years of Tee Booking and convert to String
-    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
-    // .slice(-2)
-  }
-}
-
-// ------------------------------------------------------------------
+// -----------------------------------------
+// Now wait for button on new page to appear
+// -----------------------------------------
 
 const waitForSelectorWithReload = async (page, selector) => {
   const MAX_TRIES = 5
   let tries = 0
   while (tries <= MAX_TRIES) {
-    console.log("Attempt")
-
     try {
       const element = await page.waitForSelector(selector, {
         timeout: 1000,
       })
 
-      console.log("Attempt: " + element)
+      console.log("Attempt No: " + tries)
 
       return element
     } catch (error) {
