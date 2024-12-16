@@ -13,10 +13,42 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2024-12-13T18:00:00.000Z")
+    let requestedBooking = new Date("2024-12-22T18:00:00.000Z")
+
+    // -----------------------------------
+    // Calendar Control COLUMN Calculation
+    // -----------------------------------
+
+    // console.log(requestedBooking.getDay()) // 0-6, 0 == Sunday, 3 == Wednesday
+    // In Calendar control Sunday == 7 not 0 but Numbers 1 == Monday to 6 == Saturday
+    // This corresponds to column in Calendar control
+    // e.g. Wed 25th Dec 2024 is a Wednesday = 3 from getDay() and this equals column 3 in the Calendar control
+
+    // -----------------------------------
+    // Calendar Control ROW Calculation
+    // -----------------------------------
+
+    // Calculate Day corresponding to the 1st of month
+
+    // // If 1st day of month is Sunday then Days in 1st Week = 1
+    // // If 1st day of month is Monday then Days in 1st Week = 7
+    // // If 1st day of month is Tuesday then Days in 1st Week = 6
+    // // If 1st day of month is Wednesday then Days in 1st Week = 5
+    // // If 1st day of month is Thursday then Days in 1st Week = 4
+    // // If 1st day of month is Friday then Days in 1st Week = 3
+    // // If 1st day of month is Saturday then Days in 1st Week = 2
+
+    // if RequestedDay <= Days in 1st Week then ROWS = 1
+    // if RequestedDay > Days in 1st Week & <= [(Days in 1st Week) + 7] then ROWS = 2
+    // if RequestedDay > [(Days in 1st Week) + 7] & <= [(Days in 1st Week) + 14] then ROWS = 3
+    // if RequestedDay > [(Days in 1st Week) + 14] & <= [(Days in 1st Week) + 21] then ROWS = 4
+    // if RequestedDay > [(Days in 1st Week) + 21] & <= [(Days in 1st Week) + 28] then ROWS = 5
+    // if RequestedDay > [(Days in 1st Week) + 28] then ROWS = 6
 
     // Now split requestedBooking into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
+
+    console.log(bookingDateTime)
 
     let numberOfPlayingPartners = 0 // Should be 2
     let numberOfHoles = 9
@@ -108,6 +140,18 @@ export class breakdownBookingTimes {
     // Extract Years of Tee Booking and convert to String
     this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
     // .slice(-2)
+
+    // Calculate Column Number to use in Calendar Control
+    let day = requestedBooking.getDay() // 0-6, 0 == Sunday, 3 == Wednesday
+
+    // In Calendar control Sunday == 7 not 0 but Numbers 1 == Monday to 6 == Saturday
+    // This corresponds to column in Calendar control
+    // e.g. Wed 25th Dec 2024 is a Wednesday = 3 from getDay() and this equals column 3 in the Calendar control
+    if (day == 0) {
+      day = 7
+    }
+
+    this.calendarControlColumns = day
   }
 }
 

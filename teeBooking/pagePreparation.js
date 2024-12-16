@@ -1,6 +1,6 @@
 import "dotenv/config.js"
 
-// const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
 export const pagePreparationObject = {
   // ------------------------------------------------------------------
@@ -70,10 +70,15 @@ export const pagePreparationObject = {
     // ----------------------------------------------
     // TODO - CONVERT bookingDateTime to row & column
     // ----------------------------------------------
+    // #ui-datepicker-div > table > tbody > tr:nth-child(5) > td.ui-datepicker-current-day > a
+    // Column min == 1 & max == 7
 
-    // Click on <a> "13" - row 3 column 5
-    await page.waitForSelector('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
-    await page.click('tr:nth-child(3) > td:nth-child(5) > [href="#"]')
+    // Click on <a> "20" - row 4 column 5
+    const teeBookingDay = 'tr:nth-child(4) > td:nth-child(5) > [href="#"]'
+    await page.waitForSelector(teeBookingDay)
+    await page.click(teeBookingDay)
+
+    await sleep(2000)
   },
 
   // ------------------------------------------------------------------
