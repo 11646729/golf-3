@@ -13,37 +13,7 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2024-12-22T18:00:00.000Z")
-
-    // -----------------------------------
-    // Calendar Control COLUMN Calculation
-    // -----------------------------------
-
-    // console.log(requestedBooking.getDay()) // 0-6, 0 == Sunday, 3 == Wednesday
-    // In Calendar control Sunday == 7 not 0 but Numbers 1 == Monday to 6 == Saturday
-    // This corresponds to column in Calendar control
-    // e.g. Wed 25th Dec 2024 is a Wednesday = 3 from getDay() and this equals column 3 in the Calendar control
-
-    // -----------------------------------
-    // Calendar Control ROW Calculation
-    // -----------------------------------
-
-    // Calculate Day corresponding to the 1st of month
-
-    // // If 1st day of month is Sunday then Days in 1st Week = 1
-    // // If 1st day of month is Monday then Days in 1st Week = 7
-    // // If 1st day of month is Tuesday then Days in 1st Week = 6
-    // // If 1st day of month is Wednesday then Days in 1st Week = 5
-    // // If 1st day of month is Thursday then Days in 1st Week = 4
-    // // If 1st day of month is Friday then Days in 1st Week = 3
-    // // If 1st day of month is Saturday then Days in 1st Week = 2
-
-    // if RequestedDay <= Days in 1st Week then ROWS = 1
-    // if RequestedDay > Days in 1st Week & <= [(Days in 1st Week) + 7] then ROWS = 2
-    // if RequestedDay > [(Days in 1st Week) + 7] & <= [(Days in 1st Week) + 14] then ROWS = 3
-    // if RequestedDay > [(Days in 1st Week) + 14] & <= [(Days in 1st Week) + 21] then ROWS = 4
-    // if RequestedDay > [(Days in 1st Week) + 21] & <= [(Days in 1st Week) + 28] then ROWS = 5
-    // if RequestedDay > [(Days in 1st Week) + 28] then ROWS = 6
+    let requestedBooking = new Date("2024-12-23T18:00:00.000Z")
 
     // Now split requestedBooking into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
@@ -139,19 +109,105 @@ export class breakdownBookingTimes {
 
     // Extract Years of Tee Booking and convert to String
     this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
-    // .slice(-2)
 
     // Calculate Column Number to use in Calendar Control
-    let day = requestedBooking.getDay() // 0-6, 0 == Sunday, 3 == Wednesday
+    this.calendarControlColumnNo = requestedBooking.getDay() // 0-6, 0 == Sunday, 3 == Wednesday
 
     // In Calendar control Sunday == 7 not 0 but Numbers 1 == Monday to 6 == Saturday
     // This corresponds to column in Calendar control
     // e.g. Wed 25th Dec 2024 is a Wednesday = 3 from getDay() and this equals column 3 in the Calendar control
-    if (day == 0) {
-      day = 7
+    if (this.calendarControlColumnNo == 0) {
+      this.calendarControlColumnNo = 7
     }
 
-    this.calendarControlColumns = day
+    // -----------------------------------------------
+    // Calculate Row Number to use in Calendar Control
+    // -----------------------------------------------
+
+    // First calculate the day corresponding to the 1st of month
+    let text = this.fullDate.toISOString()
+
+    let tempFirstDay =
+      text.substring(0, 8) +
+      "01T" +
+      this.hoursOfTeeBooking +
+      ":" +
+      this.minutesOfTeeBooking +
+      ":" +
+      this.secondsOfTeeBooking +
+      ".000Z"
+
+    let dayOf1stOfTheMonth = new Date(tempFirstDay).getDay() // 0-6, 0 == Sunday, 3 == Wednesday
+    console.log(dayOf1stOfTheMonth)
+
+    // -----------------------------------
+    // Calendar Control ROW Calculation
+    // -----------------------------------
+    let daysIn1stWeek = 0
+
+    if (dayOf1stOfTheMonth == 0) {
+      daysIn1stWeek = 1
+    }
+
+    if (dayOf1stOfTheMonth == 1) {
+      daysIn1stWeek = 7
+    }
+
+    if (dayOf1stOfTheMonth == 2) {
+      daysIn1stWeek = 6
+    }
+
+    if (dayOf1stOfTheMonth == 3) {
+      daysIn1stWeek = 5
+    }
+
+    if (dayOf1stOfTheMonth == 4) {
+      daysIn1stWeek = 4
+    }
+
+    if (dayOf1stOfTheMonth == 5) {
+      daysIn1stWeek = 3
+    }
+
+    if (dayOf1stOfTheMonth == 6) {
+      daysIn1stWeek = 2
+    }
+
+    if (this.daysOfTeeBooking <= daysIn1stWeek) {
+      this.calendarControlRowNo = 1
+    }
+
+    if (
+      (this.daysOfTeeBooking > daysIn1stWeek) &
+      (this.daysOfTeeBooking <= daysIn1stWeek + 7)
+    ) {
+      this.calendarControlRowNo = 2
+    }
+
+    if (
+      (this.daysOfTeeBooking > daysIn1stWeek + 7) &
+      (this.daysOfTeeBooking <= daysIn1stWeek + 14)
+    ) {
+      this.calendarControlRowNo = 3
+    }
+
+    if (
+      (this.daysOfTeeBooking > daysIn1stWeek + 14) &
+      (this.daysOfTeeBooking <= daysIn1stWeek + 21)
+    ) {
+      this.calendarControlRowNo = 4
+    }
+
+    if (
+      (this.daysOfTeeBooking > daysIn1stWeek + 21) &
+      (this.daysOfTeeBooking <= daysIn1stWeek + 28)
+    ) {
+      this.calendarControlRowNo = 5
+    }
+
+    if (this.daysOfTeeBooking > daysIn1stWeek + 28) {
+      this.calendarControlRowNo = 6
+    }
   }
 }
 
