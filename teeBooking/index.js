@@ -13,12 +13,10 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2024-12-23T18:00:00.000Z")
+    let requestedBooking = new Date("2024-12-30T18:00:00.000Z")
 
-    // Now split requestedBooking into bookingDateTime object
+    // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
-
-    console.log(bookingDateTime)
 
     let numberOfPlayingPartners = 0 // Should be 2
     let numberOfHoles = 9
@@ -56,8 +54,6 @@ import { scraperController } from "./scraperController.js"
 const runAtSpecificTimeOfDay = (
   browser,
   requestedBooking
-  // browser,
-  // requestedBooking,
   // scraperController
 ) => {
   console.log("Here I am")
@@ -110,12 +106,15 @@ export class breakdownBookingTimes {
     // Extract Years of Tee Booking and convert to String
     this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
 
+    // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control
-    this.calendarControlColumnNo = requestedBooking.getDay() // 0-6, 0 == Sunday, 3 == Wednesday
+    // -----------------------------------------------
 
-    // In Calendar control Sunday == 7 not 0 but Numbers 1 == Monday to 6 == Saturday
-    // This corresponds to column in Calendar control
-    // e.g. Wed 25th Dec 2024 is a Wednesday = 3 from getDay() and this equals column 3 in the Calendar control
+    // Calculate Column Number to use in Calendar Control
+    this.calendarControlColumnNo = requestedBooking.getDay()
+
+    // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
+    // So adjust for a Sunday
     if (this.calendarControlColumnNo == 0) {
       this.calendarControlColumnNo = 7
     }
@@ -138,10 +137,9 @@ export class breakdownBookingTimes {
       ".000Z"
 
     let dayOf1stOfTheMonth = new Date(tempFirstDay).getDay() // 0-6, 0 == Sunday, 3 == Wednesday
-    console.log(dayOf1stOfTheMonth)
 
     // -----------------------------------
-    // Calendar Control ROW Calculation
+    // Calendar Control Row Calculation
     // -----------------------------------
     let daysIn1stWeek = 0
 

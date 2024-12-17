@@ -21,14 +21,14 @@ export const scraperController = async (
   // Navigate to Tee Booking Date Time Page
   await pagePreparationObject.loadTodaysTeeBookingPage(page, bookingDateTime)
 
-  // // ---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  // // Press Tee Booking Button - if it exists
+  // Press Tee Booking Button - if it exists
   // await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
 
-  // // ---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  // // Enter Tee Booking Partner Numbers & Number Of Holes to Play
+  // Enter Tee Booking Partner Numbers & Number Of Holes to Play
   // page =
   //   await pagePreparationObject.enterTeeBookingNumberOfPartnersNumberOfHoles(
   //     page,
@@ -36,17 +36,17 @@ export const scraperController = async (
   //     numberOfHoles
   //   )
 
-  // // Enter Tee Booking Partner Names & Number of Buggies
+  // Enter Tee Booking Partner Names & Number of Buggies
   // await pagePreparationObject.enterTeeBookingPartnersNames(
   //   page,
   //   numberOfPlayingPartners,
   //   numberOfBuggiesRequested
   // )
 
-  // // Save the Tee Booking & Finish
+  // Save the Tee Booking & Finish
   // await pagePreparationObject.pressFinishTeeBooking(page)
 
-  // // Log out of the Web Site
+  // Log out of the Web Site
   // await pagePreparationObject.logoutOfGolfClubWebSite(page)
 }
 

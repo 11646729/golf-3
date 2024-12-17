@@ -67,14 +67,13 @@ export const pagePreparationObject = {
     await page.waitForSelector("#date")
     await page.click("#date")
 
-    // ----------------------------------------------
-    // TODO - CONVERT bookingDateTime to row & column
-    // ----------------------------------------------
-    // #ui-datepicker-div > table > tbody > tr:nth-child(5) > td.ui-datepicker-current-day > a
-    // Column min == 1 & max == 7
-
-    // Click on <a> "20" - row 4 column 5
-    const teeBookingDay = 'tr:nth-child(4) > td:nth-child(5) > [href="#"]'
+    const teeBookingDay =
+      "tr:nth-child(" +
+      bookingDateTime.calendarControlRowNo +
+      ") > td:nth-child(" +
+      bookingDateTime.calendarControlColumnNo +
+      ") > [href='#']"
+    console.log(teeBookingDay)
     await page.waitForSelector(teeBookingDay)
     await page.click(teeBookingDay)
 
