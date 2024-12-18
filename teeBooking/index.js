@@ -13,17 +13,17 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2024-12-30T18:00:00.000Z")
+    let requestedBooking = new Date("2024-12-29T18:18:00.000Z")
 
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
 
-    let numberOfPlayingPartners = 0 // Should be 2
+    let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
-    let numberOfBuggiesRequested = 1
+    let numberOfBuggies = 1
 
-    if (numberOfPlayingPartners >= 2) {
-      numberOfBuggiesRequested = 2
+    if (numberOfPlayers >= 3) {
+      numberOfBuggies = 2
     }
 
     // runAtSpecificTimeOfDay(browser, requestedBooking)
@@ -36,9 +36,9 @@ import { scraperController } from "./scraperController.js"
     await scraperController(
       browser,
       bookingDateTime,
-      numberOfPlayingPartners,
+      numberOfPlayers,
       numberOfHoles,
-      numberOfBuggiesRequested
+      numberOfBuggies
     )
 
     // Now close the browser

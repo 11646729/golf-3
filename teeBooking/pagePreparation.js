@@ -67,17 +67,16 @@ export const pagePreparationObject = {
     await page.waitForSelector("#date")
     await page.click("#date")
 
+    // Click on Row & Column of Drop-down Calendar
     const teeBookingDay =
       "tr:nth-child(" +
       bookingDateTime.calendarControlRowNo +
       ") > td:nth-child(" +
       bookingDateTime.calendarControlColumnNo +
       ") > [href='#']"
-    console.log(teeBookingDay)
+
     await page.waitForSelector(teeBookingDay)
     await page.click(teeBookingDay)
-
-    await sleep(2000)
   },
 
   // ------------------------------------------------------------------
@@ -99,60 +98,52 @@ export const pagePreparationObject = {
       bookingDateTime.secondsOfTeeBooking +
       '"]'
 
-    const beforeBooking = new Date()
-    let textBefore = beforeBooking.toISOString()
-    console.log("Time before booking: " + textBefore)
+    // const beforeBooking = new Date()
+    // let textBefore = beforeBooking.toISOString()
+    // console.log("Time before booking: " + textBefore)
 
-    await waitForSelectorWithReload(page, bookTeeSlot)
-    // await page.waitForSelector(bookTeeSlot)
+    // await waitForSelectorWithReload(page, bookTeeSlot)
+    await page.waitForSelector(bookTeeSlot)
 
-    const afterBooking = new Date()
-    let textAfter = afterBooking.toISOString()
-    console.log("Time after booking: " + textAfter)
+    // const afterBooking = new Date()
+    // let textAfter = afterBooking.toISOString()
+    // console.log("Time after booking: " + textAfter)
 
     await page.click(bookTeeSlot)
   },
 
   // ------------------------------------------------------------------
 
-  async enterTeeBookingNumberOfPartnersNumberOfHoles(
+  async enterTeeBookingNumberOfPlayersNumberOfHoles(
     page,
-    numberOfPlayingPartners,
+    numberOfPlayers,
     numberOfHoles
   ) {
     // -------------------------
-    // Select Number of Partners
+    // Select Number of Players
     // -------------------------
+    const tempNumberOfPlayers =
+      "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(" +
+      numberOfPlayers +
+      ")"
+    await page.waitForSelector(tempNumberOfPlayers)
+    await page.click(tempNumberOfPlayers)
 
-    // Click on <label> "2"
-    if (numberOfPlayingPartners == 1) {
-      const numberOfPlayers =
-        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(2)"
-      await page.waitForSelector(numberOfPlayers)
-      await page.click(numberOfPlayers)
-    }
-
-    // Click on <label> "3"
-    if (numberOfPlayingPartners == 2) {
-      const numberOfPlayers =
-        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(3)"
-      await page.waitForSelector(numberOfPlayers)
-      await page.click(numberOfPlayers)
-    }
-
-    // Click on <label> "4"
-    if (numberOfPlayingPartners == 3) {
-      const numberOfPlayers =
-        "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(4)"
-      await page.waitForSelector(numberOfPlayers)
-      await page.click(numberOfPlayers)
-    }
-
+    // -------------------------
+    // Select Number of Holes
+    // -------------------------
     // Click on <label> "9 holes"
-    // Change label:nth-child(1) to label:nth-child(2) in line below for 18 Holes
     if (numberOfHoles == 9) {
       const numHoles =
         "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(1)"
+      await page.waitForSelector(numHoles)
+      await page.click(numHoles)
+    }
+
+    // Click on <label> "18 holes"
+    if (numberOfHoles == 18) {
+      const numHoles =
+        "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(2)"
       await page.waitForSelector(numHoles)
       await page.click(numHoles)
     }
@@ -166,16 +157,12 @@ export const pagePreparationObject = {
     return page
   },
 
-  async enterTeeBookingPartnersNames(
-    page,
-    numberOfPlayingPartners,
-    numberOfBuggiesRequested
-  ) {
+  async enterTeeBookingPartnersNames(page, numberOfPlayers) {
     // -----------------------
     // Now Enter Second Player
     // -----------------------
 
-    if (numberOfPlayingPartners == 1) {
+    if (numberOfPlayers == 2) {
       // Click on <a> "Enter Details"
       await page.waitForSelector('tr:nth-child(2) [href="#"]')
       await page.click('tr:nth-child(2) [href="#"]')
@@ -209,7 +196,7 @@ export const pagePreparationObject = {
     // Now Enter Third Player
     // -----------------------
 
-    if (numberOfPlayingPartners == 2) {
+    if (numberOfPlayers == 3) {
       // Click on <a> "Enter Details"
       await page.waitForSelector('[href="#"]')
       await page.click('[href="#"]')
@@ -223,14 +210,24 @@ export const pagePreparationObject = {
         page.waitForNavigation(),
       ])
     }
+  },
 
+  async enterTeeBookingNumberOfBuggies(page, numberOfPlayers, numberOfBuggies) {
     // -------------------
     // Now reserve buggies
     // -------------------
+    // Getting the href of a link with the class 'external-link'
+    const link = await page.$(
+      "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
+    )
+    const href = await link.getProperty("href")
+    const text = await href.jsonValue()
+    let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
+    console.log(findNumber)
 
     // Click on <a> "Buggy Booking (£0.00)"
-    const buggyBookingString = '[href="?edit=4346420&addservice=19"]'
-    for (let step = 0; step < numberOfBuggiesRequested; step++) {
+    const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
+    for (let step = 0; step <= numberOfBuggies; step++) {
       await page.waitForSelector(buggyBookingString)
       await Promise.all([
         page.click(buggyBookingString),
@@ -244,10 +241,21 @@ export const pagePreparationObject = {
   // --------------------------
 
   async pressFinishTeeBooking(page) {
+    // ----------------------
     // Click on <a> " Finish"
-    await page.waitForSelector('[href="?edit=4346420&redirectToHome=1"]')
+    // ----------------------
+    // Getting the href of a link with the class 'external-link'
+    const link = await page.$("#globalwrap > div > a")
+    const href = await link.getProperty("href")
+    const text = await href.jsonValue()
+    let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
+    console.log(findNumber)
+
+    const finishBookingString =
+      '[href="?edit=' + findNumber + '&redirectToHome=1"]'
+    await page.waitForSelector(finishBookingString)
     await Promise.all([
-      page.click('[href="?edit=4346420&redirectToHome=1"]'),
+      page.click(finishBookingString),
       page.waitForNavigation(),
     ])
   },

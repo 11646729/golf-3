@@ -5,9 +5,9 @@ import { pagePreparationObject } from "./pagePreparation.js"
 export const scraperController = async (
   browser,
   bookingDateTime,
-  numberOfPlayingPartners,
+  numberOfPlayers,
   numberOfHoles,
-  numberOfBuggiesRequested
+  numberOfBuggies
 ) => {
   // Load Home Web Page
   let page = await pagePreparationObject.loadHomePage(browser)
@@ -24,30 +24,36 @@ export const scraperController = async (
   // ---------------------------------------------------------------------
 
   // Press Tee Booking Button - if it exists
-  // await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
+  await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
 
   // ---------------------------------------------------------------------
 
-  // Enter Tee Booking Partner Numbers & Number Of Holes to Play
-  // page =
-  //   await pagePreparationObject.enterTeeBookingNumberOfPartnersNumberOfHoles(
-  //     page,
-  //     numberOfPlayingPartners,
-  //     numberOfHoles
-  //   )
+  // Enter Tee Booking Partner Numbers, Number Of Holes to Play & Number Of Buggies
+  page =
+    await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
+      page,
+      numberOfPlayers,
+      numberOfHoles
+    )
 
-  // Enter Tee Booking Partner Names & Number of Buggies
+  // Enter Tee Booking Partner Names
   // await pagePreparationObject.enterTeeBookingPartnersNames(
   //   page,
-  //   numberOfPlayingPartners,
-  //   numberOfBuggiesRequested
+  //   numberOfPlayers
   // )
 
+  // Enter Tee Booking Number of Buggies
+  await pagePreparationObject.enterTeeBookingNumberOfBuggies(
+    page,
+    numberOfPlayers,
+    numberOfBuggies
+  )
+
   // Save the Tee Booking & Finish
-  // await pagePreparationObject.pressFinishTeeBooking(page)
+  await pagePreparationObject.pressFinishTeeBooking(page)
 
   // Log out of the Web Site
-  // await pagePreparationObject.logoutOfGolfClubWebSite(page)
+  await pagePreparationObject.logoutOfGolfClubWebSite(page)
 }
 
 // ------------------------------------------------------------------
