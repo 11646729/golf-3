@@ -132,30 +132,33 @@ export const pagePreparationObject = {
     // -------------------------
     // Select Number of Holes
     // -------------------------
-    // Click on <label> "9 holes"
-    if (numberOfHoles == 9) {
-      const numHoles =
-        "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(1)"
-      await page.waitForSelector(numHoles)
-      await page.click(numHoles)
-    }
+    // Preset holes variable for 9 holes
+    let holes = 1
 
-    // Click on <label> "18 holes"
+    // Change holes variable for 18 holes or display error
     if (numberOfHoles == 18) {
-      const numHoles =
-        "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(2)"
-      await page.waitForSelector(numHoles)
-      await page.click(numHoles)
+      holes = 2
+    } else {
+      console.log("Error in Number of holes chosen - must be 9 or 18 only")
     }
 
-    //  Now click Booking Button to bring up the Booking Details page
+    const numHoles =
+      "#cluetip-inner .form-group:nth-child(7) .btn:nth-child(" + holes + ")"
+    await page.waitForSelector(numHoles)
+    await page.click(numHoles)
+
+    // -------------------------------------------------------------
+    // Now click Booking Button to bring up the Booking Details page
     // THIS RESERVES THE TEE BOOKING
+    // -------------------------------------------------------------
     const bookTeetimeButton = "#cluetip-inner form > .btn"
     await page.waitForSelector(bookTeetimeButton)
     await Promise.all([page.click(bookTeetimeButton), page.waitForNavigation()])
 
     return page
   },
+
+  // ------------------------------------------------------------------
 
   async enterTeeBookingPartnersNames(page, numberOfPlayers) {
     // -----------------------
