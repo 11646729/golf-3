@@ -36,21 +36,22 @@ export const scraperController = async (
       numberOfHoles
     )
 
-  // Enter Tee Booking Partner Names
-  // await pagePreparationObject.enterTeeBookingPartnersNames(
-  //   page,
-  //   numberOfPlayers
-  // )
-
-  // Enter Tee Booking Number of Buggies
-  await pagePreparationObject.enterTeeBookingNumberOfBuggies(
+  // Enter Tee Booking Number of Buggies & Partner Names
+  await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
     page,
-    numberOfPlayers,
-    numberOfBuggies
+    numberOfBuggies,
+    numberOfPlayers
   )
 
+  // Enter Tee Booking Number of Buggies
+  // await pagePreparationObject.enterTeeBookingNumberOfBuggies(
+  //   page,
+  //   numberOfPlayers,
+  //   numberOfBuggies
+  // )
+
   // Save the Tee Booking & Finish
-  await pagePreparationObject.pressFinishTeeBooking(page)
+  // await pagePreparationObject.pressFinishTeeBooking(page)
 
   // Log out of the Web Site
   await pagePreparationObject.logoutOfGolfClubWebSite(page)

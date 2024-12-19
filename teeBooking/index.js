@@ -18,7 +18,7 @@ import { scraperController } from "./scraperController.js"
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
 
-    let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
+    let numberOfPlayers = 2 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
     let numberOfBuggies = 1
 
