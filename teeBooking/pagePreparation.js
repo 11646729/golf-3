@@ -132,11 +132,13 @@ export const pagePreparationObject = {
     // -------------------------
     // Select Number of Holes
     // -------------------------
-    // Preset holes variable for 9 holes
-    let holes = 1
+    // Create holes variable
+    let holes = 0
 
-    // Change holes variable for 18 holes or display error
-    if (numberOfHoles == 18) {
+    // Change holes variable for 9 or 18 holes or report error
+    if (numberOfHoles == 9) {
+      holes = 1
+    } else if (numberOfHoles == 18) {
       holes = 2
     } else {
       console.log("Error in Number of holes chosen - must be 9 or 18 only")
