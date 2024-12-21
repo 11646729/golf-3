@@ -162,7 +162,7 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async enterTeeBookingNumberOfBuggiesPartnersNames(
+  async enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
     numberOfBuggies,
     numberOfPlayers
@@ -178,9 +178,11 @@ export const pagePreparationObject = {
     const text = await href.jsonValue()
     let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
 
+    console.log(findNumber)
+
     // Click on <a> "Buggy Booking (£0.00)"
     const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
-    for (let step = 0; step <= numberOfBuggies; step++) {
+    for (let step = 1; step <= numberOfBuggies; step++) {
       await page.waitForSelector(buggyBookingString)
       await Promise.all([
         page.click(buggyBookingString),
@@ -253,53 +255,6 @@ export const pagePreparationObject = {
       page.waitForNavigation(),
     ])
   },
-
-  // async enterTeeBookingNumberOfBuggies(page, numberOfPlayers, numberOfBuggies) {
-  //   // -------------------
-  //   // Now reserve buggies
-  //   // -------------------
-  //   // Getting the href of a link with the class 'external-link'
-  //   const link = await page.$(
-  //     "#teebooking_info > table > tbody > tr:nth-child(7) > td > a"
-  //   )
-  //   const href = await link.getProperty("href")
-  //   const text = await href.jsonValue()
-  //   let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
-  //   console.log(findNumber)
-
-  //   // Click on <a> "Buggy Booking (£0.00)"
-  //   const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
-  //   for (let step = 0; step <= numberOfBuggies; step++) {
-  //     await page.waitForSelector(buggyBookingString)
-  //     await Promise.all([
-  //       page.click(buggyBookingString),
-  //       page.waitForNavigation(),
-  //     ])
-  //   }
-  // },
-
-  // // --------------------------
-  // // Now finish the Tee Booking
-  // // --------------------------
-  // async pressFinishTeeBooking(page) {
-  //   // ----------------------
-  //   // Click on <a> " Finish"
-  //   // ----------------------
-  //   // Getting the href of a link with the class 'external-link'
-  //   const link = await page.$("#globalwrap > div > a")
-  //   const href = await link.getProperty("href")
-  //   const text = await href.jsonValue()
-  //   let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
-  //   console.log(findNumber)
-
-  //   const finishBookingString =
-  //     '[href="?edit=' + findNumber + '&redirectToHome=1"]'
-  //   await page.waitForSelector(finishBookingString)
-  //   await Promise.all([
-  //     page.click(finishBookingString),
-  //     page.waitForNavigation(),
-  //   ])
-  // },
 
   // ---------------------------
   // Now log out of the Web Site
