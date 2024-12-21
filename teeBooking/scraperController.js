@@ -40,7 +40,8 @@ export const scraperController = async (
   await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
     numberOfBuggies,
-    numberOfPlayers
+    numberOfPlayers,
+    bookingDateTime
   )
 
   // Log out of the Web Site

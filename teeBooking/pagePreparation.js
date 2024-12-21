@@ -165,7 +165,8 @@ export const pagePreparationObject = {
   async enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
     numberOfBuggies,
-    numberOfPlayers
+    numberOfPlayers,
+    bookingDateTime
   ) {
     // -------------------
     // Now reserve buggies
@@ -177,8 +178,6 @@ export const pagePreparationObject = {
     const href = await link.getProperty("href")
     const text = await href.jsonValue()
     let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
-
-    console.log(findNumber)
 
     // Click on <a> "Buggy Booking (£0.00)"
     const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
@@ -254,6 +253,24 @@ export const pagePreparationObject = {
       page.click(finishBookingString),
       page.waitForNavigation(),
     ])
+
+    // ----------------------
+    // Report of Booking Made
+    // ----------------------
+    console.log("Booking No: " + findNumber + " made")
+
+    console.log("At " + bookingDateTime.fullDate)
+
+    if (numberOfPlayers == 1) {
+      console.log("For: " + numberOfPlayers + " Player")
+    } else {
+      console.log("For: " + numberOfPlayers + " Players")
+    }
+    if (numberOfBuggies == 1) {
+      console.log("With: " + numberOfBuggies + " Buggy")
+    } else {
+      console.log("With: " + numberOfBuggies + " Buggies")
+    }
   },
 
   // ---------------------------

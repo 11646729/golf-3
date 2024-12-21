@@ -14,18 +14,20 @@ import { scraperController } from "./scraperController.js"
 
     // Tee Booking Parameters
     let requestedBooking = new Date("2024-12-25T18:10:00.000Z")
+    let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
+    let numberOfHoles = 9
+    let numberOfBuggies = 1
 
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
-
-    let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
-    let numberOfBuggies = 1
 
     if (numberOfPlayers > 2) {
       numberOfBuggies = 2
     }
 
-    let numberOfHoles = 9
+    if (numberOfPlayers < 1 && numberOfPlayers > 4) {
+      console.log("Number of Players is not between 1 & 4")
+    }
 
     if (numberOfHoles != 9 && numberOfHoles != 18) {
       console.log("Number of Holes is not either 9 or 18")
@@ -38,13 +40,13 @@ import { scraperController } from "./scraperController.js"
     // })
 
     // Pass the browser instance to the scraper controller
-    await scraperController(
-      browser,
-      bookingDateTime,
-      numberOfPlayers,
-      numberOfHoles,
-      numberOfBuggies
-    )
+    // await scraperController(
+    //   browser,
+    //   bookingDateTime,
+    //   numberOfPlayers,
+    //   numberOfHoles,
+    //   numberOfBuggies
+    // )
 
     // Now close the browser
     await browser.close()
