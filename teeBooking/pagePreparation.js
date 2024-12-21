@@ -259,7 +259,7 @@ export const pagePreparationObject = {
     // ----------------------
     console.log("Booking No: " + findNumber + " made")
 
-    console.log("At " + bookingDateTime.fullDate)
+    console.log("For " + bookingDateTime.fullDate)
 
     if (numberOfPlayers == 1) {
       console.log("For: " + numberOfPlayers + " Player")

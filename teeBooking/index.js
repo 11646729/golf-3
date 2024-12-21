@@ -40,13 +40,13 @@ import { scraperController } from "./scraperController.js"
     // })
 
     // Pass the browser instance to the scraper controller
-    // await scraperController(
-    //   browser,
-    //   bookingDateTime,
-    //   numberOfPlayers,
-    //   numberOfHoles,
-    //   numberOfBuggies
-    // )
+    await scraperController(
+      browser,
+      bookingDateTime,
+      numberOfPlayers,
+      numberOfHoles,
+      numberOfBuggies
+    )
 
     // Now close the browser
     await browser.close()
