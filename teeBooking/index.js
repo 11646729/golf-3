@@ -13,7 +13,7 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2024-12-25T18:10:00.000Z")
+    let requestedBooking = new Date("2025-01-03T18:10:00.000Z")
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
     let numberOfBuggies = 1
@@ -49,7 +49,7 @@ import { scraperController } from "./scraperController.js"
     )
 
     // Now close the browser
-    await browser.close()
+    // await browser.close()
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
@@ -114,9 +114,16 @@ export class breakdownBookingTimes {
     this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
 
     // -----------------------------------------------
+    // Calculate Calender Month & Year to use in Calendar Control
+    // -----------------------------------------------
+    var resultInt = parseInt(this.monthsOfTeeBooking - 1, 10) // Adjust because CalendarControl uses 0 for January etc
+    this.calendarControlMonth = resultInt.toString()
+
+    this.calendarControlYear = this.yearsOfTeeBooking
+
+    // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control
     // -----------------------------------------------
-
     // Calculate Column Number to use in Calendar Control
     this.calendarControlColumnNo = requestedBooking.getDay()
 

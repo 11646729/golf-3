@@ -67,6 +67,29 @@ export const pagePreparationObject = {
     await page.waitForSelector("#date")
     await page.click("#date")
 
+    // Click on <select> "2024 2025 2026 2027 2028"
+    await page.waitForSelector(".ui-datepicker-year")
+    await page.click(".ui-datepicker-year")
+
+    // Fill calendarControlYear on <select> .ui-datepicker-year
+    await page.waitForSelector(".ui-datepicker-year")
+    await page.select(
+      ".ui-datepicker-year",
+      bookingDateTime.calendarControlYear
+    )
+
+    // Click on <select> "Jan Feb Mar Apr May Jun J..."
+    await page.waitForSelector(".ui-datepicker-month")
+    await page.click(".ui-datepicker-month")
+
+    // Fill calendarControlMonth on <select> .ui-datepicker-month
+    // January == 0, February == 1 etc.
+    await page.waitForSelector(".ui-datepicker-month")
+    await page.select(
+      ".ui-datepicker-month",
+      bookingDateTime.calendarControlMonth
+    )
+
     // Click on Row & Column of Drop-down Calendar
     const teeBookingDay =
       "tr:nth-child(" +
@@ -102,8 +125,8 @@ export const pagePreparationObject = {
     // let textBefore = beforeBooking.toISOString()
     // console.log("Time before booking: " + textBefore)
 
-    // await waitForSelectorWithReload(page, bookTeeSlot)
-    await page.waitForSelector(bookTeeSlot)
+    await waitForSelectorWithReload(page, bookTeeSlot)
+    // await page.waitForSelector(bookTeeSlot)
 
     // const afterBooking = new Date()
     // let textAfter = afterBooking.toISOString()
@@ -296,7 +319,7 @@ const waitForSelectorWithReload = async (page, selector) => {
   while (tries <= MAX_TRIES) {
     try {
       const element = await page.waitForSelector(selector, {
-        timeout: 1000,
+        timeout: 1000, // 1000 milliseconds = 1 second
       })
 
       console.log("Attempt No: " + tries)

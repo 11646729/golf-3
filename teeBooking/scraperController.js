@@ -24,11 +24,12 @@ export const scraperController = async (
   // ---------------------------------------------------------------------
 
   // Press Tee Booking Button - if it exists
+  // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
   await pagePreparationObject.pressTeeBookingButton(page, bookingDateTime)
 
   // ---------------------------------------------------------------------
 
-  // Enter Tee Booking Partner Numbers, Number Of Holes to Play & Number Of Buggies
+  // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
   page =
     await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
       page,
@@ -36,7 +37,7 @@ export const scraperController = async (
       numberOfHoles
     )
 
-  // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
+  // // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
   await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
     numberOfBuggies,
