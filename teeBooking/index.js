@@ -49,7 +49,7 @@ import { scraperController } from "./scraperController.js"
     )
 
     // Now close the browser
-    // await browser.close()
+    await browser.close()
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
