@@ -16,7 +16,7 @@ import { scraperController } from "./scraperController.js"
     let requestedBooking = new Date("2025-01-03T18:10:00.000Z")
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
-    let numberOfBuggies = 1
+    let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
 
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTimes(requestedBooking)
@@ -33,14 +33,12 @@ import { scraperController } from "./scraperController.js"
       console.log("Number of Holes is not either 9 or 18")
     }
 
-    // runAtSpecificTimeOfDay(browser, requestedBooking)
-
-    // runAtSpecificTimeOfDay(browser, requestedBooking, () => {
-    //   // scraperController(browser, requestedBooking)
-    // })
+    if (numberOfBuggies < 1 && numberOfBuggies > 2) {
+      console.log("Number of Buggies is not 1 or 2")
+    }
 
     // Pass the browser instance to the scraper controller
-    await scraperController(
+    await runAtSpecificTimeOfDay(
       browser,
       bookingDateTime,
       numberOfPlayers,
@@ -58,15 +56,13 @@ import { scraperController } from "./scraperController.js"
 // ----------------------------------------------
 // This runs a function at a specific time & date
 // ----------------------------------------------
-const runAtSpecificTimeOfDay = (
+const runAtSpecificTimeOfDay = async (
   browser,
-  requestedBooking
-  // scraperController
+  bookingDateTime,
+  numberOfPlayers,
+  numberOfHoles,
+  numberOfBuggies
 ) => {
-  console.log("Here I am")
-
-  scraperController(browser, requestedBooking)
-
   // ;(function loop() {
   //   var now = new Date()
   //   if (
@@ -76,7 +72,14 @@ const runAtSpecificTimeOfDay = (
   //   ) {
   //     console.log("Now: " + now)
 
-  //     //   scraperController(browser, requestedBooking)
+  await scraperController(
+    browser,
+    bookingDateTime,
+    numberOfPlayers,
+    numberOfHoles,
+    numberOfBuggies
+  )
+
   //   }
 
   //   now = new Date() // allow for time passing

@@ -9,6 +9,8 @@ export const scraperController = async (
   numberOfHoles,
   numberOfBuggies
 ) => {
+  console.log("Here in scraperController function")
+
   // Load Home Web Page
   let page = await pagePreparationObject.loadHomePage(browser)
 
