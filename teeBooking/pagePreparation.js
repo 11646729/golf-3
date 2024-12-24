@@ -33,7 +33,7 @@ export const pagePreparationObject = {
 
     // Submit the Login form and wait for process to complete
     await Promise.all([
-      await page.click('.btn[type="submit"]'),
+      page.click('.btn[type="submit"]'),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
       console.log(`Logged In To Tee Booking Subsystem ...`),
     ])
@@ -45,16 +45,10 @@ export const pagePreparationObject = {
 
   async clickBookTeeTimePage(page) {
     // Click on <a> "Book a tee time"
-    await page.waitForSelector(
-      'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]',
-      { visible: true }
-    )
+    await page.waitForSelector('td > [href="/memberbooking/"]')
     await Promise.all([
-      page.click(
-        'td > [href="' + process.env.GOLF_CLUB_TEE_BOOKING_SUBSYSTEM + '"]'
-      ),
+      page.click('td > [href="/memberbooking/"]'),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
-      console.log(`Click To Book Tee Time ...`),
     ])
 
     return page
@@ -121,16 +115,16 @@ export const pagePreparationObject = {
       bookingDateTime.secondsOfTeeBooking +
       '"]'
 
-    // const beforeBooking = new Date()
-    // let textBefore = beforeBooking.toISOString()
-    // console.log("Time before booking: " + textBefore)
+    const beforeBooking = new Date()
+    let textBefore = beforeBooking.toISOString()
+    console.log("Time before booking: " + textBefore)
 
     await waitForSelectorWithReload(page, bookTeeSlot)
     // await page.waitForSelector(bookTeeSlot)
 
-    // const afterBooking = new Date()
-    // let textAfter = afterBooking.toISOString()
-    // console.log("Time after booking: " + textAfter)
+    const afterBooking = new Date()
+    let textAfter = afterBooking.toISOString()
+    console.log("Time after booking: " + textAfter)
 
     await page.click(bookTeeSlot)
   },

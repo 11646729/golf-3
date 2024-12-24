@@ -21,6 +21,14 @@ import { scraperController } from "./scraperController.js"
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTime(requestedBooking)
 
+    // let bookingDate = bookingDateTime.daysOfTeeBooking
+    let bookingHour = bookingDateTime.daysOfTeeBooking
+    let bookingMinutes = bookingDateTime.minutesOfTeeBooking
+    let bookingSeconds = bookingDateTime.secondsOfTeeBooking
+    console.log(bookingHour)
+    console.log(bookingMinutes)
+    console.log(bookingSeconds)
+
     if (numberOfPlayers > 2) {
       numberOfBuggies = 2
     }
@@ -37,18 +45,10 @@ import { scraperController } from "./scraperController.js"
       console.log("Number of Buggies is not 1 or 2")
     }
 
-    // Pass the browser instance to the scraper controller
-    // scraperController(
-    //   browser,
-    //   bookingDateTime,
-    //   numberOfPlayers,
-    //   numberOfHoles,
-    //   numberOfBuggies
-    // )
-
+    // Pass the browser instance to the scraper controller Scheduler
     scheduleFunctionAtTime(
-      10,
-      30,
+      11,
+      22,
       30,
       makeBooking,
       browser,
@@ -57,9 +57,6 @@ import { scraperController } from "./scraperController.js"
       numberOfHoles,
       numberOfBuggies
     )
-
-    // Now close the browser
-    // await browser.close()
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
