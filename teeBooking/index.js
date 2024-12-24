@@ -19,7 +19,7 @@ import { scraperController } from "./scraperController.js"
     let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
 
     // Now split requestedBooking date into bookingDateTime object
-    const bookingDateTime = new breakdownBookingTimes(requestedBooking)
+    const bookingDateTime = new breakdownBookingTime(requestedBooking)
 
     if (numberOfPlayers > 2) {
       numberOfBuggies = 2
@@ -38,7 +38,19 @@ import { scraperController } from "./scraperController.js"
     }
 
     // Pass the browser instance to the scraper controller
-    await runAtSpecificTimeOfDay(
+    // scraperController(
+    //   browser,
+    //   bookingDateTime,
+    //   numberOfPlayers,
+    //   numberOfHoles,
+    //   numberOfBuggies
+    // )
+
+    scheduleFunctionAtTime(
+      10,
+      30,
+      30,
+      makeBooking,
       browser,
       bookingDateTime,
       numberOfPlayers,
@@ -47,50 +59,52 @@ import { scraperController } from "./scraperController.js"
     )
 
     // Now close the browser
-    await browser.close()
+    // await browser.close()
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
 })()
 
-// ----------------------------------------------
-// This runs a function at a specific time & date
-// ----------------------------------------------
-const runAtSpecificTimeOfDay = async (
+function scheduleFunctionAtTime(hour, minute, second, callback, ...args) {
+  // Get the current time
+  const now = new Date()
+
+  // Create a date object for the target time today
+  const targetTime = new Date()
+  targetTime.setHours(hour, minute, second, 0)
+
+  // If the target time has already passed today, schedule for tomorrow
+  if (targetTime <= now) {
+    targetTime.setDate(targetTime.getDate() + 1)
+  }
+
+  // Calculate the delay in milliseconds
+  const delay = targetTime - now
+
+  // Use setTimeout to schedule the function with parameters
+  setTimeout(() => callback(...args), delay)
+}
+
+// makeBooking function to be called
+const makeBooking = async (
   browser,
   bookingDateTime,
   numberOfPlayers,
   numberOfHoles,
   numberOfBuggies
 ) => {
-  // ;(function loop() {
-  //   var now = new Date()
-  //   if (
-  //     now.getDate() === 10 &&
-  //     now.getHours() === 20 &&
-  //     now.getMinutes() === 45
-  //   ) {
-  //     console.log("Now: " + now)
-
-  await scraperController(
+  scraperController(
     browser,
     bookingDateTime,
     numberOfPlayers,
     numberOfHoles,
     numberOfBuggies
   )
-
-  //   }
-
-  //   now = new Date() // allow for time passing
-  //   var delay = 60000 - (now % 60000) // exact ms to next minute interval
-  //   setTimeout(loop, delay)
-  // })()
 }
 
 // ------------------------------------------------------------------
 
-export class breakdownBookingTimes {
+export class breakdownBookingTime {
   constructor(requestedBooking) {
     this.fullDate = requestedBooking
 
@@ -139,7 +153,6 @@ export class breakdownBookingTimes {
     // -----------------------------------------------
     // Calculate Row Number to use in Calendar Control
     // -----------------------------------------------
-
     // First calculate the day corresponding to the 1st of month
     let text = this.fullDate.toISOString()
 

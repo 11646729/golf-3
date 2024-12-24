@@ -9,8 +9,6 @@ export const scraperController = async (
   numberOfHoles,
   numberOfBuggies
 ) => {
-  console.log("Here in scraperController function")
-
   // Load Home Web Page
   let page = await pagePreparationObject.loadHomePage(browser)
 
@@ -49,6 +47,9 @@ export const scraperController = async (
 
   // Log out of the Web Site
   await pagePreparationObject.logoutOfGolfClubWebSite(page)
+
+  // Now close the browser
+  await browser.close()
 }
 
 // ------------------------------------------------------------------
