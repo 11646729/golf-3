@@ -13,7 +13,7 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2025-01-03T18:10:00.000Z")
+    let requestedBooking = new Date("2025-01-03T18:00:00.000Z")
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
     let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
@@ -21,13 +21,25 @@ import { scraperController } from "./scraperController.js"
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTime(requestedBooking)
 
-    // let bookingDate = bookingDateTime.daysOfTeeBooking
-    let bookingHour = bookingDateTime.daysOfTeeBooking
-    let bookingMinutes = bookingDateTime.minutesOfTeeBooking
-    let bookingSeconds = bookingDateTime.secondsOfTeeBooking
-    console.log(bookingHour)
-    console.log(bookingMinutes)
-    console.log(bookingSeconds)
+    // ------------------------------------------------------------------
+    // Calculate time to start program - 3 minutes before bookingDateTime
+    // ------------------------------------------------------------------
+    let startProgramDate = new Date(requestedBooking)
+    const durationInMinutes = 3
+    startProgramDate.setMinutes(
+      requestedBooking.getMinutes() - durationInMinutes
+    )
+
+    const startProgramHours = startProgramDate.getHours()
+    const startProgramMinutes = startProgramDate.getMinutes()
+    const startProgramSeconds = startProgramDate.getSeconds()
+    console.log(startProgramHours)
+    console.log(startProgramMinutes)
+    console.log(startProgramSeconds)
+
+    console.log("Program Start Date: " + startProgramDate.toISOString())
+    console.log("Requested Booking: " + requestedBooking.toISOString())
+    // ------------------------------------------------------------------
 
     if (numberOfPlayers > 2) {
       numberOfBuggies = 2
@@ -46,17 +58,26 @@ import { scraperController } from "./scraperController.js"
     }
 
     // Pass the browser instance to the scraper controller Scheduler
-    scheduleFunctionAtTime(
-      11,
-      22,
-      30,
-      makeBooking,
-      browser,
-      bookingDateTime,
-      numberOfPlayers,
-      numberOfHoles,
-      numberOfBuggies
-    )
+    // scheduleFunctionAtTime(
+    //   startProgramHours,
+    //   startProgramMinutes,
+    //   startProgramSeconds,
+    //   makeBooking,
+    //   browser,
+    //   bookingDateTime,
+    //   numberOfPlayers,
+    //   numberOfHoles,
+    //   numberOfBuggies
+    // )
+
+    // FOR TESTING ONLY - NOT TIMER
+    // scraperController(
+    //   browser,
+    //   bookingDateTime,
+    //   numberOfPlayers,
+    //   numberOfHoles,
+    //   numberOfBuggies
+    // )
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
