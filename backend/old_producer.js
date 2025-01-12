@@ -6,7 +6,7 @@ import { rabbitMQ } from "./rtSwitchboardconfig.js"
 //step 3 : Create the exchange
 //step 4 : Publish the message to the exchange with a routing key
 
-class Producer {
+export class Producer {
   channel
 
   async createChannel() {
@@ -40,4 +40,4 @@ class Producer {
   }
 }
 
-export default Producer
+// export default Producer

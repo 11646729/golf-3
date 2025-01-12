@@ -13,32 +13,36 @@ import { scraperController } from "./scraperController.js"
     })
 
     // Tee Booking Parameters
-    let requestedBooking = new Date("2025-01-03T18:00:00.000Z")
+    let requestedBookingTime = new Date("2025-01-15T18:00:00.000Z")
+    let startProgramAheadOfRequestedBookingMinutes = 2
+
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
     let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
 
     // Now split requestedBooking date into bookingDateTime object
-    const bookingDateTime = new breakdownBookingTime(requestedBooking)
+    const bookingDateTime = new breakdownBookingTime(requestedBookingTime)
 
-    // ------------------------------------------------------------------
-    // Calculate time to start program - 3 minutes before bookingDateTime
-    // ------------------------------------------------------------------
-    let startProgramDate = new Date(requestedBooking)
-    const durationInMinutes = 3
-    startProgramDate.setMinutes(
-      requestedBooking.getMinutes() - durationInMinutes
+    // ----------------------------------------------------------------------------------------------------------------
+    // Calculate time to start program - startProgramAheadOfRequestedBookingMinutes minutes before requestedBookingTime
+    // ----------------------------------------------------------------------------------------------------------------
+    let startProgramTime = new Date(requestedBookingTime)
+
+    startProgramTime.setMinutes(
+      requestedBookingTime.getMinutes() -
+        startProgramAheadOfRequestedBookingMinutes
     )
 
-    const startProgramHours = startProgramDate.getHours()
-    const startProgramMinutes = startProgramDate.getMinutes()
-    const startProgramSeconds = startProgramDate.getSeconds()
-    console.log(startProgramHours)
-    console.log(startProgramMinutes)
-    console.log(startProgramSeconds)
+    const startProgramHours = startProgramTime.getHours()
+    const startProgramMinutes = startProgramTime.getMinutes()
+    const startProgramSeconds = startProgramTime.getSeconds()
 
-    console.log("Program Start Date: " + startProgramDate.toISOString())
-    console.log("Requested Booking: " + requestedBooking.toISOString())
+    // console.log(startProgramHours)
+    // console.log(startProgramMinutes)
+    // console.log(startProgramSeconds)
+
+    // console.log("Program Start Time: " + startProgramTime.toISOString())
+    // console.log("Requested Booking Time: " + requestedBookingTime.toISOString())
     // ------------------------------------------------------------------
 
     if (numberOfPlayers > 2) {
@@ -123,30 +127,30 @@ const makeBooking = async (
 // ------------------------------------------------------------------
 
 export class breakdownBookingTime {
-  constructor(requestedBooking) {
-    this.fullDate = requestedBooking
+  constructor(requestedBookingTime) {
+    this.fullDate = requestedBookingTime
 
     // Use 00 for seconds & describe as a String
     this.secondsOfTeeBooking = "00"
 
     // Extract Minutes of Tee Booking and convert to String
-    const m = requestedBooking.getMinutes()
+    const m = requestedBookingTime.getMinutes()
     this.minutesOfTeeBooking = ("0" + m).slice(-2)
 
     // Extract Hours of Tee Booking and convert to String
-    const h = requestedBooking.getHours()
+    const h = requestedBookingTime.getHours()
     this.hoursOfTeeBooking = ("0" + h).slice(-2)
 
     // Extract Days of Tee Booking and convert to String
-    const d = requestedBooking.getDate()
+    const d = requestedBookingTime.getDate()
     this.daysOfTeeBooking = ("0" + d).slice(-2)
 
     // Extract Months of Tee Booking and convert to String
-    const mo = requestedBooking.getMonth() + 1
+    const mo = requestedBookingTime.getMonth() + 1
     this.monthsOfTeeBooking = ("0" + mo).slice(-2)
 
     // Extract Years of Tee Booking and convert to String
-    this.yearsOfTeeBooking = requestedBooking.getFullYear().toString()
+    this.yearsOfTeeBooking = requestedBookingTime.getFullYear().toString()
 
     // -----------------------------------------------
     // Calculate Calender Month & Year to use in Calendar Control
@@ -160,7 +164,7 @@ export class breakdownBookingTime {
     // Calculate Column Number to use in Calendar Control
     // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control
-    this.calendarControlColumnNo = requestedBooking.getDay()
+    this.calendarControlColumnNo = requestedBookingTime.getDay()
 
     // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
     // So adjust for a Sunday
