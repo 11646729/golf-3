@@ -3,6 +3,8 @@ import { scraperController } from "./scraperController.js"
 
 // ------------------------------------------------------------------
 ;(async () => {
+  let validBooking = true
+  const t0 = performance.now()
   try {
     // Start the browser and create a browser instance
     const browser = await puppeteer.launch({
@@ -12,13 +14,20 @@ import { scraperController } from "./scraperController.js"
       ignoreHTTPSErrors: true,
     })
 
-    // Tee Booking Parameters
-    let requestedBookingTime = new Date("2025-01-15T18:00:00.000Z")
+    // Requested Tee Booking Parameters
+    let requestedBookingTime = new Date("2025-01-30T18:00:00.000Z")
     let startProgramAheadOfRequestedBookingMinutes = 2
 
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9
     let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
+
+    // Validate Requested Tee Booking Parameters
+    let validBooking = validateBooking(
+      numberOfPlayers,
+      numberOfHoles,
+      numberOfBuggies
+    )
 
     // Now split requestedBooking date into bookingDateTime object
     const bookingDateTime = new breakdownBookingTime(requestedBookingTime)
@@ -41,25 +50,7 @@ import { scraperController } from "./scraperController.js"
     // console.log(startProgramMinutes)
     // console.log(startProgramSeconds)
 
-    // console.log("Program Start Time: " + startProgramTime.toISOString())
-    // console.log("Requested Booking Time: " + requestedBookingTime.toISOString())
     // ------------------------------------------------------------------
-
-    if (numberOfPlayers > 2) {
-      numberOfBuggies = 2
-    }
-
-    if (numberOfPlayers < 1 && numberOfPlayers > 4) {
-      console.log("Number of Players is not between 1 & 4")
-    }
-
-    if (numberOfHoles != 9 && numberOfHoles != 18) {
-      console.log("Number of Holes is not either 9 or 18")
-    }
-
-    if (numberOfBuggies < 1 && numberOfBuggies > 2) {
-      console.log("Number of Buggies is not 1 or 2")
-    }
 
     // Pass the browser instance to the scraper controller Scheduler
     // scheduleFunctionAtTime(
@@ -82,12 +73,45 @@ import { scraperController } from "./scraperController.js"
     //   numberOfHoles,
     //   numberOfBuggies
     // )
+
+    const t1 = performance.now()
+    console.log(`Call to Start Program ${t1 - t0} milliseconds.`)
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
 })()
 
-function scheduleFunctionAtTime(hour, minute, second, callback, ...args) {
+// ------------------------------------------------------------------
+// Validate Booking Request Parameters
+// ------------------------------------------------------------------
+const validateBooking = (numberOfPlayers, numberOfHoles, numberOfBuggies) => {
+  let validTest = true
+
+  if (numberOfPlayers > 2) {
+    numberOfBuggies = 2
+  }
+
+  if (numberOfPlayers < 1 || numberOfPlayers > 4) {
+    validTest = false
+    console.log("Number of Players is not between 1 & 4")
+  }
+
+  if (numberOfHoles != 9 && numberOfHoles != 18) {
+    validTest = false
+    console.log("Number of Holes is not either 9 or 18")
+  }
+
+  if (numberOfBuggies < 1 || numberOfBuggies > 2) {
+    validTest = false
+    console.log("Number of Buggies is not 1 or 2")
+  }
+
+  return validTest
+}
+
+// ------------------------------------------------------------------
+
+const scheduleFunctionAtTime = (hour, minute, second, callback, ...args) => {
   // Get the current time
   const now = new Date()
 
@@ -106,6 +130,8 @@ function scheduleFunctionAtTime(hour, minute, second, callback, ...args) {
   // Use setTimeout to schedule the function with parameters
   setTimeout(() => callback(...args), delay)
 }
+
+// ------------------------------------------------------------------
 
 // makeBooking function to be called
 const makeBooking = async (
@@ -163,7 +189,7 @@ export class breakdownBookingTime {
     // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control
     // -----------------------------------------------
-    // Calculate Column Number to use in Calendar Control
+
     this.calendarControlColumnNo = requestedBookingTime.getDay()
 
     // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
