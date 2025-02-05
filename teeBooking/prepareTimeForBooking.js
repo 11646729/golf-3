@@ -5,32 +5,53 @@ export const prepareTimeForBooking = async (browser, booking) => {
   // ----------------------------------------------------------------------------------------------------------------
   // Calculate time to start program - startProgramAheadOfRequestedBookingMinutes minutes before requestedBookingTime
   // ----------------------------------------------------------------------------------------------------------------
-  var startRunningProgramTime = new Date(
-    booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
+  const splitRunningProgramTime = new startProgramObject(
+    booking,
+    minutesBeforeBookingTime,
+    millisecondsInMinute
   )
 
   // Split booking into time
   const splitBookingDateTime = new breakdownBookingTime(booking.bookingTime)
 
-  const extendedBookingObject = new extendBookingObject(
-    booking.bookingTime,
-    splitBookingDateTime,
-    startRunningProgramTime
-  )
+  // Split out extended Booking Details e.g. No of Players, Buggies & Holes to play
+  const extendedBookingDetails = new extendedBookingObject(booking)
 
-  console.log(extendedBookingObject)
+  // Pass the browser instance to the scraper controller Scheduler
+  // scheduleFunctionAtTime(splitRunningProgramTime, splitBookingDateTime, extendedBookingDetails)
+
+  console.log(splitRunningProgramTime)
+  console.log(splitBookingDateTime)
+  console.log(extendedBookingDetails)
 }
 
 // ------------------------------------------------------------------
 
-export class extendBookingObject {
-  constructor(booking, splitBookingDateTime, startRunningProgramTime) {
-    this.bookingTime = booking
-    this.splitBookingTime = splitBookingDateTime
-    this.startProgramTime = startRunningProgramTime
-    // this.startRunningProgramHours = startRunningProgramTime.getHours()
-    // this.startRunningProgramMinutes = startRunningProgramTime.getMinutes()
-    // this.startRunningProgramSeconds = startRunningProgramTime.getSeconds()
+export class startProgramObject {
+  constructor(booking, minutesBeforeBookingTime, millisecondsInMinute) {
+    this.startProgramTime = new Date(
+      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
+    )
+
+    this.startRunningProgramHours = new Date(
+      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
+    ).getHours()
+    this.startRunningProgramMinutes = new Date(
+      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
+    ).getMinutes()
+    this.startRunningProgramSeconds = new Date(
+      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
+    ).getSeconds()
+  }
+}
+
+// ------------------------------------------------------------------
+
+export class extendedBookingObject {
+  constructor(booking) {
+    this.numberOfPlayers = booking.noOfPlayers
+    this.numberOfHoles = booking.noOfHoles
+    this.numberOfBuggies = booking.noOfBuggies
   }
 }
 
@@ -64,20 +85,6 @@ export class breakdownBookingTime {
   }
 
   // ------------------------------------------------------------------
-
-  // Pass the browser instance to the scraper controller Scheduler
-  // scheduleFunctionAtTime(
-  //   startProgramHours,
-  //   startProgramMinutes,
-  //   startProgramSeconds,
-  //   makeBooking,
-  //   browser,
-  //   startRunningProgramTime,
-  //   bookingDateTime,
-  //   numberOfPlayers,
-  //   numberOfHoles,
-  //   numberOfBuggies
-  // )
 
   // // -----------------------------------------------
   // // Calculate Calender Month & Year to use in Calendar Control
