@@ -23,12 +23,15 @@ export const prepareTimeForBooking = async (browser, booking) => {
     splitBookingDateTime
   )
 
-  console.log(calendarControlParameters)
-
   // Pass the browser instance to the scraper controller Scheduler
-  // scheduleFunctionAtTime(splitRunningProgramTime, splitBookingDateTime, extendedBookingDetails)
+  // scheduleFunctionAtTime(splitRunningProgramTime, splitBookingDateTime, extendedBookingDetails, calendarControlParameters)
 
-  // scraperController(browser, splitBookingDateTime, extendedBookingDetails)
+  scraperController(
+    browser,
+    splitBookingDateTime,
+    extendedBookingDetails,
+    calendarControlParameters
+  )
 }
 
 // ------------------------------------------------------------------
@@ -97,9 +100,11 @@ export class breakdownBookingTime {
 // -----------------------------------------------
 export class calendarControlParametersForBookingTime {
   constructor(booking) {
-    this.calendarControlMonth = parseInt(booking.monthsOfTeeBooking - 1, 10)
-    // .toString() // Adjust because CalendarControl uses 0 for January etc
-    this.calendarControlYear = parseInt(booking.yearsOfTeeBooking, 10)
+    this.calendarControlMonth = parseInt(
+      booking.monthsOfTeeBooking - 1,
+      10
+    ).toString() // Adjust because CalendarControl uses 0 for January etc
+    this.calendarControlYear = booking.yearsOfTeeBooking
 
     // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control

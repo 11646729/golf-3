@@ -56,7 +56,7 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async loadTodaysTeeBookingPage(page, bookingDateTime) {
+  async loadTodaysTeeBookingPage(page, calendarControlParameters) {
     // Click on <input> #date
     await page.waitForSelector("#date")
     await page.click("#date")
@@ -69,7 +69,7 @@ export const pagePreparationObject = {
     await page.waitForSelector(".ui-datepicker-year")
     await page.select(
       ".ui-datepicker-year",
-      bookingDateTime.calendarControlYear
+      calendarControlParameters.calendarControlYear
     )
 
     // Click on <select> "Jan Feb Mar Apr May Jun J..."
@@ -81,15 +81,15 @@ export const pagePreparationObject = {
     await page.waitForSelector(".ui-datepicker-month")
     await page.select(
       ".ui-datepicker-month",
-      bookingDateTime.calendarControlMonth
+      calendarControlParameters.calendarControlMonth
     )
 
     // Click on Row & Column of Drop-down Calendar
     const teeBookingDay =
       "tr:nth-child(" +
-      bookingDateTime.calendarControlRowNo +
+      calendarControlParameters.calendarControlRowNo +
       ") > td:nth-child(" +
-      bookingDateTime.calendarControlColumnNo +
+      calendarControlParameters.calendarControlColumnNo +
       ") > [href='#']"
 
     await page.waitForSelector(teeBookingDay)

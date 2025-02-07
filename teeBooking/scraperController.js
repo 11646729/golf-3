@@ -5,11 +5,9 @@ import { pagePreparationObject } from "./pagePreparation.js"
 export const scraperController = async (
   browser,
   splitBookingDateTime,
-  extendedBookingDetails
+  extendedBookingDetails,
+  calendarControlParameters
 ) => {
-  console.log(splitBookingDateTime)
-  console.log(extendedBookingDetails)
-
   // Load Home Web Page
   let page = await pagePreparationObject.loadHomePage(browser)
 
@@ -19,21 +17,19 @@ export const scraperController = async (
   // Click Book a Tee Time link
   page = await pagePreparationObject.clickBookTeeTimePage(page)
 
-  // console.log(typeof splitBookingDateTime.fullDateTime.toISOString())
-
-  // Navigate to Tee Booking Date Time Page
+  // // Navigate to Tee Booking Date Time Page
   await pagePreparationObject.loadTodaysTeeBookingPage(
     page,
-    splitBookingDateTime
+    calendarControlParameters
   )
 
-  // // ---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
-  // // Press Tee Booking Button - if it exists
-  // // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
+  // Press Tee Booking Button - if it exists
+  // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
   // await pagePreparationObject.pressTeeBookingButton(page, splitBookingDateTime)
 
-  // // ---------------------------------------------------------------------
+  // ---------------------------------------------------------------------
 
   // // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
   // page =
