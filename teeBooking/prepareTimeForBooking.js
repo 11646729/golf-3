@@ -97,110 +97,111 @@ export class breakdownBookingTime {
 // -----------------------------------------------
 export class calendarControlParametersForBookingTime {
   constructor(booking) {
-    this.resultInt = parseInt(booking.monthsOfTeeBooking - 1, 10) // Adjust because CalendarControl uses 0 for January etc
-    // this.calendarControlMonth = resultInt.toString()
-    // this.calendarControlYear = this.yearsOfTeeBooking
+    this.calendarControlMonth = parseInt(booking.monthsOfTeeBooking - 1, 10)
+    // .toString() // Adjust because CalendarControl uses 0 for January etc
+    this.calendarControlYear = parseInt(booking.yearsOfTeeBooking, 10)
+
+    // -----------------------------------------------
+    // Calculate Column Number to use in Calendar Control
+    // -----------------------------------------------
+
+    // First get Day of Week for the requested booking date
+    this.calendarControlColumnNo = booking.fullDateTime.getDay()
+
+    // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
+    // So adjust for a Sunday
+    if (this.calendarControlColumnNo == 0) {
+      this.calendarControlColumnNo = 7
+    }
+
+    // -----------------------------------------------
+    // Calculate Row Number to use in Calendar Control
+    // -----------------------------------------------
+    // First calculate the day corresponding to the 1st of month
+    let text = booking.fullDateTime.toISOString()
+
+    let tempFirstDay =
+      text.substring(0, 8) +
+      "01T" +
+      booking.hoursOfTeeBooking +
+      ":" +
+      booking.minutesOfTeeBooking +
+      ":" +
+      booking.secondsOfTeeBooking +
+      ".000Z"
+
+    let dayOf1stOfTheMonth = new Date(tempFirstDay).getDay() // 0-6, 0 == Sunday, 3 == Wednesday
+
+    // -----------------------------------
+    // Calendar Control Row Calculation
+    // -----------------------------------
+    let daysIn1stWeek = 0
+
+    if (dayOf1stOfTheMonth == 0) {
+      daysIn1stWeek = 1
+    }
+
+    if (dayOf1stOfTheMonth == 1) {
+      daysIn1stWeek = 7
+    }
+
+    if (dayOf1stOfTheMonth == 2) {
+      daysIn1stWeek = 6
+    }
+
+    if (dayOf1stOfTheMonth == 3) {
+      daysIn1stWeek = 5
+    }
+
+    if (dayOf1stOfTheMonth == 4) {
+      daysIn1stWeek = 4
+    }
+
+    if (dayOf1stOfTheMonth == 5) {
+      daysIn1stWeek = 3
+    }
+
+    if (dayOf1stOfTheMonth == 6) {
+      daysIn1stWeek = 2
+    }
+
+    if (booking.daysOfTeeBooking <= daysIn1stWeek) {
+      this.calendarControlRowNo = 1
+    }
+
+    if (
+      (booking.daysOfTeeBooking > daysIn1stWeek) &
+      (booking.daysOfTeeBooking <= daysIn1stWeek + 7)
+    ) {
+      this.calendarControlRowNo = 2
+    }
+
+    if (
+      (booking.daysOfTeeBooking > daysIn1stWeek + 7) &
+      (booking.daysOfTeeBooking <= daysIn1stWeek + 14)
+    ) {
+      this.calendarControlRowNo = 3
+    }
+
+    if (
+      (booking.daysOfTeeBooking > daysIn1stWeek + 14) &
+      (booking.daysOfTeeBooking <= daysIn1stWeek + 21)
+    ) {
+      this.calendarControlRowNo = 4
+    }
+
+    if (
+      (booking.daysOfTeeBooking > daysIn1stWeek + 21) &
+      (booking.daysOfTeeBooking <= daysIn1stWeek + 28)
+    ) {
+      this.calendarControlRowNo = 5
+    }
+
+    if (booking.daysOfTeeBooking > daysIn1stWeek + 28) {
+      this.calendarControlRowNo = 6
+    }
   }
 }
-
-// // -----------------------------------------------
-// // Calculate Column Number to use in Calendar Control
-// // -----------------------------------------------
-
-// this.calendarControlColumnNo = requestedBookingTime.getDay()
-
-// // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
-// // So adjust for a Sunday
-// if (this.calendarControlColumnNo == 0) {
-//   this.calendarControlColumnNo = 7
-// }
-
-// // -----------------------------------------------
-// // Calculate Row Number to use in Calendar Control
-// // -----------------------------------------------
-// // First calculate the day corresponding to the 1st of month
-// let text = this.fullDate.toISOString()
-
-//   let tempFirstDay =
-//     text.substring(0, 8) +
-//     "01T" +
-//     this.hoursOfTeeBooking +
-//     ":" +
-//     this.minutesOfTeeBooking +
-//     ":" +
-//     this.secondsOfTeeBooking +
-//     ".000Z"
-
-//   let dayOf1stOfTheMonth = new Date(tempFirstDay).getDay() // 0-6, 0 == Sunday, 3 == Wednesday
-
-//   // -----------------------------------
-//   // Calendar Control Row Calculation
-//   // -----------------------------------
-//   let daysIn1stWeek = 0
-
-//   if (dayOf1stOfTheMonth == 0) {
-//     daysIn1stWeek = 1
-//   }
-
-//   if (dayOf1stOfTheMonth == 1) {
-//     daysIn1stWeek = 7
-//   }
-
-//   if (dayOf1stOfTheMonth == 2) {
-//     daysIn1stWeek = 6
-//   }
-
-//   if (dayOf1stOfTheMonth == 3) {
-//     daysIn1stWeek = 5
-//   }
-
-//   if (dayOf1stOfTheMonth == 4) {
-//     daysIn1stWeek = 4
-//   }
-
-//   if (dayOf1stOfTheMonth == 5) {
-//     daysIn1stWeek = 3
-//   }
-
-//   if (dayOf1stOfTheMonth == 6) {
-//     daysIn1stWeek = 2
-//   }
-
-//   if (this.daysOfTeeBooking <= daysIn1stWeek) {
-//     this.calendarControlRowNo = 1
-//   }
-
-//   if (
-//     (this.daysOfTeeBooking > daysIn1stWeek) &
-//     (this.daysOfTeeBooking <= daysIn1stWeek + 7)
-//   ) {
-//     this.calendarControlRowNo = 2
-//   }
-
-//   if (
-//     (this.daysOfTeeBooking > daysIn1stWeek + 7) &
-//     (this.daysOfTeeBooking <= daysIn1stWeek + 14)
-//   ) {
-//     this.calendarControlRowNo = 3
-//   }
-
-//   if (
-//     (this.daysOfTeeBooking > daysIn1stWeek + 14) &
-//     (this.daysOfTeeBooking <= daysIn1stWeek + 21)
-//   ) {
-//     this.calendarControlRowNo = 4
-//   }
-
-//   if (
-//     (this.daysOfTeeBooking > daysIn1stWeek + 21) &
-//     (this.daysOfTeeBooking <= daysIn1stWeek + 28)
-//   ) {
-//     this.calendarControlRowNo = 5
-//   }
-
-//   if (this.daysOfTeeBooking > daysIn1stWeek + 28) {
-//     this.calendarControlRowNo = 6
-//   }
 
 // ------------------------------------------------------------------
 

@@ -14,7 +14,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
     })
 
     // Requested Tee Booking Parameters
-    let requestedBookingTime = new Date("2025-01-30T18:00:00.000Z")
+    let requestedBookingTime = new Date("2025-01-26T18:00:00.000Z")
 
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9
