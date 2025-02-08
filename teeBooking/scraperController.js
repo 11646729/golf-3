@@ -24,20 +24,26 @@ export const scraperController = async (
   )
 
   // ---------------------------------------------------------------------
-
-  // Press Tee Booking Button - if it exists
-  // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
-  // await pagePreparationObject.pressTeeBookingButton(page, splitBookingDateTime)
+  // Test Routine
+  // ---------------------------------------------------------------------
+  const d = new Date()
+  console.log(d.toISOString())
+  console.log(extendedBookingDetails)
 
   // ---------------------------------------------------------------------
 
-  // // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
-  // page =
-  //   await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
-  //     page,
-  //     numberOfPlayers,
-  //     numberOfHoles
-  //   )
+  // Press Tee Booking Button - if it exists
+  // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
+  await pagePreparationObject.pressTeeBookingButton(page, splitBookingDateTime)
+
+  // ---------------------------------------------------------------------
+
+  // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
+  page =
+    await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
+      page,
+      extendedBookingDetails
+    )
 
   // // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
   // await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(

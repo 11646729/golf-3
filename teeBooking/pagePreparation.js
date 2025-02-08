@@ -133,15 +133,14 @@ export const pagePreparationObject = {
 
   async enterTeeBookingNumberOfPlayersNumberOfHoles(
     page,
-    numberOfPlayers,
-    numberOfHoles
+    extendedBookingDetails
   ) {
     // -------------------------
     // Select Number of Players
     // -------------------------
     const tempNumberOfPlayers =
       "#cluetip-inner .form-group:nth-child(1) .btn:nth-child(" +
-      numberOfPlayers +
+      extendedBookingDetails.numberOfPlayers +
       ")"
     await page.waitForSelector(tempNumberOfPlayers)
     await page.click(tempNumberOfPlayers)
@@ -153,9 +152,9 @@ export const pagePreparationObject = {
     let holes = 0
 
     // Change holes variable for 9 or 18 holes or report error
-    if (numberOfHoles == 9) {
+    if (extendedBookingDetails.numberOfHoles == 9) {
       holes = 1
-    } else if (numberOfHoles == 18) {
+    } else if (extendedBookingDetails.numberOfHoles == 18) {
       holes = 2
     } else {
       console.log("Error in Number of holes chosen - must be 9 or 18 only")
