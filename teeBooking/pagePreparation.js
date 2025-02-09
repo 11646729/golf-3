@@ -180,8 +180,7 @@ export const pagePreparationObject = {
 
   async enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
-    numberOfBuggies,
-    numberOfPlayers,
+    extendedBookingDetails,
     bookingDateTime
   ) {
     // -------------------
@@ -197,7 +196,7 @@ export const pagePreparationObject = {
 
     // Click on <a> "Buggy Booking (£0.00)"
     const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
-    for (let step = 1; step <= numberOfBuggies; step++) {
+    for (let step = 1; step <= extendedBookingDetails.numberOfBuggies; step++) {
       await page.waitForSelector(buggyBookingString)
       await Promise.all([
         page.click(buggyBookingString),
@@ -208,7 +207,7 @@ export const pagePreparationObject = {
     // -----------------------
     // Now Enter Second Player
     // -----------------------
-    if (numberOfPlayers == 2) {
+    if (extendedBookingDetails.numberOfPlayers == 2) {
       // Click on <a> "Enter Details"
       await page.waitForSelector('tr:nth-child(2) [href="#"]')
       await page.click('tr:nth-child(2) [href="#"]')
@@ -242,7 +241,7 @@ export const pagePreparationObject = {
     // -----------------------
     // Now Enter Third Player
     // -----------------------
-    if (numberOfPlayers == 3) {
+    if (extendedBookingDetails.numberOfPlayers == 3) {
       // Click on <a> "Enter Details"
       await page.waitForSelector('[href="#"]')
       await page.click('[href="#"]')
@@ -277,15 +276,17 @@ export const pagePreparationObject = {
 
     console.log("For " + bookingDateTime.fullDate)
 
-    if (numberOfPlayers == 1) {
-      console.log("For: " + numberOfPlayers + " Player")
+    if (extendedBookingDetails.numberOfPlayers == 1) {
+      console.log("For: " + extendedBookingDetails.numberOfPlayers + " Player")
     } else {
-      console.log("For: " + numberOfPlayers + " Players")
+      console.log("For: " + extendedBookingDetails.numberOfPlayers + " Players")
     }
-    if (numberOfBuggies == 1) {
-      console.log("With: " + numberOfBuggies + " Buggy")
+    if (extendedBookingDetails.numberOfBuggies == 1) {
+      console.log("With: " + extendedBookingDetails.numberOfBuggies + " Buggy")
     } else {
-      console.log("With: " + numberOfBuggies + " Buggies")
+      console.log(
+        "With: " + extendedBookingDetails.numberOfBuggies + " Buggies"
+      )
     }
   },
 

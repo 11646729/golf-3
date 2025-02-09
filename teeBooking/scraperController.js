@@ -45,19 +45,18 @@ export const scraperController = async (
       extendedBookingDetails
     )
 
-  // // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
-  // await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
-  //   page,
-  //   numberOfBuggies,
-  //   numberOfPlayers,
-  //   bookingDateTime
-  // )
+  // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
+  await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
+    page,
+    extendedBookingDetails,
+    splitBookingDateTime
+  )
 
-  // // Log out of the Web Site
-  // await pagePreparationObject.logoutOfGolfClubWebSite(page)
+  // Log out of the Web Site
+  await pagePreparationObject.logoutOfGolfClubWebSite(page)
 
-  // // Now close the browser
-  // await browser.close()
+  // Now close the browser
+  await browser.close()
 }
 
 // ------------------------------------------------------------------
