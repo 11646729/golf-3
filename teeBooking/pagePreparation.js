@@ -181,7 +181,7 @@ export const pagePreparationObject = {
   async enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
     page,
     extendedBookingDetails,
-    bookingDateTime
+    splitBookingDateTime
   ) {
     // -------------------
     // Now reserve buggies
@@ -274,7 +274,7 @@ export const pagePreparationObject = {
     // ----------------------
     console.log("Booking No: " + findNumber + " made")
 
-    console.log("For " + bookingDateTime.fullDate)
+    console.log("For " + splitBookingDateTime.fullDateTime.toISOString())
 
     if (extendedBookingDetails.numberOfPlayers == 1) {
       console.log("For: " + extendedBookingDetails.numberOfPlayers + " Player")

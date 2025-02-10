@@ -24,13 +24,6 @@ export const scraperController = async (
   )
 
   // ---------------------------------------------------------------------
-  // Test Routine
-  // ---------------------------------------------------------------------
-  const d = new Date()
-  console.log(d.toISOString())
-  console.log(extendedBookingDetails)
-
-  // ---------------------------------------------------------------------
 
   // Press Tee Booking Button - if it exists
   // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
