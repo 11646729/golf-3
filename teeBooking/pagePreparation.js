@@ -178,7 +178,7 @@ export const pagePreparationObject = {
 
   // ------------------------------------------------------------------
 
-  async enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
+  async enterTeeBookingNumberOfBuggiesPartnersNames(
     page,
     extendedBookingDetails,
     splitBookingDateTime
@@ -301,7 +301,13 @@ export const pagePreparationObject = {
       await page.waitForSelector(partner1, { visible: true })
       await Promise.all([page.click(partner1), page.waitForNavigation()])
     }
+  },
 
+  async enterTeeBookingNumberOfBuggiesPartnersNames(
+    page,
+    extendedBookingDetails,
+    splitBookingDateTime
+  ) {
     // --------------------------
     // Now finish the Tee Booking
     // --------------------------

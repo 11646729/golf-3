@@ -45,6 +45,13 @@ export const scraperController = async (
     splitBookingDateTime
   )
 
+  // Press Finish to Make Booking & Display Report
+  await pagePreparationObject.pressFinishAndReport(
+    page,
+    extendedBookingDetails,
+    splitBookingDateTime
+  )
+
   // Log out of the Web Site
   await pagePreparationObject.logoutOfGolfClubWebSite(page)
 
