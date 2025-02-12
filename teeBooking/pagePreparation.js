@@ -208,6 +208,70 @@ export const pagePreparationObject = {
     // Now Enter Second Player
     // -----------------------
     if (extendedBookingDetails.numberOfPlayers == 2) {
+      // // Click on <a> "Enter Details"
+      // await page.waitForSelector('tr:nth-child(2) [href="#"]')
+      // await page.click('tr:nth-child(2) [href="#"]')
+
+      // // Click on <a> "ANOTHER MEMBER"
+      // await page.waitForSelector(
+      //   '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
+      // )
+      // await page.click(
+      //   '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
+      // )
+
+      // // Fill "LAI" on <input> .content [name="partner"]
+      // await page.waitForSelector('.content [name="partner"]:not([disabled])')
+      // await page.type(
+      //   '.content [name="partner"]',
+      //   process.env.DAVID_LAIRD_INITIALS
+      // )
+
+      // // Click on <input> .content [name="submit"]
+      // await page.waitForSelector('.content [name="submit"]')
+      // await page.click('.content [name="submit"]')
+
+      // // Click on <a> "David Laird (40.5)"
+      // const partner1 =
+      //   '[href="?edit=' + findNumber + '&addpartner=10712&partnerslot=2"]'
+      // await page.waitForSelector(partner1, { visible: true })
+      // await Promise.all([page.click(partner1), page.waitForNavigation()])
+
+      // Click on <a> "Enter Details"
+      await page.waitForSelector('[href="#"]')
+      await page.click('[href="#"]')
+
+      // Click on <a> "Rodney Ross"
+      await page.waitForSelector(
+        '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
+      )
+      await Promise.all([
+        page.click(
+          '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
+        ),
+        page.waitForNavigation(),
+      ])
+    }
+
+    // -----------------------
+    // Now Enter Third Player
+    // -----------------------
+    if (extendedBookingDetails.numberOfPlayers == 3) {
+      // // Click on <a> "Enter Details"
+      // await page.waitForSelector('[href="#"]')
+      // await page.click('[href="#"]')
+
+      // // Click on <a> "Rodney Ross"
+      // await page.waitForSelector(
+      //   '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
+      // )
+      // await Promise.all([
+      //   page.click(
+      //     '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
+      //   ),
+      //   page.waitForNavigation(),
+      // ])
+
       // Click on <a> "Enter Details"
       await page.waitForSelector('tr:nth-child(2) [href="#"]')
       await page.click('tr:nth-child(2) [href="#"]')
@@ -236,26 +300,6 @@ export const pagePreparationObject = {
         '[href="?edit=' + findNumber + '&addpartner=10712&partnerslot=2"]'
       await page.waitForSelector(partner1, { visible: true })
       await Promise.all([page.click(partner1), page.waitForNavigation()])
-    }
-
-    // -----------------------
-    // Now Enter Third Player
-    // -----------------------
-    if (extendedBookingDetails.numberOfPlayers == 3) {
-      // Click on <a> "Enter Details"
-      await page.waitForSelector('[href="#"]')
-      await page.click('[href="#"]')
-
-      // Click on <a> "Rodney Ross"
-      await page.waitForSelector(
-        '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-      )
-      await Promise.all([
-        page.click(
-          '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-        ),
-        page.waitForNavigation(),
-      ])
     }
 
     // --------------------------
