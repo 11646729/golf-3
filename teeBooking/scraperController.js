@@ -38,8 +38,8 @@ export const scraperController = async (
       extendedBookingDetails
     )
 
-  // Enter Tee Booking Number of Buggies & Partner Names, Save the Tee Booking & Finish
-  await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNamesPressFinish(
+  // Enter Tee Booking Number of Buggies & Partner Names
+  await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
     page,
     extendedBookingDetails,
     splitBookingDateTime
