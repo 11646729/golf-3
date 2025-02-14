@@ -119,8 +119,8 @@ export const pagePreparationObject = {
     let textBefore = beforeBooking.toISOString()
     console.log("Time before booking: " + textBefore)
 
-    await waitForSelectorWithReload(page, bookTeeSlot)
-    // await page.waitForSelector(bookTeeSlot)
+    // await waitForSelectorWithReload(page, bookTeeSlot)
+    await page.waitForSelector(bookTeeSlot)
 
     const afterBooking = new Date()
     let textAfter = afterBooking.toISOString()
@@ -180,8 +180,8 @@ export const pagePreparationObject = {
 
   async enterTeeBookingNumberOfBuggiesPartnersNames(
     page,
-    extendedBookingDetails,
-    splitBookingDateTime
+    extendedBookingDetails
+    // splitBookingDateTime
   ) {
     // -------------------
     // Now reserve buggies
@@ -192,10 +192,11 @@ export const pagePreparationObject = {
     )
     const href = await link.getProperty("href")
     const text = await href.jsonValue()
-    let findNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
+    let bookingNumber = text.slice(text.indexOf("=") + 1, text.indexOf("&"))
 
     // Click on <a> "Buggy Booking (£0.00)"
-    const buggyBookingString = '[href="?edit=' + findNumber + '&addservice=19"]'
+    const buggyBookingString =
+      '[href="?edit=' + bookingNumber + '&addservice=19"]'
     for (let step = 1; step <= extendedBookingDetails.numberOfBuggies; step++) {
       await page.waitForSelector(buggyBookingString)
       await Promise.all([
@@ -208,80 +209,16 @@ export const pagePreparationObject = {
     // Now Enter Second Player
     // -----------------------
     if (extendedBookingDetails.numberOfPlayers == 2) {
-      // // Click on <a> "Enter Details"
-      // await page.waitForSelector('tr:nth-child(2) [href="#"]')
-      // await page.click('tr:nth-child(2) [href="#"]')
-
-      // // Click on <a> "ANOTHER MEMBER"
-      // await page.waitForSelector(
-      //   '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
-      // )
-      // await page.click(
-      //   '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
-      // )
-
-      // // Fill "LAI" on <input> .content [name="partner"]
-      // await page.waitForSelector('.content [name="partner"]:not([disabled])')
-      // await page.type(
-      //   '.content [name="partner"]',
-      //   process.env.DAVID_LAIRD_INITIALS
-      // )
-
-      // // Click on <input> .content [name="submit"]
-      // await page.waitForSelector('.content [name="submit"]')
-      // await page.click('.content [name="submit"]')
-
-      // // Click on <a> "David Laird (40.5)"
-      // const partner1 =
-      //   '[href="?edit=' + findNumber + '&addpartner=10712&partnerslot=2"]'
-      // await page.waitForSelector(partner1, { visible: true })
-      // await Promise.all([page.click(partner1), page.waitForNavigation()])
-
-      // Click on <a> "Enter Details"
-      await page.waitForSelector('[href="#"]')
-      await page.click('[href="#"]')
-
-      // Click on <a> "Rodney Ross"
-      await page.waitForSelector(
-        '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-      )
-      await Promise.all([
-        page.click(
-          '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-        ),
-        page.waitForNavigation(),
-      ])
-    }
-
-    // -----------------------
-    // Now Enter Third Player
-    // -----------------------
-    if (extendedBookingDetails.numberOfPlayers == 3) {
-      // // Click on <a> "Enter Details"
-      // await page.waitForSelector('[href="#"]')
-      // await page.click('[href="#"]')
-
-      // // Click on <a> "Rodney Ross"
-      // await page.waitForSelector(
-      //   '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-      // )
-      // await Promise.all([
-      //   page.click(
-      //     '[href="?edit=' + findNumber + '&addpartner=11206&partnerslot=3"]'
-      //   ),
-      //   page.waitForNavigation(),
-      // ])
-
       // Click on <a> "Enter Details"
       await page.waitForSelector('tr:nth-child(2) [href="#"]')
       await page.click('tr:nth-child(2) [href="#"]')
 
       // Click on <a> "ANOTHER MEMBER"
       await page.waitForSelector(
-        '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
+        '[href="?edit=' + bookingNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
       )
       await page.click(
-        '[href="?edit=' + findNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
+        '[href="?edit=' + bookingNumber + '&memdiv=1#memberdiv&partnerslot=2"]'
       )
 
       // Fill "LAI" on <input> .content [name="partner"]
@@ -297,22 +234,45 @@ export const pagePreparationObject = {
 
       // Click on <a> "David Laird (40.5)"
       const partner1 =
-        '[href="?edit=' + findNumber + '&addpartner=10712&partnerslot=2"]'
+        '[href="?edit=' + bookingNumber + '&addpartner=10712&partnerslot=2"]'
       await page.waitForSelector(partner1, { visible: true })
       await Promise.all([page.click(partner1), page.waitForNavigation()])
     }
+
+    // -----------------------
+    // Now Enter Third Player
+    // -----------------------
+    if (extendedBookingDetails.numberOfPlayers == 3) {
+      // Click on <a> "Enter Details"
+      await page.waitForSelector('[href="#"]')
+      await page.click('[href="#"]')
+
+      // Click on <a> "Rodney Ross"
+      await page.waitForSelector(
+        '[href="?edit=' + bookingNumber + '&addpartner=11206&partnerslot=3"]'
+      )
+      await Promise.all([
+        page.click(
+          '[href="?edit=' + bookingNumber + '&addpartner=11206&partnerslot=3"]'
+        ),
+        page.waitForNavigation(),
+      ])
+    }
+
+    return bookingNumber
   },
 
-  async enterTeeBookingNumberOfBuggiesPartnersNames(
+  async pressFinishAndReport(
     page,
     extendedBookingDetails,
-    splitBookingDateTime
+    splitBookingDateTime,
+    bookingNumber
   ) {
     // --------------------------
     // Now finish the Tee Booking
     // --------------------------
     const finishBookingString =
-      '[href="?edit=' + findNumber + '&redirectToHome=1"]'
+      '[href="?edit=' + bookingNumber + '&redirectToHome=1"]'
     await page.waitForSelector(finishBookingString)
     await Promise.all([
       page.click(finishBookingString),
@@ -322,7 +282,7 @@ export const pagePreparationObject = {
     // ----------------------
     // Report of Booking Made
     // ----------------------
-    console.log("Booking No: " + findNumber + " made")
+    console.log("Booking No: " + bookingNumber + " made")
 
     console.log("For " + splitBookingDateTime.fullDateTime.toISOString())
 
@@ -362,6 +322,10 @@ const waitForSelectorWithReload = async (page, selector) => {
   let tries = 0
   while (tries <= MAX_TRIES) {
     try {
+      console.log("Here")
+      console.log(tries)
+      console.log(MAX_TRIES)
+
       const element = await page.waitForSelector(selector, {
         timeout: 1000, // 1000 milliseconds = 1 second
       })
@@ -370,6 +334,8 @@ const waitForSelectorWithReload = async (page, selector) => {
 
       return element
     } catch (error) {
+      console.log(error)
+
       if (tries === MAX_TRIES) throw error
 
       tries += 1

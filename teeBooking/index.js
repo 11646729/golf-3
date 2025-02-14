@@ -3,7 +3,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
 
 // ------------------------------------------------------------------
 ;(async () => {
-  // const t0 = performance.now()
+  const t0 = performance.now()
 
   try {
     // Start the browser and create a browser instance
@@ -15,9 +15,9 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
     })
 
     // Requested Tee Booking Parameters
-    // let requestedBookingTime = new Date("2025-02-26T11:00:00.000Z")
+    // let requestedBookingTime = new Date("2025-02-27T11:00:00.000Z")
     // Test Booking
-    let requestedBookingTime = new Date("2025-02-13T18:00:00.000Z")
+    let requestedBookingTime = new Date("2025-02-20T18:00:00.000Z")
 
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9

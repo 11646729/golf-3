@@ -39,17 +39,19 @@ export const scraperController = async (
     )
 
   // Enter Tee Booking Number of Buggies & Partner Names
-  await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
-    page,
-    extendedBookingDetails,
-    splitBookingDateTime
-  )
+  let bookingNumber =
+    await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
+      page,
+      extendedBookingDetails
+      // splitBookingDateTime
+    )
 
   // Press Finish to Make Booking & Display Report
   await pagePreparationObject.pressFinishAndReport(
     page,
     extendedBookingDetails,
-    splitBookingDateTime
+    splitBookingDateTime,
+    bookingNumber
   )
 
   // Log out of the Web Site
