@@ -23,15 +23,23 @@ export const prepareTimeForBooking = async (browser, booking) => {
     splitBookingDateTime
   )
 
-  // Pass the browser instance to the scraper controller Scheduler
-  // scheduleFunctionAtTime(splitRunningProgramTime, splitBookingDateTime, extendedBookingDetails, calendarControlParameters)
+  // New function
+  runAtSpecificTimeOfDay(splitRunningProgramTime, splitBookingDateTime)
 
-  scraperController(
-    browser,
-    splitBookingDateTime,
-    extendedBookingDetails,
-    calendarControlParameters
-  )
+  // Pass the browser instance to the scraper controller Scheduler
+  // scheduleFunctionAtTime(
+  //   splitRunningProgramTime,
+  //   splitBookingDateTime,
+  //   extendedBookingDetails,
+  //   calendarControlParameters
+  // )
+
+  // scraperController(
+  //   browser,
+  //   splitBookingDateTime,
+  //   extendedBookingDetails,
+  //   calendarControlParameters
+  // )
 }
 
 // ------------------------------------------------------------------
@@ -211,6 +219,8 @@ export class calendarControlParametersForBookingTime {
 // ------------------------------------------------------------------
 
 const scheduleFunctionAtTime = (hour, minute, second, callback, ...args) => {
+  console.log("Here")
+
   // Get the current time
   const now = new Date()
 
@@ -228,6 +238,37 @@ const scheduleFunctionAtTime = (hour, minute, second, callback, ...args) => {
 
   // Use setTimeout to schedule the function with parameters
   setTimeout(() => callback(...args), delay)
+}
+
+// ------------------------------------------------------------------
+
+const runAtSpecificTimeOfDay = (
+  splitRunningProgramTime,
+  splitBookingDateTime
+  // func
+) => {
+  // Get the current time
+  const now = new Date()
+
+  // Create a date object for the target time today
+  const targetTime = splitRunningProgramTime.startProgramTime
+
+  // If the target time has already passed today, schedule for tomorrow
+  if (targetTime <= now) {
+    targetTime.setDate(targetTime.getDate() + 1)
+  }
+
+  // Calculate the delay in milliseconds
+  // const delay = targetTime - now
+  // Test data
+  const delay = 10000
+
+  setTimeout(function () {
+    // run once
+    // func()
+    console.log(targetTime)
+    console.log(splitBookingDateTime.fullDateTime)
+  }, delay)
 }
 
 // ------------------------------------------------------------------

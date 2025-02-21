@@ -17,7 +17,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
     // Requested Tee Booking Parameters
     // let requestedBookingTime = new Date("2025-02-27T11:00:00.000Z")
     // Test Booking
-    let requestedBookingTime = new Date("2025-02-20T18:00:00.000Z")
+    let requestedBookingTime = new Date("2025-02-27T18:00:00.000Z")
 
     let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
     let numberOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9
@@ -46,7 +46,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
     }
 
     const t1 = performance.now()
-    console.log(`Call to Start Program ${t1 - t0} milliseconds.`)
+    console.log("Call to Start Program ${t1 - t0} milliseconds.")
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }

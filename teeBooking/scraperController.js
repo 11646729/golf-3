@@ -43,7 +43,6 @@ export const scraperController = async (
     await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
       page,
       extendedBookingDetails
-      // splitBookingDateTime
     )
 
   // Press Finish to Make Booking & Display Report
