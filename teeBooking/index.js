@@ -14,33 +14,35 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
       ignoreHTTPSErrors: true,
     })
 
-    // Requested Tee Booking Parameters
-    // let requestedBookingTime = new Date("2025-02-27T11:00:00.000Z")
-    // Test Booking
-    let requestedBookingTime = new Date("2025-02-27T18:00:00.000Z")
+    // Program start time
+    let minutesBeforeBookingTime = 2
+    let millisecondsInMinute = 60000
 
-    let numberOfPlayers = 1 // Minimum of 1 but normally would be 3
-    let numberOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9
-    let numberOfBuggies = 1 // Minimum of 1 but normally would be 2
+    // Requested Tee Booking Parameters
+    let teeBookingTime = new Date("2025-02-27T18:00:00.000Z")
+
+    let noOfPlayers = 1 // Minimum of 1 but normally would be 3
+    let noOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9
+    let noOfBuggies = 1 // Minimum of 1 but normally would be 2
 
     // Validate Requested Tee Booking Parameters
     let validBooking = validateBookingParameters(
-      numberOfPlayers,
-      numberOfHoles,
-      numberOfBuggies
+      noOfPlayers,
+      noOfHoles,
+      noOfBuggies
     )
 
     if (validBooking) {
-      // Convert Tee Booking details into a booking Object
-      const booking = new bookingObject(
-        requestedBookingTime,
-        numberOfPlayers,
-        numberOfHoles,
-        numberOfBuggies
-      )
-
       // Call a routine to split the booking object
-      prepareTimeForBooking(browser, booking)
+      prepareTimeForBooking(
+        browser,
+        minutesBeforeBookingTime,
+        millisecondsInMinute,
+        teeBookingTime,
+        noOfPlayers,
+        noOfHoles,
+        noOfBuggies
+      )
     } else {
       console.log("Invalid parameters entered for Tee Booking")
     }
