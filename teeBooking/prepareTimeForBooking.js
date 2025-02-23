@@ -1,38 +1,27 @@
 import { scraperController } from "./scraperController.js"
 
-export const prepareTimeForBooking = async (browser, booking) => {
+export const prepareTimeForBooking = async (browser, bookingObject) => {
   let minutesBeforeBookingTime = 2
   let millisecondsInMinute = 60000
 
   // ----------------------------------------------------------------------------------------------------------------
   // Calculate time to start program - startProgramAheadOfRequestedBookingMinutes minutes before requestedBookingTime
   // ----------------------------------------------------------------------------------------------------------------
-  const splitRunningProgramTime = new startProgramObject(
-    booking,
+  // Split Tee Booking time & Store in Extended Booking
+  const myExtendedBookingObject = new extendedBookingObject(bookingObject)
+
+  // Create Calendar Control pPrameters
+  const myCalendarControlObject = new calendarControlObject(
+    myExtendedBookingObject,
     minutesBeforeBookingTime,
     millisecondsInMinute
   )
 
-  // Split booking into time
-  const splitBookingDateTime = new breakdownBookingTime(booking.bookingTime)
-
-  // Split out extended Booking Details e.g. No of Players, Buggies & Holes to play
-  const extendedBookingDetails = new extendedBookingObject(booking)
-
-  const calendarControlParameters = new calendarControlParametersForBookingTime(
-    splitBookingDateTime
-  )
-
-  // New function
-  runAtSpecificTimeOfDay(splitRunningProgramTime, splitBookingDateTime)
+  console.log(myExtendedBookingObject)
+  console.log(myCalendarControlObject)
 
   // Pass the browser instance to the scraper controller Scheduler
-  // scheduleFunctionAtTime(
-  //   splitRunningProgramTime,
-  //   splitBookingDateTime,
-  //   extendedBookingDetails,
-  //   calendarControlParameters
-  // )
+  // runAtSpecificTimeOfDay(booking, splitRunningProgramTime, splitBookingDateTime)
 
   // scraperController(
   //   browser,
@@ -44,82 +33,76 @@ export const prepareTimeForBooking = async (browser, booking) => {
 
 // ------------------------------------------------------------------
 
-export class startProgramObject {
-  constructor(booking, minutesBeforeBookingTime, millisecondsInMinute) {
-    this.startProgramTime = new Date(
-      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
-    )
-
-    this.startRunningProgramHours = new Date(
-      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
-    ).getHours()
-    this.startRunningProgramMinutes = new Date(
-      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
-    ).getMinutes()
-    this.startRunningProgramSeconds = new Date(
-      booking.bookingTime - minutesBeforeBookingTime * millisecondsInMinute
-    ).getSeconds()
-  }
-}
-
-// ------------------------------------------------------------------
-
 export class extendedBookingObject {
-  constructor(booking) {
-    this.numberOfPlayers = booking.noOfPlayers
-    this.numberOfHoles = booking.noOfHoles
-    this.numberOfBuggies = booking.noOfBuggies
-  }
-}
+  constructor(bookingObject) {
+    this.fullDateTime = bookingObject.bookingTime
 
-// ------------------------------------------------------------------
-
-export class breakdownBookingTime {
-  constructor(requestedBookingTime) {
-    this.fullDateTime = requestedBookingTime
+    this.numberOfPlayers = bookingObject.noOfPlayers
+    this.numberOfHoles = bookingObject.noOfHoles
+    this.numberOfBuggies = bookingObject.noOfBuggies
 
     // Use 00 for seconds & describe as a String
     this.secondsOfTeeBooking = "00"
 
     // Extract Minutes of Tee Booking and convert to String
-    const m = requestedBookingTime.getMinutes()
+    const m = bookingObject.bookingTime.getMinutes()
     this.minutesOfTeeBooking = ("0" + m).slice(-2)
 
     // Extract Hours of Tee Booking and convert to String
-    const h = requestedBookingTime.getHours()
+    const h = bookingObject.bookingTime.getHours()
     this.hoursOfTeeBooking = ("0" + h).slice(-2)
 
     // Extract Days of Tee Booking and convert to String
-    const d = requestedBookingTime.getDate()
+    const d = bookingObject.bookingTime.getDate()
     this.daysOfTeeBooking = ("0" + d).slice(-2)
 
     // Extract Months of Tee Booking and convert to String
-    const mo = requestedBookingTime.getMonth() + 1
+    const mo = bookingObject.bookingTime.getMonth() + 1
     this.monthsOfTeeBooking = ("0" + mo).slice(-2)
 
     // Extract Years of Tee Booking and convert to String
-    this.yearsOfTeeBooking = requestedBookingTime.getFullYear().toString()
+    this.yearsOfTeeBooking = bookingObject.bookingTime.getFullYear().toString()
   }
 }
-// ------------------------------------------------------------------
 
 // -----------------------------------------------
 // Calculate Calender Month & Year to use in Calendar Control
 // -----------------------------------------------
-export class calendarControlParametersForBookingTime {
-  constructor(booking) {
+export class calendarControlObject {
+  constructor(
+    myExtendedBookingObject,
+    minutesBeforeBookingTime,
+    millisecondsInMinute
+  ) {
+    this.startProgramTime = new Date(
+      myExtendedBookingObject.fullDateTime -
+        minutesBeforeBookingTime * millisecondsInMinute
+    )
+    this.startRunningProgramHours = new Date(
+      myExtendedBookingObject.fullDateTime -
+        minutesBeforeBookingTime * millisecondsInMinute
+    ).getHours()
+    this.startRunningProgramMinutes = new Date(
+      myExtendedBookingObject.fullDateTime -
+        minutesBeforeBookingTime * millisecondsInMinute
+    ).getMinutes()
+    this.startRunningProgramSeconds = new Date(
+      myExtendedBookingObject.fullDateTime -
+        minutesBeforeBookingTime * millisecondsInMinute
+    ).getSeconds()
+
     this.calendarControlMonth = parseInt(
-      booking.monthsOfTeeBooking - 1,
+      myExtendedBookingObject.monthsOfTeeBooking - 1,
       10
     ).toString() // Adjust because CalendarControl uses 0 for January etc
-    this.calendarControlYear = booking.yearsOfTeeBooking
+    this.calendarControlYear = myExtendedBookingObject.yearsOfTeeBooking
 
     // -----------------------------------------------
     // Calculate Column Number to use in Calendar Control
     // -----------------------------------------------
 
     // First get Day of Week for the requested booking date
-    this.calendarControlColumnNo = booking.fullDateTime.getDay()
+    this.calendarControlColumnNo = myExtendedBookingObject.fullDateTime.getDay()
 
     // In Calendar control: Sunday == 7 but getDay() Numbers: Sunday == 0, Monday == 1 to Saturday == 6
     // So adjust for a Sunday
@@ -131,16 +114,16 @@ export class calendarControlParametersForBookingTime {
     // Calculate Row Number to use in Calendar Control
     // -----------------------------------------------
     // First calculate the day corresponding to the 1st of month
-    let text = booking.fullDateTime.toISOString()
+    let text = myExtendedBookingObject.fullDateTime.toISOString()
 
     let tempFirstDay =
       text.substring(0, 8) +
       "01T" +
-      booking.hoursOfTeeBooking +
+      myExtendedBookingObject.hoursOfTeeBooking +
       ":" +
-      booking.minutesOfTeeBooking +
+      myExtendedBookingObject.minutesOfTeeBooking +
       ":" +
-      booking.secondsOfTeeBooking +
+      myExtendedBookingObject.secondsOfTeeBooking +
       ".000Z"
 
     let dayOf1stOfTheMonth = new Date(tempFirstDay).getDay() // 0-6, 0 == Sunday, 3 == Wednesday
@@ -178,66 +161,42 @@ export class calendarControlParametersForBookingTime {
       daysIn1stWeek = 2
     }
 
-    if (booking.daysOfTeeBooking <= daysIn1stWeek) {
+    if (myExtendedBookingObject.daysOfTeeBooking <= daysIn1stWeek) {
       this.calendarControlRowNo = 1
     }
 
     if (
-      (booking.daysOfTeeBooking > daysIn1stWeek) &
-      (booking.daysOfTeeBooking <= daysIn1stWeek + 7)
+      (myExtendedBookingObject.daysOfTeeBooking > daysIn1stWeek) &
+      (myExtendedBookingObject.daysOfTeeBooking <= daysIn1stWeek + 7)
     ) {
       this.calendarControlRowNo = 2
     }
 
     if (
-      (booking.daysOfTeeBooking > daysIn1stWeek + 7) &
-      (booking.daysOfTeeBooking <= daysIn1stWeek + 14)
+      (myExtendedBookingObject.daysOfTeeBooking > daysIn1stWeek + 7) &
+      (myExtendedBookingObject.daysOfTeeBooking <= daysIn1stWeek + 14)
     ) {
       this.calendarControlRowNo = 3
     }
 
     if (
-      (booking.daysOfTeeBooking > daysIn1stWeek + 14) &
-      (booking.daysOfTeeBooking <= daysIn1stWeek + 21)
+      (myExtendedBookingObject.daysOfTeeBooking > daysIn1stWeek + 14) &
+      (myExtendedBookingObject.daysOfTeeBooking <= daysIn1stWeek + 21)
     ) {
       this.calendarControlRowNo = 4
     }
 
     if (
-      (booking.daysOfTeeBooking > daysIn1stWeek + 21) &
-      (booking.daysOfTeeBooking <= daysIn1stWeek + 28)
+      (myExtendedBookingObject.daysOfTeeBooking > daysIn1stWeek + 21) &
+      (myExtendedBookingObject.daysOfTeeBooking <= daysIn1stWeek + 28)
     ) {
       this.calendarControlRowNo = 5
     }
 
-    if (booking.daysOfTeeBooking > daysIn1stWeek + 28) {
+    if (myExtendedBookingObject.daysOfTeeBooking > daysIn1stWeek + 28) {
       this.calendarControlRowNo = 6
     }
   }
-}
-
-// ------------------------------------------------------------------
-
-const scheduleFunctionAtTime = (hour, minute, second, callback, ...args) => {
-  console.log("Here")
-
-  // Get the current time
-  const now = new Date()
-
-  // Create a date object for the target time today
-  const targetTime = new Date()
-  targetTime.setHours(hour, minute, second, 0)
-
-  // If the target time has already passed today, schedule for tomorrow
-  if (targetTime <= now) {
-    targetTime.setDate(targetTime.getDate() + 1)
-  }
-
-  // Calculate the delay in milliseconds
-  const delay = targetTime - now
-
-  // Use setTimeout to schedule the function with parameters
-  setTimeout(() => callback(...args), delay)
 }
 
 // ------------------------------------------------------------------
