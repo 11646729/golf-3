@@ -1,63 +1,42 @@
 import { pagePreparationObject } from "./pagePreparation.js"
 
-// ---------------------------------------------------------------------
-
 export const scraperController = async (
   browser,
-  splitBookingDateTime,
-  extendedBookingDetails,
-  calendarControlParameters
+  myExtendedBookingObject,
+  myCalendarControlObject,
+  page
 ) => {
-  // Load Home Web Page
-  let page = await pagePreparationObject.loadHomePage(browser)
+  console.log(new Date())
+  // console.log(page)
 
-  // Login to Tee Booking section of the Golf Club Web Site
-  page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
-
-  // Click Book a Tee Time link
-  page = await pagePreparationObject.clickBookTeeTimePage(page)
-
-  // // Navigate to Tee Booking Date Time Page
-  await pagePreparationObject.loadTodaysTeeBookingPage(
-    page,
-    calendarControlParameters
-  )
-
-  // ---------------------------------------------------------------------
-
-  // Press Tee Booking Button - if it exists
-  // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
-  await pagePreparationObject.pressTeeBookingButton(page, splitBookingDateTime)
-
-  // ---------------------------------------------------------------------
-
-  // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
-  page =
-    await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
-      page,
-      extendedBookingDetails
-    )
-
-  // Enter Tee Booking Number of Buggies & Partner Names
-  let bookingNumber =
-    await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
-      page,
-      extendedBookingDetails
-    )
-
-  // Press Finish to Make Booking & Display Report
-  await pagePreparationObject.pressFinishAndReport(
-    page,
-    extendedBookingDetails,
-    splitBookingDateTime,
-    bookingNumber
-  )
-
-  // Log out of the Web Site
-  await pagePreparationObject.logoutOfGolfClubWebSite(page)
-
-  // Now close the browser
-  await browser.close()
+  // // ---------------------------------------------------------------------
+  // // Press Tee Booking Button - if it exists
+  // // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
+  // await pagePreparationObject.pressTeeBookingButton(
+  //   page,
+  //   myExtendedBookingObject
+  // )
+  // // ---------------------------------------------------------------------
+  // // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
+  // page =
+  //   await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
+  //     page,
+  //     myExtendedBookingObject
+  //   )
+  // // Enter Tee Booking Number of Buggies & Partner Names
+  // let bookingNumber =
+  //   await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
+  //     page,
+  //     myExtendedBookingObject
+  //   )
+  // // Press Finish to Make Booking & Display Report
+  // await pagePreparationObject.pressFinishAndReport(
+  //   page,
+  //   myExtendedBookingObject,
+  //   bookingNumber
+  // )
+  // // Log out of the Web Site
+  // await pagePreparationObject.logoutOfGolfClubWebSite(page)
+  // // Now close the browser
+  // await browser.close()
 }
-
-// ------------------------------------------------------------------

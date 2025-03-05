@@ -1,9 +1,9 @@
 import { scraperController } from "./scraperController.js"
+import { pagePreparationObject } from "./pagePreparation.js"
+import "dotenv/config.js"
 
 export const prepareTimeForBooking = async (
   browser,
-  minutesBeforeBookingTime,
-  millisecondsInMinute,
   teeBookingTime,
   noOfPlayers,
   noOfHoles,
@@ -16,11 +16,9 @@ export const prepareTimeForBooking = async (
     noOfBuggies
   )
 
-  // Create Calendar Control pPrameters
+  // Create Calendar Control Parameters
   const myCalendarControlObject = new calendarControlObject(
-    myExtendedBookingObject,
-    minutesBeforeBookingTime,
-    millisecondsInMinute
+    myExtendedBookingObject
   )
 
   // Pass the browser instance to the scraper controller Scheduler
@@ -68,27 +66,24 @@ export class extendedBookingObject {
 // -----------------------------------------------
 // Calculate Calender Month & Year to use in Calendar Control
 // -----------------------------------------------
+
 export class calendarControlObject {
-  constructor(
-    myExtendedBookingObject,
-    minutesBeforeBookingTime,
-    millisecondsInMinute
-  ) {
+  constructor(myExtendedBookingObject) {
     this.startProgramTime = new Date(
       myExtendedBookingObject.requestedTeeBookingTime -
-        minutesBeforeBookingTime * millisecondsInMinute
+        process.env.MINUTESBEFOREBOOKINGTIME * process.env.MILLISECONDSINMINUTE
     )
     this.startRunningProgramHours = new Date(
       myExtendedBookingObject.requestedTeeBookingTime -
-        minutesBeforeBookingTime * millisecondsInMinute
+        process.env.MINUTESBEFOREBOOKINGTIME * process.env.MILLISECONDSINMINUTE
     ).getHours()
     this.startRunningProgramMinutes = new Date(
       myExtendedBookingObject.requestedTeeBookingTime -
-        minutesBeforeBookingTime * millisecondsInMinute
+        process.env.MINUTESBEFOREBOOKINGTIME * process.env.MILLISECONDSINMINUTE
     ).getMinutes()
     this.startRunningProgramSeconds = new Date(
       myExtendedBookingObject.requestedTeeBookingTime -
-        minutesBeforeBookingTime * millisecondsInMinute
+        process.env.MINUTESBEFOREBOOKINGTIME * process.env.MILLISECONDSINMINUTE
     ).getSeconds()
 
     this.calendarControlMonth = parseInt(
@@ -202,7 +197,7 @@ export class calendarControlObject {
 
 // ------------------------------------------------------------------
 
-const runAtSpecificTimeOfDay = (
+const runAtSpecificTimeOfDay = async (
   browser,
   myExtendedBookingObject,
   myCalendarControlObject
@@ -220,18 +215,32 @@ const runAtSpecificTimeOfDay = (
 
   // Calculate the delay in milliseconds
   // const delay = targetTime - now
+
   // Test data
   const delay = 10000
 
-  setTimeout(function () {
-    // scraperController(
-    //   browser,
-    //   myExtendedBookingObject,
-    //   myCalendarControlObject
-    // )
+  // Load Home Web Page
+  let page = await pagePreparationObject.loadHomePage(browser)
 
-    console.log(targetTime)
-    console.log(myExtendedBookingObject.requestedTeeBookingTime)
+  // Login to Tee Booking section of the Golf Club Web Site
+  page = await pagePreparationObject.loginToTeeBookingSubsystem(page)
+
+  // Click Book a Tee Time link
+  page = await pagePreparationObject.clickBookTeeTimePage(page)
+
+  // Navigate to Tee Booking Date Time Page
+  await pagePreparationObject.loadTodaysTeeBookingPage(
+    page,
+    myCalendarControlObject
+  )
+
+  setTimeout(() => {
+    scraperController(
+      browser,
+      myExtendedBookingObject,
+      myCalendarControlObject,
+      page
+    )
   }, delay)
 }
 

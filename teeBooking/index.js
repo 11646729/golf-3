@@ -5,6 +5,8 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
 ;(async () => {
   const t0 = performance.now()
 
+  console.log(new Date())
+
   try {
     // Start the browser and create a browser instance
     const browser = await puppeteer.launch({
@@ -14,12 +16,8 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
       ignoreHTTPSErrors: true,
     })
 
-    // Program start time
-    let minutesBeforeBookingTime = 2
-    let millisecondsInMinute = 60000
-
     // Requested Tee Booking Parameters
-    let teeBookingTime = new Date("2025-02-27T18:00:00.000Z")
+    let teeBookingTime = new Date("2025-03-18T18:00:00.000Z")
 
     let noOfPlayers = 1 // Minimum of 1 but normally would be 3
     let noOfHoles = 9 // Either 9, 13 or 18 Holes but normally would be 9
@@ -36,8 +34,6 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
       // Call a routine to split the booking object
       prepareTimeForBooking(
         browser,
-        minutesBeforeBookingTime,
-        millisecondsInMinute,
         teeBookingTime,
         noOfPlayers,
         noOfHoles,
