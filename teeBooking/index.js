@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer"
-import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
+import { prepareToRunAtASpecificTime } from "./prepareTimeForBooking.js"
 
 // ------------------------------------------------------------------
 ;(async () => {
@@ -32,7 +32,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
 
     if (validBooking) {
       // Call a routine to split the booking object
-      prepareTimeForBooking(
+      prepareToRunAtASpecificTime(
         browser,
         teeBookingTime,
         noOfPlayers,
@@ -44,7 +44,7 @@ import { prepareTimeForBooking } from "./prepareTimeForBooking.js"
     }
 
     const t1 = performance.now()
-    console.log("Call to Start Program ${t1 - t0} milliseconds.")
+    console.log(`Call to Start Program ${t1 - t0} milliseconds.`)
   } catch (err) {
     console.log("Could not resolve the browser instance => ", err)
   }
@@ -80,24 +80,6 @@ const validateBookingParameters = (
   }
 
   return validTest
-}
-
-// ------------------------------------------------------------------
-// Convert Booking Details into a Booking Object
-// ------------------------------------------------------------------
-
-export class bookingObject {
-  constructor(
-    requestedBookingTime,
-    numberOfPlayers,
-    numberOfHoles,
-    numberOfBuggies
-  ) {
-    this.bookingTime = requestedBookingTime
-    this.noOfPlayers = numberOfPlayers
-    this.noOfHoles = numberOfHoles
-    this.noOfBuggies = numberOfBuggies
-  }
 }
 
 // ------------------------------------------------------------------

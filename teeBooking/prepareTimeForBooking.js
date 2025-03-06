@@ -1,8 +1,7 @@
-import { scraperController } from "./scraperController.js"
-import { pagePreparationObject } from "./pagePreparation.js"
 import "dotenv/config.js"
+import { pagePreparationObject } from "./pagePreparation.js"
 
-export const prepareTimeForBooking = async (
+export const prepareToRunAtASpecificTime = async (
   browser,
   teeBookingTime,
   noOfPlayers,
@@ -109,6 +108,7 @@ export class calendarControlObject {
     // -----------------------------------------------
     // Calculate Row Number to use in Calendar Control
     // -----------------------------------------------
+
     // First calculate the day corresponding to the 1st of month
     let text = myExtendedBookingObject.requestedTeeBookingTime.toISOString()
 
@@ -127,6 +127,7 @@ export class calendarControlObject {
     // -----------------------------------
     // Calendar Control Row Calculation
     // -----------------------------------
+
     let daysIn1stWeek = 0
 
     if (dayOf1stOfTheMonth == 0) {
@@ -235,12 +236,38 @@ const runAtSpecificTimeOfDay = async (
   )
 
   setTimeout(() => {
-    scraperController(
-      browser,
-      myExtendedBookingObject,
-      myCalendarControlObject,
-      page
-    )
+    console.log(new Date())
+
+    // // ---------------------------------------------------------------------
+    // // Press Tee Booking Button - if it exists
+    // // THIS LOOPS UNTIL BUTTON EXISTS - ??????????????//
+    // await pagePreparationObject.pressTeeBookingButton(
+    //   page,
+    //   myExtendedBookingObject
+    // )
+    // // ---------------------------------------------------------------------
+    // // Enter Tee Booking Partner Numbers & Number Of Holes to Play then Press Button to Reserve Tee Booking
+    // page =
+    //   await pagePreparationObject.enterTeeBookingNumberOfPlayersNumberOfHoles(
+    //     page,
+    //     myExtendedBookingObject
+    //   )
+    // // Enter Tee Booking Number of Buggies & Partner Names
+    // let bookingNumber =
+    //   await pagePreparationObject.enterTeeBookingNumberOfBuggiesPartnersNames(
+    //     page,
+    //     myExtendedBookingObject
+    //   )
+    // // Press Finish to Make Booking & Display Report
+    // await pagePreparationObject.pressFinishAndReport(
+    //   page,
+    //   myExtendedBookingObject,
+    //   bookingNumber
+    // )
+    // // Log out of the Web Site
+    // await pagePreparationObject.logoutOfGolfClubWebSite(page)
+    // // Now close the browser
+    // await browser.close()
   }, delay)
 }
 
