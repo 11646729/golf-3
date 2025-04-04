@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react"
-// import CruisesTable from "../components/CruisesTable"
+import CruisesTable from "../components/CruisesTable"
 import { getBelfastHarbourMovementsData } from "../functionHandlers/getBelfastHarbourMovements"
 import "../styles/cruises.scss"
 
@@ -28,6 +28,8 @@ const BelfastHarbourPage = () => {
         console.log(err)
       })
   }, [])
+
+  console.log(belfastHarbourMovements)
 
   return (
     <div className="cruisescontainer">

@@ -16,7 +16,9 @@ export var index = (req, res) => {
 // Path: localhost:4000/api/golf/getBelfastHarbourMovements
 // -------------------------------------------------------
 export const getBelfastHarbourMovements = (req, res) => {
-  return console.log("In belfastHarbourMovementsController.js file")
+  return console.log(
+    "In belfastHarbourMovementsController.js file TODO Here - enable SQL function"
+  )
 }
 
 export default getBelfastHarbourMovements
