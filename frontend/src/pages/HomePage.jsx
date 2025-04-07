@@ -5,7 +5,6 @@ import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
 import NearbyCrimesCard from "../cards/NearbyCrimesCard"
 import CruiseCard from "../cards/CruiseCard"
-import BelfastHarbourCard from "../cards/BelfastHarbourCard"
 import TransportRoutesCard from "../cards/TransportRoutesCard"
 import SeismicDesignCard from "../cards/SeismicDesignCard"
 import "../styles/home.scss"
@@ -32,9 +31,6 @@ const HomePage = () => {
           </Grid>
           <Grid item sm={3} style={{ padding: 20 }}>
             <CruiseCard />
-          </Grid>
-          <Grid item sm={3} style={{ padding: 20 }}>
-            <BelfastHarbourCard />
           </Grid>
           <Grid item sm={3} style={{ padding: 20 }}>
             <TransportRoutesCard />

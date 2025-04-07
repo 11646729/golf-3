@@ -13,7 +13,6 @@ import rtNewsRouter from "./routes/rtNewsRouteCatalog.js"
 import golfRouter from "./routes/golfRouteCatalog.js"
 import rtWeatherRouter from "./routes/rtWeatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
-import belfastHarbourMovementsRouter from "./routes/belfastHarbourMovementsRouteCatalog.js"
 import gtfsTransportRouter from "./routes/gtfsTransportRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
 
@@ -62,7 +61,6 @@ app.use("/api/rtnews", rtNewsRouter)
 app.use("/api/golf", golfRouter)
 app.use("/api/weather", rtWeatherRouter)
 app.use("/api/cruise", cruiseRouter)
-app.use("/api/belfastharbourmovements", belfastHarbourMovementsRouter)
 app.use("/api/gtfs", gtfsTransportRouter)
 app.use("/api/seismicdesigns", seismicDesignsRouter)
 
@@ -74,7 +72,7 @@ app.use((req, res) => {
 
 // Enable Realtime data sending system
 // enableRealtimeData(io)
-setupRabbitMQAndEmitMessages(io) // This was uncommented on 08-11-24 BDS
+// setupRabbitMQAndEmitMessages(io) // This was uncommented on 08-11-24 BDS
 
 // Start Express server
 httpServer.listen(port, (err) => {

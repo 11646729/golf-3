@@ -10,7 +10,6 @@ import WeatherPage from "../pages/WeatherPage"
 import GolfCoursesPage from "../pages/GolfCoursesPage"
 import NearbyCrimesPage from "../pages/NearbyCrimesPage"
 import CruisesPage from "../pages/CruisesPage"
-import BelfastHarbourPage from "../pages/BelfastHarbourPage"
 import TransportRoutesPage from "../pages/TransportRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
@@ -68,10 +67,6 @@ const App = () => {
         {
           path: "/cruisespage",
           element: <CruisesPage />,
-        },
-        {
-          path: "/belfastharbourpage",
-          element: <BelfastHarbourPage />,
         },
         {
           path: "/transportroutespage",

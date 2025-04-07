@@ -1,5 +1,5 @@
 import React, { useState, memo, useEffect } from "react"
-import PropTypes from "prop-types"
+import PropTypes, { element } from "prop-types"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -84,6 +84,8 @@ const CruisesTable = (props) => {
 
     setModifiedPortArrivals(portArrivals)
   }, [portArrivals])
+
+  console.log(modifiedPortArrivals)
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -241,36 +243,3 @@ const CruisesTable = (props) => {
 }
 
 export default memo(CruisesTable)
-
-//  Display Card
-// <Card>
-//   <CardMedia
-//     style={{
-//       height: 0,
-//       paddingTop: "40%",
-//       marginTop: "30",
-//     }}
-//     // image={selected.photourl}
-//     // title={selected.phototitle}
-//   />
-//   <CardContent>
-//     <Typography gutterBottom variant="h5" component="h2">
-//       "Name"
-//       {selected.name}
-//     </Typography>
-//     <Typography component="p">
-//       "Description"
-//       {selected.description}
-//     </Typography>
-//   </CardContent>
-//   <CardActions>
-//     <Button
-//       size="small"
-//       color="primary"
-//       component={Link}
-//       // to="/golfcoursespage"
-//     >
-//       View
-//     </Button>
-//   </CardActions>
-// </Card>
