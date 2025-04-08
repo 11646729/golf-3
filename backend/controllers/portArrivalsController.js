@@ -304,7 +304,7 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
 
       // If No Arrival Time Given
       if (vessel_eta_time == "") {
-        vessel_eta_time = "23:59"
+        vessel_eta_time = "11:59"
       }
 
       vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
@@ -312,7 +312,6 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
       vessel_eta = a.toISOString()
 
       // Expected Weekday of Arrival
-      // let weekday = ""
       let weekday = weekdayArray[a.getDay()]
 
       // -------------------------------------------------------
@@ -321,7 +320,7 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
       let vessel_etd = ""
 
       if (vessel_etd_time == "") {
-        vessel_etd_time = "23:59"
+        vessel_etd_time = "11:59"
       }
 
       vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")

@@ -63,20 +63,20 @@ const CruisesTable = (props) => {
 
   useEffect(() => {
     portArrivals.forEach((element) => {
-      if (element.vesseletatime == "23:59") {
+      if (element.vesseletatime == "11:59") {
         element.vesseletatime = "Not Known"
 
         var date = new Date(element.vesseleta)
-        date.setHours(date.getHours() - 23)
+        date.setHours(date.getHours() - 11)
         date.setMinutes(date.getMinutes() - 59)
         element.vesseleta = date.toISOString()
       }
 
-      if (element.vesseletdtime == "23:59") {
+      if (element.vesseletdtime == "11:59") {
         element.vesseletdtime = "Not Known"
 
         var date = new Date(element.vesseletd)
-        date.setHours(date.getHours() - 23)
+        date.setHours(date.getHours() - 11)
         date.setMinutes(date.getMinutes() - 59)
         element.vesseletd = date.toISOString()
       }
