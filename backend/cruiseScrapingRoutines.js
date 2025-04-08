@@ -54,3 +54,39 @@ export const importPortArrivalsAndVessels = async (req, res) => {
     console.log(DeduplicatedVesselUrlArray.length + " Vessels added")
   }
 }
+
+// -------------------------------------------------------
+// Fetch Year & Months which show Vessel Arrival Data
+// Path: Local function called by importPortArrivalsAndVessels
+// -------------------------------------------------------
+const getScheduleMonths = async (portName) => {
+  let scheduledPeriods = []
+
+  let initialPeriod = new Date().toISOString().slice(0, 7)
+
+  let initialUrl =
+    process.env.CRUISE_MAPPER_URL +
+    portName +
+    "?tab=schedule&month=" +
+    initialPeriod +
+    "#schedule"
+
+  // Fetch the initial html page
+  const response = await fetch(initialUrl)
+  const data = await response.text()
+
+  // Load cheerio
+  const $ = cheerio.load(data)
+
+  $("#schedule > div:nth-child(2) > div.col-xs-8.thisMonth option").each(
+    (i, item) => {
+      const monthYearString = $(item).attr("value")
+
+      scheduledPeriods.push({
+        monthYearString,
+      })
+    }
+  )
+
+  return scheduledPeriods
+}
