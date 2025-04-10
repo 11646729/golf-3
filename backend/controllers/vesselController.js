@@ -180,8 +180,8 @@ export const getVesselPosition = async (req, res) => {
 
     // Name of Vessel
     let vesselName = positionParagraph.substring(
-      0,
-      positionParagraph.indexOf("current ") - 1
+      24,
+      positionParagraph.indexOf("is ") - 1
     )
 
     // Reported Position
@@ -292,7 +292,7 @@ export const getVesselPosition = async (req, res) => {
     j++
   } while (j < arrivals.length)
 
-  //  console.log(shipPosition)
+  console.log(shipPositions[0])
 
   res.send(shipPositions)
 }
