@@ -102,7 +102,7 @@ const CruisesTable = (props) => {
   }
 
   const handleOpen = (imageUrl) => {
-    // setSelectedImage(imageUrl)
+    // setSelectedImage(element.vesselurl)
     setSelectedImage(
       "https://www.cruisemapper.com/images/ships/693-large-53e3a7161e428b65688f14b84d61c610.jpg"
     )

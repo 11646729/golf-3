@@ -151,8 +151,8 @@ const CruisesMap = (props) => {
                     paddingTop: "40%",
                     marginTop: "30",
                   }}
-                  // image={selected.photourl}
-                  // title={selected.phototitle}
+                  // image={selected.vesselurl}
+                  // title={selected.vessseltitle}
                 />
                 <CardContent>
                   <Typography

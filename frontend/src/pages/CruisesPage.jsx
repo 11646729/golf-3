@@ -37,8 +37,6 @@ const CruisesPage = () => {
       })
   }, [])
 
-  console.log(portArrivals)
-
   // This routine gets Cruise Vessel position data - after portArrivals array has been filled
   useEffect(() => {
     setIsLoading(true)
@@ -55,6 +53,8 @@ const CruisesPage = () => {
         })
     }
   }, [portArrivals])
+
+  console.log(portArrivals[0])
 
   return (
     <div className="cruisescontainer">
