@@ -217,7 +217,8 @@ const CruisesTable = (props) => {
             <Box sx={style}>
               {selectedImage && (
                 <img
-                  src={selectedImage}
+                  // src={selectedImage}
+                  src="https://www.cruisemapper.com/images/ships/2200-7ae75f1d27c.jpg"
                   alt="Selected"
                   style={{ width: "100%" }}
                 />
