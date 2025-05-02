@@ -16,7 +16,7 @@ export const menu = [
       },
       {
         id: 3,
-        title: "Raw Data",
+        title: "Load Raw Data",
         url: "/rawdatapage",
         icon: "/static/images/home.svg",
       },

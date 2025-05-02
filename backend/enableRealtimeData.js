@@ -1,4 +1,5 @@
 import nodeCron from "node-cron"
+import { emitHeartbeatData } from "./controllers/rtHeartbeatController.js"
 import {
   emitCalendarEventsData,
   getGoogleCalendarEvents,
@@ -12,7 +13,6 @@ import {
   emitNewsHeadlinesData,
   getNewsHeadlinesItems,
 } from "./controllers/rtNewsController.js"
-// import { formatMessage } from "./formatMessage.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -42,7 +42,7 @@ export const enableRealtimeData = (io) => {
     }
 
     Heartbeat = nodeCron.schedule("*/1 * * * * *", () => {
-      getApiAndEmit(socket)
+      getHeartbeatApiAndEmit(socket)
     })
 
     CalendarEventsInterval = nodeCron.schedule("*/1 * * * * *", () => {
@@ -67,12 +67,12 @@ export const enableRealtimeData = (io) => {
   })
 
   // -----------------------------
-  // 1 second tick clock
+  // 1 second Heartbeat
   // -----------------------------
-  const getApiAndEmit = (socket) => {
-    const response = new Date()
-    // Emitting a 1 second heartbeat
-    socket.emit("Heartbeat", response)
+  const getHeartbeatApiAndEmit = (socket) => {
+    const heartbeatReading = new Date()
+    // Emit 2 events isLoading & sendData to client
+    emitHeartbeatData(socket, heartbeatReading, false)
   }
 
   // -----------------------------
@@ -80,32 +80,8 @@ export const enableRealtimeData = (io) => {
   // -----------------------------
   const getCalendarEventsApiAndEmit = (socket) => {
     getGoogleCalendarEvents().then((result) => {
-      // let message = formatMessage(result)
-      // console.log(message)
-
       // Emit 2 events isLoading & sendData to client
       emitCalendarEventsData(socket, result, false)
-    })
-  }
-
-  // -----------------------------
-  // Fetch News Headline data
-  // -----------------------------
-  const getNewsHeadlinesApiAndEmit = (socket) => {
-    const liveNewsTopHeadlinesUrl =
-      "https://newsapi.org/v2/top-headlines" +
-      "?sources=bbc-news" +
-      "&apiKey=" +
-      process.env.RT_NEWS_API
-
-    // let currentDate = moment().format().format("YYYY-MM-DD")
-    // let timeNow = new Date().toISOString()
-    // console.log(currentDate)
-    // console.log(timeNow)
-
-    getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
-      // Emit 2 events isLoading & sendData to client
-      emitNewsHeadlinesData(socket, result, false)
     })
   }
 
@@ -151,6 +127,22 @@ export const enableRealtimeData = (io) => {
 
       // Emit 2 events isLoading & sendData to client
       emitTemperatureData(socket, temperatureReadings, false)
+    })
+  }
+
+  // -----------------------------
+  // Fetch News Headline data
+  // -----------------------------
+  const getNewsHeadlinesApiAndEmit = (socket) => {
+    const liveNewsTopHeadlinesUrl =
+      "https://newsapi.org/v2/top-headlines" +
+      "?sources=bbc-news" +
+      "&apiKey=" +
+      process.env.RT_NEWS_API
+
+    getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
+      // Emit 2 events isLoading & sendData to client
+      emitNewsHeadlinesData(socket, result, false)
     })
   }
 }

@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
-// import { enableRealtimeData } from "./enableRealtimeData.js"
+import { enableRealtimeData } from "./enableRealtimeData.js"
 import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
@@ -71,7 +71,7 @@ app.use((req, res) => {
 })
 
 // Enable Realtime data sending system
-// enableRealtimeData(io)
+enableRealtimeData(io)
 // setupRabbitMQAndEmitMessages(io) // This was uncommented on 08-11-24 BDS
 
 // Start Express server

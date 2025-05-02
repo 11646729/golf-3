@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material"
 
-const TemperaturesCard = () => {
+const RawDataLoadCard = () => {
   return (
     <Card
       sx={{
@@ -21,11 +21,11 @@ const TemperaturesCard = () => {
       <CardMedia
         sx={{ paddingTop: "56.25%" }}
         image="/static/images/SaveData.jpg"
-        title="Load Data"
+        title="Load Raw Data"
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          Find and Load Data
+          Load Raw Data
         </Typography>
         <Typography>This loads Raw Data into the SQL database</Typography>
       </CardContent>
@@ -38,4 +38,4 @@ const TemperaturesCard = () => {
   )
 }
 
-export default memo(TemperaturesCard)
+export default memo(RawDataLoadCard)

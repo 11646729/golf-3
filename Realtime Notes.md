@@ -4,4 +4,4 @@
 
 - [ ] Use Typescript
 - [ ] Use a tick rate of 1 minute
-- [ ] Use a monorepo (as per survive-the-night-game)
+- [x] Use a monorepo (as per survive-the-night-game)

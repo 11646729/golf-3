@@ -248,8 +248,8 @@ export const emitTemperatureData = (
   if (stillLoading == null) return
 
   try {
-    socket.emit("FromIsLoadingTemperatureData", stillLoading)
     socket.emit("FromTemperatureAPI", temperatureReadings)
+    socket.emit("FromIsLoadingTemperatureData", stillLoading)
   } catch (error) {
     console.log("Error in emitTemperatureData: ", error)
   }

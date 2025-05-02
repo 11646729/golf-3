@@ -278,8 +278,8 @@ export const emitNewsHeadlinesData = (
   if (stillLoading == null) return
 
   try {
-    socket.emit("FromIsLoadingNewsHeadlinesData", stillLoading)
     socket.emit("FromNewsHeadlinesAPI", newsHeadlinesData)
+    socket.emit("FromIsLoadingNewsHeadlinesData", stillLoading)
   } catch (error) {
     console.log("Error in emitNewsHeadlinesData: ", error)
   }

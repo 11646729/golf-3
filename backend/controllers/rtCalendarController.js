@@ -403,8 +403,8 @@ export const emitCalendarEventsData = (
   if (stillLoading == null) return
 
   try {
-    socket.emit("FromIsLoadingCalendarEvents", false)
     socket.emit("FromCalendarEventsAPI", calendarEvents)
+    socket.emit("FromIsLoadingCalendarEvents", false)
   } catch (error) {
     console.log("Error in emitCalendarEventsData: ", error)
   }

@@ -5,8 +5,8 @@ export const emitHeartbeatData = (socket, heartbeatReading, stillLoading) => {
   if (stillLoading == null) return
 
   try {
-    socket.emit("FromIsLoadingHeartbeatData", stillLoading)
     socket.emit("FromHeartbeatAPI", heartbeatReading)
+    socket.emit("FromIsLoadingHeartbeatData", stillLoading)
   } catch (error) {
     console.log("Error in emitHeartbeatData: ", error)
   }
