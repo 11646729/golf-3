@@ -20,7 +20,7 @@ const RealTimeDataCard = () => {
     >
       <CardMedia
         sx={{ paddingTop: "56.25%" }}
-        image="/static/images/SaveData.jpg"
+        image="/static/images/RealTime.jpg"
         title="Run RealTime Data Feed"
       />
       <CardContent sx={{ flexGrow: 1 }}>
