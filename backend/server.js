@@ -64,15 +64,14 @@ app.use("/api/cruise", cruiseRouter)
 app.use("/api/gtfs", gtfsTransportRouter)
 app.use("/api/seismicdesigns", seismicDesignsRouter)
 
-// Added on 23-10-2022
-// This returns a default response for any other request
+// This returns an error HTML response code for any other request
 app.use((req, res) => {
   res.status(404)
 })
 
 // Enable Realtime data sending system
-enableRealtimeData(io)
-// setupRabbitMQAndEmitMessages(io) // This was uncommented on 08-11-24 BDS
+enableRealtimeData(io) // Socket.io system
+// setupRabbitMQAndEmitMessages(io) // RabbitMQ system
 
 // Start Express server
 httpServer.listen(port, (err) => {

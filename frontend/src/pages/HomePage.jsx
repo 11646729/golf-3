@@ -1,5 +1,6 @@
 import React, { memo } from "react"
 import { Grid } from "@mui/material"
+import RealTimeDataCard from "../cards/RealTimeDataCard"
 import RawDataLoadCard from "../cards/RawDataLoadCard"
 import WeatherCard from "../cards/WeatherCard"
 import GolfCoursesCard from "../cards/GolfCoursesCard"
@@ -17,6 +18,9 @@ const HomePage = () => {
     <div className="homecontainer">
       <div className="cardcontainer">
         <Grid container>
+          <Grid item sm={3} style={{ padding: 20 }}>
+            <RealTimeDataCard />
+          </Grid>
           <Grid item sm={3} style={{ padding: 20 }}>
             <RawDataLoadCard />
           </Grid>
