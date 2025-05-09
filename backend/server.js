@@ -55,6 +55,16 @@ app.use(express.static(path.join(__dirname, "public")))
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }))
 
+// // This returns an error HTML response code for any other request
+// app.use((req, res) => {
+//   res.status(404)
+// })
+
+// -----------------------------------------------------
+// Fetch External Data
+// Analyse it and if it is new then send it to the frontend
+// -----------------------------------------------------
+
 // Routes
 app.use("/api/rtcalendar", rtCalendarRouter)
 app.use("/api/rtnews", rtNewsRouter)
@@ -69,9 +79,11 @@ app.use((req, res) => {
   res.status(404)
 })
 
+// -----------------------------------------------------
 // Enable Realtime data sending system
 enableRealtimeData(io) // Socket.io system
 // setupRabbitMQAndEmitMessages(io) // RabbitMQ system
+// -----------------------------------------------------
 
 // Start Express server
 httpServer.listen(port, (err) => {
