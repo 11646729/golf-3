@@ -52,7 +52,13 @@ class newServer {
     // -----------------------------------------------------
 
     // Routes
-    addRoutes(app)
+    app.use("/api/rtcalendar", rtCalendarRouter)
+    app.use("/api/rtnews", rtNewsRouter)
+    app.use("/api/golf", golfRouter)
+    app.use("/api/weather", rtWeatherRouter)
+    app.use("/api/cruise", cruiseRouter)
+    app.use("/api/gtfs", gtfsTransportRouter)
+    app.use("/api/seismicdesigns", seismicDesignsRouter)
 
     // Implementing CORS on Socket.io
     const io = new Server(httpServer, {
@@ -63,16 +69,16 @@ class newServer {
       },
     })
 
-    // This returns an error HTML response code for any other request
-    app.use((req, res) => {
-      res.status(404)
-    })
-
     // -----------------------------------------------------
     // Enable Realtime data sending system
     enableRealtimeData(io) // Socket.io system
     // setupRabbitMQAndEmitMessages(io) // RabbitMQ system
     // -----------------------------------------------------
+
+    // This returns an error HTML response code for any other request
+    app.use((req, res) => {
+      res.status(404)
+    })
 
     // Start Express server
     httpServer.listen(port, (err) => {
@@ -85,17 +91,6 @@ class newServer {
 
     console.log("Class started")
   }
-}
-
-const addRoutes = (app) => {
-  // Routes
-  app.use("/api/rtcalendar", rtCalendarRouter)
-  app.use("/api/rtnews", rtNewsRouter)
-  app.use("/api/golf", golfRouter)
-  app.use("/api/weather", rtWeatherRouter)
-  app.use("/api/cruise", cruiseRouter)
-  app.use("/api/gtfs", gtfsTransportRouter)
-  app.use("/api/seismicdesigns", seismicDesignsRouter)
 }
 
 const newGolfServer = new newServer()

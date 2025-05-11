@@ -225,6 +225,9 @@ export const getGolfCourses = (req, res) => {
           return
         }
         res.send(results)
+
+        // Put socket.emit here
+        // console.log(results)
       })
 
       // Close the Database Connection
