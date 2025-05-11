@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import TemperaturesTable from "../components/TemperaturesTable"
 import TemperaturesChart from "../components/TemperaturesChart"
 import { getTemperaturesData } from "../functionHandlers/loadTemperaturesDataHandler"

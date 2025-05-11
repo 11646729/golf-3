@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import GolfCoursesTable from "../components/GolfCoursesTable"
 import GolfCoursesMap from "../components/GolfCoursesMap"
 import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import SeismicArrayDesign from "../components/NewSeismicArrayDesign"
 import { getSeismicDesignsData } from "../functionHandlers/loadSeismicDesignsDataHandler"
 import "../styles/arraydesign.scss"

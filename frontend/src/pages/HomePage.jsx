@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import { Grid } from "@mui/material"
 import RealTimeDataCard from "../cards/RealTimeDataCard"
 import RawDataLoadCard from "../cards/RawDataLoadCard"

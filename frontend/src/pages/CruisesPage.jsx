@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import { getPortArrivalsData } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"

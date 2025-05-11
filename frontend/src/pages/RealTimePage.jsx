@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import socketIOClient from "socket.io-client"
 import RTCalendar from "../components/RTCalendar"
 import RTNews from "../components/RTNews"

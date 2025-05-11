@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import RawDataTable from "../components/RawDataTable"
 import "../styles/rawdata.scss"
 

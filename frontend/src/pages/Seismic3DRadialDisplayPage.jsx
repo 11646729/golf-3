@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import Seismic3DRadialDisplay from "../components/Seismic3DRadialDisplay"
 import "../styles/seismic3dradialdisplay.scss"
 

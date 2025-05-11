@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import NearbyCrimesInputPanel from "../components/NearbyCrimesInputPanel"
 import NearbyCrimesMap from "../components/NearbyCrimesMap"
 import { getCrimesData } from "../functionHandlers/loadCrimesDataHandler"
