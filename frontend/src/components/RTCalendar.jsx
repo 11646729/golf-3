@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import PropTypes from "prop-types"
 import moment from "moment"
 import "../styles/rtcalendar.scss"

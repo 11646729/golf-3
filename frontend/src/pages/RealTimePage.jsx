@@ -135,7 +135,7 @@ const ClientComponent = () => {
         <div className="box box5">Cruise Ships in Belfast or En Route</div>
         <div className="box box6">Traffic</div>
         <div className="box box7">Shares</div>
-        <div className="box box8">Crimes</div>
+        <div className="box box8">Crime</div>
         <div className="box box9">Bus Services</div>
         <div className="box box10">Learning</div>
         <div className="box box11">
@@ -144,6 +144,7 @@ const ClientComponent = () => {
         </div>
         <div className="box box12">Crime Prevention Advice</div>
         <div className="box box13">Seismic Productivity</div>
+        <div className="box box14">Nearby Ship Movements</div>
       </div>
     </>
   )
