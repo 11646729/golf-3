@@ -19,6 +19,12 @@
 - [ ] Emergency message passing ?
 - [ ] Speed up play with an audio alert
 
+## Map Specifications
+
+- [ ] Course Name e.g. 5 options
+- [ ] Maximum Number of Buggies e.g. 99
+- [ ] Zoom into a buggy or a hole
+
 ## Golf ball locator using range finder
 
 - [ ] After hitting a ball into a hazard, use the Range Finder to mark/flag where the ball went into the hazard.
@@ -33,12 +39,6 @@
 
 - [ ] before playing a new sound, determine distance from player and reduce volume if the sound was far away
 - [ ] auto clean up sound entities after 5 seconds.
-- [ ] add sound for knife
-- [ ] add sound for player walking
-- [ ] add sound for zombie walking
-- [ ] add sound for zombie attack
-- [ ] add sound for item craft
-- [ ] ambient background music that can be turned off
 
 ### Map Generation
 
