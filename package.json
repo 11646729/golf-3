@@ -2,10 +2,17 @@
   "name": "golf-3-monorepo",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "backend",
-    "frontend"
-  ],
+  "workspaces": {
+    "packages": [
+      "backend",
+      "frontend"
+    ],
+    "nohoist": [
+      "backend/sqlite3",
+      "backend/**/sqlite3",
+      "backend/**/sqlite3/**"
+    ]
+  },
   "scripts": {
     "start:backend": "yarn workspace backend start",
     "start:frontend": "yarn workspace frontend start",
