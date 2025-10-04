@@ -1,0 +1,13 @@
+{
+  "name": "golf-3-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:backend": "npm --prefix backend run start",
+    "start:frontend": "npm --prefix frontend run start",
+    "start": "concurrently \"npm --prefix backend run start\" \"npm --prefix frontend run start\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
