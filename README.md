@@ -11,3 +11,5 @@ Currently, two official plugins are available:
 
 backend: yarn start
 frontend: yarn start
+
+test
