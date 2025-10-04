@@ -9,7 +9,9 @@
     "dev": "nodemon server.js",
     "test": "node objecttest.js",
     "test1": "node isInsideArea.js",
-    "googletest": "node googlemappolygon,html"
+    "googletest": "node googlemappolygon,html",
+    "rebuild-native": "npm rebuild sqlite3 --build-from-source",
+    "postinstall": "npm run rebuild-native || true"
   },
   "keywords": [],
   "author": "Brian Smith",
