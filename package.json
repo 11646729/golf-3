@@ -2,12 +2,17 @@
   "name": "golf-3-monorepo",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "start:backend": "npm --prefix backend run start",
-    "start:frontend": "npm --prefix frontend run start",
-    "start": "concurrently \"npm --prefix backend run start\" \"npm --prefix frontend run start\""
+    "start:backend": "yarn workspace backend start",
+    "start:frontend": "yarn workspace frontend start",
+    "start": "concurrently \"yarn workspace backend start\" \"yarn workspace frontend start\"",
+    "rebuild-native": "yarn workspace backend run rebuild-native"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^9.2.1"
   }
 }

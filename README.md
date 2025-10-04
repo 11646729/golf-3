@@ -7,9 +7,11 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-# To start the 2 projects
+# To start the 2 projects together
+
+from the root: yarn start
+
+or
 
 backend: yarn start
 frontend: yarn start
-
-test
