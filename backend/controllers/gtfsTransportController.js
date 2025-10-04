@@ -22,8 +22,12 @@ import readRouteFile from "../fileUtilities.js"
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
-const defaultConfigPath = new URL("../gtfs_config_files/configTransportForIreland.json", import.meta.url).pathname
-const configPath = process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath
+const defaultConfigPath = new URL(
+  "../gtfs_config_files/configTransportForIreland.json",
+  import.meta.url
+).pathname
+const configPath =
+  process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath
 console.log(`Using GTFS config file: ${configPath}`)
 const config = readRouteFile(configPath)
 
