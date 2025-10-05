@@ -23,7 +23,7 @@
     "brace-expansion": "2.0.2",
     "braces": "^3.0.3",
     "cheerio": "^1.0.0-rc.12",
-    "cookie": "0.7.0",
+  "cookie": "^0.7.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "decompress": "^4.2.1",
