@@ -56,7 +56,8 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "4.7.0",
+    "esbuild": "0.25.10",
     "sass": "^1.93.2",
     "vite": "^7.1.9"
   }
