@@ -30,15 +30,49 @@ const CruisesMap = (props) => {
   const [map, setMap] = useState(null)
   const [selected, setSelected] = useState(null)
 
-  const mapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+  const mapZoom = useMemo(() => {
+    const z = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+    return Number.isFinite(z) ? z : 10
+  }, [])
 
-  const mapCenter = useMemo(
-    () => ({
-      lat: parseFloat(import.meta.env.VITE_BELFAST_PORT_LATITUDE),
-      lng: parseFloat(import.meta.env.VITE_BELFAST_PORT_LONGITUDE),
-    }),
-    []
-  )
+  // Helper to parse and validate coordinates
+  const parseNum = (v) => {
+    const n = parseFloat(v)
+    return Number.isFinite(n) ? n : null
+  }
+
+  const mapCenter = useMemo(() => {
+    const envLat = parseNum(import.meta.env.VITE_BELFAST_PORT_LATITUDE)
+    const envLng = parseNum(import.meta.env.VITE_BELFAST_PORT_LONGITUDE)
+
+    if (envLat !== null && envLng !== null) {
+      return { lat: envLat, lng: envLng }
+    }
+
+    // fallback to cruisesHomePosition if valid
+    if (
+      cruisesHomePosition &&
+      Number.isFinite(parseNum(cruisesHomePosition.lat)) &&
+      Number.isFinite(parseNum(cruisesHomePosition.lng))
+    ) {
+      return {
+        lat: parseNum(cruisesHomePosition.lat),
+        lng: parseNum(cruisesHomePosition.lng),
+      }
+    }
+
+    // fallback to first valid vessel position
+    if (Array.isArray(vesselPositions)) {
+      const first = vesselPositions.find(
+        (p) =>
+          Number.isFinite(parseNum(p?.lat)) && Number.isFinite(parseNum(p?.lng))
+      )
+      if (first) return { lat: parseNum(first.lat), lng: parseNum(first.lng) }
+    }
+
+    // ultimate fallback: Belfast approximate coords
+    return { lat: 54.597285, lng: -5.93012 }
+  }, [cruisesHomePosition, vesselPositions])
 
   const mapContainerStyle = {
     height: "600px",
@@ -66,20 +100,32 @@ const CruisesMap = (props) => {
 
   // Now compute bounds of map to display
   useEffect(() => {
-    if (map) {
-      if (vesselPositions.length > 0) {
-        const bounds = new window.google.maps.LatLngBounds(mapCenter)
+    if (!map) return
 
-        vesselPositions.map((vesselPosition) =>
-          bounds.extend({
-            lat: vesselPosition.lat,
-            lng: vesselPosition.lng,
-          })
+    // Build bounds from valid positions only
+    const validPositions = Array.isArray(vesselPositions)
+      ? vesselPositions.filter(
+          (p) =>
+            Number.isFinite(parseNum(p?.lat)) &&
+            Number.isFinite(parseNum(p?.lng))
         )
-        map.fitBounds(bounds)
-      }
+      : []
+
+    if (validPositions.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds()
+      validPositions.forEach((v) =>
+        bounds.extend({ lat: parseNum(v.lat), lng: parseNum(v.lng) })
+      )
+      map.fitBounds(bounds)
+    } else if (
+      Number.isFinite(mapCenter.lat) &&
+      Number.isFinite(mapCenter.lng)
+    ) {
+      // No vessel positions — set center and zoom to defaults
+      map.setCenter(mapCenter)
+      map.setZoom(mapZoom)
     }
-  }, [map, vesselPositions, mapCenter])
+  }, [map, vesselPositions, mapCenter, mapZoom])
 
   const iconPin = {
     path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
@@ -116,29 +162,45 @@ const CruisesMap = (props) => {
           onLoad={onLoadHandler}
           onUnmount={onUnmountHandler}
         >
-          <Marker position={cruisesHomePosition} />
+          {Number.isFinite(parseNum(cruisesHomePosition?.lat)) &&
+          Number.isFinite(parseNum(cruisesHomePosition?.lng)) ? (
+            <Marker
+              position={{
+                lat: parseNum(cruisesHomePosition.lat),
+                lng: parseNum(cruisesHomePosition.lng),
+              }}
+            />
+          ) : null}
 
-          {vesselPositions
-            ? vesselPositions.map((vesselPosition) => (
-                <Marker
-                  key={vesselPosition.index}
-                  position={{
-                    lat: vesselPosition.lat,
-                    lng: vesselPosition.lng,
-                  }}
-                  icon={iconPin}
-                  onClick={() => {
-                    setSelected(vesselPosition)
-                  }}
-                />
-              ))
+          {Array.isArray(vesselPositions)
+            ? vesselPositions
+                .filter(
+                  (p) =>
+                    Number.isFinite(parseNum(p?.lat)) &&
+                    Number.isFinite(parseNum(p?.lng))
+                )
+                .map((vesselPosition, idx) => (
+                  <Marker
+                    key={vesselPosition.index ?? idx}
+                    position={{
+                      lat: parseNum(vesselPosition.lat),
+                      lng: parseNum(vesselPosition.lng),
+                    }}
+                    icon={iconPin}
+                    onClick={() => {
+                      setSelected(vesselPosition)
+                    }}
+                  />
+                ))
             : null}
 
-          {selected ? (
+          {selected &&
+          Number.isFinite(parseNum(selected?.lat)) &&
+          Number.isFinite(parseNum(selected?.lng)) ? (
             <InfoWindow
               position={{
-                lat: selected.lat,
-                lng: selected.lng,
+                lat: parseNum(selected.lat),
+                lng: parseNum(selected.lng),
               }}
               onCloseClick={() => {
                 setSelected(null)

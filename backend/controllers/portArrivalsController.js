@@ -124,8 +124,8 @@ export const deletePortArrivals = (db) => {
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
 export const getPortArrivals = (req, res, next) => {
-  const sql =
-    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
+  const sql = "SELECT * FROM portarrivals"
+  // WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
   let params = []
 
   // Open a Database Connection
