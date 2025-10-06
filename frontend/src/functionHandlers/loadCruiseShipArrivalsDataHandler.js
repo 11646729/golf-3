@@ -1,23 +1,47 @@
 import axios from "axios"
 
+const DEFAULT_TIMEOUT = 3000 // 3s
+
+const DEFAULT_HEADERS = { "Content-Type": "application/json" }
+
+async function requestWithRetry(fn, attempts = 3, delayMs = 500) {
+  let lastError
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn()
+    } catch (err) {
+      lastError = err
+      // simple backoff
+      await new Promise((r) => setTimeout(r, delayMs * (i + 1)))
+    }
+  }
+  throw lastError
+}
+
 // -------------------------------------------------------
 // Function to prepare the portarrivals table in the SQL database
 // -------------------------------------------------------
 const preparePortArrivalsTable = async (url) => {
-  return await axios
-    .post(url)
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+  return requestWithRetry(() => axios.post(url, {}, config))
     .then((response) => response.data)
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.error("preparePortArrivalsTable error:", err?.message || err)
+      throw err
+    })
 }
 
 // -------------------------------------------------------
 // Function to prepare the vessels table in the SQL database
 // -------------------------------------------------------
 const prepareVesselsTable = async (url) => {
-  return await axios
-    .post(url)
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+  return requestWithRetry(() => axios.post(url, {}, config))
     .then((response) => response.data)
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.error("prepareVesselsTable error:", err?.message || err)
+      throw err
+    })
 }
 
 // -------------------------------------------------------
@@ -25,17 +49,17 @@ const prepareVesselsTable = async (url) => {
 // -------------------------------------------------------
 const importPortArrivalsAndVesselsData = async (url) => {
   const params = { portName: import.meta.env.VITE_PORT_NAME }
-  const config = {
-    timeout: 20000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
 
-  return await axios
-    .post(url, params, config)
+  return requestWithRetry(() => axios.post(url, params, config))
     .then((returnedData) => returnedData.data)
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.error(
+        "importPortArrivalsAndVesselsData error:",
+        err?.message || err
+      )
+      throw err
+    })
 }
 
 // -------------------------------------------------------
@@ -43,35 +67,40 @@ const importPortArrivalsAndVesselsData = async (url) => {
 // -------------------------------------------------------
 export const getPortArrivalsData = async (url) => {
   const params = { portName: import.meta.env.VITE_PORT_NAME }
-  const config = {
-    timeout: 20000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS, params }
 
-  return await axios
-    .get(url, params, config)
+  console.log("Fetching Cruise Port Arrivals data...", url)
+
+  return requestWithRetry(() => axios.get(url, config))
     .then((returnedData) => returnedData.data)
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.error("getPortArrivalsData error:", err?.message || err)
+      throw err
+    })
 }
 
 // -------------------------------------------------------
 // Function to store all Cruise PortArrivals & Vessel data in the SQL database
 // -------------------------------------------------------
-export const loadCruiseShipArrivalsDataHandler = () => {
-  // Prepare empty port arrivals table in the database & show result
-  preparePortArrivalsTable(
-    "http://localhost:4000/api/cruise/preparePortArrivalsTable"
-  )
-
-  // Prepare empty vessels table in the database & show result
-  prepareVesselsTable("http://localhost:4000/api/cruise/prepareVesselsTable")
-
-  // Import the scraped data into the database & show result
-  importPortArrivalsAndVesselsData(
-    "http://localhost:4000/api/cruise/importPortArrivalsAndVesselsData"
-  )
+export const loadCruiseShipArrivalsDataHandler = async () => {
+  try {
+    await preparePortArrivalsTable(
+      "http://localhost:4000/api/cruise/preparePortArrivalsTable"
+    )
+    await prepareVesselsTable(
+      "http://localhost:4000/api/cruise/prepareVesselsTable"
+    )
+    await importPortArrivalsAndVesselsData(
+      "http://localhost:4000/api/cruise/importPortArrivalsAndVesselsData"
+    )
+    console.log("Cruise data import completed")
+  } catch (err) {
+    console.error(
+      "loadCruiseShipArrivalsDataHandler failed:",
+      err?.message || err
+    )
+    throw err
+  }
 }
 
 export { getPortArrivalsData as default }

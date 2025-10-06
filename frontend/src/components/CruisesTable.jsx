@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect } from "react"
+import { useState, memo, useEffect } from "react"
 import PropTypes, { element } from "prop-types"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"

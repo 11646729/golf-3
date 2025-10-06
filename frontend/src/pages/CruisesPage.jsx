@@ -42,18 +42,17 @@ const CruisesPage = () => {
     setIsLoading(true)
 
     if (portArrivals.length !== 0) {
-      // getLiveVesselPositions(portArrivals)
-      //   .then((returnedData) => {
-      //     setVesselPositions(returnedData)
-      //     setIsLoading(false)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
+      getLiveVesselPositions(portArrivals)
+        .then((returnedData) => {
+          setVesselPositions(returnedData)
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }, [portArrivals])
 
-  // console.log(portArrivals)
   // console.log(vesselPositions)
 
   return (

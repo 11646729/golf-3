@@ -1,0 +1,9 @@
+yarn workspace v1.22.22
+yarn run v1.22.22
+$ vite
+
+  VITE v7.1.9  ready in 186 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help

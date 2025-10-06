@@ -40,11 +40,31 @@ export const importPortArrivalsAndVessels = async (req, res) => {
     let loop = 0
     do {
       // Extract urls for vessels & store in newVessel array
-      let scrapedVessel = await scrapeVesselDetails(
-        DeduplicatedVesselUrlArray[loop]
-      )
+      let scrapedVessel = null
+      try {
+        scrapedVessel = await scrapeVesselDetails(
+          DeduplicatedVesselUrlArray[loop]
+        )
+      } catch (err) {
+        console.error(
+          "scrapeVesselDetails failed for ",
+          DeduplicatedVesselUrlArray[loop],
+          err?.message || err
+        )
+      }
 
-      saveVesselDetails(scrapedVessel)
+      if (scrapedVessel) {
+        try {
+          saveVesselDetails(scrapedVessel)
+        } catch (err) {
+          console.error("saveVesselDetails failed:", err?.message || err)
+        }
+      } else {
+        console.warn(
+          "Skipping vessel due to scrape failure:",
+          DeduplicatedVesselUrlArray[loop]
+        )
+      }
 
       loop++
     } while (loop < DeduplicatedVesselUrlArray.length)

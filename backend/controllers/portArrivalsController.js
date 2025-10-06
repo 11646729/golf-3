@@ -124,8 +124,8 @@ export const deletePortArrivals = (db) => {
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
 export const getPortArrivals = (req, res, next) => {
-  const sql = "SELECT * FROM portarrivals"
-  // WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
+  const sql =
+    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
   let params = []
 
   // Open a Database Connection
@@ -247,7 +247,19 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
   let arrivalUrl =
     process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
 
-  const { data: html } = await axios.get(arrivalUrl)
+  let html
+  try {
+    const resp = await axios.get(arrivalUrl)
+    html = resp.data
+  } catch (err) {
+    console.error(
+      "getSingleMonthPortArrival axios.get failed for",
+      arrivalUrl,
+      err?.message || err
+    )
+    // Return empty list of vessel URLs for this period so importer can continue
+    return []
+  }
 
   // load up cheerio
   const $ = cheerio.load(html)
