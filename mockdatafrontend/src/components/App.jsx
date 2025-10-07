@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom"
+import { RouterProvider, createBrowserRouter, Outlet } from "react-router"
 
 import Header from "./Header"
 import Menu from "./Menu"
