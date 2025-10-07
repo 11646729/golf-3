@@ -1,29 +1,16 @@
 import axios from "axios"
 
-const DEFAULT_TIMEOUT = 3000 // 3s
-
+const DEFAULT_TIMEOUT = 20000 // 20s
 const DEFAULT_HEADERS = { "Content-Type": "application/json" }
-
-async function requestWithRetry(fn, attempts = 3, delayMs = 500) {
-  let lastError
-  for (let i = 0; i < attempts; i++) {
-    try {
-      return await fn()
-    } catch (err) {
-      lastError = err
-      // simple backoff
-      await new Promise((r) => setTimeout(r, delayMs * (i + 1)))
-    }
-  }
-  throw lastError
-}
 
 // -------------------------------------------------------
 // Function to prepare the portarrivals table in the SQL database
 // -------------------------------------------------------
 const preparePortArrivalsTable = async (url) => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
-  return requestWithRetry(() => axios.post(url, {}, config))
+
+  return await axios
+    .post(url, {}, config)
     .then((response) => response.data)
     .catch((err) => {
       console.error("preparePortArrivalsTable error:", err?.message || err)
@@ -36,7 +23,9 @@ const preparePortArrivalsTable = async (url) => {
 // -------------------------------------------------------
 const prepareVesselsTable = async (url) => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
-  return requestWithRetry(() => axios.post(url, {}, config))
+
+  return await axios
+    .post(url, {}, config)
     .then((response) => response.data)
     .catch((err) => {
       console.error("prepareVesselsTable error:", err?.message || err)
@@ -51,7 +40,8 @@ const importPortArrivalsAndVesselsData = async (url) => {
   const params = { portName: import.meta.env.VITE_PORT_NAME }
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
 
-  return requestWithRetry(() => axios.post(url, params, config))
+  return await axios
+    .post(url, params, config)
     .then((returnedData) => returnedData.data)
     .catch((err) => {
       console.error(
@@ -69,9 +59,8 @@ export const getPortArrivalsData = async (url) => {
   const params = { portName: import.meta.env.VITE_PORT_NAME }
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS, params }
 
-  console.log("Fetching Cruise Port Arrivals data...", url)
-
-  return requestWithRetry(() => axios.get(url, config))
+  return await axios
+    .get(url, params, config)
     .then((returnedData) => returnedData.data)
     .catch((err) => {
       console.error("getPortArrivalsData error:", err?.message || err)
