@@ -187,9 +187,9 @@ export const savePortArrival = (db, newPortArrival) => {
     const sql1 =
       "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivalDate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)"
 
-    db.run(sql1, newPortArrival, (err) => {
+    runWithRetry(db, sql1, newPortArrival, (err) => {
       if (err) {
-        return console.error(err.message)
+        return console.error("Error: ", err.message)
       }
     })
   } catch (err) {

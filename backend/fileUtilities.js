@@ -4,6 +4,9 @@ import sqlite3 from "sqlite3"
 
 sqlite3.verbose()
 
+// Module-level singleton DB to avoid repeated open/close and reduce locking
+let pooledDb = null
+
 // -------------------------------------------------------
 // Function to read the geojson filenames in a directory
 // -------------------------------------------------------
@@ -98,28 +101,50 @@ export var prepReadGtfsFile = (firstFile, iterationSize, arraylength) => {
 // -------------------------------------------------------
 export var openSqlDbConnection = (url) => {
   // Guard clause for null Database Url
-  if (url === null) {
+  if (!url) {
     console.log("Invalid Database url")
-    return
+    return null
   }
 
-  let db = null
-  if (process.env.NODE_ENV === "production") {
-    // PostgreSQL in production
-    // TODO
-    //
-  } else if (process.env.NODE_ENV === "development") {
-    // SQLite by default
-    db = new sqlite3.Database(url)
+  // If we already have a pooled DB connection return it (singleton)
+  if (pooledDb) return pooledDb
 
-    if (db !== null) {
-      // console.log("Connected to the SQLite database")
-      return db
-    } else {
-      console.log("UNSUCCESSFUL in connecting to the SQLite database")
+  try {
+    // Open a connection (non-production: SQLite)
+    const db = new sqlite3.Database(url, (err) => {
+      if (err) {
+        console.error("Failed to open SQLite database:", err.message)
+      }
+    })
+
+    // Configure to reduce busy/lock errors
+    try {
+      // busy timeout tells SQLite how long to wait for locks
+      if (typeof db.configure === "function") {
+        db.configure("busyTimeout", 5000)
+      }
+    } catch (e) {
+      // ignore if not supported
     }
 
-    return db
+    // Use WAL journal mode to allow concurrent readers and writers
+    db.run("PRAGMA journal_mode = WAL;", [], (err) => {
+      if (err) console.warn("Could not set WAL journal mode:", err.message)
+    })
+    // Use NORMAL synchronous for a reasonable balance
+    db.run("PRAGMA synchronous = NORMAL;", [], (err) => {
+      if (err) console.warn("Could not set synchronous PRAGMA:", err.message)
+    })
+
+    pooledDb = db
+    // console.log('Connected to the SQLite database (pooled)')
+    return pooledDb
+  } catch (err) {
+    console.error(
+      "UNSUCCESSFUL in connecting to the SQLite database",
+      err?.message || err
+    )
+    return null
   }
 }
 
@@ -128,13 +153,22 @@ export var openSqlDbConnection = (url) => {
 // -------------------------------------------------------
 export var closeSqlDbConnection = (db) => {
   // Guard clause for null Database Connection
-  if (db === null) {
-    console.log("Database Connection not closed")
+  if (!db) {
+    // nothing to do
     return
   }
 
-  db.close()
-  // console.log("Disconnected from the SQLite database")
+  // If db is the pooled connection, don't close it (reuse across app lifetime)
+  if (pooledDb && db === pooledDb) {
+    // No-op: pooled connection is intended to live for the app lifetime
+    return
+  }
+
+  try {
+    db.close()
+  } catch (e) {
+    console.warn("Error closing database connection:", e?.message || e)
+  }
 }
 
 export default readRouteFile
