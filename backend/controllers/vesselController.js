@@ -24,7 +24,7 @@ export const prepareEmptyVesselsTable = (req, res) => {
       if (results.length === 1) {
         // If exists then DROP and recreate to ensure schema is current
         console.log(
-          "vessels table exists - dropping and recreating to ensure schema"
+          "vessels table exists - dropping and recreating to ensure schema is correct"
         )
         db.run("DROP TABLE IF EXISTS vessels", [], (dropErr) => {
           if (dropErr) {
@@ -64,7 +64,6 @@ export const createVesselsTable = (db) => {
       if (err) {
         return console.error(err.message)
       }
-      console.log("Empty vessels table created")
     })
   } catch (e) {
     console.error("Error in createVesselsTable: ", e.message)

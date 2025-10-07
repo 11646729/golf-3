@@ -30,7 +30,9 @@ export const prepareEmptyPortArrivalsTable = (req, res) => {
       // results.length shows 1 if exists or 0 if doesn't exist
       if (results.length === 1) {
         // If exists then delete all values
-        console.log("portarrivals table exists")
+        console.log(
+          "portarrivals table exists - dropping and recreating to ensure schema is correct"
+        )
         deletePortArrivals(db)
       } else {
         // Else create table
@@ -64,7 +66,6 @@ export const createPortArrivalsTable = (db) => {
       if (err) {
         console.error(err.message)
       }
-      console.log("Empty portarrivals table created")
     })
   } catch (e) {
     console.error("Error in createPortArrivalsTable: ", e.message)
@@ -95,7 +96,6 @@ export const deletePortArrivals = (db) => {
           if (err) {
             console.error(err.message)
           }
-          console.log("All portarrivals data deleted")
         })
 
         // Reset the id number
