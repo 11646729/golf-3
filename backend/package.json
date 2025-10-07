@@ -11,7 +11,7 @@
     "test": "node objecttest.js",
     "test1": "node isInsideArea.js",
     "googletest": "node googlemappolygon,html",
-    "rebuild-native": "npm rebuild sqlite3 --build-from-source",
+    "rebuild-native": "npm_config_python=/opt/homebrew/bin/python3.11 npm rebuild sqlite3 --build-from-source || npm_config_python=python3.11 npm rebuild sqlite3 --build-from-source || npm rebuild sqlite3 --build-from-source",
     "postinstall": "npm run rebuild-native || true"
   },
   "keywords": [],
