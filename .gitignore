@@ -25,7 +25,7 @@ yarn-error.log*
 # Added by BDS 12-01-24
 /*/node_modules
 # /backend/node_modules
-/backend/gtfs_data
+# /backend/gtfs_data
 # /frontend/node_modules
 # /rtMockDatafeed/node_modules
 .env
