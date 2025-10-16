@@ -109,7 +109,7 @@ const RawDataTable = (props) => {
   // const [buttonBackgroundColor, setButtonBackgroundColor] = useState("darkred")
 
   const handleClick = (id) => {
-    // Define the logic for handling the button click here
+    // Define the logic for handling the button click based on the row ID
 
     switch (id) {
       case 1:
