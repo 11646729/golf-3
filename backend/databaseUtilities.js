@@ -1,0 +1,294 @@
+import fs from "fs"
+import path from "path"
+import pg from "pg"
+import sqlite3 from "sqlite3"
+
+// Module-level singleton connections
+let pooledPgClient = null
+let pooledSqliteDb = null
+
+// -------------------------------------------------------
+// Function to read the geojson filenames in a directory
+// -------------------------------------------------------
+export var readRouteDirectory = (dirPath, suffix) => {
+  try {
+    let fileArray = []
+
+    const files = fs.readdirSync(dirPath)
+
+    files.forEach((file) => {
+      if (path.extname(file).toLowerCase() === suffix) fileArray.push(file)
+    })
+    return fileArray
+  } catch (err) {
+    throw err
+  }
+}
+
+// -------------------------------------------------------
+// Function to read a Route file
+// -------------------------------------------------------
+export const readRouteFile = (fileUrl) => {
+  try {
+    // Firstly read all existing Bus Stops in the file
+    const data = fs.readFileSync(fileUrl, "utf8")
+
+    return JSON.parse(data)
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      console.log("File not found!")
+    } else {
+      throw err
+    }
+  }
+}
+
+// -------------------------------------------------------
+// Local function to read a set of files in a directory
+// -------------------------------------------------------
+export var prepReadGtfsFile = (firstFile, iterationSize, arraylength) => {
+  let fileFetchArray = []
+  let fileFetch = []
+
+  // Divide into pieces to prevent timeout error
+  let loop = 0
+  let start = 0
+  let startIteration = firstFile // fileFetch[0]
+  let endIteration = 0 // fileFetch[1]
+  let end = arraylength // fileFetch[2]
+  let noOfIterations = Math.floor(end / iterationSize)
+
+  if (noOfIterations > 0) {
+    do {
+      if (loop === 0) {
+        startIteration = start
+        endIteration = iterationSize - 1
+      } else {
+        startIteration = loop * iterationSize
+        if (loop < noOfIterations) {
+          endIteration = (loop + 1) * iterationSize - 1
+        } else {
+          endIteration = end - 1
+        }
+      }
+
+      loop++
+
+      fileFetch.push(startIteration)
+      fileFetch.push(endIteration)
+      fileFetch.push(noOfIterations)
+
+      fileFetchArray.push(fileFetch)
+
+      fileFetch = []
+    } while (loop <= noOfIterations)
+  } else {
+    startIteration = start
+    endIteration = end - 1
+
+    fileFetch.push(startIteration)
+    fileFetch.push(endIteration)
+    fileFetch.push(noOfIterations)
+
+    fileFetchArray.push(fileFetch)
+  }
+
+  return fileFetchArray
+}
+
+// -------------------------------------------------------
+// Database Adapter Class - works with both PostgreSQL and SQLite
+// -------------------------------------------------------
+class DatabaseAdapter {
+  constructor(client, type) {
+    this.client = client
+    this.type = type // 'postgres' or 'sqlite'
+  }
+
+  // Convert ? placeholders to $1, $2, etc for PostgreSQL
+  convertQuery(sql, params) {
+    if (this.type === "postgres") {
+      let index = 1
+      const convertedSql = sql.replace(/\?/g, () => `$${index++}`)
+      return { sql: convertedSql, params }
+    }
+    return { sql, params }
+  }
+
+  // SQLite-compatible .run() method
+  run(sql, params = [], callback = () => {}) {
+    const { sql: convertedSql, params: convertedParams } = this.convertQuery(
+      sql,
+      params
+    )
+
+    if (this.type === "postgres") {
+      this.client
+        .query(convertedSql, convertedParams)
+        .then((result) => {
+          // Mock SQLite's lastID property for INSERT operations
+          const mockThis = {
+            lastID: result.insertId || null,
+            changes: result.rowCount || 0,
+          }
+          callback.call(mockThis, null)
+        })
+        .catch((err) => callback(err))
+    } else {
+      this.client.run(convertedSql, convertedParams, callback)
+    }
+  }
+
+  // SQLite-compatible .all() method
+  all(sql, params = [], callback) {
+    const { sql: convertedSql, params: convertedParams } = this.convertQuery(
+      sql,
+      params
+    )
+
+    if (this.type === "postgres") {
+      this.client
+        .query(convertedSql, convertedParams)
+        .then((result) => callback(null, result.rows))
+        .catch((err) => callback(err, null))
+    } else {
+      this.client.all(convertedSql, convertedParams, callback)
+    }
+  }
+
+  // SQLite-compatible .get() method
+  get(sql, params = [], callback) {
+    const { sql: convertedSql, params: convertedParams } = this.convertQuery(
+      sql,
+      params
+    )
+
+    if (this.type === "postgres") {
+      this.client
+        .query(convertedSql, convertedParams)
+        .then((result) => callback(null, result.rows[0] || null))
+        .catch((err) => callback(err, null))
+    } else {
+      this.client.get(convertedSql, convertedParams, callback)
+    }
+  }
+
+  // Close connection
+  close() {
+    if (this.type === "postgres") {
+      return this.client.end()
+    } else {
+      return this.client.close()
+    }
+  }
+}
+
+// -------------------------------------------------------
+// Function to detect database type from URL
+// -------------------------------------------------------
+function detectDatabaseType(url) {
+  if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
+    return "postgres"
+  }
+  return "sqlite"
+}
+
+// -------------------------------------------------------
+// Function to open database connection (supports both PostgreSQL and SQLite)
+// -------------------------------------------------------
+export var openSqlDbConnection = async (url) => {
+  // Guard clause for null Database Url
+  if (!url) {
+    console.log("Invalid Database url")
+    return null
+  }
+
+  const dbType = detectDatabaseType(url)
+
+  try {
+    if (dbType === "postgres") {
+      // If we already have a pooled PostgreSQL connection return it
+      if (pooledPgClient) return new DatabaseAdapter(pooledPgClient, "postgres")
+
+      // Create PostgreSQL client
+      const client = new pg.Client(url)
+      await client.connect()
+
+      pooledPgClient = client
+      console.log("Connected to PostgreSQL database")
+      return new DatabaseAdapter(pooledPgClient, "postgres")
+    } else {
+      // SQLite connection (existing logic)
+      if (pooledSqliteDb) return new DatabaseAdapter(pooledSqliteDb, "sqlite")
+
+      const db = new sqlite3.Database(url, (err) => {
+        if (err) {
+          console.error("Failed to open SQLite database:", err.message)
+        }
+      })
+
+      // Configure to reduce busy/lock errors
+      try {
+        if (typeof db.configure === "function") {
+          db.configure("busyTimeout", 5000)
+        }
+      } catch (e) {
+        // ignore if not supported
+      }
+
+      // Use WAL journal mode
+      db.run("PRAGMA journal_mode = WAL;", [], (err) => {
+        if (err) console.warn("Could not set WAL journal mode:", err.message)
+      })
+
+      db.run("PRAGMA synchronous = NORMAL;", [], (err) => {
+        if (err) console.warn("Could not set synchronous PRAGMA:", err.message)
+      })
+
+      pooledSqliteDb = db
+      console.log("Connected to SQLite database")
+      return new DatabaseAdapter(pooledSqliteDb, "sqlite")
+    }
+  } catch (err) {
+    console.error(
+      `UNSUCCESSFUL in connecting to the ${dbType} database`,
+      err?.message || err
+    )
+    return null
+  }
+}
+
+// -------------------------------------------------------
+// Function to close database connection
+// -------------------------------------------------------
+export var closeSqlDbConnection = (adapter) => {
+  // Guard clause for null Database Connection
+  if (!adapter) {
+    return
+  }
+
+  // Don't close pooled connections (reuse across app lifetime)
+  if (
+    adapter.type === "postgres" &&
+    pooledPgClient &&
+    adapter.client === pooledPgClient
+  ) {
+    return // No-op: pooled connection is intended to live for the app lifetime
+  }
+
+  if (
+    adapter.type === "sqlite" &&
+    pooledSqliteDb &&
+    adapter.client === pooledSqliteDb
+  ) {
+    return // No-op: pooled connection is intended to live for the app lifetime
+  }
+
+  try {
+    adapter.close()
+  } catch (e) {
+    console.warn("Error closing database connection:", e?.message || e)
+  }
+}
+
+export default readRouteFile
