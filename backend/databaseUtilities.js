@@ -103,6 +103,33 @@ class DatabaseAdapter {
   constructor(client, type) {
     this.client = client
     this.type = type // 'postgres' or 'sqlite'
+    this._connectionPromise = null
+
+    // If no client provided, auto-connect to database
+    if (!client) {
+      this._connectionPromise = this._autoConnect()
+    }
+  }
+
+  // Auto-connect to database using environment variables
+  async _autoConnect() {
+    const url = process.env.DATABASE_URL || process.env.SQL_URI
+    if (!url) {
+      throw new Error("No database URL found in environment variables")
+    }
+
+    const adapter = await openSqlDbConnection(url)
+    this.client = adapter.client
+    this.type = adapter.type
+    return this
+  }
+
+  // Ensure connection is established
+  async _ensureConnection() {
+    if (this._connectionPromise) {
+      await this._connectionPromise
+      this._connectionPromise = null // Clear after first use
+    }
   }
 
   // Convert ? placeholders to $1, $2, etc for PostgreSQL
@@ -115,18 +142,43 @@ class DatabaseAdapter {
     return { sql, params }
   }
 
-  // SQLite-compatible .run() method
-  run(sql, params = [], callback = () => {}) {
+  // SQLite-compatible .run() method - supports both callbacks and promises
+  async run(sql, params = [], callback) {
+    await this._ensureConnection()
+
     const { sql: convertedSql, params: convertedParams } = this.convertQuery(
       sql,
       params
     )
 
+    // If no callback provided, return a Promise
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        if (this.type === "postgres") {
+          this.client
+            .query(convertedSql, convertedParams)
+            .then((result) => {
+              const mockThis = {
+                lastID: result.insertId || null,
+                changes: result.rowCount || 0,
+              }
+              resolve(mockThis)
+            })
+            .catch(reject)
+        } else {
+          this.client.run(convertedSql, convertedParams, function (err) {
+            if (err) reject(err)
+            else resolve({ lastID: this.lastID, changes: this.changes })
+          })
+        }
+      })
+    }
+
+    // Callback-based usage
     if (this.type === "postgres") {
       this.client
         .query(convertedSql, convertedParams)
         .then((result) => {
-          // Mock SQLite's lastID property for INSERT operations
           const mockThis = {
             lastID: result.insertId || null,
             changes: result.rowCount || 0,
@@ -139,13 +191,33 @@ class DatabaseAdapter {
     }
   }
 
-  // SQLite-compatible .all() method
-  all(sql, params = [], callback) {
+  // SQLite-compatible .all() method - supports both callbacks and promises
+  async all(sql, params = [], callback) {
+    await this._ensureConnection()
+
     const { sql: convertedSql, params: convertedParams } = this.convertQuery(
       sql,
       params
     )
 
+    // If no callback provided, return a Promise
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        if (this.type === "postgres") {
+          this.client
+            .query(convertedSql, convertedParams)
+            .then((result) => resolve(result.rows))
+            .catch(reject)
+        } else {
+          this.client.all(convertedSql, convertedParams, (err, rows) => {
+            if (err) reject(err)
+            else resolve(rows)
+          })
+        }
+      })
+    }
+
+    // Callback-based usage
     if (this.type === "postgres") {
       this.client
         .query(convertedSql, convertedParams)
@@ -156,13 +228,33 @@ class DatabaseAdapter {
     }
   }
 
-  // SQLite-compatible .get() method
-  get(sql, params = [], callback) {
+  // SQLite-compatible .get() method - supports both callbacks and promises
+  async get(sql, params = [], callback) {
+    await this._ensureConnection()
+
     const { sql: convertedSql, params: convertedParams } = this.convertQuery(
       sql,
       params
     )
 
+    // If no callback provided, return a Promise
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        if (this.type === "postgres") {
+          this.client
+            .query(convertedSql, convertedParams)
+            .then((result) => resolve(result.rows[0] || null))
+            .catch(reject)
+        } else {
+          this.client.get(convertedSql, convertedParams, (err, row) => {
+            if (err) reject(err)
+            else resolve(row)
+          })
+        }
+      })
+    }
+
+    // Callback-based usage
     if (this.type === "postgres") {
       this.client
         .query(convertedSql, convertedParams)
@@ -292,3 +384,13 @@ export var closeSqlDbConnection = (adapter) => {
 }
 
 export default readRouteFile
+
+// Export the DatabaseAdapter class for controllers to use
+export { DatabaseAdapter }
+
+// Factory function to create a DatabaseAdapter connected to PostgreSQL
+export const createDatabaseAdapter = async () => {
+  const url = process.env.DATABASE_URL || process.env.SQL_URI
+  const adapter = await openSqlDbConnection(url)
+  return adapter
+}
