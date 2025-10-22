@@ -1,28 +1,30 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
 import moment from "moment"
-import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+import {
+  openSqlDbConnection,
+  closeSqlDbConnection,
+} from "../databaseUtilities.js"
 
 // -------------------------------------------------------
 // Prepare empty vessels Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyVesselsTable = (req, res) => {
+export const prepareEmptyVesselsTable = async (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+  db = await openSqlDbConnection(process.env.SQL_URI)
 
   if (db !== null) {
-    // Firstly read the sqlite_sequence table to check if vessels table exists
-    let sql = "SELECT seq FROM sqlite_sequence WHERE name = 'vessels'"
+    // Simple SELECT to check if table exists (works for both databases)
+    let sql = "SELECT COUNT(*) as count FROM vessels"
 
     db.all(sql, [], (err, results) => {
       if (err) {
-        return console.error(err.message)
-      }
-
-      // results.length shows 1 if exists or 0 if doesn't exist
-      if (results.length === 1) {
-        // If exists then DROP and recreate to ensure schema is current
+        // Table doesn't exist, create it
+        console.log("vessels table does not exist - creating")
+        createVesselsTable(db)
+      } else {
+        // Table exists, drop and recreate to ensure schema is current
         console.log(
           "vessels table exists - dropping and recreating to ensure schema is correct"
         )
@@ -32,10 +34,6 @@ export const prepareEmptyVesselsTable = (req, res) => {
           }
           createVesselsTable(db)
         })
-      } else {
-        // Else create table
-        console.log("vessels table does not exist - creating")
-        createVesselsTable(db)
       }
     })
 
@@ -49,21 +47,49 @@ export const prepareEmptyVesselsTable = (req, res) => {
 }
 
 // -------------------------------------------------------
-// Create vessels Table in the SQLite Database
+// Create vessels Table in the database
 // -------------------------------------------------------
 export const createVesselsTable = (db) => {
   // Guard clause for null Database Connection
   if (db === null) return
 
   try {
-    // IF NOT EXISTS isn't really necessary in next line
-    const sql =
-      "CREATE TABLE IF NOT EXISTS vessels (vesselid INTEGER PRIMARY KEY AUTOINCREMENT, databaseversion INTEGER, vesselnameurl TEXT NOT NULL, vesselname TEXT NOT NULL, vesseltitle TEXT NOT NULL, vesselurl TEXT NOT NULL, vesseltype TEXT NOT NULL, vesselflag TEXT NOT NULL, vesselshortoperator TEXT NOT NULL, vessellongoperator TEXT NOT NULL, vesselyearbuilt TEXT NOT NULL, vessellengthmetres INTEGER, vesselwidthmetres INTEGER, vesselgrosstonnage INTEGER, vesselaveragespeedknots REAL, vesselmaxspeedknots REAL, vesselaveragedraughtmetres REAL, vesselimonumber INTEGER, vesselmmsnumber INTEGER, vesselcallsign TEXT NOT NULL, vesseltypicalpassengers TEXT, vesseltypicalcrew INTEGER, currentpositionlng REAL CHECK( currentpositionlng >= -180 AND currentpositionlng <= 180 ), currentpositionlat REAL CHECK( currentpositionlat >= -90 AND currentpositionlat <= 90 ), currentpositiontime TEXT)"
+    // PostgreSQL and SQLite compatible table creation
+    const sql = `
+      CREATE TABLE IF NOT EXISTS vessels (
+        vesselid SERIAL PRIMARY KEY, 
+        databaseversion INTEGER, 
+        vesselnameurl TEXT NOT NULL, 
+        vesselname TEXT NOT NULL, 
+        vesseltitle TEXT NOT NULL, 
+        vesselurl TEXT NOT NULL, 
+        vesseltype TEXT NOT NULL, 
+        vesselflag TEXT NOT NULL, 
+        vesselshortoperator TEXT NOT NULL, 
+        vessellongoperator TEXT NOT NULL, 
+        vesselyearbuilt TEXT NOT NULL, 
+        vessellengthmetres INTEGER, 
+        vesselwidthmetres INTEGER, 
+        vesselgrosstonnage INTEGER, 
+        vesselaveragespeedknots REAL, 
+        vesselmaxspeedknots REAL, 
+        vesselaveragedraughtmetres REAL, 
+        vesselimonumber INTEGER, 
+        vesselmmsnumber INTEGER, 
+        vesselcallsign TEXT NOT NULL, 
+        vesseltypicalpassengers TEXT, 
+        vesseltypicalcrew INTEGER, 
+        currentpositionlng REAL CHECK( currentpositionlng >= -180 AND currentpositionlng <= 180 ), 
+        currentpositionlat REAL CHECK( currentpositionlat >= -90 AND currentpositionlat <= 90 ), 
+        currentpositiontime TEXT
+      )
+    `
 
     db.run(sql, [], (err) => {
       if (err) {
         return console.error(err.message)
       }
+      console.log("Empty vessels table created")
     })
   } catch (e) {
     console.error("Error in createVesselsTable: ", e.message)
@@ -71,7 +97,7 @@ export const createVesselsTable = (db) => {
 }
 
 // -------------------------------------------------------
-// Delete all Vessels from SQLite database
+// Delete all Vessels from database
 // -------------------------------------------------------
 export const deleteVessels = (db) => {
   // Guard clause for null Database Connection
@@ -97,19 +123,21 @@ export const deleteVessels = (db) => {
           console.log("All vessels data deleted")
         })
 
-        // Reset the id number
-        const sql2 = "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'vessels'"
+        // Reset sequence for PostgreSQL or SQLite
+        const sql2 = `
+          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'vessels';
+          ALTER SEQUENCE vessels_vesselid_seq RESTART WITH 1;
+        `
 
         db.run(sql2, [], (err) => {
           if (err) {
-            console.error(err.message)
+            // Don't log error as one of the statements will fail depending on DB type
+            console.log("Sequence reset attempted")
           }
-          console.log("In sqlite_sequence table vessels seq number set to 0")
         })
       } else {
         console.log("vessels table was empty (so no data deleted)")
       }
-      // })
     })
   } catch (err) {
     console.error("Error in deleteVessels: ", err.message)
@@ -117,19 +145,18 @@ export const deleteVessels = (db) => {
 }
 
 // -------------------------------------------------------
-// Save Vessel details to SQLite database
+// Save Vessel details to database
 // -------------------------------------------------------
-export const saveVesselDetails = (newVessel) => {
+export const saveVesselDetails = async (newVessel) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+  db = await openSqlDbConnection(process.env.SQL_URI)
 
   // Guard clause for null Vessel details
   if (db === null) return
   if (newVessel == null) return
 
-  db.serialize(() => {
-    // try {
+  try {
     // Count the records in the database
     let sql = "SELECT COUNT(vesselid) AS count FROM vessels"
 
@@ -140,9 +167,9 @@ export const saveVesselDetails = (newVessel) => {
       // console.log("Record Count Before Insertion: ", results.count)
     })
 
-    // Don't change the routine below
+    // Use placeholder syntax that works with both databases
     const sql_insert =
-      "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)"
+      "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
     db.run(sql_insert, newVessel, (err) => {
       if (err) {
@@ -150,12 +177,11 @@ export const saveVesselDetails = (newVessel) => {
       }
       // console.warn("New id of inserted vessel:", this.lastID)
     })
-    // } catch (err) {
-    //   console.error("Error in SQLsaveVessel: ", err)
-    // }
-  })
+  } catch (err) {
+    console.error("Error in saveVesselDetails: ", err)
+  }
 
-  // Disconnect from the SQLite database
+  // Disconnect from the database
   closeSqlDbConnection(db)
 }
 

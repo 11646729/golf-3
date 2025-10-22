@@ -4,9 +4,12 @@ import fs from "fs"
 import moment from "moment"
 
 // import createCalendarEvent from "../gcEventStructure.js"
-import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+import { DatabaseAdapter } from "../databaseUtilities.js"
 
 dotenv.config()
+
+// Database adapter for PostgreSQL
+const db = new DatabaseAdapter()
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -20,112 +23,79 @@ export var index = (req, res) => {
 // Prepare empty RTCalendar Table ready to import events
 // Path: localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable
 // -------------------------------------------------------
-export const prepareEmptyRTCalendarTable = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+export const prepareEmptyRTCalendarTable = async (req, res) => {
+  try {
+    // Check if rtcalendar table exists using PostgreSQL system tables
+    const tableExists = await db.get(
+      `SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'rtcalendar'
+      )`
+    )
 
-  if (db !== null) {
-    // Firstly read the sqlite_schema table to check if golfcourses table exists
-    let sql =
-      "SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'rtcalendar'"
+    if (tableExists.exists) {
+      // If exists then delete all values
+      console.log("rtcalendar table exists")
+      await deleteRTCalendarEvents()
+    } else {
+      // Else create table
+      console.log("rtcalendar table does not exist")
+      await createRTCalendarTable()
+    }
 
-    // Must use db.all not db.run
-    db.all(sql, [], (err, results) => {
-      if (err) {
-        return console.error(err.message)
-      }
-
-      // results.length shows 1 if exists or 0 if doesn't exist
-      if (results.length === 1) {
-        // If exists then delete all values
-        console.log("rtcalendar table exists")
-        deleteRTCalendarEvents(db)
-      } else {
-        // Else create table
-        console.log("rtcalendar table does not exist")
-        createRTCalendarTable(db)
-      }
-    })
-
-    res.send("Returned Data")
-  } else {
-    console.error("Cannot connect to database")
+    res.send({ message: "RTCalendar table prepared successfully" })
+  } catch (error) {
+    console.error("Error in prepareEmptyRTCalendarTable:", error.message)
+    res.status(500).send({ error: "Failed to prepare RTCalendar table" })
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
 // Local function to create empty RTCalendar Table in the database
 // -------------------------------------------------------
-const createRTCalendarTable = (db) => {
-  // IF NOT EXISTS isn't really necessary in next line
-  const sql =
-    "CREATE TABLE IF NOT EXISTS rtcalendar (eventid INTEGER PRIMARY KEY AUTOINCREMENT, DTSTAMP TEXT NOT NULL, event_description TEXT NOT NULL)"
-  let params = []
-
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+const createRTCalendarTable = async () => {
   try {
-    db.run(sql, params, (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-      console.log("Empty rtCalendar table created")
-    })
-  } catch (e) {
-    console.error("Error in createRTCalendarTable: ", e.message)
+    const sql = `
+      CREATE TABLE IF NOT EXISTS rtcalendar (
+        eventid SERIAL PRIMARY KEY, 
+        DTSTAMP TEXT NOT NULL, 
+        event_description TEXT NOT NULL
+      )
+    `
+
+    await db.run(sql)
+    console.log("Empty rtCalendar table created")
+  } catch (error) {
+    console.error("Error in createRTCalendarTable:", error.message)
+    throw error
   }
 }
 
 // -------------------------------------------------------
 // Local function to delete all RTCalendar records from Table in database
 // -------------------------------------------------------
-const deleteRTCalendarEvents = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+const deleteRTCalendarEvents = async () => {
   try {
-    // db.serialize(function () {
     // Count the records in the database
-    const sql = "SELECT COUNT(eventid) AS count FROM rtcalendar"
+    const countResult = await db.get(
+      "SELECT COUNT(eventid) AS count FROM rtcalendar"
+    )
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
-      }
+    if (countResult && countResult.count > 0) {
+      // Delete all the data in the rtcalendar table
+      await db.run("DELETE FROM rtcalendar")
+      console.log("All rtcalendar data deleted")
 
-      if (result[0].count > 0) {
-        // Delete all the data in the rtcalendar table
-        const sql1 = "DELETE FROM rtcalendar"
-
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("All rtcalendar data deleted")
-        })
-
-        // Reset the id number
-        const sql2 =
-          "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'rtcalendar'"
-
-        db.run(sql2, [], (err) => {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("In sqlite_sequence table rtcalendar seq number set to 0")
-        })
-      } else {
-        console.log("rtcalendar table was empty (so no data deleted)")
-      }
-      // })
-    })
-  } catch (err) {
-    console.error("Error in deleteRTCalendarEvents: ", err.message)
+      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      await db.run("ALTER SEQUENCE rtcalendar_eventid_seq RESTART WITH 1")
+      console.log("RTCalendar ID sequence reset to 1")
+    } else {
+      console.log("rtcalendar table was empty (so no data deleted)")
+    }
+  } catch (error) {
+    console.error("Error in deleteRTCalendarEvents:", error.message)
+    throw error
   }
 }
 
@@ -133,109 +103,69 @@ const deleteRTCalendarEvents = (db) => {
 // Import RTCalendar Events from a File to the Table in the Database
 // Path: localhost:4000/api/rtcalendar/importRTCalendarEventsFromFile
 // -------------------------------------------------------
-export const importRTCalendarEventsFromFile = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
-
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+export const importRTCalendarEventsFromFile = async (req, res) => {
   try {
     // Fetch all the RTCalendar events
-    fs.readFile(
+    const data = await fs.promises.readFile(
       process.env.RAW_RTCALENDAR_DATA_FILEPATH,
-      "utf8",
-      (err, data) => {
-        if (err) {
-          console.error(err.message)
-        }
-
-        // Save the data in the rtcalender Table in the SQLite database
-        const calendarEvents = JSON.parse(data)
-        populateRTCalendarTable(calendarEvents)
-      }
+      "utf8"
     )
-  } catch (err) {
-    console.error("Error in importRTCalendarEventsFromFile: ", err.message)
-  }
 
-  // Close the Database Connection
-  closeSqlDbConnection(db)
+    // Save the data in the rtcalendar Table in the PostgreSQL database
+    const calendarEvents = JSON.parse(data)
+    await populateRTCalendarTable(calendarEvents)
+
+    res.send({ message: "RTCalendar events imported successfully" })
+  } catch (error) {
+    console.error("Error in importRTCalendarEventsFromFile:", error.message)
+    res.status(500).send({ error: "Failed to import RTCalendar events" })
+  }
 }
 
 // -------------------------------------------------------
 // Local function for importRTCalendarDataFromFile
 // -------------------------------------------------------
-const populateRTCalendarTable = (calendarEvents) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
-
-  let loop = 0
+const populateRTCalendarTable = async (calendarEvents) => {
   try {
-    do {
+    let insertedCount = 0
+
+    for (const calendarEvent of calendarEvents.tableData) {
       const event = [
-        // process.env.DATABASE_VERSION,
-        calendarEvents.tableData[loop].eventid,
-        calendarEvents.tableData[loop].DTSTAMP,
-        calendarEvents.tableData[loop].event_description,
+        calendarEvent.eventid,
+        calendarEvent.DTSTAMP,
+        calendarEvent.event_description,
       ]
 
-      const sql =
-        "INSERT INTO rtcalendar (eventid, DTSTAMP, event_description) VALUES ($1, $2, $3 )"
+      const sql = `
+        INSERT INTO rtcalendar (eventid, DTSTAMP, event_description) 
+        VALUES (?, ?, ?)
+      `
 
-      db.run(sql, event, (err) => {
-        if (err) {
-          console.error(err.message)
-        }
-      })
+      await db.run(sql, event)
+      insertedCount++
+    }
 
-      loop++
-    } while (loop < calendarEvents.tableData.length)
-
-    console.log("No of new Calendar Events created & saved: ", loop)
-  } catch (e) {
-    console.error(e.message)
+    console.log("No of new Calendar Events created & saved:", insertedCount)
+    return insertedCount
+  } catch (error) {
+    console.error("Error in populateRTCalendarTable:", error.message)
+    throw error
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
-// Get all RTCalender Events from database
+// Get all RTCalendar Events from database
 // Path: localhost:4000/api/rtcalendar/getRTCalendarEvents
 // -------------------------------------------------------
-export const getRTCalendarEvents = (req, res) => {
-  let sql = "SELECT * FROM rtcalendar ORDER BY eventid"
-  let params = []
+export const getRTCalendarEvents = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM rtcalendar ORDER BY eventid"
+    const results = await db.all(sql)
 
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
-
-  if (db !== null) {
-    try {
-      db.all(sql, params, (err, results) => {
-        if (err) {
-          res.status(400).json({ error: err.message })
-          return
-        }
-        // res.json({
-        //   message: "success",
-        //   data: results,
-        // })
-        res.send(results)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
+    res.send(results)
+  } catch (error) {
+    console.error("Error in getRTCalendarEvents:", error.message)
+    res.status(500).send({ error: "Failed to fetch RTCalendar events" })
   }
 }
 

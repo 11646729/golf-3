@@ -1,5 +1,8 @@
 import axios from "axios"
-import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+import { DatabaseAdapter } from "../databaseUtilities.js"
+
+// Database adapter for PostgreSQL
+const db = new DatabaseAdapter()
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -12,181 +15,130 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Prepare empty temperatures Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyTemperaturesTable = (req, res) => {
-  // Open a Database Connection
-  let db = openSqlDbConnection(process.env.SQL_URI)
+export const prepareEmptyTemperaturesTable = async (req, res) => {
+  try {
+    // Check if temperatures table exists using PostgreSQL system tables
+    const tableExists = await db.get(
+      `SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'temperatures'
+      )`
+    )
 
-  if (db !== null) {
-    // Firstly read the sqlite_schema table to check if temperatures table exists
-    let sql =
-      "SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'temperatures'"
-
-    // Must use db.all not db.run
-    db.all(sql, [], (error, results) => {
-      if (error) {
-        return console.error(error.message)
-      }
-
-      // results.length shows 1 if exists or 0 if doesn't exist
-      if (results.length === 1) {
-        // If exists then delete all values
-        console.log("temperatures table exists")
-        deleteTemperatures(db)
-      } else {
-        // Else create table
-        console.log("temperatures table does not exist")
-        createTemperaturesTable(db)
-      }
-    })
-  } else {
-    console.error("Cannot connect to database")
-  }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
-
-  // res.send("prepareEmptyTemperaturesTable return value")
-}
-
-// -------------------------------------------------------
-// Create temperatures Table in the SQLite Database
-// -------------------------------------------------------
-const createTemperaturesTable = (req, res) => {
-  // Open a Database Connection
-  let db = openSqlDbConnection(process.env.SQL_URI)
-
-  if (db !== null) {
-    try {
-      const sql =
-        "CREATE TABLE IF NOT EXISTS temperatures (temperatureid INTEGER PRIMARY KEY AUTOINCREMENT, timenow TEXT NOT NULL, databaseversion INTEGER, timeofmeasurement TEXT NOT NULL, locationname TEXT NOT NULL, locationtemperature REAL, lng REAL CHECK( lng >= -180 AND lng <= 180 ), lat REAL CHECK( lat >= -90 AND lat <= 90 ))"
-
-      db.all(sql, [], (error) => {
-        if (error) {
-          return console.error(error.message)
-        }
-        console.log("temperatures table successfully created")
-      })
-
-      // Disconnect from the SQLite database
-      closeSqlDbConnection(db)
-    } catch (error) {
-      console.error(error.message)
+    if (tableExists.exists) {
+      // If exists then delete all values
+      console.log("temperatures table exists")
+      await deleteTemperatures()
+    } else {
+      // Else create table
+      console.log("temperatures table does not exist")
+      await createTemperaturesTable()
     }
-  } else {
-    console.error("Cannot connect to database")
+
+    if (res) {
+      res.send({ message: "Temperature table prepared successfully" })
+    }
+  } catch (error) {
+    console.error("Error in prepareEmptyTemperaturesTable:", error.message)
+    if (res) {
+      res.status(500).send({ error: "Failed to prepare temperature table" })
+    }
   }
 }
 
 // -------------------------------------------------------
-// Delete all temperatures records from SQLite database
+// Create temperatures Table in PostgreSQL Database
 // -------------------------------------------------------
-const deleteTemperatures = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
+const createTemperaturesTable = async () => {
+  try {
+    const sql = `
+      CREATE TABLE IF NOT EXISTS temperatures (
+        temperatureid SERIAL PRIMARY KEY, 
+        timenow TEXT NOT NULL, 
+        databaseversion INTEGER, 
+        timeofmeasurement TEXT NOT NULL, 
+        locationname TEXT NOT NULL, 
+        locationtemperature REAL, 
+        lng REAL CHECK( lng >= -180 AND lng <= 180 ), 
+        lat REAL CHECK( lat >= -90 AND lat <= 90 )
+      )
+    `
 
+    await db.run(sql)
+    console.log("temperatures table successfully created")
+  } catch (error) {
+    console.error("Error creating temperatures table:", error.message)
+    throw error
+  }
+}
+
+// -------------------------------------------------------
+// Delete all temperatures records from PostgreSQL database
+// -------------------------------------------------------
+const deleteTemperatures = async () => {
   try {
     // Count the records in the database
-    const sql = "SELECT COUNT(temperatureid) AS count FROM temperatures"
+    const countResult = await db.get(
+      "SELECT COUNT(temperatureid) AS count FROM temperatures"
+    )
 
-    db.all(sql, [], (error, result) => {
-      if (error) {
-        console.error(error.message)
-      }
+    if (countResult && countResult.count > 0) {
+      // Delete all the data in the temperatures table
+      await db.run("DELETE FROM temperatures")
+      console.log("All temperatures data deleted")
 
-      if (result[0].count > 0) {
-        // Delete all the data in the temperatures table
-        const sql1 = "DELETE FROM temperatures"
-
-        db.all(sql1, [], function (error, results) {
-          if (error) {
-            console.error(error.message)
-          }
-          console.log("All temperatures data deleted")
-        })
-
-        // Reset the id number
-        const sql2 =
-          "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'temperatures'"
-
-        db.run(sql2, [], (error) => {
-          if (error) {
-            console.error(error.message)
-          }
-          console.log(
-            "In sqlite_sequence table temperatures seq number set to 0"
-          )
-        })
-      } else {
-        console.log("temperatures table was empty (so no data deleted)")
-      }
-    })
+      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      await db.run(
+        "ALTER SEQUENCE temperatures_temperatureid_seq RESTART WITH 1"
+      )
+      console.log("Temperature ID sequence reset to 1")
+    } else {
+      console.log("temperatures table was empty (so no data deleted)")
+    }
   } catch (error) {
-    console.error("Error in deleteTemperatures: ", error.message)
+    console.error("Error in deleteTemperatures:", error.message)
+    throw error
   }
 }
 
 // -------------------------------------------------------
 // Get all temperatures
 // -------------------------------------------------------
-export const getTemperaturesFromDatabase = (req, res) => {
-  // Open a Database Connection
-  let db = openSqlDbConnection(process.env.SQL_URI)
+export const getTemperaturesFromDatabase = async (req, res) => {
+  try {
+    // Only fetch <= the last 20 readings
+    const sql =
+      "SELECT * FROM temperatures ORDER BY temperatureid DESC LIMIT 20"
+    const results = await db.all(sql)
 
-  if (db !== null) {
-    try {
-      // Only fetch <= the last 20 readings
-      const sql =
-        "SELECT * FROM temperatures ORDER BY temperatureid DESC LIMIT 20"
-
-      db.all(sql, [], (error, results) => {
-        if (error) {
-          return console.error(error.message)
-        }
-        // console.log("Results: ", results.length)
-
-        res.send(results)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (error) {
-      console.error(error.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
+    console.log("Temperature results:", results.length)
+    res.send(results)
+  } catch (error) {
+    console.error("Error in getTemperaturesFromDatabase:", error.message)
+    res.status(500).send({ error: "Failed to fetch temperature data" })
   }
 }
 
 // -------------------------------------------------------
-// Save temperatures to SQLite database
+// Save temperatures to PostgreSQL database
 // -------------------------------------------------------
-const saveTemperature = (temperatureReading) => {
+const saveTemperature = async (temperatureReading) => {
   // Guard clause for null temperatureReading
   if (temperatureReading == null) return
 
-  // Open a Database Connection
-  let db = openSqlDbConnection(process.env.SQL_URI)
+  try {
+    const sql = `
+      INSERT INTO temperatures (timenow, databaseversion, timeofmeasurement, locationname, locationtemperature, lng, lat) 
+      VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING temperatureid
+    `
 
-  if (db !== null) {
-    try {
-      // Don't change the routine below
-      const sql1 =
-        "INSERT INTO temperatures (timenow, databaseversion, timeofmeasurement, locationname, locationtemperature, lng, lat) VALUES ($1, $2, $3, $4, $5, $6, $7)"
-
-      db.run(sql1, temperatureReading, function (err) {
-        if (err) {
-          return console.error(err.message)
-        }
-        console.log("New id of inserted temperature reading:", this.lastID)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (error) {
-      console.error("Error in saveTemperature: ", error)
-    }
-  } else {
-    console.error("Cannot connect to database")
+    const result = await db.get(sql, temperatureReading)
+    console.log("New id of inserted temperature reading:", result.temperatureid)
+    return result.temperatureid
+  } catch (error) {
+    console.error("Error in saveTemperature:", error.message)
+    throw error
   }
 }
 
@@ -254,5 +206,8 @@ export const emitTemperatureData = (
     console.log("Error in emitTemperatureData: ", error)
   }
 }
+
+// Make saveTemperature available for external use
+export { saveTemperature }
 
 export default getTemperaturesFromDatabase

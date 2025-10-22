@@ -1,5 +1,8 @@
 // import fs from "fs"
-import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+import { DatabaseAdapter } from "../databaseUtilities.js"
+
+// Database adapter for PostgreSQL
+const db = new DatabaseAdapter()
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -12,114 +15,81 @@ export var index = (req, res) => {
 // -------------------------------------------------------
 // Prepare empty seismicdesigns Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptySeismicDesignsTable = (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
-
-  if (db !== null) {
-    // Firstly read the sqlite_schema table to check if golfcourses table exists
-    let sql =
-      "SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'seismicdesigns'"
-
-    // Must use db.all not db.run
-    db.all(sql, [], (err, results) => {
-      if (err) {
-        return console.error(err.message)
-      }
-
-      // results.length shows 1 if exists or 0 if doesn't exist
-      if (results.length === 1) {
-        // If exists then delete all values
-        console.log("seismicdesigns table exists")
-        deleteSeismicDesigns(db)
-      } else {
-        // Else create table
-        console.log("seismicdesigns table does not exist")
-        createSeismicDesignsTable(db)
-      }
-    })
-
-    res.send("Returned Data")
-  } else {
-    console.error("Cannot connect to database")
-  }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
-}
-
-// -------------------------------------------------------
-// Create seismicdesigns Table in the SQLite database
-// -------------------------------------------------------
-const createSeismicDesignsTable = (db) => {
-  // IF NOT EXISTS isn't really necessary in next line
-  const sql =
-    "CREATE TABLE IF NOT EXISTS seismicdesigns (seismicdesignid INTEGER PRIMARY KEY AUTOINCREMENT, databaseversion INTEGER, type TEXT NOT NULL)"
-  let params = []
-
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+export const prepareEmptySeismicDesignsTable = async (req, res) => {
   try {
-    db.run(sql, params, (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-      console.log("Empty seismicdesigns table created")
-    })
-  } catch (e) {
-    console.error("Error in createSeismicDesignsTable: ", e.message)
+    // Check if seismicdesigns table exists using PostgreSQL system tables
+    const tableExists = await db.get(
+      `SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'seismicdesigns'
+      )`
+    )
+
+    if (tableExists.exists) {
+      // If exists then delete all values
+      console.log("seismicdesigns table exists")
+      await deleteSeismicDesigns()
+    } else {
+      // Else create table
+      console.log("seismicdesigns table does not exist")
+      await createSeismicDesignsTable()
+    }
+
+    res.send({ message: "Seismic Designs table prepared successfully" })
+  } catch (error) {
+    console.error("Error in prepareEmptySeismicDesignsTable:", error.message)
+    res.status(500).send({ error: "Failed to prepare Seismic Designs table" })
   }
 }
 
 // -------------------------------------------------------
-// Delete all seismicdesigns records from SQLite database
+// Create seismicdesigns Table in PostgreSQL database
 // -------------------------------------------------------
-const deleteSeismicDesigns = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+const createSeismicDesignsTable = async () => {
   try {
-    // db.serialize(function () {
+    const sql = `
+      CREATE TABLE IF NOT EXISTS seismicdesigns (
+        seismicdesignid SERIAL PRIMARY KEY, 
+        databaseversion INTEGER, 
+        type TEXT NOT NULL
+      )
+    `
+
+    await db.run(sql)
+    console.log("Empty seismicdesigns table created")
+  } catch (error) {
+    console.error("Error in createSeismicDesignsTable:", error.message)
+    throw error
+  }
+}
+
+// -------------------------------------------------------
+// Delete all seismicdesigns records from PostgreSQL database
+// -------------------------------------------------------
+const deleteSeismicDesigns = async () => {
+  try {
     // Count the records in the database
-    const sql = "SELECT COUNT(seismicdesignid) AS count FROM seismicdesigns"
+    const countResult = await db.get(
+      "SELECT COUNT(seismicdesignid) AS count FROM seismicdesigns"
+    )
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
-      }
+    if (countResult && countResult.count > 0) {
+      // Delete all the data in the seismicdesigns table
+      await db.run("DELETE FROM seismicdesigns")
+      console.log("All seismicdesigns data deleted")
 
-      if (result[0].count > 0) {
-        // Delete all the data in the seismicdesigns table
-        const sql1 = "DELETE FROM seismicdesigns"
-
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("All seismicdesigns data deleted")
-        })
-
-        // Reset the id number
-        const sql2 =
-          "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'seismicdesigns'"
-
-        db.run(sql2, [], (err) => {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log(
-            "In sqlite_sequence table seismicdesigns seq number set to 0"
-          )
-        })
-      } else {
-        console.log("seismicdesigns table was empty (so no data deleted)")
-      }
-      // })
-    })
-  } catch (err) {
-    console.error("Error in deleteSeismicDesigns: ", err.message)
+      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      await db.run(
+        "ALTER SEQUENCE seismicdesigns_seismicdesignid_seq RESTART WITH 1"
+      )
+      console.log("Seismic Designs ID sequence reset to 1")
+    } else {
+      console.log("seismicdesigns table was empty (so no data deleted)")
+    }
+  } catch (error) {
+    console.error("Error in deleteSeismicDesigns:", error.message)
+    throw error
   }
 }
 
@@ -205,38 +175,18 @@ const populateSeismicDesigns = (courses) => {
 }
 
 // -------------------------------------------------------
-// Get all Seismic Designs from SQLite database
+// Get all Seismic Designs from PostgreSQL database
 // Path: localhost:4000/api/seismicdesigns/getSeismicDesigns
 // -------------------------------------------------------
-export const getSeismicDesigns = (req, res) => {
-  let sql = "SELECT * FROM seismicdesigns ORDER BY seismicdesignsid"
-  let params = []
+export const getSeismicDesigns = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM seismicdesigns ORDER BY seismicdesignid"
+    const results = await db.all(sql)
 
-  // Open a Database Connection
-  let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
-
-  if (db !== null) {
-    try {
-      db.all(sql, params, (err, results) => {
-        if (err) {
-          res.status(400).json({ error: err.message })
-          return
-        }
-        // res.json({
-        //   message: "success",
-        //   data: results,
-        // })
-        res.send(results)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
+    res.send(results)
+  } catch (error) {
+    console.error("Error in getSeismicDesigns:", error.message)
+    res.status(500).send({ error: "Failed to fetch Seismic Designs" })
   }
 }
 

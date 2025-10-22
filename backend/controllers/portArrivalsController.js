@@ -1,6 +1,9 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
-import { openSqlDbConnection, closeSqlDbConnection } from "../fileUtilities.js"
+import {
+  openSqlDbConnection,
+  closeSqlDbConnection,
+} from "../databaseUtilities.js"
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -13,31 +16,26 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Prepare empty portarrivals Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyPortArrivalsTable = (req, res) => {
+export const prepareEmptyPortArrivalsTable = async (req, res) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+  db = await openSqlDbConnection(process.env.SQL_URI)
 
   if (db !== null) {
-    // Firstly read the sqlite_sequence table to check if portarrivals table exists
-    let sql = "SELECT seq FROM sqlite_sequence WHERE name = 'portarrivals'"
+    // Simple SELECT to check if table exists (works for both databases)
+    let sql = "SELECT COUNT(*) as count FROM portarrivals"
 
     db.all(sql, [], (err, results) => {
       if (err) {
-        return console.error(err.message)
-      }
-
-      // results.length shows 1 if exists or 0 if doesn't exist
-      if (results.length === 1) {
-        // If exists then delete all values
+        // Table doesn't exist, create it
+        console.log("portarrivals table does not exist")
+        createPortArrivalsTable(db)
+      } else {
+        // Table exists, delete data
         console.log(
           "portarrivals table exists - dropping and recreating to ensure schema is correct"
         )
         deletePortArrivals(db)
-      } else {
-        // Else create table
-        console.log("portarrivals table does not exist")
-        createPortArrivalsTable(db)
       }
     })
 
@@ -51,21 +49,41 @@ export const prepareEmptyPortArrivalsTable = (req, res) => {
 }
 
 // -------------------------------------------------------
-// Create portarrivals Table in the SQLite Database
+// Create portarrivals Table in the database
 // -------------------------------------------------------
 export const createPortArrivalsTable = (db) => {
   // Guard clause for null Database Connection
   if (db === null) return
 
   try {
-    // IF NOT EXISTS isn't really necessary in next line
-    const sql =
-      "CREATE TABLE IF NOT EXISTS portarrivals (portarrivalid INTEGER PRIMARY KEY AUTOINCREMENT, databaseversion INTEGER, sentencecaseport TEXT NOT NULL, portname TEXT NOT NULL, portunlocode TEXT NOT NULL, portcoordinatelng REAL CHECK( portcoordinatelng >= -180 AND portcoordinatelng <= 180 ), portcoordinatelat REAL CHECK( portcoordinatelat >= -90 AND portcoordinatelat <= 90 ), cruiseline TEXT, cruiselinelogo TEXT, vesselshortcruisename TEXT, arrivalDate TEXT, weekday TEXT, vesseleta TEXT, vesseletatime TEXT, vesseletd TEXT, vesseletdtime TEXT, vesselnameurl TEXT)"
+    // PostgreSQL and SQLite compatible table creation
+    const sql = `
+      CREATE TABLE IF NOT EXISTS portarrivals (
+        portarrivalid SERIAL PRIMARY KEY, 
+        databaseversion INTEGER, 
+        sentencecaseport TEXT NOT NULL, 
+        portname TEXT NOT NULL, 
+        portunlocode TEXT NOT NULL, 
+        portcoordinatelng REAL CHECK( portcoordinatelng >= -180 AND portcoordinatelng <= 180 ), 
+        portcoordinatelat REAL CHECK( portcoordinatelat >= -90 AND portcoordinatelat <= 90 ), 
+        cruiseline TEXT, 
+        cruiselinelogo TEXT, 
+        vesselshortcruisename TEXT, 
+        arrivaldate TEXT, 
+        weekday TEXT, 
+        vesseleta TEXT, 
+        vesseletatime TEXT, 
+        vesseletd TEXT, 
+        vesseletdtime TEXT, 
+        vesselnameurl TEXT
+      )
+    `
 
     db.run(sql, [], (err) => {
       if (err) {
         console.error(err.message)
       }
+      console.log("Empty portarrivals table created")
     })
   } catch (e) {
     console.error("Error in createPortArrivalsTable: ", e.message)
@@ -73,7 +91,7 @@ export const createPortArrivalsTable = (db) => {
 }
 
 // -------------------------------------------------------
-// Delete all Port Arrivals records from SQLite database
+// Delete all Port Arrivals records from database
 // -------------------------------------------------------
 export const deletePortArrivals = (db) => {
   // Guard clause for null Database Connection
@@ -96,19 +114,20 @@ export const deletePortArrivals = (db) => {
           if (err) {
             console.error(err.message)
           }
+          console.log("All portarrivals data deleted")
         })
 
-        // Reset the id number
-        const sql2 =
-          "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'portarrivals'"
+        // Reset sequence for PostgreSQL or SQLite
+        const sql2 = `
+          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'portarrivals';
+          ALTER SEQUENCE portarrivals_portarrivalid_seq RESTART WITH 1;
+        `
 
         db.run(sql2, [], (err) => {
           if (err) {
-            console.error(err.message)
+            // Don't log error as one of the statements will fail depending on DB type
+            console.log("Sequence reset attempted")
           }
-          console.log(
-            "In sqlite_sequence table portarrivals seq number set to 0"
-          )
         })
       } else {
         console.log("portarrivals table was empty (so no data deleted)")
@@ -120,17 +139,23 @@ export const deletePortArrivals = (db) => {
 }
 
 // -------------------------------------------------------
-// Get all Port Arrivals from SQLite database
+// Get all Port Arrivals from database
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
-export const getPortArrivals = (req, res, next) => {
+export const getPortArrivals = async (req, res, next) => {
+  // Use ISO date strings for better compatibility across databases
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  const threeMonthsFromNow = new Date()
+  threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
+
   const sql =
-    "SELECT * FROM portarrivals WHERE vesseleta >= DATE('now', '-1 day') AND vesseleta < DATE('now', '+3 month')"
-  let params = []
+    "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
+  let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+  db = await openSqlDbConnection(process.env.SQL_URI)
 
   if (db !== null) {
     try {
@@ -183,9 +208,9 @@ export const savePortArrival = (db, newPortArrival) => {
       }
     })
 
-    // Don't change the routine below
+    // Use placeholder syntax that works with both databases
     const sql1 =
-      "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivalDate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)"
+      "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
     db.run(sql1, newPortArrival, (err) => {
       if (err) {
@@ -208,7 +233,7 @@ export const getAndSavePortArrivals = async (
 ) => {
   // Open a Database Connection
   let db = null
-  db = openSqlDbConnection(process.env.SQL_URI)
+  db = await openSqlDbConnection(process.env.SQL_URI)
 
   let allVesselArrivals = []
   let periodVesselArrivals = []
@@ -233,7 +258,7 @@ export const getAndSavePortArrivals = async (
     loop++
   } while (loop < scheduledPeriods.length)
 
-  // Disconnect from the SQLite database
+  // Disconnect from the database
   closeSqlDbConnection(db)
 
   return allVesselArrivals
