@@ -53,7 +53,7 @@ const createGolfCoursesTable = (db) => {
   const sql = `
     CREATE TABLE IF NOT EXISTS golfcourses (
       courseid SERIAL PRIMARY KEY, 
-      databaseversion INTEGER, 
+      databaseversion TEXT NOT NULL, 
       type TEXT NOT NULL, 
       crsurn TEXT NOT NULL, 
       name TEXT NOT NULL, 
@@ -196,7 +196,7 @@ const populateGolfCoursesTable = async (courses) => {
 
       db.run(sql, course, (err) => {
         if (err) {
-          console.error(err.message)
+          console.error("Here: " + err.message)
         }
       })
 
