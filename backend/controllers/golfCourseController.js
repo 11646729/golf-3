@@ -53,7 +53,7 @@ const createGolfCoursesTable = (db) => {
   const sql = `
     CREATE TABLE IF NOT EXISTS golfcourses (
       courseid SERIAL PRIMARY KEY, 
-      databaseversion TEXT NOT NULL, 
+      version TEXT NOT NULL, 
       type TEXT NOT NULL, 
       crsurn TEXT NOT NULL, 
       name TEXT NOT NULL, 
@@ -192,7 +192,7 @@ const populateGolfCoursesTable = async (courses) => {
 
       // Use placeholder syntax that works with both databases
       const sql =
-        "INSERT INTO golfcourses (databaseversion, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO golfcourses (version, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
       db.run(sql, course, (err) => {
         if (err) {
