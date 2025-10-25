@@ -89,3 +89,5 @@ export var prepReadGtfsFile = (firstFile, iterationSize, arraylength) => {
 
   return fileFetchArray
 }
+
+export default readRouteFile

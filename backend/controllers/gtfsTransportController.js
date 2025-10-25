@@ -17,8 +17,7 @@ import * as stream from "stream"
 import decompress from "decompress"
 import axios from "axios"
 import { promisify } from "util"
-import path from "path"
-import readRouteFile from "../fileUtilities.js"
+import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.)
