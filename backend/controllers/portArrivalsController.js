@@ -25,17 +25,22 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
     // Simple SELECT to check if table exists (works for both databases)
     let sql = "SELECT COUNT(*) as count FROM portarrivals"
 
-    db.all(sql, [], (err, results) => {
+    db.all(sql, [], (err) => {
       if (err) {
-        // Table doesn't exist, create it
-        console.log("portarrivals table does not exist")
-        createPortArrivalsTable(db)
-      } else {
-        // Table exists, delete data
+        // Table doesn't exist
         console.log(
-          "portarrivals table exists - dropping and recreating to ensure schema is correct"
+          "portarrivals table does not exist - creating the empty table"
         )
-        deletePortArrivals(db)
+        // createPortArrivalsTable(db)
+      } else {
+        // Table exists, drop and recreate to ensure schema is current
+        db.run("DROP TABLE IF EXISTS portarrivals", [], (dropErr) => {
+          if (dropErr) {
+            console.error("Error dropping portarrivals table:", dropErr.message)
+          }
+          // createPortArrivalsTable(db)
+        })
+        createPortArrivalsTable(db)
       }
     })
 
@@ -129,12 +134,12 @@ export const deletePortArrivals = (db) => {
             console.log("Sequence reset attempted")
           }
         })
-      } else {
-        console.log("portarrivals table was empty (so no data deleted)")
+        // } else {
+        //   console.log("portarrivals table was empty (so no data deleted)")
       }
     })
   } catch (err) {
-    console.error("Error in deletePortArrivals: ", err.message)
+    console.error("Error in deletePortArrivals function: ", err.message)
   }
 }
 

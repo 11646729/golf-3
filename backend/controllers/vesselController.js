@@ -18,22 +18,20 @@ export const prepareEmptyVesselsTable = async (req, res) => {
     // Simple SELECT to check if table exists (works for both databases)
     let sql = "SELECT COUNT(*) as count FROM vessels"
 
-    db.all(sql, [], (err, results) => {
+    db.all(sql, [], (err) => {
       if (err) {
         // Table doesn't exist, create it
-        console.log("vessels table does not exist - creating")
-        createVesselsTable(db)
+        console.log("vessels table does not exist - creating the empty table")
+        // createVesselsTable(db)
       } else {
         // Table exists, drop and recreate to ensure schema is current
-        console.log(
-          "vessels table exists - dropping and recreating to ensure schema is correct"
-        )
         db.run("DROP TABLE IF EXISTS vessels", [], (dropErr) => {
           if (dropErr) {
             console.error("Error dropping vessels table:", dropErr.message)
           }
-          createVesselsTable(db)
+          // createVesselsTable(db)
         })
+        createVesselsTable(db)
       }
     })
 
