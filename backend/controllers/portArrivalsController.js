@@ -31,16 +31,15 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
         console.log(
           "portarrivals table does not exist - creating the empty table"
         )
-        // createPortArrivalsTable(db)
+        createPortArrivalsTable(db)
       } else {
         // Table exists, drop and recreate to ensure schema is current
         db.run("DROP TABLE IF EXISTS portarrivals", [], (dropErr) => {
           if (dropErr) {
             console.error("Error dropping portarrivals table:", dropErr.message)
           }
-          // createPortArrivalsTable(db)
+          createPortArrivalsTable(db)
         })
-        createPortArrivalsTable(db)
       }
     })
 
@@ -98,50 +97,50 @@ export const createPortArrivalsTable = (db) => {
 // -------------------------------------------------------
 // Delete all Port Arrivals records from database
 // -------------------------------------------------------
-export const deletePortArrivals = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
+// export const deletePortArrivals = (db) => {
+//   // Guard clause for null Database Connection
+//   if (db === null) return
 
-  try {
-    // Count the records in the database
-    const sql = "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
+//   try {
+//     // Count the records in the database
+//     const sql = "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
-      }
+//     db.all(sql, [], (err, result) => {
+//       if (err) {
+//         console.error(err.message)
+//       }
 
-      if (result[0].count > 0) {
-        // Delete all the data in the portarrivals table
-        const sql1 = "DELETE FROM portarrivals"
+//       if (result[0].count > 0) {
+//         // Delete all the data in the portarrivals table
+//         const sql1 = "DELETE FROM portarrivals"
 
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("All portarrivals data deleted")
-        })
+//         db.all(sql1, [], function (err, results) {
+//           if (err) {
+//             console.error(err.message)
+//           }
+//           console.log("All portarrivals data deleted")
+//         })
 
-        // Reset sequence for PostgreSQL or SQLite
-        const sql2 = `
-          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'portarrivals';
-          ALTER SEQUENCE portarrivals_portarrivalid_seq RESTART WITH 1;
-        `
+//         // Reset sequence for PostgreSQL or SQLite
+//         const sql2 = `
+//           UPDATE sqlite_sequence SET seq = 0 WHERE name = 'portarrivals';
+//           ALTER SEQUENCE portarrivals_portarrivalid_seq RESTART WITH 1;
+//         `
 
-        db.run(sql2, [], (err) => {
-          if (err) {
-            // Don't log error as one of the statements will fail depending on DB type
-            console.log("Sequence reset attempted")
-          }
-        })
-        // } else {
-        //   console.log("portarrivals table was empty (so no data deleted)")
-      }
-    })
-  } catch (err) {
-    console.error("Error in deletePortArrivals function: ", err.message)
-  }
-}
+//         db.run(sql2, [], (err) => {
+//           if (err) {
+//             // Don't log error as one of the statements will fail depending on DB type
+//             console.log("Sequence reset attempted")
+//           }
+//         })
+//         // } else {
+//         //   console.log("portarrivals table was empty (so no data deleted)")
+//       }
+//     })
+//   } catch (err) {
+//     console.error("Error in deletePortArrivals function: ", err.message)
+//   }
+// }
 
 // -------------------------------------------------------
 // Get all Port Arrivals from database

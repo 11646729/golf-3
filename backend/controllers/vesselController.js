@@ -14,6 +14,8 @@ export const prepareEmptyVesselsTable = async (req, res) => {
   let db = null
   db = await openSqlDbConnection(process.env.SQL_URI)
 
+  console.log("Here")
+
   if (db !== null) {
     // Simple SELECT to check if table exists (works for both databases)
     let sql = "SELECT COUNT(*) as count FROM vessels"
@@ -22,22 +24,22 @@ export const prepareEmptyVesselsTable = async (req, res) => {
       if (err) {
         // Table doesn't exist, create it
         console.log("vessels table does not exist - creating the empty table")
-        // createVesselsTable(db)
+        createVesselsTable(db)
       } else {
         // Table exists, drop and recreate to ensure schema is current
         db.run("DROP TABLE IF EXISTS vessels", [], (dropErr) => {
           if (dropErr) {
             console.error("Error dropping vessels table:", dropErr.message)
           }
-          // createVesselsTable(db)
+          createVesselsTable(db)
         })
-        createVesselsTable(db)
       }
     })
 
-    res.send("Returned Data")
+    res.send({ message: "Vessels table prepared successfully" })
   } else {
     console.error("Cannot connect to database")
+    res.status(500).send({ error: "Cannot connect to database" })
   }
 
   // Close the Database Connection
@@ -97,50 +99,50 @@ export const createVesselsTable = (db) => {
 // -------------------------------------------------------
 // Delete all Vessels from database
 // -------------------------------------------------------
-export const deleteVessels = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
+// export const deleteVessels = (db) => {
+//   // Guard clause for null Database Connection
+//   if (db === null) return
 
-  try {
-    // Count the records in the database
-    const sql = "SELECT COUNT(vesselid) AS count FROM vessels"
+//   try {
+//     // Count the records in the database
+//     const sql = "SELECT COUNT(vesselid) AS count FROM vessels"
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
-      }
+//     db.all(sql, [], (err, result) => {
+//       if (err) {
+//         console.error(err.message)
+//       }
 
-      if (result[0].count > 0) {
-        // Delete all the data in the vessels table
-        const sql1 = "DELETE FROM vessels"
+//       if (result[0].count > 0) {
+//         // Delete all the data in the vessels table
+//         const sql1 = "DELETE FROM vessels"
 
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("All vessels data deleted")
-        })
+//         db.all(sql1, [], function (err, results) {
+//           if (err) {
+//             console.error(err.message)
+//           }
+//           console.log("All vessels data deleted")
+//         })
 
-        // Reset sequence for PostgreSQL or SQLite
-        const sql2 = `
-          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'vessels';
-          ALTER SEQUENCE vessels_vesselid_seq RESTART WITH 1;
-        `
+//         // Reset sequence for PostgreSQL or SQLite
+//         const sql2 = `
+//           UPDATE sqlite_sequence SET seq = 0 WHERE name = 'vessels';
+//           ALTER SEQUENCE vessels_vesselid_seq RESTART WITH 1;
+//         `
 
-        db.run(sql2, [], (err) => {
-          if (err) {
-            // Don't log error as one of the statements will fail depending on DB type
-            console.log("Sequence reset attempted")
-          }
-        })
-      } else {
-        console.log("vessels table was empty (so no data deleted)")
-      }
-    })
-  } catch (err) {
-    console.error("Error in deleteVessels: ", err.message)
-  }
-}
+//         db.run(sql2, [], (err) => {
+//           if (err) {
+//             // Don't log error as one of the statements will fail depending on DB type
+//             console.log("Sequence reset attempted")
+//           }
+//         })
+//       } else {
+//         console.log("vessels table was empty (so no data deleted)")
+//       }
+//     })
+//   } catch (err) {
+//     console.error("Error in deleteVessels: ", err.message)
+//   }
+// }
 
 // -------------------------------------------------------
 // Save Vessel details to database
