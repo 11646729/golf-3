@@ -14,8 +14,6 @@ export const prepareEmptyVesselsTable = async (req, res) => {
   let db = null
   db = await openSqlDbConnection(process.env.SQL_URI)
 
-  console.log("Here")
-
   if (db !== null) {
     // Simple SELECT to check if table exists (works for both databases)
     let sql = "SELECT COUNT(*) as count FROM vessels"

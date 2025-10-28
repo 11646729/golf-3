@@ -322,7 +322,6 @@ const waitForSelectorWithReload = async (page, selector) => {
   let tries = 0
   while (tries <= MAX_TRIES) {
     try {
-      // console.log("Here")
       console.log(tries)
       console.log(MAX_TRIES)
 
