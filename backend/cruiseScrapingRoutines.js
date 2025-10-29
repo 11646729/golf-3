@@ -1,9 +1,13 @@
 import * as cheerio from "cheerio"
+import dotenv from "dotenv"
 import { getAndSavePortArrivals } from "./controllers/portArrivalsController.js"
 import {
   saveVesselDetails,
   scrapeVesselDetails,
 } from "./controllers/vesselController.js"
+
+// Load environment variables
+dotenv.config()
 
 // -------------------------------------------------------
 // Import Port Arrivals & Vessel Details
@@ -11,6 +15,8 @@ import {
 export const importPortArrivalsAndVessels = async (req, res) => {
   // Get the Port Name & Associated values
   //  let port = req.query.portName.toUpperCase()
+
+  console.log("Here we go - Importing Port Arrivals & Vessel Details")
 
   const port = process.env.BELFAST_PORT_NAME.toUpperCase()
   // const port = process.env.GEIRANGER_PORT_NAME.toUpperCase()

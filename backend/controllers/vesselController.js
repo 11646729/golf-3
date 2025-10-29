@@ -1,62 +1,59 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
 import moment from "moment"
-import {
-  openSqlDbConnection,
-  closeSqlDbConnection,
-} from "../databaseUtilities.js"
+import { DatabaseAdapter } from "../databaseUtilities.js"
+
+// Database adapter for PostgreSQL - created lazily
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // -------------------------------------------------------
 // Prepare empty vessels Table ready to import data
 // -------------------------------------------------------
 export const prepareEmptyVesselsTable = async (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+  try {
+    const db = getDb()
+    // Check if vessels table exists using PostgreSQL system tables
+    const tableExists = await db.get(
+      `SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'vessels'
+      )`
+    )
 
-  if (db !== null) {
-    // Simple SELECT to check if table exists (works for both databases)
-    let sql = "SELECT COUNT(*) as count FROM vessels"
+    if (tableExists.exists) {
+      // If exists then delete the table and recreate
+      console.log("vessels table exists - dropping and recreating")
+      await db.run("DROP TABLE IF EXISTS vessels")
+    } else {
+      console.log("vessels table does not exist - creating the empty table")
+    }
 
-    db.all(sql, [], (err) => {
-      if (err) {
-        // Table doesn't exist, create it
-        console.log("vessels table does not exist - creating the empty table")
-        createVesselsTable(db)
-      } else {
-        // Table exists, drop and recreate to ensure schema is current
-        db.run("DROP TABLE IF EXISTS vessels", [], (dropErr) => {
-          if (dropErr) {
-            console.error("Error dropping vessels table:", dropErr.message)
-          }
-          createVesselsTable(db)
-        })
-      }
-    })
+    // Create the table
+    await createVesselsTable()
 
-    res.send({ message: "Vessels table prepared successfully" })
-  } else {
-    console.error("Cannot connect to database")
-    res.status(500).send({ error: "Cannot connect to database" })
+    res.send({ message: "Vessels table prepared successfully" }).status(200)
+  } catch (error) {
+    console.error("Error preparing vessels table:", error)
+    res.status(500).send({ error: "Error preparing vessels table" })
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
-}
-
-// -------------------------------------------------------
+} // -------------------------------------------------------
 // Create vessels Table in the database
 // -------------------------------------------------------
-export const createVesselsTable = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+export const createVesselsTable = async () => {
   try {
+    const db = getDb()
     // PostgreSQL and SQLite compatible table creation
     const sql = `
       CREATE TABLE IF NOT EXISTS vessels (
         vesselid SERIAL PRIMARY KEY, 
-        databaseversion INTEGER, 
+        databaseversion TEXT NOT NULL, 
         vesselnameurl TEXT NOT NULL, 
         vesselname TEXT NOT NULL, 
         vesseltitle TEXT NOT NULL, 
@@ -83,14 +80,10 @@ export const createVesselsTable = (db) => {
       )
     `
 
-    db.run(sql, [], (err) => {
-      if (err) {
-        return console.error(err.message)
-      }
-      console.log("Empty vessels table created")
-    })
-  } catch (e) {
-    console.error("Error in createVesselsTable: ", e.message)
+    await db.run(sql)
+    console.log("Empty vessels table created")
+  } catch (error) {
+    console.error("Error in createVesselsTable: ", error.message)
   }
 }
 
@@ -146,41 +139,26 @@ export const createVesselsTable = (db) => {
 // Save Vessel details to database
 // -------------------------------------------------------
 export const saveVesselDetails = async (newVessel) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
-
-  // Guard clause for null Vessel details
-  if (db === null) return
-  if (newVessel == null) return
-
   try {
-    // Count the records in the database
-    let sql = "SELECT COUNT(vesselid) AS count FROM vessels"
+    const db = getDb()
+    // Guard clause for null Vessel details
+    if (!newVessel) return
 
-    db.run(sql, (err) => {
-      if (err) {
-        return console.error("Error: ", err.message)
-      }
-      // console.log("Record Count Before Insertion: ", results.count)
-    })
+    // Count the records in the database
+    const countResult = await db.get(
+      "SELECT COUNT(vesselid) AS count FROM vessels"
+    )
+    console.log(`Current vessels count: ${countResult.count}`)
 
     // Use placeholder syntax that works with both databases
     const sql_insert =
       "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-    db.run(sql_insert, newVessel, (err) => {
-      if (err) {
-        return console.error("Error: ", err.message)
-      }
-      // console.warn("New id of inserted vessel:", this.lastID)
-    })
-  } catch (err) {
-    console.error("Error in saveVesselDetails: ", err)
+    await db.run(sql_insert, newVessel)
+    console.log("Vessel details saved successfully")
+  } catch (error) {
+    console.error("Error in saveVesselDetails: ", error)
   }
-
-  // Disconnect from the database
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
@@ -423,7 +401,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
 
     // If No Length of Vessel in metres Available
     if (vessel_length_metres == "") {
-      vessel_length_metres = "Not Known"
+      vessel_length_metres = null
+    } else {
+      vessel_length_metres = parseInt(vessel_length_metres) || null
     }
 
     // Width of Vessel in metres
@@ -441,7 +421,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
 
     // If No Width of Vessel in metres Available
     if (vessel_width_metres == "") {
-      vessel_width_metres = "Not Known"
+      vessel_width_metres = null
+    } else {
+      vessel_width_metres = parseInt(vessel_width_metres) || null
     }
 
     // Gross Tonnage of Vessel
@@ -459,7 +441,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
 
     // If No Gross Tonnage of Vessel Available
     if (vessel_gross_tonnage == "") {
-      vessel_gross_tonnage = "Not Known"
+      vessel_gross_tonnage = null
+    } else {
+      vessel_gross_tonnage = parseInt(vessel_gross_tonnage) || null
     }
 
     // Vessel Average Speed
@@ -480,7 +464,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
     // )
 
     // If No Vessel Average Speed Available
-    let vessel_average_speed_knots = "Not Known"
+    let vessel_average_speed_knots = null
 
     // Vessel Maximum Speed
     const vessel_max_speed_knots_temp = $("td")
@@ -497,7 +481,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
 
     // If No Vessel Maximum Speed Available
     if (vessel_max_speed_knots == "") {
-      vessel_max_speed_knots = "Not Known"
+      vessel_max_speed_knots = null
+    } else {
+      vessel_max_speed_knots = parseFloat(vessel_max_speed_knots) || null
     }
 
     // Vessel Callsign
@@ -524,19 +510,24 @@ export const scrapeVesselDetails = async (vessel_url) => {
       .next()
       .text()
 
+    // If No Typical Number of Crew Available
+    if (vessel_typical_crew == "") {
+      vessel_typical_crew = null
+    } else {
+      vessel_typical_crew = parseInt(vessel_typical_crew) || null
+    }
+
     let vessel_current_position_lng = 0.0
     let vessel_current_position_lat = 0.0
     let vessel_current_position_time = "Not Known"
 
     const scrapedVessel = [
       process.env.DATABASE_VERSION,
-      vessel_url,
-      vessel_title,
-      vessel_photo_title,
-      vessel_photourl,
-      vessel_type, // From where?
-      // vessel_ais_name,
-      // vessel_name,
+      vessel_url, // vesselnameurl
+      vessel_title, // vesselname (using title as name)
+      vessel_photo_title, // vesseltitle
+      vessel_photourl, // vesselurl
+      vessel_type,
       vessel_flag,
       vessel_short_operator,
       vessel_long_operator,
@@ -546,10 +537,10 @@ export const scrapeVesselDetails = async (vessel_url) => {
       vessel_gross_tonnage,
       vessel_average_speed_knots,
       vessel_max_speed_knots,
-      "7.9",
-      "8217881",
-      "311000343",
-      vessel_callsign, // From where?
+      7.9, // vesselaveragedraughtmetres (REAL)
+      8217881, // vesselimonumber (INTEGER)
+      311000343, // vesselmmsnumber (INTEGER)
+      vessel_callsign,
       vessel_typical_passengers,
       vessel_typical_crew,
       vessel_current_position_lng,

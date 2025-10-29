@@ -1,9 +1,15 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
-import {
-  openSqlDbConnection,
-  closeSqlDbConnection,
-} from "../databaseUtilities.js"
+import { DatabaseAdapter } from "../databaseUtilities.js"
+
+// Database adapter for PostgreSQL - created lazily
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -17,49 +23,43 @@ export var index = async (req, res) => {
 // Prepare empty portarrivals Table ready to import data
 // -------------------------------------------------------
 export const prepareEmptyPortArrivalsTable = async (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+  try {
+    const db = getDb()
+    // Check if portarrivals table exists using PostgreSQL system tables
+    const tableExists = await db.get(
+      `SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'portarrivals'
+      )`
+    )
 
-  if (db !== null) {
-    // Simple SELECT to check if table exists (works for both databases)
-    let sql = "SELECT COUNT(*) as count FROM portarrivals"
+    if (tableExists.exists) {
+      // If exists then delete the table and recreate
+      console.log("portarrivals table exists - dropping and recreating")
+      await db.run("DROP TABLE IF EXISTS portarrivals")
+    } else {
+      console.log(
+        "portarrivals table does not exist - creating the empty table"
+      )
+    }
 
-    db.all(sql, [], (err) => {
-      if (err) {
-        // Table doesn't exist
-        console.log(
-          "portarrivals table does not exist - creating the empty table"
-        )
-        createPortArrivalsTable(db)
-      } else {
-        // Table exists, drop and recreate to ensure schema is current
-        db.run("DROP TABLE IF EXISTS portarrivals", [], (dropErr) => {
-          if (dropErr) {
-            console.error("Error dropping portarrivals table:", dropErr.message)
-          }
-          createPortArrivalsTable(db)
-        })
-      }
-    })
+    // Create the table
+    await createPortArrivalsTable()
 
-    res.send("Returned Data")
-  } else {
-    console.error("Cannot connect to database")
+    res.send("Port arrivals table prepared successfully").status(200)
+  } catch (error) {
+    console.error("Error preparing port arrivals table:", error)
+    res.status(500).send("Error preparing port arrivals table")
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
 // Create portarrivals Table in the database
 // -------------------------------------------------------
-export const createPortArrivalsTable = (db) => {
-  // Guard clause for null Database Connection
-  if (db === null) return
-
+export const createPortArrivalsTable = async () => {
   try {
+    const db = getDb()
     // PostgreSQL and SQLite compatible table creation
     const sql = `
       CREATE TABLE IF NOT EXISTS portarrivals (
@@ -83,14 +83,10 @@ export const createPortArrivalsTable = (db) => {
       )
     `
 
-    db.run(sql, [], (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-      console.log("Empty portarrivals table created")
-    })
-  } catch (e) {
-    console.error("Error in createPortArrivalsTable: ", e.message)
+    await db.run(sql)
+    console.log("Empty portarrivals table created")
+  } catch (error) {
+    console.error("Error in createPortArrivalsTable: ", error.message)
   }
 }
 
@@ -147,82 +143,77 @@ export const createPortArrivalsTable = (db) => {
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
 export const getPortArrivals = async (req, res, next) => {
-  // Use ISO date strings for better compatibility across databases
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const threeMonthsFromNow = new Date()
-  threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
+  try {
+    const db = getDb()
+    // Use ISO date strings for better compatibility across databases
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const threeMonthsFromNow = new Date()
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
-  const sql =
-    "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
-  let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
+    const sql =
+      "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
+    let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+    const results = await db.all(sql, params)
 
-  if (db !== null) {
-    try {
-      db.all(sql, params, (err, results) => {
-        if (err) {
-          res.status(400).json({ error: err.message })
-          return
-        }
+    // Code here to convert 23:59 to Not Known
 
-        // Code here to convert 23:59 to Not Known
-
-        res.json({
-          message: "success",
-          data: results,
-        })
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
-    } catch (e) {
-      console.error(e.message)
-    }
-  } else {
-    console.error("Cannot connect to database")
+    res.json({
+      message: "success",
+      data: results,
+    })
+  } catch (error) {
+    console.error("Error getting port arrivals:", error)
+    res.status(400).json({ error: error.message })
   }
 }
 
 // -------------------------------------------------------
 // Save Port Arrival details to SQLite database
 // -------------------------------------------------------
-export const savePortArrival = (db, newPortArrival) => {
-  // Guard clauses
-  if (db === null) return
-  if (newPortArrival == null) return
-
-  // TODO
-  // Add Notification of change (except End of Month rollover)
-  // Details of this Cruise?
-  // Current Position - to plot on a map
-
+export const savePortArrival = async (req, res) => {
   try {
-    // Count the records in the database
-    let sql = "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
+    const newPortArrival = req.body
 
-    // Must be get to work - db.all doesn't work
-    // SHOULD THIS BE run ?
-    db.get(sql, (err) => {
-      if (err) {
-        return console.error(err.message)
-      }
-    })
+    if (!newPortArrival) {
+      return res.status(400).json({ error: "No port arrival data provided" })
+    }
+
+    // Count the records in the database
+    const db = getDb()
+    const countResult = await db.get(
+      "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
+    )
+    console.log(`Current port arrivals count: ${countResult.count}`)
 
     // Use placeholder syntax that works with both databases
     const sql1 =
       "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-    db.run(sql1, newPortArrival, (err) => {
-      if (err) {
-        return console.error("Error: ", err.message)
-      }
-    })
-  } catch (err) {
-    console.error("Error in SQLsavePortArrival: ", err)
+    await db.run(sql1, newPortArrival)
+    res.json({ message: "Port arrival saved successfully" })
+  } catch (error) {
+    console.error("Error in savePortArrival: ", error)
+    res.status(500).json({ error: error.message })
+  }
+}
+
+// -------------------------------------------------------
+// Internal function to save port arrival (for use within controller)
+// -------------------------------------------------------
+const savePortArrivalInternal = async (newPortArrival) => {
+  try {
+    const db = getDb()
+    if (!newPortArrival) return
+
+    // Use placeholder syntax that works with both databases
+    const sql1 =
+      "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+    await db.run(sql1, newPortArrival)
+  } catch (error) {
+    console.error("Error in savePortArrivalInternal: ", error)
   }
 }
 
@@ -235,10 +226,6 @@ export const getAndSavePortArrivals = async (
   port,
   portName
 ) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
-
   let allVesselArrivals = []
   let periodVesselArrivals = []
 
@@ -246,7 +233,6 @@ export const getAndSavePortArrivals = async (
   do {
     const period = String(scheduledPeriods[loop].monthYearString)
     periodVesselArrivals = await getSingleMonthPortArrival(
-      db,
       period,
       port,
       portName
@@ -255,15 +241,11 @@ export const getAndSavePortArrivals = async (
     let j = 0
     do {
       allVesselArrivals.push(periodVesselArrivals[j])
-
       j++
     } while (j < periodVesselArrivals.length)
 
     loop++
   } while (loop < scheduledPeriods.length)
-
-  // Disconnect from the database
-  closeSqlDbConnection(db)
 
   return allVesselArrivals
 }
@@ -272,7 +254,7 @@ export const getAndSavePortArrivals = async (
 // Fetch a Single Port Arrival
 // Path: Local function called by getAndSavePortArrivals
 // -----------------------------------------------------
-export const getSingleMonthPortArrival = async (db, period, port, portName) => {
+export const getSingleMonthPortArrival = async (period, port, portName) => {
   let arrivalUrl =
     process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
 
@@ -296,120 +278,123 @@ export const getSingleMonthPortArrival = async (db, period, port, portName) => {
   // let vesselArrival = []
   let vesselUrls = []
 
-  $(".portItemSchedule tr").each((i, item) => {
-    // Ignore the table heading
-    if (i > 0) {
-      // Port Name Associated values
-      const port_name = portName
-      const portLat = port + "_PORT_LATITUDE"
-      const portLng = port + "_PORT_LONGITUDE"
-      const portUnLocode = port + "_PORT_UN_LOCODE"
+  // Get all the table rows and process them
+  const rows = $(".portItemSchedule tr").toArray()
 
-      var sentence_case_port = port
-        .split(" ")
-        .map((w) => w[0].toUpperCase() + w.substr(1).toLowerCase())
-        .join(" ")
+  for (let i = 1; i < rows.length; i++) {
+    // Start from 1 to ignore table heading
+    const item = rows[i]
 
-      // Port UN Locode
-      const port_un_locode = process.env[portUnLocode]
+    // Port Name Associated values
+    const port_name = portName
+    const portLat = port + "_PORT_LATITUDE"
+    const portLng = port + "_PORT_LONGITUDE"
+    const portUnLocode = port + "_PORT_UN_LOCODE"
 
-      // Port Coordinates
-      const portcoordinateslat = process.env[portLat]
-      const portcoordinateslng = process.env[portLng]
+    var sentence_case_port = port
+      .split(" ")
+      .map((w) => w[0].toUpperCase() + w.substr(1).toLowerCase())
+      .join(" ")
 
-      // Name of Vessel
-      const vessel_short_cruise_name = $(item).find("a").text()
+    // Port UN Locode
+    const port_un_locode = process.env[portUnLocode]
 
-      let weekdayArray = new Array(
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      )
-      // -------------------------------------------------------
+    // Port Coordinates
+    const portcoordinateslat = process.env[portLat]
+    const portcoordinateslng = process.env[portLng]
 
-      //  Scrape Date of Arrival
-      let arrivalDate = $(item)
-        .children("td")
-        .children("span")
-        .html()
-        .replace(/,/, "") // Removes the comma
+    // Name of Vessel
+    const vessel_short_cruise_name = $(item).find("a").text()
 
-      // -------------------------------------------------------
-      // Expected Time of Arrival
-      let vessel_eta_time = $(item).children("td").next("td").next("td").html()
-      let vessel_eta = ""
+    let weekdayArray = new Array(
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    )
+    // -------------------------------------------------------
 
-      // If No Arrival Time Given
-      if (vessel_eta_time == "") {
-        vessel_eta_time = "11:59"
-      }
+    //  Scrape Date of Arrival
+    let arrivalDate = $(item)
+      .children("td")
+      .children("span")
+      .html()
+      .replace(/,/, "") // Removes the comma
 
-      vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
-      let a = new Date(vessel_eta)
-      vessel_eta = a.toISOString()
+    // -------------------------------------------------------
+    // Expected Time of Arrival
+    let vessel_eta_time = $(item).children("td").next("td").next("td").html()
+    let vessel_eta = ""
 
-      // Expected Weekday of Arrival
-      let weekday = weekdayArray[a.getDay()]
-
-      // -------------------------------------------------------
-      // Expected Time of Departure
-      let vessel_etd_time = $(item).children("td").last("td").html()
-      let vessel_etd = ""
-
-      if (vessel_etd_time == "") {
-        vessel_etd_time = "11:59"
-      }
-
-      vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
-      vessel_etd = new Date(vessel_etd).toISOString()
-      // -------------------------------------------------------
-
-      // Url of Cruise Line Logo image
-      const cruise_line_logo_url = $(item).find("img").attr("src")
-
-      // Name of Cruise Line
-      const raw_cruise_line = $(item).find("img").attr("title")
-      const cruise_line = raw_cruise_line.substr(0, raw_cruise_line.length - 20)
-
-      // Url of Vessel Web Page
-      const vessel_name_url = $(item).find("a").attr("href")
-      if (
-        typeof vessel_name_url === "string" ||
-        vessel_name_url instanceof String
-      ) {
-        // it's a string
-        vesselUrls.push(vessel_name_url)
-      }
-      // it's something else
-      else console.log("Error, vessel_name_url is not a string")
-
-      const newPortArrival = [
-        process.env.DATABASE_VERSION,
-        sentence_case_port,
-        port_name,
-        port_un_locode,
-        portcoordinateslng,
-        portcoordinateslat,
-        cruise_line,
-        cruise_line_logo_url,
-        vessel_short_cruise_name,
-        arrivalDate,
-        weekday,
-        vessel_eta,
-        vessel_eta_time,
-        vessel_etd,
-        vessel_etd_time,
-        vessel_name_url,
-      ]
-
-      // Now save in SQLite
-      savePortArrival(db, newPortArrival)
+    // If No Arrival Time Given
+    if (vessel_eta_time == "") {
+      vessel_eta_time = "11:59"
     }
-  })
+
+    vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
+    let a = new Date(vessel_eta)
+    vessel_eta = a.toISOString()
+
+    // Expected Weekday of Arrival
+    let weekday = weekdayArray[a.getDay()]
+
+    // -------------------------------------------------------
+    // Expected Time of Departure
+    let vessel_etd_time = $(item).children("td").last("td").html()
+    let vessel_etd = ""
+
+    if (vessel_etd_time == "") {
+      vessel_etd_time = "11:59"
+    }
+
+    vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
+    vessel_etd = new Date(vessel_etd).toISOString()
+    // -------------------------------------------------------
+
+    // Url of Cruise Line Logo image
+    const cruise_line_logo_url = $(item).find("img").attr("src")
+
+    // Name of Cruise Line
+    const raw_cruise_line = $(item).find("img").attr("title")
+    const cruise_line = raw_cruise_line.substr(0, raw_cruise_line.length - 20)
+
+    // Url of Vessel Web Page
+    const vessel_name_url = $(item).find("a").attr("href")
+    if (
+      typeof vessel_name_url === "string" ||
+      vessel_name_url instanceof String
+    ) {
+      // it's a string
+      vesselUrls.push(vessel_name_url)
+    }
+    // it's something else
+    else console.log("Error, vessel_name_url is not a string")
+
+    const newPortArrival = [
+      process.env.DATABASE_VERSION,
+      sentence_case_port,
+      port_name,
+      port_un_locode,
+      portcoordinateslng,
+      portcoordinateslat,
+      cruise_line,
+      cruise_line_logo_url,
+      vessel_short_cruise_name,
+      arrivalDate,
+      weekday,
+      vessel_eta,
+      vessel_eta_time,
+      vessel_etd,
+      vessel_etd_time,
+      vessel_name_url,
+    ]
+
+    // Now save in SQLite
+    await savePortArrivalInternal(newPortArrival)
+  }
 
   // Return array of vessel Urls
   return vesselUrls
