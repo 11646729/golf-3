@@ -148,14 +148,14 @@ export const saveVesselDetails = async (newVessel) => {
     const countResult = await db.get(
       "SELECT COUNT(vesselid) AS count FROM vessels"
     )
-    console.log(`Current vessels count: ${countResult.count}`)
+    // console.log(`Current vessels count: ${countResult.count}`)
 
     // Use placeholder syntax that works with both databases
     const sql_insert =
       "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
     await db.run(sql_insert, newVessel)
-    console.log("Vessel details saved successfully")
+    // console.log("Vessel details saved successfully")
   } catch (error) {
     console.error("Error in saveVesselDetails: ", error)
   }
@@ -165,142 +165,230 @@ export const saveVesselDetails = async (newVessel) => {
 // Find vesselNameUrl from vessels Table from SQLite database
 // -------------------------------------------------------
 export const getVesselPosition = async (req, res) => {
-  // Remove duplicates and store Urls in arrivals array
-  const arrivals = Array.from(new Set(req.query.portArrivals))
+  try {
+    // Validate input
+    if (!req.query.portArrivals) {
+      return res.status(400).json({ error: "No port arrivals provided" })
+    }
 
-  // Now get current location & destination
-  var shipPositions = []
+    // Remove duplicates and store Urls in arrivals array
+    const arrivals = Array.from(new Set(req.query.portArrivals))
 
-  var j = 0
-  do {
-    // Fetch the initial data
-    const { data: html } = await axios.get(arrivals[j])
+    if (arrivals.length === 0) {
+      return res.status(400).json({ error: "No valid arrival URLs provided" })
+    }
 
-    // Load up cheerio
-    const $ = cheerio.load(html) // html
+    // Now get current location & destination
+    var shipPositions = []
 
-    // Paragraph containing position & time reported
-    let positionParagraph = $(
-      "#container > main > section > article > section > div:nth-child(3) > div > div.col-md-4.currentItineraryInfo > p"
-    )
-      .text()
-      .trim()
+    for (let j = 0; j < arrivals.length; j++) {
+      try {
+        console.log(`Fetching vessel data for: ${arrivals[j]}`)
 
-    // Name of Vessel
-    let vesselName = positionParagraph.substring(
-      24,
-      positionParagraph.indexOf("is ") - 1
-    )
+        // Fetch the initial data with timeout
+        const { data: html } = await axios.get(arrivals[j], {
+          timeout: 10000,
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          },
+        })
 
-    // Reported Position
-    var latitude = Number(
-      positionParagraph
-        .substring(
-          positionParagraph.indexOf("coordinates ") + 12,
-          positionParagraph.indexOf("/") - 2
+        // Load up cheerio
+        const $ = cheerio.load(html)
+
+        // Paragraph containing position & time reported
+        let positionParagraph = $(
+          "#container > main > section > article > section > div:nth-child(3) > div > div.col-md-4.currentItineraryInfo > p"
         )
-        .trim()
-    )
-    var longitude = Number(
-      positionParagraph
-        .substring(
-          positionParagraph.indexOf("/") + 2,
-          positionParagraph.indexOf(")") - 2
+          .text()
+          .trim()
+
+        if (!positionParagraph) {
+          console.warn(`No position paragraph found for ${arrivals[j]}`)
+          continue
+        }
+
+        // Name of Vessel - safer extraction
+        let vesselName = "Unknown"
+        if (positionParagraph.includes("is ")) {
+          const nameEnd = positionParagraph.indexOf("is ") - 1
+          if (nameEnd > 24) {
+            vesselName = positionParagraph.substring(24, nameEnd).trim()
+          }
+        }
+
+        // Reported Position - safer coordinate extraction
+        var latitude = null
+        var longitude = null
+
+        if (
+          positionParagraph.includes("coordinates ") &&
+          positionParagraph.includes("/")
+        ) {
+          try {
+            const coordStart = positionParagraph.indexOf("coordinates ") + 12
+            const coordEnd = positionParagraph.indexOf(")", coordStart)
+
+            if (coordEnd > coordStart) {
+              const coordString = positionParagraph.substring(
+                coordStart,
+                coordEnd
+              )
+              const parts = coordString.split("/")
+
+              if (parts.length === 2) {
+                latitude = parseFloat(parts[0].trim())
+                longitude = parseFloat(parts[1].trim())
+
+                // Validate coordinates
+                if (
+                  isNaN(latitude) ||
+                  isNaN(longitude) ||
+                  latitude < -90 ||
+                  latitude > 90 ||
+                  longitude < -180 ||
+                  longitude > 180
+                ) {
+                  latitude = null
+                  longitude = null
+                  console.warn(
+                    `Invalid coordinates for ${arrivals[j]}: ${coordString}`
+                  )
+                }
+              }
+            }
+          } catch (coordError) {
+            console.warn(
+              `Error parsing coordinates for ${arrivals[j]}:`,
+              coordError.message
+            )
+          }
+        }
+
+        // AIS Reported Time - safer time extraction
+        let secs = 0,
+          mins = 0,
+          hrs = 0
+
+        try {
+          // Extract seconds
+          if (positionParagraph.includes("second")) {
+            const secondsMatch = positionParagraph.match(/(\d+)\s+seconds?/)
+            if (secondsMatch) {
+              secs = parseInt(secondsMatch[1]) || 0
+            }
+          }
+
+          // Extract minutes
+          if (positionParagraph.includes("minute")) {
+            const minutesMatch = positionParagraph.match(/(\d+)\s+minutes?/)
+            if (minutesMatch) {
+              mins = parseInt(minutesMatch[1]) || 0
+            }
+          }
+
+          // Extract hours
+          if (positionParagraph.includes("hour")) {
+            const hoursMatch = positionParagraph.match(/(\d+)\s+hours?/)
+            if (hoursMatch) {
+              hrs = parseInt(hoursMatch[1]) || 0
+            }
+          }
+        } catch (timeError) {
+          console.warn(
+            `Error parsing time for ${arrivals[j]}:`,
+            timeError.message
+          )
+        }
+
+        var aistimestamp = null
+        try {
+          var aistime = moment
+            .utc()
+            .subtract(hrs, "hours")
+            .subtract(mins, "minutes")
+            .subtract(secs, "seconds")
+          aistimestamp = new Date(aistime.format())
+        } catch (timestampError) {
+          console.warn(
+            `Error creating timestamp for ${arrivals[j]}:`,
+            timestampError.message
+          )
+          aistimestamp = new Date()
+        }
+
+        // Destination - safer extraction
+        var destination = "Unknown"
+        try {
+          if (
+            positionParagraph.includes("route to ") &&
+            positionParagraph.includes(". The")
+          ) {
+            var vesselDest = positionParagraph
+              .substring(
+                positionParagraph.indexOf("route to ") + 9,
+                positionParagraph.indexOf(". The")
+              )
+              .trim()
+
+            if (vesselDest && vesselDest.length > 0) {
+              destination =
+                vesselDest[0].toUpperCase() +
+                vesselDest.substring(1).toLowerCase()
+            }
+          }
+        } catch (destError) {
+          console.warn(
+            `Error parsing destination for ${arrivals[j]}:`,
+            destError.message
+          )
+        }
+
+        var shipPosition = {
+          index: j,
+          vesselUrl: arrivals[j],
+          vesselName: vesselName,
+          lat: latitude,
+          lng: longitude,
+          timestamp: aistimestamp,
+          destination: destination,
+        }
+
+        shipPositions.push(shipPosition)
+        console.log(
+          `✅ Successfully processed vessel ${j + 1}/${
+            arrivals.length
+          }: ${vesselName}`
         )
-        .trim()
-    )
-
-    // AIS Reported Time
-    let secs = 0
-    if (positionParagraph.includes("second")) {
-      var secs1 = positionParagraph.substring(
-        positionParagraph.indexOf("second"),
-        positionParagraph.indexOf("second") - 2
-      )
-
-      secs = secs1.trim()
-
-      if (positionParagraph.includes("seconds")) {
-        var secs2 = positionParagraph.substring(
-          positionParagraph.indexOf("seconds"),
-          positionParagraph.indexOf("seconds") - 3
+      } catch (vesselError) {
+        console.error(
+          `❌ Error processing vessel ${arrivals[j]}:`,
+          vesselError.message
         )
-
-        secs = secs2.trim()
+        // Continue with next vessel instead of failing completely
+        shipPositions.push({
+          index: j,
+          vesselUrl: arrivals[j],
+          vesselName: "Error",
+          lat: null,
+          lng: null,
+          timestamp: new Date(),
+          destination: "Unknown",
+          error: vesselError.message,
+        })
       }
     }
 
-    let mins = 0
-    if (positionParagraph.includes("minute")) {
-      var mins1 = positionParagraph.substring(
-        positionParagraph.indexOf("minute"),
-        positionParagraph.indexOf("minute") - 2
-      )
-
-      mins = mins1.trim()
-
-      if (positionParagraph.includes("minutes")) {
-        var mins2 = positionParagraph.substring(
-          positionParagraph.indexOf("minutes"),
-          positionParagraph.indexOf("minutes") - 3
-        )
-
-        mins = mins2.trim()
-      }
-    }
-
-    let hrs = 0
-    if (positionParagraph.includes("hour")) {
-      var hrs1 = positionParagraph.substring(
-        positionParagraph.indexOf("hour"),
-        positionParagraph.indexOf("hour") - 2
-      )
-
-      hrs = hrs1.trim()
-
-      if (positionParagraph.includes("hours")) {
-        var hrs2 = positionParagraph.substring(
-          positionParagraph.indexOf("hours"),
-          positionParagraph.indexOf("hours") - 3
-        )
-
-        hrs = hrs2.trim()
-      }
-    }
-
-    var aistime = moment
-      .utc()
-      .subtract(hrs, "hours")
-      .subtract(mins, "minutes")
-      .subtract(secs, "seconds")
-
-    var aistimestamp = new Date(aistime.format())
-
-    // Destination
-    var vesselDest = positionParagraph.substring(
-      positionParagraph.indexOf("route to ") + 9,
-      positionParagraph.indexOf(". The")
-    )
-
-    var destination =
-      vesselDest[0].toUpperCase() + vesselDest.substring(1).toLowerCase()
-
-    var shipPosition = {
-      index: j,
-      vesselUrl: arrivals[j],
-      vesselName: vesselName,
-      lat: latitude,
-      lng: longitude,
-      timestamp: aistimestamp,
-      destination: destination,
-    }
-
-    shipPositions.push(shipPosition)
-
-    j++
-  } while (j < arrivals.length)
-
-  res.send(shipPositions)
+    console.log(`Processed ${shipPositions.length} vessels`)
+    res.json(shipPositions)
+  } catch (error) {
+    console.error("Error in getVesselPosition:", error)
+    res.status(500).json({
+      error: "Failed to get vessel positions",
+      message: error.message,
+    })
+  }
 }
 
 // ----------------------------------------------------------
