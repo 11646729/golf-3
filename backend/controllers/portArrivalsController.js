@@ -64,7 +64,7 @@ export const createPortArrivalsTable = async () => {
     const sql = `
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY, 
-        databaseversion INTEGER, 
+        databaseversion TEXT NOT NULL, 
         sentencecaseport TEXT NOT NULL, 
         portname TEXT NOT NULL, 
         portunlocode TEXT NOT NULL, 
