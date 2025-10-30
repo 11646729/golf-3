@@ -54,8 +54,6 @@ const CruisesPage = () => {
     }
   }, [portArrivals])
 
-  // console.log(vesselPositions)
-
   return (
     <div className="cruisescontainer">
       <div className="cruisestablecontainer">
