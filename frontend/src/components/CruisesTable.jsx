@@ -63,6 +63,10 @@ const CruisesTable = (props) => {
 
   useEffect(() => {
     portArrivals.forEach((element) => {
+      // if (element.vesseletatime == "00:00") {
+      //   console.log(element.vesseletatime)
+      // }
+
       if (element.vesseletatime == "11:59") {
         element.vesseletatime = "Not Known"
 

@@ -218,7 +218,8 @@ export var openSqlDbConnection = async (url) => {
       await client.connect()
 
       pooledPgClient = client
-      console.log("Connected to PostgreSQL database")
+      console.log("Connected to PostgreSQL database - Here")
+
       return new DatabaseAdapter(pooledPgClient, "postgres")
     } else {
       // SQLite connection (existing logic)
