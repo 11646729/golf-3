@@ -172,7 +172,20 @@ export const getVesselPosition = async (req, res) => {
     }
 
     // Remove duplicates and store Urls in arrivals array
-    const arrivals = Array.from(new Set(req.query.portArrivals))
+    let portArrivalsParam = req.query.portArrivals
+
+    // Handle both string and array cases
+    let arrivals
+    if (Array.isArray(portArrivalsParam)) {
+      arrivals = Array.from(new Set(portArrivalsParam)).filter(
+        (url) => url && url.trim()
+      )
+    } else if (typeof portArrivalsParam === "string") {
+      // If it's a single string, convert to array
+      arrivals = portArrivalsParam.trim() ? [portArrivalsParam] : []
+    } else {
+      return res.status(400).json({ error: "Invalid port arrivals format" })
+    }
 
     if (arrivals.length === 0) {
       return res.status(400).json({ error: "No valid arrival URLs provided" })
@@ -183,8 +196,6 @@ export const getVesselPosition = async (req, res) => {
 
     for (let j = 0; j < arrivals.length; j++) {
       try {
-        console.log(`Fetching vessel data for: ${arrivals[j]}`)
-
         // Fetch the initial data with timeout
         const { data: html } = await axios.get(arrivals[j], {
           timeout: 10000,
@@ -356,11 +367,6 @@ export const getVesselPosition = async (req, res) => {
         }
 
         shipPositions.push(shipPosition)
-        console.log(
-          `✅ Successfully processed vessel ${j + 1}/${
-            arrivals.length
-          }: ${vesselName}`
-        )
       } catch (vesselError) {
         console.error(
           `❌ Error processing vessel ${arrivals[j]}:`,
@@ -380,7 +386,6 @@ export const getVesselPosition = async (req, res) => {
       }
     }
 
-    console.log(`Processed ${shipPositions.length} vessels`)
     res.json(shipPositions)
   } catch (error) {
     console.error("Error in getVesselPosition:", error)

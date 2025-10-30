@@ -49,6 +49,7 @@ const CruisesPage = () => {
         })
         .catch((err) => {
           console.log(err)
+          console.log("Error getting live vessel positions")
         })
     }
   }, [portArrivals])
