@@ -89,8 +89,6 @@ const CruisesTable = (props) => {
     setModifiedPortArrivals(portArrivals)
   }, [portArrivals])
 
-  console.log(modifiedPortArrivals)
-
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [open, setOpen] = useState(false)
@@ -151,6 +149,7 @@ const CruisesTable = (props) => {
                 ))}
               </TableRow>
             </TableHead>
+
             <TableBody>
               {modifiedPortArrivals
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -164,7 +163,7 @@ const CruisesTable = (props) => {
                         {modifiedPortArrivals.weekday}
                       </div>
                       <div className="cruisescellcenter">
-                        {modifiedPortArrivals.arrivalDate}
+                        {modifiedPortArrivals.arrivaldate}
                       </div>
                     </TableCell>
                     <TableCell
