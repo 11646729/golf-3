@@ -16,7 +16,7 @@ export const importPortArrivalsAndVessels = async (req, res) => {
   // Get the Port Name & Associated values
   //  let port = req.query.portName.toUpperCase()
 
-  console.log("Here we go - Importing Port Arrivals & Vessel Details")
+  console.log("Importing Port Arrivals & Vessel Details")
 
   const port = process.env.BELFAST_PORT_NAME.toUpperCase()
   // const port = process.env.GEIRANGER_PORT_NAME.toUpperCase()
