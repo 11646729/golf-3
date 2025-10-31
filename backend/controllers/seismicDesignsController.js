@@ -1,8 +1,14 @@
 // import fs from "fs"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
-// Database adapter for PostgreSQL
-const db = new DatabaseAdapter()
+// Database adapter for PostgreSQL - created lazily to avoid startup connection spam
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -18,7 +24,7 @@ export var index = (req, res) => {
 export const prepareEmptySeismicDesignsTable = async (req, res) => {
   try {
     // Check if seismicdesigns table exists using PostgreSQL system tables
-    const tableExists = await db.get(
+    const tableExists = await getDb().get(
       `SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
@@ -56,7 +62,7 @@ const createSeismicDesignsTable = async () => {
       )
     `
 
-    await db.run(sql)
+    await getDb().run(sql)
     console.log("Empty seismicdesigns table created")
   } catch (error) {
     console.error("Error in createSeismicDesignsTable:", error.message)
@@ -70,17 +76,17 @@ const createSeismicDesignsTable = async () => {
 const deleteSeismicDesigns = async () => {
   try {
     // Count the records in the database
-    const countResult = await db.get(
+    const countResult = await getDb().get(
       "SELECT COUNT(seismicdesignid) AS count FROM seismicdesigns"
     )
 
     if (countResult && countResult.count > 0) {
       // Delete all the data in the seismicdesigns table
-      await db.run("DELETE FROM seismicdesigns")
+      await getDb().run("DELETE FROM seismicdesigns")
       console.log("All seismicdesigns data deleted")
 
       // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
-      await db.run(
+      await getDb().run(
         "ALTER SEQUENCE seismicdesigns_seismicdesignid_seq RESTART WITH 1"
       )
       console.log("Seismic Designs ID sequence reset to 1")
@@ -156,7 +162,7 @@ const populateSeismicDesigns = (courses) => {
       const sql =
         "INSERT INTO seismicdesigns (seismicdesignsid, databaseversion) VALUES ($1, $2 )"
 
-      db.run(sql, course, (err) => {
+      getDb().run(sql, course, (err) => {
         if (err) {
           console.error(err.message)
         }
@@ -181,7 +187,7 @@ const populateSeismicDesigns = (courses) => {
 export const getSeismicDesigns = async (req, res) => {
   try {
     const sql = "SELECT * FROM seismicdesigns ORDER BY seismicdesignid"
-    const results = await db.all(sql)
+    const results = await getDb().all(sql)
 
     res.send(results)
   } catch (error) {

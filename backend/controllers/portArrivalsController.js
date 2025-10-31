@@ -24,9 +24,8 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 export const prepareEmptyPortArrivalsTable = async (req, res) => {
   try {
-    const db = getDb()
     // Check if portarrivals table exists using PostgreSQL system tables
-    const tableExists = await db.get(
+    const tableExists = await getDb().get(
       `SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
@@ -37,7 +36,7 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
     if (tableExists.exists) {
       // If exists then delete the table and recreate
       console.log("portarrivals table exists - dropping and recreating")
-      await db.run("DROP TABLE IF EXISTS portarrivals")
+      await getDb().run("DROP TABLE IF EXISTS portarrivals")
     } else {
       console.log(
         "portarrivals table does not exist - creating the empty table"
@@ -83,7 +82,7 @@ export const createPortArrivalsTable = async () => {
       )
     `
 
-    await db.run(sql)
+    await getDb().run(sql)
     console.log("Empty portarrivals table created")
   } catch (error) {
     console.error("Error in createPortArrivalsTable: ", error.message)
@@ -107,7 +106,7 @@ export const getPortArrivals = async (req, res, next) => {
       "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
-    const results = await db.all(sql, params)
+    const results = await getDb().all(sql, params)
 
     // Code here to convert 23:59 to Not Known
 
@@ -133,8 +132,7 @@ export const savePortArrival = async (req, res) => {
     }
 
     // Count the records in the database
-    const db = getDb()
-    const countResult = await db.get(
+    const countResult = await getDb().get(
       "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
     )
     console.log(`Current port arrivals count: ${countResult.count}`)
@@ -143,7 +141,7 @@ export const savePortArrival = async (req, res) => {
     const sql1 =
       "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-    await db.run(sql1, newPortArrival)
+    await getDb().run(sql1, newPortArrival)
     res.json({ message: "Port arrival saved successfully" })
   } catch (error) {
     console.error("Error in savePortArrival: ", error)
@@ -163,7 +161,7 @@ const savePortArrivalInternal = async (newPortArrival) => {
     const sql1 =
       "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-    await db.run(sql1, newPortArrival)
+    await getDb().run(sql1, newPortArrival)
   } catch (error) {
     console.error("Error in savePortArrivalInternal: ", error)
   }

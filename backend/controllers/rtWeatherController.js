@@ -1,8 +1,14 @@
 import axios from "axios"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
-// Database adapter for PostgreSQL
-const db = new DatabaseAdapter()
+// Database adapter for PostgreSQL - created lazily to avoid startup connection spam
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -18,7 +24,7 @@ export var index = async (req, res) => {
 export const prepareEmptyTemperaturesTable = async (req, res) => {
   try {
     // Check if temperatures table exists using PostgreSQL system tables
-    const tableExists = await db.get(
+    const tableExists = await getDb().get(
       `SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
@@ -65,7 +71,7 @@ const createTemperaturesTable = async () => {
       )
     `
 
-    await db.run(sql)
+    await getDb().run(sql)
     console.log("temperatures table successfully created")
   } catch (error) {
     console.error("Error creating temperatures table:", error.message)
@@ -79,17 +85,17 @@ const createTemperaturesTable = async () => {
 const deleteTemperatures = async () => {
   try {
     // Count the records in the database
-    const countResult = await db.get(
+    const countResult = await getDb().get(
       "SELECT COUNT(temperatureid) AS count FROM temperatures"
     )
 
     if (countResult && countResult.count > 0) {
       // Delete all the data in the temperatures table
-      await db.run("DELETE FROM temperatures")
+      await getDb().run("DELETE FROM temperatures")
       console.log("All temperatures data deleted")
 
       // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
-      await db.run(
+      await getDb().run(
         "ALTER SEQUENCE temperatures_temperatureid_seq RESTART WITH 1"
       )
       console.log("Temperature ID sequence reset to 1")
@@ -110,7 +116,7 @@ export const getTemperaturesFromDatabase = async (req, res) => {
     // Only fetch <= the last 20 readings
     const sql =
       "SELECT * FROM temperatures ORDER BY temperatureid DESC LIMIT 20"
-    const results = await db.all(sql)
+    const results = await getDb().all(sql)
 
     console.log("Temperature results:", results.length)
     res.send(results)
@@ -133,7 +139,7 @@ const saveTemperature = async (temperatureReading) => {
       VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING temperatureid
     `
 
-    const result = await db.get(sql, temperatureReading)
+    const result = await getDb().get(sql, temperatureReading)
     console.log("New id of inserted temperature reading:", result.temperatureid)
     return result.temperatureid
   } catch (error) {

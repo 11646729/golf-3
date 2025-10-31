@@ -20,8 +20,14 @@ import { promisify } from "util"
 import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
-// Database adapter for PostgreSQL integration (for logging, analytics, etc.)
-const db = new DatabaseAdapter()
+// Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
@@ -41,7 +47,7 @@ const config = readRouteFile(configPath)
 export var index = async (req, res) => {
   try {
     // Log API access to PostgreSQL for analytics
-    await db.run(
+    await getDb().run(
       `INSERT INTO api_access_log (endpoint, timestamp, ip_address) 
        VALUES (?, ?, ?) 
        ON CONFLICT DO NOTHING`,
@@ -125,7 +131,7 @@ export var importStaticGtfsToSQLite = async () => {
           const endTime = new Date()
           const duration = endTime - startTime
 
-          await db.run(
+          await getDb().run(
             `INSERT INTO gtfs_import_log (import_date, status, duration_ms, file_size_mb) 
              VALUES (?, ?, ?, ?)`,
             [startTime.toISOString(), "success", duration, 0] // file size can be calculated if needed
@@ -134,7 +140,7 @@ export var importStaticGtfsToSQLite = async () => {
           console.error(err)
 
           // Log failed import to PostgreSQL
-          await db.run(
+          await getDb().run(
             `INSERT INTO gtfs_import_log (import_date, status, error_message) 
              VALUES (?, ?, ?)`,
             [startTime.toISOString(), "failed", err.message]
@@ -146,7 +152,7 @@ export var importStaticGtfsToSQLite = async () => {
 
     // Log error to PostgreSQL
     try {
-      await db.run(
+      await getDb().run(
         `INSERT INTO gtfs_import_log (import_date, status, error_message) 
          VALUES (?, ?, ?)`,
         [startTime.toISOString(), "error", error.message]
@@ -167,7 +173,7 @@ export var updateRealtimeGtfsToSQLite = async () => {
     await updateGtfsRealtime(config)
 
     // Log successful realtime update to PostgreSQL
-    await db.run(
+    await getDb().run(
       `INSERT INTO gtfs_realtime_log (update_date, status) 
        VALUES (?, ?)`,
       [startTime.toISOString(), "success"]
@@ -176,7 +182,7 @@ export var updateRealtimeGtfsToSQLite = async () => {
     console.error("Realtime update failed:", error)
 
     // Log failed realtime update to PostgreSQL
-    await db.run(
+    await getDb().run(
       `INSERT INTO gtfs_realtime_log (update_date, status, error_message) 
        VALUES (?, ?, ?)`,
       [startTime.toISOString(), "failed", error.message]
@@ -208,7 +214,7 @@ export var getAllAgencies = async (req, res) => {
       )
 
       // Log successful query to PostgreSQL
-      await db.run(
+      await getDb().run(
         `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
          VALUES (?, ?, ?, ?)`,
         [
@@ -247,7 +253,7 @@ export var getRoutesForSingleAgency = async (req, res) => {
       )
 
       // Log successful query to PostgreSQL
-      await db.run(
+      await getDb().run(
         `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
          VALUES (?, ?, ?, ?)`,
         [
@@ -286,7 +292,7 @@ export var getShapesForSingleRoute = async (req, res) => {
       )
 
       // Log successful query to PostgreSQL
-      await db.run(
+      await getDb().run(
         `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
          VALUES (?, ?, ?, ?)`,
         [
@@ -326,7 +332,7 @@ export var getStopsForSingleRoute = async (req, res) => {
       )
 
       // Log successful query to PostgreSQL
-      await db.run(
+      await getDb().run(
         `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
          VALUES (?, ?, ?, ?)`,
         [
@@ -368,7 +374,7 @@ export const getAllVehiclePositions = async (req, res) => {
 
       if (res) {
         // Log successful query to PostgreSQL
-        await db.run(
+        await getDb().run(
           `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
            VALUES (?, ?, ?, ?)`,
           [
@@ -413,7 +419,7 @@ const getAllTrips = async (req, res) => {
 
       if (res) {
         // Log successful query to PostgreSQL
-        await db.run(
+        await getDb().run(
           `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
            VALUES (?, ?, ?, ?)`,
           [
@@ -455,7 +461,7 @@ const getAllTripUpdates = async (req, res) => {
 
       if (res) {
         // Log successful query to PostgreSQL
-        await db.run(
+        await getDb().run(
           `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
            VALUES (?, ?, ?, ?)`,
           [
@@ -491,7 +497,7 @@ const getAllTripUpdates = async (req, res) => {
 export const createGtfsTables = async () => {
   try {
     // API access log table
-    await db.run(`
+    await getDb().run(`
       CREATE TABLE IF NOT EXISTS api_access_log (
         id SERIAL PRIMARY KEY,
         endpoint VARCHAR(255) NOT NULL,
@@ -503,7 +509,7 @@ export const createGtfsTables = async () => {
     `)
 
     // GTFS import log table
-    await db.run(`
+    await getDb().run(`
       CREATE TABLE IF NOT EXISTS gtfs_import_log (
         id SERIAL PRIMARY KEY,
         import_date TIMESTAMP NOT NULL,
@@ -516,7 +522,7 @@ export const createGtfsTables = async () => {
     `)
 
     // GTFS realtime log table
-    await db.run(`
+    await getDb().run(`
       CREATE TABLE IF NOT EXISTS gtfs_realtime_log (
         id SERIAL PRIMARY KEY,
         update_date TIMESTAMP NOT NULL,

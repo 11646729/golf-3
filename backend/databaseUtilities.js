@@ -6,6 +6,7 @@ sqlite3.verbose()
 // Module-level singleton connections
 let pooledPgClient = null
 let pooledSqliteDb = null
+let connectionInProgress = null // Track if connection is in progress
 
 // -------------------------------------------------------
 // Database Adapter Class - works with both PostgreSQL and SQLite
@@ -208,49 +209,72 @@ export var openSqlDbConnection = async (url) => {
 
   const dbType = detectDatabaseType(url)
 
+  // If a connection is already in progress, wait for it
+  if (connectionInProgress) {
+    await connectionInProgress
+  }
+
   try {
     if (dbType === "postgres") {
       // If we already have a pooled PostgreSQL connection return it
       if (pooledPgClient) return new DatabaseAdapter(pooledPgClient, "postgres")
 
-      // Create PostgreSQL client
-      const client = new pg.Client(url)
-      await client.connect()
+      // Set connection in progress to prevent race conditions
+      connectionInProgress = (async () => {
+        // Double-check after awaiting in case another connection was established
+        if (pooledPgClient) return
 
-      pooledPgClient = client
-      console.log("Connected to PostgreSQL database - Here")
+        // Create PostgreSQL client
+        const client = new pg.Client(url)
+        await client.connect()
+
+        pooledPgClient = client
+        console.log("Connected to PostgreSQL database")
+        connectionInProgress = null // Clear the flag
+      })()
+
+      await connectionInProgress
 
       return new DatabaseAdapter(pooledPgClient, "postgres")
     } else {
       // SQLite connection (existing logic)
       if (pooledSqliteDb) return new DatabaseAdapter(pooledSqliteDb, "sqlite")
 
-      const db = new sqlite3.Database(url, (err) => {
-        if (err) {
-          console.error("Failed to open SQLite database:", err.message)
+      // Set connection in progress for SQLite
+      connectionInProgress = (async () => {
+        if (pooledSqliteDb) return
+
+        const db = new sqlite3.Database(url, (err) => {
+          if (err) {
+            console.error("Failed to open SQLite database:", err.message)
+          }
+        })
+
+        // Configure to reduce busy/lock errors
+        try {
+          if (typeof db.configure === "function") {
+            db.configure("busyTimeout", 5000)
+          }
+        } catch (e) {
+          // ignore if not supported
         }
-      })
 
-      // Configure to reduce busy/lock errors
-      try {
-        if (typeof db.configure === "function") {
-          db.configure("busyTimeout", 5000)
-        }
-      } catch (e) {
-        // ignore if not supported
-      }
+        // Use WAL journal mode
+        db.run("PRAGMA journal_mode = WAL;", [], (err) => {
+          if (err) console.warn("Could not set WAL journal mode:", err.message)
+        })
 
-      // Use WAL journal mode
-      db.run("PRAGMA journal_mode = WAL;", [], (err) => {
-        if (err) console.warn("Could not set WAL journal mode:", err.message)
-      })
+        db.run("PRAGMA synchronous = NORMAL;", [], (err) => {
+          if (err)
+            console.warn("Could not set synchronous PRAGMA:", err.message)
+        })
 
-      db.run("PRAGMA synchronous = NORMAL;", [], (err) => {
-        if (err) console.warn("Could not set synchronous PRAGMA:", err.message)
-      })
+        pooledSqliteDb = db
+        console.log("Connected to SQLite database")
+        connectionInProgress = null
+      })()
 
-      pooledSqliteDb = db
-      console.log("Connected to SQLite database")
+      await connectionInProgress
       return new DatabaseAdapter(pooledSqliteDb, "sqlite")
     }
   } catch (err) {

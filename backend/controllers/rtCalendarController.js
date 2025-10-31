@@ -8,8 +8,14 @@ import { DatabaseAdapter } from "../databaseUtilities.js"
 
 dotenv.config({ quiet: true })
 
-// Database adapter for PostgreSQL
-const db = new DatabaseAdapter()
+// Database adapter for PostgreSQL - created lazily to avoid startup connection spam
+let db = null
+const getDb = () => {
+  if (!db) {
+    db = new DatabaseAdapter()
+  }
+  return db
+}
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -26,7 +32,7 @@ export var index = (req, res) => {
 export const prepareEmptyRTCalendarTable = async (req, res) => {
   try {
     // Check if rtcalendar table exists using PostgreSQL system tables
-    const tableExists = await db.get(
+    const tableExists = await getDb().get(
       `SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
@@ -64,7 +70,7 @@ const createRTCalendarTable = async () => {
       )
     `
 
-    await db.run(sql)
+    await getDb().run(sql)
     console.log("Empty rtCalendar table created")
   } catch (error) {
     console.error("Error in createRTCalendarTable:", error.message)
@@ -78,17 +84,17 @@ const createRTCalendarTable = async () => {
 const deleteRTCalendarEvents = async () => {
   try {
     // Count the records in the database
-    const countResult = await db.get(
+    const countResult = await getDb().get(
       "SELECT COUNT(eventid) AS count FROM rtcalendar"
     )
 
     if (countResult && countResult.count > 0) {
       // Delete all the data in the rtcalendar table
-      await db.run("DELETE FROM rtcalendar")
+      await getDb().run("DELETE FROM rtcalendar")
       console.log("All rtcalendar data deleted")
 
       // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
-      await db.run("ALTER SEQUENCE rtcalendar_eventid_seq RESTART WITH 1")
+      await getDb().run("ALTER SEQUENCE rtcalendar_eventid_seq RESTART WITH 1")
       console.log("RTCalendar ID sequence reset to 1")
     } else {
       console.log("rtcalendar table was empty (so no data deleted)")
@@ -141,7 +147,7 @@ const populateRTCalendarTable = async (calendarEvents) => {
         VALUES (?, ?, ?)
       `
 
-      await db.run(sql, event)
+      await getDb().run(sql, event)
       insertedCount++
     }
 
@@ -160,7 +166,7 @@ const populateRTCalendarTable = async (calendarEvents) => {
 export const getRTCalendarEvents = async (req, res) => {
   try {
     const sql = "SELECT * FROM rtcalendar ORDER BY eventid"
-    const results = await db.all(sql)
+    const results = await getDb().all(sql)
 
     res.send(results)
   } catch (error) {
