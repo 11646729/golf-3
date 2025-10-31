@@ -7,7 +7,7 @@ import {
 } from "./controllers/vesselController.js"
 
 // Load environment variables
-dotenv.config()
+dotenv.config({ quiet: true })
 
 // -------------------------------------------------------
 // Import Port Arrivals & Vessel Details

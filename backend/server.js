@@ -23,7 +23,7 @@ const httpServer = createServer(app)
 
 const __dirname = path.resolve()
 
-dotenv.config()
+dotenv.config({ quiet: true })
 
 app.use(express.json())
 

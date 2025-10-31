@@ -6,7 +6,7 @@ import moment from "moment"
 // import createCalendarEvent from "../gcEventStructure.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
-dotenv.config()
+dotenv.config({ quiet: true })
 
 // Database adapter for PostgreSQL
 const db = new DatabaseAdapter()

@@ -4,6 +4,7 @@ import {
   GoogleMap,
   useJsApiLoader,
   Marker,
+  // AdvancedMarkerElement,
   InfoWindow,
 } from "@react-google-maps/api"
 import Card from "@mui/material/Card"
@@ -181,6 +182,7 @@ const CruisesMap = (props) => {
                 )
                 .map((vesselPosition, idx) => (
                   <Marker
+                    // <AdvancedMarkerElement
                     key={vesselPosition.index ?? idx}
                     position={{
                       lat: parseNum(vesselPosition.lat),

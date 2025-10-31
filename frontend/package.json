@@ -16,7 +16,7 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.15",
-    "@react-google-maps/api": "^2.19.3",
+    "@react-google-maps/api": "^2.20.7",
     "amqplib": "^0.10.3",
     "axios": "^1.13.0",
     "brace-expansion": "4.0.1",
