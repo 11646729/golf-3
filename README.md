@@ -9,9 +9,9 @@ Currently, two official plugins are available:
 
 # To start the 2 projects together
 
-from the root: yarn start
+from the root: npm start
 
 or
 
-backend: yarn start
-frontend: yarn start
+backend: npm start
+frontend: npm start

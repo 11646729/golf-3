@@ -2,27 +2,20 @@
   "name": "golf-3-monorepo",
   "version": "1.0.0",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "backend",
-      "frontend"
-    ],
-    "nohoist": [
-      "backend/sqlite3",
-      "backend/**/sqlite3",
-      "backend/**/sqlite3/**"
-    ]
-  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "start:backend": "yarn workspace backend start",
-    "start:frontend": "yarn workspace frontend start",
-    "start": "concurrently --raw \"yarn workspace backend start\" \"yarn workspace frontend start\"",
-    "rebuild-native": "yarn workspace backend run rebuild-native"
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start": "concurrently --raw \"npm run start --workspace=backend\" \"npm run start --workspace=frontend\"",
+    "rebuild-native": "npm run rebuild-native --workspace=backend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
   },
-  "resolutions": {
+  "overrides": {
     "brace-expansion": "4.0.1",
     "serve-static": "1.16.2",
     "cookie": "0.7.2",
