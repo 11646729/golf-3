@@ -1,12 +1,6 @@
-import React, { useState, useEffect, useCallback, memo, useMemo } from "react"
+import { useState, useEffect, useCallback, memo, useMemo } from "react"
 import PropTypes from "prop-types"
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  // AdvancedMarkerElement,
-  InfoWindow,
-} from "@react-google-maps/api"
+import { APIProvider, Map, Marker, InfoWindow } from "@vis.gl/react-google-maps"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
@@ -84,11 +78,6 @@ const CruisesMap = (props) => {
     marginBottom: 0,
   }
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_KEY,
-  })
-
   // Store a reference to the google map instance in state
   const onLoadHandler = useCallback((Mymap) => {
     setMap(Mymap)
@@ -137,116 +126,116 @@ const CruisesMap = (props) => {
     strokeWeight: 1,
   }
 
-  return isLoaded ? (
-    <div>
-      <div className="cruisesmaptitlecontainer">
-        <Title>{CruiseMapTitle}</Title>
-      </div>
+  return (
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
+      <div>
+        <div className="cruisesmaptitlecontainer">
+          <Title>{CruiseMapTitle}</Title>
+        </div>
 
-      <Paper
-        sx={{
-          paddingLeft: "20px",
-          paddingRight: "20px",
-          paddingTop: "20px",
-          paddingBottom: "20px",
-        }}
-      >
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={mapCenter}
-          zoom={mapZoom}
-          options={{
-            // mapTypeId: "hybrid",
-            disableDefaultUI: true,
-            zoomControl: true,
+        <Paper
+          sx={{
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingTop: "20px",
+            paddingBottom: "20px",
           }}
-          onLoad={onLoadHandler}
-          onUnmount={onUnmountHandler}
         >
-          {Number.isFinite(parseNum(cruisesHomePosition?.lat)) &&
-          Number.isFinite(parseNum(cruisesHomePosition?.lng)) ? (
-            <Marker
-              position={{
-                lat: parseNum(cruisesHomePosition.lat),
-                lng: parseNum(cruisesHomePosition.lng),
-              }}
-            />
-          ) : null}
+          <Map
+            style={mapContainerStyle}
+            defaultCenter={mapCenter}
+            defaultZoom={mapZoom}
+            mapId="cruise-map"
+            disableDefaultUI={true}
+            zoomControl={true}
+            onLoad={onLoadHandler}
+            onUnmount={onUnmountHandler}
+          >
+            {Number.isFinite(parseNum(cruisesHomePosition?.lat)) &&
+            Number.isFinite(parseNum(cruisesHomePosition?.lng)) ? (
+              <Marker
+                position={{
+                  lat: parseNum(cruisesHomePosition.lat),
+                  lng: parseNum(cruisesHomePosition.lng),
+                }}
+              />
+            ) : null}
 
-          {Array.isArray(vesselPositions)
-            ? vesselPositions
-                .filter(
-                  (p) =>
-                    Number.isFinite(parseNum(p?.lat)) &&
-                    Number.isFinite(parseNum(p?.lng))
-                )
-                .map((vesselPosition, idx) => (
-                  <Marker
-                    // <AdvancedMarkerElement
-                    key={vesselPosition.index ?? idx}
-                    position={{
-                      lat: parseNum(vesselPosition.lat),
-                      lng: parseNum(vesselPosition.lng),
+            {Array.isArray(vesselPositions)
+              ? vesselPositions
+                  .filter(
+                    (p) =>
+                      Number.isFinite(parseNum(p?.lat)) &&
+                      Number.isFinite(parseNum(p?.lng))
+                  )
+                  .map((vesselPosition, idx) => (
+                    <Marker
+                      // <AdvancedMarkerElement
+                      key={vesselPosition.index ?? idx}
+                      position={{
+                        lat: parseNum(vesselPosition.lat),
+                        lng: parseNum(vesselPosition.lng),
+                      }}
+                      icon={iconPin}
+                      onClick={() => {
+                        setSelected(vesselPosition)
+                      }}
+                    />
+                  ))
+              : null}
+
+            {selected &&
+            Number.isFinite(parseNum(selected?.lat)) &&
+            Number.isFinite(parseNum(selected?.lng)) ? (
+              <InfoWindow
+                position={{
+                  lat: parseNum(selected.lat),
+                  lng: parseNum(selected.lng),
+                }}
+                onCloseClick={() => {
+                  setSelected(null)
+                }}
+              >
+                <Card>
+                  <CardMedia
+                    style={{
+                      height: 0,
+                      paddingTop: "40%",
+                      marginTop: "30",
                     }}
-                    icon={iconPin}
-                    onClick={() => {
-                      setSelected(vesselPosition)
-                    }}
+                    // image={selected.vesselurl}
+                    // title={selected.vessseltitle}
                   />
-                ))
-            : null}
-
-          {selected &&
-          Number.isFinite(parseNum(selected?.lat)) &&
-          Number.isFinite(parseNum(selected?.lng)) ? (
-            <InfoWindow
-              position={{
-                lat: parseNum(selected.lat),
-                lng: parseNum(selected.lng),
-              }}
-              onCloseClick={() => {
-                setSelected(null)
-              }}
-            >
-              <Card>
-                <CardMedia
-                  style={{
-                    height: 0,
-                    paddingTop: "40%",
-                    marginTop: "30",
-                  }}
-                  // image={selected.vesselurl}
-                  // title={selected.vessseltitle}
-                />
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                  ></Typography>
-                  <Typography component="p">{selected.vesselName}</Typography>
-                  <Typography component="p">{selected.timestamp}</Typography>
-                  <Typography component="p">
-                    En Route to {selected.destination}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    color="primary"
-                    component={Link}
-                    // to="/golfcoursespage"
-                  >
-                    View
-                  </Button>
-                </CardActions>
-              </Card>
-            </InfoWindow>
-          ) : null}
-        </GoogleMap>
-      </Paper>
-    </div>
-  ) : null
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                    ></Typography>
+                    <Typography component="p">{selected.vesselName}</Typography>
+                    <Typography component="p">{selected.timestamp}</Typography>
+                    <Typography component="p">
+                      En Route to {selected.destination}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      component={Link}
+                      // to="/golfcoursespage"
+                    >
+                      View
+                    </Button>
+                  </CardActions>
+                </Card>
+              </InfoWindow>
+            ) : null}
+          </Map>
+        </Paper>
+      </div>
+    </APIProvider>
+  )
 }
 
 export default memo(CruisesMap)

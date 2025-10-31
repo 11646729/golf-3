@@ -1,11 +1,11 @@
-import React, { useMemo, memo } from "react"
+import { useMemo, memo } from "react"
 import PropTypes from "prop-types"
 import {
-  GoogleMap,
-  MarkerClusterer,
+  APIProvider,
+  Map,
+  // MarkerClusterer,
   Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api"
+} from "@vis.gl/react-google-maps"
 import Title from "./Title"
 import "../styles/nearbycrimesmap.scss"
 
@@ -43,47 +43,37 @@ const NearbyCrimesMap = (props) => {
     []
   )
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_KEY,
-  })
+  return (
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
+      <div className="nearbycrimesmapcontainer">
+        <Title>{NearbyCrimesMapTitle}</Title>
+        <Map
+          style={mapContainerStyle}
+          defaultZoom={mapZoom}
+          defaultCenter={mapCenter}
+          mapId="nearby-crimes-map"
+          disableDefaultUI={true}
+          zoomControl={true}
+        >
+          {/* <Marker position={mapCenter} icon={iconPin} /> */}
 
-  return isLoaded ? (
-    <div className="nearbycrimesmapcontainer">
-      <Title>{NearbyCrimesMapTitle}</Title>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={mapZoom}
-        center={mapCenter}
-        options={{
-          // mapTypeId: "hybrid",
-          disableDefaultUI: true,
-          zoomControl: true,
-        }}
-      >
-        {/* <Marker position={mapCenter} icon={iconPin} /> */}
-
-        <MarkerClusterer options={options}>
-          {(clusterer) =>
-            crimesData.map((crime) => (
-              <Marker
-                key={`crime-${crime.id}`}
-                position={{
-                  lat: parseFloat(crime.location.latitude),
-                  lng: parseFloat(crime.location.longitude),
-                }}
-                onClick={() => {
-                  // setSelected(crime)
-                  console.log(crime)
-                }}
-                clusterer={clusterer}
-              />
-            ))
-          }
-        </MarkerClusterer>
-      </GoogleMap>
-    </div>
-  ) : null
+          {/* Note: MarkerClusterer not yet available in vis.gl, using simple markers */}
+          {crimesData.map((crime) => (
+            <Marker
+              key={`crime-${crime.id}`}
+              position={{
+                lat: parseFloat(crime.latitude),
+                lng: parseFloat(crime.longitude),
+              }}
+              onClick={() => {
+                console.log(crime)
+              }}
+            />
+          ))}
+        </Map>
+      </div>
+    </APIProvider>
+  )
 }
 
 export default memo(NearbyCrimesMap)

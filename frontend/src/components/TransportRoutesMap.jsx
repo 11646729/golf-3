@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback, memo } from "react"
+import { useState, useEffect, useCallback, memo } from "react"
 import PropTypes from "prop-types"
 import {
-  GoogleMap,
-  useJsApiLoader,
+  APIProvider,
+  Map,
   Marker,
-  Polyline,
+  // Polyline,
   // InfoWindow,
-} from "@react-google-maps/api"
+} from "@vis.gl/react-google-maps"
 import "../styles/transportroutes.scss"
 
 import Title from "./Title"
@@ -46,11 +46,6 @@ const TransportRoutesMap = (props) => {
     marginRight: 10,
     marginBottom: 20,
   }
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_KEY,
-  })
 
   // Store a reference to the google map instance in state
   const onLoadHandler = useCallback((Mymap) => {
@@ -104,56 +99,56 @@ const TransportRoutesMap = (props) => {
     strokeWeight: 1,
   }
 
-  return isLoaded ? (
-    <div>
+  return (
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
       <div>
-        <Title>{transportAgencyName}</Title>
-      </div>
-      <div className="transportroutesmapcontainer">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={mapCenter}
-          zoom={mapZoom}
-          options={{
-            // mapTypeId: "hybrid",
-            disableDefaultUI: true,
-            zoomControl: true,
-          }}
-          onLoad={onLoadHandler}
-          onUnmount={onUnmountHandler}
-        >
-          {transportShapesArray
-            ? transportShapesArray.map((transportShape) => (
-                <Polyline
-                  key={transportShape.shapeKey}
-                  path={transportShape.shapeCoordinates}
-                  options={{
-                    strokeColor: transportShape.defaultColor,
-                    strokeOpacity: "1.0",
-                    strokeWeight: 2,
-                  }}
-                  // onClick={() => {
-                  //   handleTransportShapeClick()
-                  // }}
-                />
-              ))
-            : null}
-          {transportStopsArray
-            ? transportStopsArray.map((transportStop) => (
-                <Marker
-                  key={transportStop.stop_id}
-                  position={{
-                    lat: transportStop.stop_lat,
-                    lng: transportStop.stop_lon,
-                  }}
-                  icon={transportStopIcon}
-                  // onClick={() => {
-                  //   handleBusStopClick()
-                  // }}
-                />
-              ))
-            : null}
-          {/* {transportStopSelected ? (
+        <div>
+          <Title>{transportAgencyName}</Title>
+        </div>
+        <div className="transportroutesmapcontainer">
+          <Map
+            style={mapContainerStyle}
+            defaultCenter={mapCenter}
+            defaultZoom={mapZoom}
+            mapId="transport-routes-map"
+            disableDefaultUI={true}
+            zoomControl={true}
+            onLoad={onLoadHandler}
+            onUnmount={onUnmountHandler}
+          >
+            {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
+            {/* {transportShapesArray
+              ? transportShapesArray.map((transportShape) => (
+                  <Polyline
+                    key={transportShape.shapeKey}
+                    path={transportShape.shapeCoordinates}
+                    options={{
+                      strokeColor: transportShape.defaultColor,
+                      strokeOpacity: "1.0",
+                      strokeWeight: 2,
+                    }}
+                    // onClick={() => {
+                    //   handleTransportShapeClick()
+                    // }}
+                  />
+                ))
+              : null} */}
+            {transportStopsArray
+              ? transportStopsArray.map((transportStop) => (
+                  <Marker
+                    key={transportStop.stop_id}
+                    position={{
+                      lat: transportStop.stop_lat,
+                      lng: transportStop.stop_lon,
+                    }}
+                    icon={transportStopIcon}
+                    // onClick={() => {
+                    //   handleBusStopClick()
+                    // }}
+                  />
+                ))
+              : null}
+            {/* {transportStopSelected ? (
               <InfoWindow
                 position={{
                   lat: transportStopSelected.stop_lat,
@@ -170,10 +165,11 @@ const TransportRoutesMap = (props) => {
                 </div>
               </InfoWindow>
             ) : null} */}
-        </GoogleMap>
+          </Map>
+        </div>
       </div>
-    </div>
-  ) : null
+    </APIProvider>
+  )
 }
 
 export default memo(TransportRoutesMap)
