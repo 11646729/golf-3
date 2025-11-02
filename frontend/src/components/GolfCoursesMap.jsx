@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
-  Marker,
+  AdvancedMarker,
   InfoWindow,
   // OverlayView,
 } from "@vis.gl/react-google-maps"
@@ -72,18 +72,24 @@ const GolfCoursesMap = (props) => {
     }
   }, [map, golfcourses, mapCenter])
 
-  const iconPin = {
-    path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
-    fillColor: "#78a32e",
-    fillOpacity: 0.7,
-    scale: 0.03, // to reduce the size of icons
-    strokeColor: "#2f4024",
-    strokeWeight: 1,
-  }
-
-  // const onClick = () => {
-  //   console.info("I have been clicked!")
-  // }
+  const CustomCircle = ({
+    color = "#78a32e",
+    size = 15,
+    borderColor = "#ffffff",
+    borderWidth = 2,
+  }) => (
+    <div
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        backgroundColor: color,
+        borderRadius: "50%",
+        border: `${borderWidth}px solid ${borderColor}`,
+        boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+        cursor: "pointer",
+      }}
+    />
+  )
 
   // const divStyle = {
   //   background: "white",
@@ -108,17 +114,20 @@ const GolfCoursesMap = (props) => {
           >
             {golfcourses
               ? golfcourses.map((golfcourse) => (
-                  <Marker
+                  <AdvancedMarker
                     key={golfcourse.name}
-                    position={{
-                      lat: golfcourse.lat,
-                      lng: golfcourse.lng,
-                    }}
-                    icon={iconPin}
-                    onClick={() => {
-                      setSelected(golfcourse)
-                    }}
-                  />
+                    position={{ lat: golfcourse.lat, lng: golfcourse.lng }}
+                    onClick={() =>
+                      console.log(`Clicked marker ${golfcourse.name}`)
+                    }
+                  >
+                    <CustomCircle
+                      color="#78a32e"
+                      size={15}
+                      borderColor="#ffffff"
+                      borderWidth={1}
+                    />
+                  </AdvancedMarker>
                 ))
               : null}
 
