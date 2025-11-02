@@ -40,15 +40,67 @@ const GolfCoursesMap = (props) => {
     marginBottom: 20,
   }
 
-  const mapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+  const defaultMapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
 
-  const mapCenter = useMemo(
-    () => ({
+  const mapCenter = useMemo(() => {
+    // If we have golf courses, center the map on them
+    if (golfcourses && golfcourses.length > 0) {
+      const totalLat = golfcourses.reduce((sum, course) => sum + course.lat, 0)
+      const totalLng = golfcourses.reduce((sum, course) => sum + course.lng, 0)
+      return {
+        lat: totalLat / golfcourses.length,
+        lng: totalLng / golfcourses.length,
+      }
+    }
+
+    // Otherwise use default home location
+    return {
       lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
       lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
-    }),
-    []
-  )
+    }
+  }, [golfcourses])
+
+  // Function to calculate zoom level to show all golf course pins
+  const mapZoom = useMemo(() => {
+    if (!golfcourses || golfcourses.length === 0) {
+      return defaultMapZoom
+    }
+
+    if (golfcourses.length === 1) {
+      return 12 // Good zoom for single golf course
+    }
+
+    // Calculate bounds of all golf courses
+    let minLat = golfcourses[0].lat
+    let maxLat = golfcourses[0].lat
+    let minLng = golfcourses[0].lng
+    let maxLng = golfcourses[0].lng
+
+    golfcourses.forEach((course) => {
+      minLat = Math.min(minLat, course.lat)
+      maxLat = Math.max(maxLat, course.lat)
+      minLng = Math.min(minLng, course.lng)
+      maxLng = Math.max(maxLng, course.lng)
+    })
+
+    // Calculate the distance span
+    const latSpan = maxLat - minLat
+    const lngSpan = maxLng - minLng
+    const maxSpan = Math.max(latSpan, lngSpan)
+
+    // Calculate zoom level based on span
+    // This is an approximation - adjust these values based on your needs
+    let zoom = defaultMapZoom
+    if (maxSpan >= 10) zoom = 6 // Very wide area
+    else if (maxSpan >= 5) zoom = 7 // Wide area
+    else if (maxSpan >= 2) zoom = 8 // Large area
+    else if (maxSpan >= 1) zoom = 9 // Medium area
+    else if (maxSpan >= 0.5) zoom = 10 // Small area
+    else if (maxSpan >= 0.1) zoom = 11 // Very small area
+    else zoom = 12 // Tight area
+
+    return zoom
+  }, [golfcourses, defaultMapZoom])
 
   // Store a reference to the google map instance in state
   const onLoadHandler = useCallback((Mymap) => setMap(Mymap), [])
@@ -57,20 +109,22 @@ const GolfCoursesMap = (props) => {
   const onUnmountHandler = useCallback(() => setMap(null), [])
 
   useEffect(() => {
-    if (map) {
-      if (golfcourses.length > 0) {
-        const bounds = new window.google.maps.LatLngBounds(mapCenter)
+    if (map && golfcourses && golfcourses.length > 1) {
+      // Only use fitBounds if we have multiple golf courses and want precise fitting
+      // This provides a fallback for cases where calculated zoom might not be perfect
+      const bounds = new window.google.maps.LatLngBounds()
 
-        golfcourses.map((golfCourse) =>
-          bounds.extend({
-            lat: golfCourse.lat,
-            lng: golfCourse.lng,
-          })
-        )
-        map.fitBounds(bounds)
-      }
+      golfcourses.forEach((golfCourse) =>
+        bounds.extend({
+          lat: golfCourse.lat,
+          lng: golfCourse.lng,
+        })
+      )
+
+      // Add some padding around the bounds
+      map.fitBounds(bounds, { padding: 50 })
     }
-  }, [map, golfcourses, mapCenter])
+  }, [map, golfcourses])
 
   const CustomCircle = ({
     color = "#78a32e",
