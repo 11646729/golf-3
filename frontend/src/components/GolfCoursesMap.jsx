@@ -20,29 +20,6 @@ import {
 import Title from "./Title"
 import "../styles/golfcoursesmap.scss"
 
-// const MyComponent = () => {
-//   const map = useMap()
-
-//   useEffect(() => {
-//     if (!map) return
-
-//     // do something with the map instance
-//   }, [map])
-
-//   console.log(map)
-
-//   return <>...</>
-// }
-
-// const App = () => {
-//   return (
-//     <APIProvider>
-//       <Map></Map>
-//       <MyComponent />
-//     </APIProvider>
-//   )
-// }
-
 const GolfCoursesMapTitle = "Golf Course Locations"
 
 const GolfCoursesMap = (props) => {
