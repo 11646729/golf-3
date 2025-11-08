@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react"
+import { useState, useEffect } from "react"
 import GolfCoursesTable from "../components/GolfCoursesTable"
 import GolfCoursesMap2 from "../components/GolfCoursesMap2"
 import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"
@@ -11,9 +11,9 @@ const GolfCoursesPage = () => {
   const [golfcourses, setGolfCoursesData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const golfDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
-
   useEffect(() => {
+    const golfDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
+
     getGolfCoursesData(golfDataUrl)
       .then((returnedData) => {
         setGolfCoursesData(returnedData)
@@ -25,19 +25,16 @@ const GolfCoursesPage = () => {
       })
   }, [])
 
-  // console.log(golfcourses)
-
   return (
     <div className="golfcoursescontainer">
       <div className="golfcoursestablecontainer">
         <GolfCoursesTable golfcourses={golfcourses} />
       </div>
       <div className="golfcoursesmapcontainer">
-        {/* <GolfCoursesMap2 /> */}
         <GolfCoursesMap2 isLoading={isLoading} golfcourses={golfcourses} />
       </div>
     </div>
   )
 }
 
-export default memo(GolfCoursesPage)
+export default GolfCoursesPage

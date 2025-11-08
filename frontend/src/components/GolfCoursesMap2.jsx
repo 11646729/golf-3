@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React from "react"
 import {
   APIProvider,
   Map,
@@ -7,7 +7,6 @@ import {
 } from "@vis.gl/react-google-maps"
 import Title from "./Title"
 import "../styles/golfcoursesmap.scss"
-import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"
 
 const GolfCoursesMapTitle = "Golf Course Locations"
 
@@ -61,8 +60,6 @@ const MarkersComponent = () => {
 
 const GolfCoursesMap2 = (props) => {
   const { isLoading, golfcourses } = props
-
-  console.log(golfcourses)
 
   return (
     <APIProvider
