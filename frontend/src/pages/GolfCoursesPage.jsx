@@ -25,7 +25,7 @@ const GolfCoursesPage = () => {
       })
   }, [])
 
-  console.log(golfcourses)
+  // console.log(golfcourses)
 
   return (
     <div className="golfcoursescontainer">
@@ -33,8 +33,8 @@ const GolfCoursesPage = () => {
         <GolfCoursesTable golfcourses={golfcourses} />
       </div>
       <div className="golfcoursesmapcontainer">
-        <GolfCoursesMap2 />
-        {/* <GolfCoursesMap2 isLoading={isLoading} golfcourses={golfcourses} /> */}
+        {/* <GolfCoursesMap2 /> */}
+        <GolfCoursesMap2 isLoading={isLoading} golfcourses={golfcourses} />
       </div>
     </div>
   )

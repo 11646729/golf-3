@@ -26,7 +26,7 @@ const CruisesMap = (props) => {
   const [selected, setSelected] = useState(null)
 
   const mapZoom = useMemo(() => {
-    const z = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+    const z = parseInt(import.meta.env.VITE_GOOGLE_MAPS_API_KEY, 10)
     return Number.isFinite(z) ? z : 10
   }, [])
 
