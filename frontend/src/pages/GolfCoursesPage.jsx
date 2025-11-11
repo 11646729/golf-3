@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import GolfCoursesTable from "../components/GolfCoursesTable"
-import GolfCoursesMap2 from "../components/GolfCoursesMap2"
+import GolfCoursesMap from "../components/GolfCoursesMap2"
 import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"
 import "../styles/golfcourses.scss"
 
@@ -31,7 +31,7 @@ const GolfCoursesPage = () => {
         <GolfCoursesTable golfcourses={golfcourses} />
       </div>
       <div className="golfcoursesmapcontainer">
-        <GolfCoursesMap2 isLoading={isLoading} golfcourses={golfcourses} />
+        <GolfCoursesMap isLoading={isLoading} golfcourses={golfcourses} />
       </div>
     </div>
   )

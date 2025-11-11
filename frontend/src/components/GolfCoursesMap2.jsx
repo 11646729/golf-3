@@ -1,12 +1,21 @@
-import React from "react"
+import { useEffect, useMemo } from "react"
 import {
   APIProvider,
   Map,
-  useMap,
   AdvancedMarker,
+  useMap,
 } from "@vis.gl/react-google-maps"
 import Title from "./Title"
 import "../styles/golfcoursesmap.scss"
+
+const mapContainerStyle = {
+  height: "750px",
+  width: "750px",
+  border: "1px solid #ccc",
+  marginLeft: 0,
+  marginRight: 0,
+  marginBottom: 0,
+}
 
 const GolfCoursesMapTitle = "Golf Course Locations"
 
@@ -17,13 +26,10 @@ const defaultMapCenter = {
   lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
 }
 
-const mapContainerStyle = {
-  height: "750px",
-  width: "750px",
-  border: "1px solid #ccc",
-  marginLeft: 20,
-  marginRight: 10,
-  marginBottom: 20,
+// Helper to parse and validate coordinates
+const parseCoordinate = (value) => {
+  const num = parseFloat(value)
+  return Number.isFinite(num) ? num : null
 }
 
 const CustomCircle = ({
@@ -45,27 +51,51 @@ const CustomCircle = ({
   />
 )
 
-// Helper to parse and validate coordinates
-const parseCoordinate = (value) => {
-  const num = parseFloat(value)
-  return Number.isFinite(num) ? num : null
-}
+const getValidCourses = (courses = []) =>
+  courses.reduce((list, course) => {
+    const lat = parseCoordinate(course.lat)
+    const lng = parseCoordinate(course.lng)
 
-const MarkersComponent = () => {
+    if (lat === null || lng === null) {
+      return list
+    }
+
+    list.push({ ...course, lat, lng })
+    return list
+  }, [])
+
+const FitBoundsLayer = ({ courses }) => {
   const map = useMap()
-  if (map) {
-    console.log("map:", map)
-  }
+
+  useEffect(() => {
+    if (!map || courses.length === 0) {
+      return
+    }
+
+    // Adjust the viewport so every course marker is visible
+    const bounds = new window.google.maps.LatLngBounds()
+    courses.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
+
+    if (courses.length === 1) {
+      map.setCenter(bounds.getCenter())
+      map.setZoom(Math.min(map.getZoom() ?? defaultMapZoom, 15))
+      return
+    }
+
+    map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 })
+  }, [map, courses])
+
+  return null
 }
 
-const GolfCoursesMap2 = (props) => {
-  const { isLoading, golfcourses } = props
+const GolfCoursesMap = ({ golfcourses = [] }) => {
+  const validCourses = useMemo(
+    () => getValidCourses(golfcourses),
+    [golfcourses]
+  )
 
   return (
-    <APIProvider
-      apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-      onLoad={() => console.log("Maps API has loaded.")}
-    >
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <Title>{GolfCoursesMapTitle}</Title>
       <div className="golfcoursesmapcontainer">
         <Map
@@ -76,33 +106,19 @@ const GolfCoursesMap2 = (props) => {
           disableDefaultUI={true}
           zoomControl={true}
         >
-          {golfcourses
-            ? golfcourses
-                .filter((golfcourse) => {
-                  const lat = parseCoordinate(golfcourse.lat)
-                  const lng = parseCoordinate(golfcourse.lng)
-                  return lat !== null && lng !== null
-                })
-                .map((golfcourse) => (
-                  <AdvancedMarker
-                    key={golfcourse.name}
-                    position={{
-                      lat: parseCoordinate(golfcourse.lat),
-                      lng: parseCoordinate(golfcourse.lng),
-                    }}
-                    onClick={() =>
-                      console.log(`Clicked marker ${golfcourse.name}`)
-                    }
-                  >
-                    <CustomCircle />
-                  </AdvancedMarker>
-                ))
-            : null}
+          <FitBoundsLayer courses={validCourses} />
+          {validCourses.map((course) => (
+            <AdvancedMarker
+              key={course.name}
+              position={{ lat: course.lat, lng: course.lng }}
+            >
+              <CustomCircle />
+            </AdvancedMarker>
+          ))}
         </Map>
-        <MarkersComponent />
       </div>
     </APIProvider>
   )
 }
 
-export default GolfCoursesMap2
+export default GolfCoursesMap
