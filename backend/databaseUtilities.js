@@ -16,10 +16,14 @@ class DatabaseAdapter {
     this.client = client
     this.type = type // 'postgres' or 'sqlite'
     this._connectionPromise = null
+    this._connectionError = null
 
     // If no client provided, auto-connect to database
     if (!client) {
-      this._connectionPromise = this._autoConnect()
+      this._connectionPromise = this._autoConnect().catch((err) => {
+        this._connectionError = err
+        return null
+      })
     }
   }
 
@@ -31,6 +35,9 @@ class DatabaseAdapter {
     }
 
     const adapter = await openSqlDbConnection(url)
+    if (!adapter) {
+      throw new Error("Failed to establish database connection")
+    }
     this.client = adapter.client
     this.type = adapter.type
     return this
@@ -41,6 +48,10 @@ class DatabaseAdapter {
     if (this._connectionPromise) {
       await this._connectionPromise
       this._connectionPromise = null // Clear after first use
+    }
+
+    if (this._connectionError) {
+      throw this._connectionError
     }
   }
 
@@ -282,6 +293,7 @@ export var openSqlDbConnection = async (url) => {
       `UNSUCCESSFUL in connecting to the ${dbType} database`,
       err?.message || err
     )
+    connectionInProgress = null
     return null
   }
 }
