@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react"
+import { useState, useEffect } from "react"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import { getPortArrivalsData } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
@@ -13,17 +13,9 @@ const CruisesPage = () => {
   const [vesselPositions, setVesselPositions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const homePosition = {
-    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
-    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
-  }
-
-  // build portArrivalsData Url
-  const portArrivalsDataUrl = "http://localhost:4000/api/cruise/getPortArrivals"
-
   // This routine gets Port Arrivals data
   useEffect(() => {
-    getPortArrivalsData(portArrivalsDataUrl)
+    getPortArrivalsData("http://localhost:4000/api/cruise/getPortArrivals")
       .then((returnedData) => {
         // Sort by date & time because returnedData is not always in timestamp order
         returnedData.data.sort((a, b) => (a.vesseleta > b.vesseleta ? 1 : -1))
@@ -45,11 +37,11 @@ const CruisesPage = () => {
       getLiveVesselPositions(portArrivals)
         .then((returnedData) => {
           setVesselPositions(returnedData)
+
           setIsLoading(false)
         })
         .catch((err) => {
           console.log(err)
-          console.log("Error getting live vessel positions")
         })
     }
   }, [portArrivals])
@@ -61,14 +53,13 @@ const CruisesPage = () => {
       </div>
       <div className="cruisesmapcontainer">
         <CruisesMap
-          // isLoading={isLoading}
-          cruisesHomePosition={homePosition}
+          isLoading={isLoading}
           vesselPositions={vesselPositions}
-          // vesselDetails={portArrivals}
+          vesselDetails={portArrivals}
         />
       </div>
     </div>
   )
 }
 
-export default memo(CruisesPage)
+export default CruisesPage

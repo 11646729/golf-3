@@ -32,25 +32,6 @@ const parseCoordinate = (value) => {
   return Number.isFinite(num) ? num : null
 }
 
-const CustomCircle = ({
-  color = "#78a32e",
-  size = 15,
-  borderColor = "#ffffff",
-  borderWidth = 1,
-}) => (
-  <div
-    style={{
-      width: `${size}px`,
-      height: `${size}px`,
-      backgroundColor: color,
-      borderRadius: "50%",
-      border: `${borderWidth}px solid ${borderColor}`,
-      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-      cursor: "pointer",
-    }}
-  />
-)
-
 const getValidCourses = (courses = []) =>
   courses.reduce((list, course) => {
     const lat = parseCoordinate(course.lat)
@@ -87,6 +68,25 @@ const FitBoundsLayer = ({ courses }) => {
 
   return null
 }
+
+const CustomCircle = ({
+  color = "#78a32e",
+  size = 15,
+  borderColor = "#ffffff",
+  borderWidth = 1,
+}) => (
+  <div
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      backgroundColor: color,
+      borderRadius: "50%",
+      border: `${borderWidth}px solid ${borderColor}`,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+      cursor: "pointer",
+    }}
+  />
+)
 
 const GolfCoursesMap = ({ golfcourses = [] }) => {
   const validCourses = useMemo(

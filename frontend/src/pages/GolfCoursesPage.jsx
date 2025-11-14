@@ -12,9 +12,7 @@ const GolfCoursesPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const golfDataUrl = "http://localhost:4000/api/golf/getGolfCourses"
-
-    getGolfCoursesData(golfDataUrl)
+    getGolfCoursesData("http://localhost:4000/api/golf/getGolfCourses")
       .then((returnedData) => {
         setGolfCoursesData(returnedData)
 
