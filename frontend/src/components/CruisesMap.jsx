@@ -41,10 +41,10 @@ const parseCoordinate = (value) => {
 }
 
 const CustomCircle = ({
-  color = "#1f6fee",
-  size = 16,
+  color = "#78a32e",
+  size = 15,
   borderColor = "#ffffff",
-  borderWidth = 2,
+  borderWidth = 1,
 }) => (
   <div
     style={{

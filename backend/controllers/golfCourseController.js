@@ -196,7 +196,7 @@ const populateGolfCoursesTable = async (courses) => {
 
       db.run(sql, course, (err) => {
         if (err) {
-          console.error("Here: " + err.message)
+          console.error(err.message)
         }
       })
 

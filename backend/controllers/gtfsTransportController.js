@@ -26,6 +26,9 @@ const getDb = () => {
   if (!db) {
     db = new DatabaseAdapter()
   }
+
+  console.log("Database Connection Error Here - ", db)
+
   return db
 }
 

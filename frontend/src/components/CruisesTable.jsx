@@ -30,17 +30,17 @@ const style = {
 const CruisesTableTitle = "Cruise Ships Arriving Soon"
 
 const columns = [
-  { id: "date", label: "Date", minWidth: 10, align: "center" },
+  { id: "date", label: "Arrival Date", minWidth: 10, align: "center" },
   {
     id: "arrival",
-    label: "Arrival",
+    label: "Arrival Time",
     minWidth: 10,
     align: "center",
   },
   { id: "ship", label: "Ship", minWidth: 10, align: "center" },
   {
     id: "departure",
-    label: "Departure",
+    label: "Departure Time",
     minWidth: 10,
     align: "center",
   },

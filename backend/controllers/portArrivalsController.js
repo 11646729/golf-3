@@ -100,7 +100,11 @@ export const getPortArrivals = async (req, res, next) => {
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
     const threeMonthsFromNow = new Date()
-    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 12) // Changed from 3 to 12 months
+
+    console.log(
+      `Fetching port arrivals between ${yesterday.toISOString()} and ${threeMonthsFromNow.toISOString()}`
+    )
 
     const sql =
       "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
