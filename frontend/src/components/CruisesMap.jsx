@@ -194,8 +194,4 @@ const CruisesMap = ({ vesselPositions = [] }) => {
   )
 }
 
-// CruisesMap.propTypes = {
-//   vesselPositions: PropTypes.arrayOf(PropTypes.object),
-// }
-
 export default CruisesMap
