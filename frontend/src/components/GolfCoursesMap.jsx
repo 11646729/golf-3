@@ -63,7 +63,7 @@ const FitBoundsLayer = ({ courses }) => {
       return
     }
 
-    map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 })
+    map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
   }, [map, courses])
 
   return null

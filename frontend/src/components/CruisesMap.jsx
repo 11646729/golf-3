@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
@@ -83,17 +82,11 @@ const normaliseVesselPositions = (positions = []) =>
     return list
   }, [])
 
-const FitBoundsLayer = ({ positions, fallbackCenter, fallbackZoom }) => {
+const FitBoundsLayer = ({ positions }) => {
   const map = useMap()
 
   useEffect(() => {
-    if (!map) {
-      return
-    }
-
-    if (positions.length === 0) {
-      map.setCenter(fallbackCenter)
-      map.setZoom(fallbackZoom)
+    if (!map || positions.length === null) {
       return
     }
 
@@ -102,12 +95,12 @@ const FitBoundsLayer = ({ positions, fallbackCenter, fallbackZoom }) => {
 
     if (positions.length === 1) {
       map.setCenter(bounds.getCenter())
-      map.setZoom(Math.min(fallbackZoom, 14))
+      map.setZoom(Math.min(map.getZoom() ?? defaultMapZoom, 14))
       return
     }
 
-    map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 })
-  }, [map, positions, fallbackCenter, fallbackZoom])
+    map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
+  }, [map, positions])
 
   return null
 }
@@ -122,18 +115,9 @@ const CruisesMap = ({ vesselPositions = [] }) => {
     () => normaliseVesselPositions(vesselPositions),
     [vesselPositions]
   )
-  const fallbackCenter = useMemo(() => {
-    const lat = Number.isFinite(defaultMapCenter.lat)
-      ? defaultMapCenter.lat
-      : 54.597285
-    const lng = Number.isFinite(defaultMapCenter.lng)
-      ? defaultMapCenter.lng
-      : -5.93012
 
-    return { lat, lng }
-  }, [])
-  const fallbackZoom = Number.isFinite(defaultMapZoom) ? defaultMapZoom : 10
   const [selectedId, setSelectedId] = useState(null)
+
   const selectedPosition = useMemo(
     () => getSelectedPosition(validPositions, selectedId),
     [validPositions, selectedId]
@@ -147,19 +131,14 @@ const CruisesMap = ({ vesselPositions = [] }) => {
       <Title>{CruiseMapTitle}</Title>
       <div className="cruisesmapcontainer">
         <Map
+          defaultZoom={defaultMapZoom}
+          defaultCenter={defaultMapCenter}
           style={mapContainerStyle}
-          defaultCenter={fallbackCenter}
-          defaultZoom={fallbackZoom}
           mapId="cruise-map"
           disableDefaultUI={true}
           zoomControl={true}
         >
-          <FitBoundsLayer
-            positions={validPositions}
-            fallbackCenter={fallbackCenter}
-            fallbackZoom={fallbackZoom}
-          />
-
+          <FitBoundsLayer positions={validPositions} />
           {validPositions.map((position) => (
             <AdvancedMarker
               key={position._markerId}
@@ -215,8 +194,8 @@ const CruisesMap = ({ vesselPositions = [] }) => {
   )
 }
 
-CruisesMap.propTypes = {
-  vesselPositions: PropTypes.arrayOf(PropTypes.object),
-}
+// CruisesMap.propTypes = {
+//   vesselPositions: PropTypes.arrayOf(PropTypes.object),
+// }
 
 export default CruisesMap
