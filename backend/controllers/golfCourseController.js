@@ -213,7 +213,7 @@ const populateGolfCoursesTable = async (courses) => {
 }
 
 // -------------------------------------------------------
-// Get all Golf Courses from SQLite database
+// Get all Golf Courses from Database
 // Path: localhost:4000/api/golf/getGolfCourses
 // -------------------------------------------------------
 export const getGolfCourses = async (req, res) => {

@@ -23,6 +23,8 @@ const GolfCoursesPage = () => {
       })
   }, [])
 
+  // console.log(golfcourses) // For debugging - All database fields returned
+
   return (
     <div className="golfcoursescontainer">
       <div className="golfcoursestablecontainer">
