@@ -35,6 +35,7 @@ class DatabaseAdapter {
     }
 
     const adapter = await openSqlDbConnection(url)
+
     if (!adapter) {
       throw new Error("Failed to establish database connection")
     }
@@ -220,6 +221,8 @@ export var openSqlDbConnection = async (url) => {
 
   const dbType = detectDatabaseType(url)
 
+  console.log(`Connecting to ${dbType} database...`)
+
   // If a connection is already in progress, wait for it
   if (connectionInProgress) {
     await connectionInProgress
@@ -229,6 +232,8 @@ export var openSqlDbConnection = async (url) => {
     if (dbType === "postgres") {
       // If we already have a pooled PostgreSQL connection return it
       if (pooledPgClient) return new DatabaseAdapter(pooledPgClient, "postgres")
+
+      console.log("Here: " + pooledPgClient)
 
       // Set connection in progress to prevent race conditions
       connectionInProgress = (async () => {
