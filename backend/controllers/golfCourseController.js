@@ -192,7 +192,7 @@ const populateGolfCoursesTable = async (courses) => {
 
       // Use placeholder syntax that works with both databases
       const sql =
-        "INSERT INTO golfcourses (version, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO golfcourses (databaseversion, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
       db.run(sql, course, (err) => {
         if (err) {
