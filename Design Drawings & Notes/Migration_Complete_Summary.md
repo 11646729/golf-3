@@ -75,7 +75,7 @@ Successfully migrated the entire Golf-3 application from SQLite to PostgreSQL, i
 
 ```sql
 -- Golf course data
-golf_courses (courseid, databaseversion, type, name, phonenumber, phototitle, photourl, description, lng, lat)
+golf_courses (courseid, version, type, name, phonenumber, phototitle, photourl, description, lng, lat)
 
 -- Port and vessel tracking
 port_arrivals (id, databaseversion, vessel_name, voyage_details, eta, etd, agent, quay_details, first_line, second_line, created_at)

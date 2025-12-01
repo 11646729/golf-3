@@ -64,20 +64,20 @@ const normaliseVesselPositions = (positions = []) =>
     const lng = parseCoordinate(vessel?.lng)
 
     if (lat === null || lng === null) {
-      return list
+      // return list
+    } else {
+      list.push({
+        ...vessel,
+        lat,
+        lng,
+        _markerId:
+          vessel?.index ??
+          vessel?.mmsi ??
+          vessel?.imo ??
+          vessel?.vesselId ??
+          `vessel-${index}`,
+      })
     }
-
-    list.push({
-      ...vessel,
-      lat,
-      lng,
-      _markerId:
-        vessel?.index ??
-        vessel?.mmsi ??
-        vessel?.imo ??
-        vessel?.vesselId ??
-        `vessel-${index}`,
-    })
 
     return list
   }, [])
@@ -86,20 +86,22 @@ const FitBoundsLayer = ({ positions }) => {
   const map = useMap()
 
   useEffect(() => {
-    if (!map || positions.length === null) {
+    if (!map) {
       return
     }
 
-    const bounds = new window.google.maps.LatLngBounds()
-    positions.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
-
-    if (positions.length === 1) {
+    if (positions.length === 0) {
+      // No positions yet - keep default view
+    } else if (positions.length === 1) {
+      const bounds = new window.google.maps.LatLngBounds()
+      positions.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
       map.setCenter(bounds.getCenter())
       map.setZoom(Math.min(map.getZoom() ?? defaultMapZoom, 14))
-      return
+    } else {
+      const bounds = new window.google.maps.LatLngBounds()
+      positions.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
+      map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
     }
-
-    map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
   }, [map, positions])
 
   return null

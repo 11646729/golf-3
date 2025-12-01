@@ -49,7 +49,7 @@ export const prepareEmptyVesselsTable = async (req, res) => {
 export const createVesselsTable = async () => {
   try {
     const db = getDb()
-    // PostgreSQL and SQLite compatible table creation
+    // PostgreSQL table creation
     const sql = `
       CREATE TABLE IF NOT EXISTS vessels (
         vesselid SERIAL PRIMARY KEY, 
@@ -88,54 +88,6 @@ export const createVesselsTable = async () => {
 }
 
 // -------------------------------------------------------
-// Delete all Vessels from database
-// -------------------------------------------------------
-// export const deleteVessels = (db) => {
-//   // Guard clause for null Database Connection
-//   if (db === null) return
-
-//   try {
-//     // Count the records in the database
-//     const sql = "SELECT COUNT(vesselid) AS count FROM vessels"
-
-//     db.all(sql, [], (err, result) => {
-//       if (err) {
-//         console.error(err.message)
-//       }
-
-//       if (result[0].count > 0) {
-//         // Delete all the data in the vessels table
-//         const sql1 = "DELETE FROM vessels"
-
-//         db.all(sql1, [], function (err, results) {
-//           if (err) {
-//             console.error(err.message)
-//           }
-//           console.log("All vessels data deleted")
-//         })
-
-//         // Reset sequence for PostgreSQL or SQLite
-//         const sql2 = `
-//           UPDATE sqlite_sequence SET seq = 0 WHERE name = 'vessels';
-//           ALTER SEQUENCE vessels_vesselid_seq RESTART WITH 1;
-//         `
-
-//         db.run(sql2, [], (err) => {
-//           if (err) {
-//             // Don't log error as one of the statements will fail depending on DB type
-//             console.log("Sequence reset attempted")
-//           }
-//         })
-//       } else {
-//         console.log("vessels table was empty (so no data deleted)")
-//       }
-//     })
-//   } catch (err) {
-//     console.error("Error in deleteVessels: ", err.message)
-//   }
-// }
-
-// -------------------------------------------------------
 // Save Vessel details to database
 // -------------------------------------------------------
 export const saveVesselDetails = async (newVessel) => {
@@ -148,21 +100,19 @@ export const saveVesselDetails = async (newVessel) => {
     const countResult = await db.get(
       "SELECT COUNT(vesselid) AS count FROM vessels"
     )
-    // console.log(`Current vessels count: ${countResult.count}`)
 
-    // Use placeholder syntax that works with both databases
+    // Use placeholder syntax that works with PostgreSQL database
     const sql_insert =
       "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
     await db.run(sql_insert, newVessel)
-    // console.log("Vessel details saved successfully")
   } catch (error) {
     console.error("Error in saveVesselDetails: ", error)
   }
 }
 
 // -------------------------------------------------------
-// Find vesselNameUrl from vessels Table from SQLite database
+// Find vesselNameUrl from vessels Table in PostgreSQL database
 // -------------------------------------------------------
 export const getVesselPosition = async (req, res) => {
   try {
