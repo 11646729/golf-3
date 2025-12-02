@@ -31,7 +31,7 @@
     "decompress": "^4.2.1",
     "dotenv": "^17.2.3",
     "esm": "^3.2.25",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "fs": "^0.0.1-security",
     "googleapis": "^164.1.0",
     "gtfs": "^4.10.2",
