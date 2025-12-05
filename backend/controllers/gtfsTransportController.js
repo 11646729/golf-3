@@ -26,9 +26,6 @@ const getDb = () => {
   if (!db) {
     db = new DatabaseAdapter()
   }
-
-  console.log("Database Connection Error Here - ", db)
-
   return db
 }
 
@@ -499,6 +496,18 @@ const getAllTripUpdates = async (req, res) => {
 // Create necessary PostgreSQL tables for GTFS logging and analytics
 export const createGtfsTables = async () => {
   try {
+    // Check if tables already exist
+    const tableCheck = await getDb().get(`
+      SELECT COUNT(*) as count FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name IN ('api_access_log', 'gtfs_import_log', 'gtfs_realtime_log')
+    `)
+
+    // If all 3 tables exist, skip creation
+    if (tableCheck && parseInt(tableCheck.count) === 3) {
+      return
+    }
+
     // API access log table
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS api_access_log (

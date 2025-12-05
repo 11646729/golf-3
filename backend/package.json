@@ -11,9 +11,7 @@
     "migrate:postgres": "node migrations/sqlite_to_postgres_migration.js",
     "test": "node objecttest.js",
     "test1": "node isInsideArea.js",
-    "googletest": "node googlemappolygon,html",
-    "rebuild-native": "npm_config_python=/opt/homebrew/bin/python3.11 npm rebuild sqlite3 --build-from-source || npm_config_python=python3.11 npm rebuild sqlite3 --build-from-source || npm rebuild sqlite3 --build-from-source",
-    "postinstall": "npm run rebuild-native || true"
+    "googletest": "node googlemappolygon,html"
   },
   "keywords": [],
   "author": "Brian Smith",
@@ -46,7 +44,6 @@
     "send": "^1.2.0",
     "serve-static": "^2.2.0",
     "socket.io": "^4.6.1",
-    "sqlite3": "^5.1.7",
     "stream": "^0.0.3",
     "util": "^0.12.5",
     "xmlhttprequest-ssl": "^4.0.0"
