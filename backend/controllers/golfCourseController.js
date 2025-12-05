@@ -16,43 +16,35 @@ export var index = (req, res) => {
 // Prepare empty golfcourses Table ready to import data
 // -------------------------------------------------------
 export const prepareEmptyGolfCoursesTable = async (req, res) => {
-  // Open a Database Connection
-
   console.log("Preparing empty golfcourses table...")
 
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+  const db = await openSqlDbConnection()
 
   if (db !== null) {
-    // Simple SELECT to check if table exists (works for both databases)
-    let sql = "SELECT COUNT(*) as count FROM golfcourses"
-
-    db.all(sql, [], (err, results) => {
-      if (err) {
-        // Table doesn't exist, create it
-        console.log("golfcourses table does not exist")
-        createGolfCoursesTable(db)
-      } else {
-        // Table exists, delete data
-        console.log("golfcourses table exists")
-        deleteGolfCoursesData(db)
-      }
-    })
-
+    try {
+      // Check if table exists
+      await db.all("SELECT COUNT(*) as count FROM golfcourses")
+      // Table exists, delete data
+      console.log("golfcourses table exists")
+      await deleteGolfCoursesData(db)
+    } catch (err) {
+      // Table doesn't exist, create it
+      console.log("golfcourses table does not exist")
+      await createGolfCoursesTable(db)
+    }
     res.send("Returned Data")
   } else {
     console.error("Cannot connect to database")
+    res.status(500).json({ error: "Cannot connect to database" })
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
 // Create empty golfcourses Table in the database
 // -------------------------------------------------------
-const createGolfCoursesTable = (db) => {
-  // PostgreSQL table creation
+const createGolfCoursesTable = async (db) => {
+  if (db === null) return
+
   const sql = `
     CREATE TABLE IF NOT EXISTS golfcourses (
       courseid SERIAL PRIMARY KEY, 
@@ -68,18 +60,10 @@ const createGolfCoursesTable = (db) => {
       lat REAL CHECK( lat >= -90 AND lat <= 90 )
     )
   `
-  let params = []
-
-  // Guard clause for null Database Connection
-  if (db === null) return
 
   try {
-    db.run(sql, params, (err) => {
-      if (err) {
-        console.error(err.message)
-      }
-      console.log("Empty golfcourses table created")
-    })
+    await db.run(sql)
+    console.log("Empty golfcourses table created")
   } catch (e) {
     console.error("Error in createGolfCoursesTable: ", e.message)
   }
@@ -88,131 +72,89 @@ const createGolfCoursesTable = (db) => {
 // -------------------------------------------------------
 // Delete all golfcourses records from database
 // -------------------------------------------------------
-const deleteGolfCoursesData = (db) => {
-  // Guard clause for null Database Connection
+const deleteGolfCoursesData = async (db) => {
   if (db === null) return
 
   try {
-    // Count the records in the database
-    const sql = "SELECT COUNT(courseid) AS count FROM golfcourses"
+    const result = await db.all(
+      "SELECT COUNT(courseid) AS count FROM golfcourses"
+    )
 
-    db.all(sql, [], (err, result) => {
-      if (err) {
-        console.error(err.message)
+    if (result[0].count > 0) {
+      await db.run("DELETE FROM golfcourses")
+      console.log("All golfcourses data deleted")
+
+      // Reset sequence for PostgreSQL
+      try {
+        await db.run("ALTER SEQUENCE golfcourses_courseid_seq RESTART WITH 1")
+        console.log("Sequence reset")
+      } catch (e) {
+        // Ignore if sequence doesn't exist
       }
-
-      if (result[0].count > 0) {
-        // Delete all the data in the golfcourses table
-        const sql1 = "DELETE FROM golfcourses"
-
-        db.all(sql1, [], function (err, results) {
-          if (err) {
-            console.error(err.message)
-          }
-          console.log("All golfcourses data deleted")
-        })
-
-        // Reset sequence for PostgreSQL or SQLite
-        const sql2 = `
-          UPDATE sqlite_sequence SET seq = 0 WHERE name = 'golfcourses';
-          ALTER SEQUENCE golfcourses_courseid_seq RESTART WITH 1;
-        `
-
-        db.run(sql2, [], (err) => {
-          if (err) {
-            // Don't log error as one of the statements will fail depending on DB type
-            console.log("Sequence reset attempted")
-          }
-        })
-      } else {
-        console.log("golfcourses table was empty (so no data deleted)")
-      }
-    })
+    } else {
+      console.log("golfcourses table was empty (so no data deleted)")
+    }
   } catch (err) {
     console.error("Error in deleteGolfCoursesData: ", err.message)
   }
 }
 
 // -------------------------------------------------------
-// Import Golf Courses Table in the SQLite Database
+// Import Golf Courses Data into Database
 // -------------------------------------------------------
 export const importGolfCoursesData = async (req, res) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+  const db = await openSqlDbConnection()
 
-  // Guard clause for null Database Connection
-  if (db === null) return
-
-  try {
-    // Fetch all the Golf Courses data
-    fs.readFile(
-      process.env.RAW_GOLF_COURSE_DATA_FILEPATH,
-      "utf8",
-      (err, data) => {
-        if (err) {
-          console.error(err.message)
-        }
-
-        // Save the data in the golfcourses Table in the database
-        const courses = JSON.parse(data)
-
-        populateGolfCoursesTable(courses)
-      }
-    )
-  } catch (err) {
-    console.error("Error in importGolfCoursesData: ", err.message)
+  if (db === null) {
+    res.status(500).json({ error: "Cannot connect to database" })
+    return
   }
 
-  // Close the Database Connection
-  closeSqlDbConnection(db)
+  try {
+    const data = fs.readFileSync(
+      process.env.RAW_GOLF_COURSE_DATA_FILEPATH,
+      "utf8"
+    )
+    const courses = JSON.parse(data)
+    await populateGolfCoursesTable(db, courses)
+    res.send({ message: "Golf courses imported successfully" })
+  } catch (err) {
+    console.error("Error in importGolfCoursesData: ", err.message)
+    res.status(500).json({ error: err.message })
+  }
 }
 
 // -------------------------------------------------------
 // Local function
 // -------------------------------------------------------
-const populateGolfCoursesTable = async (courses) => {
-  // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+const populateGolfCoursesTable = async (db, courses) => {
+  const sql =
+    "INSERT INTO golfcourses (version, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-  let loop = 0
   try {
-    do {
-      // Skip courseid for PostgreSQL (uses SERIAL), include for SQLite compatibility
-      const course = [
+    for (let i = 0; i < courses.features.length; i++) {
+      const feature = courses.features[i]
+      const params = [
         process.env.DATABASE_VERSION,
         process.env.TYPE_GOLF_CLUB,
         courses.crs.properties.name,
-        courses.features[loop].properties.name,
-        courses.features[loop].properties.phoneNumber,
-        courses.features[loop].properties.photoTitle,
-        courses.features[loop].properties.photoUrl,
-        courses.features[loop].properties.description,
-        courses.features[loop].geometry.coordinates[0],
-        courses.features[loop].geometry.coordinates[1],
+        feature.properties.name,
+        feature.properties.phoneNumber,
+        feature.properties.photoTitle,
+        feature.properties.photoUrl,
+        feature.properties.description,
+        feature.geometry.coordinates[0],
+        feature.geometry.coordinates[1],
       ]
-
-      // Use placeholder syntax that works with both databases
-      const sql =
-        "INSERT INTO golfcourses (version, type, crsurn, name, phonenumber, phototitle, photourl, description, lng, lat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-      db.run(sql, course, (err) => {
-        if (err) {
-          console.error(err.message)
-        }
-      })
-
-      loop++
-    } while (loop < courses.features.length)
-
-    console.log("No of new Golf Courses created & saved: ", loop)
+      await db.run(sql, params)
+    }
+    console.log(
+      "No of new Golf Courses created & saved: ",
+      courses.features.length
+    )
   } catch (e) {
     console.error(e.message)
   }
-
-  // Close the Database Connection
-  closeSqlDbConnection(db)
 }
 
 // -------------------------------------------------------
@@ -220,33 +162,22 @@ const populateGolfCoursesTable = async (courses) => {
 // Path: localhost:4000/api/golf/getGolfCourses
 // -------------------------------------------------------
 export const getGolfCourses = async (req, res) => {
-  let sql = "SELECT * FROM golfcourses ORDER BY courseid"
-  let params = []
+  const sql = "SELECT * FROM golfcourses ORDER BY courseid"
 
   // Open a Database Connection
-  let db = null
-  db = await openSqlDbConnection(process.env.SQL_URI)
+  const db = await openSqlDbConnection()
 
   if (db !== null) {
     try {
-      db.all(sql, params, (err, results) => {
-        if (err) {
-          res.status(400).json({ error: err.message })
-          return
-        }
-        res.send(results)
-
-        // Put socket.emit here
-        // console.log(results)
-      })
-
-      // Close the Database Connection
-      closeSqlDbConnection(db)
+      const results = await db.all(sql)
+      res.send(results)
     } catch (e) {
       console.error(e.message)
+      res.status(400).json({ error: e.message })
     }
   } else {
     console.error("Cannot connect to database")
+    res.status(500).json({ error: "Cannot connect to database" })
   }
 }
 

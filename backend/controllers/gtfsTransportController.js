@@ -60,8 +60,8 @@ export var index = async (req, res) => {
   res
     .send({
       response: "GTFS Transport Controller - I am alive",
-      database: "Uses SQLite for GTFS data, PostgreSQL for application data",
-      status: "hybrid-mode",
+      database: "Uses PostgreSQL for application data",
+      status: "postgresql-mode",
     })
     .status(200)
 }
