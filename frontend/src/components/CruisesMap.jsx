@@ -131,67 +131,67 @@ const CruisesMap = ({ vesselPositions = [] }) => {
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <Title>{CruiseMapTitle}</Title>
-      <div className="cruisesmapcontainer">
-        <Map
-          defaultZoom={defaultMapZoom}
-          defaultCenter={defaultMapCenter}
-          style={mapContainerStyle}
-          mapId="cruise-map"
-          disableDefaultUI={true}
-          zoomControl={true}
-        >
-          <FitBoundsLayer positions={validPositions} />
-          {validPositions.map((position) => (
-            <AdvancedMarker
-              key={position._markerId}
-              position={{ lat: position.lat, lng: position.lng }}
-              onClick={() => handleMarkerClick(position._markerId)}
-            >
-              <CustomCircle />
-            </AdvancedMarker>
-          ))}
+      {/* <div className="cruisesmapcontainer"> */}
+      <Map
+        defaultZoom={defaultMapZoom}
+        defaultCenter={defaultMapCenter}
+        style={mapContainerStyle}
+        mapId="cruise-map"
+        disableDefaultUI={true}
+        zoomControl={true}
+      >
+        <FitBoundsLayer positions={validPositions} />
+        {validPositions.map((position) => (
+          <AdvancedMarker
+            key={position._markerId}
+            position={{ lat: position.lat, lng: position.lng }}
+            onClick={() => handleMarkerClick(position._markerId)}
+          >
+            <CustomCircle />
+          </AdvancedMarker>
+        ))}
 
-          {selectedPosition ? (
-            <InfoWindow
-              position={{
-                lat: selectedPosition.lat,
-                lng: selectedPosition.lng,
-              }}
-              onCloseClick={handleInfoWindowClose}
-            >
-              <Card>
-                <CardMedia
-                  style={{
-                    height: 0,
-                    paddingTop: "40%",
-                    marginTop: "30",
-                  }}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="h3">
-                    {selectedPosition.vesselName ?? "Vessel"}
+        {selectedPosition ? (
+          <InfoWindow
+            position={{
+              lat: selectedPosition.lat,
+              lng: selectedPosition.lng,
+            }}
+            onCloseClick={handleInfoWindowClose}
+          >
+            <Card>
+              <CardMedia
+                style={{
+                  height: 0,
+                  paddingTop: "40%",
+                  marginTop: "30",
+                }}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="h3">
+                  {selectedPosition.vesselName ?? "Vessel"}
+                </Typography>
+                {selectedPosition.timestamp ? (
+                  <Typography component="p">
+                    {selectedPosition.timestamp}
                   </Typography>
-                  {selectedPosition.timestamp ? (
-                    <Typography component="p">
-                      {selectedPosition.timestamp}
-                    </Typography>
-                  ) : null}
-                  {selectedPosition.destination ? (
-                    <Typography component="p">
-                      En route to {selectedPosition.destination}
-                    </Typography>
-                  ) : null}
-                </CardContent>
-                <CardActions>
-                  <Button size="small" color="primary" component={Link}>
-                    View
-                  </Button>
-                </CardActions>
-              </Card>
-            </InfoWindow>
-          ) : null}
-        </Map>
-      </div>
+                ) : null}
+                {selectedPosition.destination ? (
+                  <Typography component="p">
+                    En route to {selectedPosition.destination}
+                  </Typography>
+                ) : null}
+              </CardContent>
+              <CardActions>
+                <Button size="small" color="primary" component={Link}>
+                  View
+                </Button>
+              </CardActions>
+            </Card>
+          </InfoWindow>
+        ) : null}
+      </Map>
+      {/* </div> */}
     </APIProvider>
   )
 }
