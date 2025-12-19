@@ -73,12 +73,6 @@ export var importStaticGtfsToSQLite = async () => {
   const startTime = new Date()
 
   try {
-    //  ----------------------------------------------------
-    // THESE ARE SUSPECT AS THE TFI FORMATS HAVE CHANGED
-    //  ----------------------------------------------------
-    // importGtfs(config)
-    // exportGtfs(config)
-
     //  Firstly download the most recent zip file of GTFS Static files
     const finishedDownload = promisify(stream.finished)
     const writer = fs.createWriteStream(config.tempFile)
