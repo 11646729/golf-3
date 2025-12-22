@@ -19,6 +19,7 @@ import axios from "axios"
 import { promisify } from "util"
 import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
+import { prepareEmptyGTFSTables } from "../createPostgreSQLTables.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -28,6 +29,8 @@ const getDb = () => {
   }
   return db
 }
+
+prepareEmptyGTFSTables()
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
@@ -489,7 +492,7 @@ const getAllTripUpdates = async (req, res) => {
 
 // Create necessary PostgreSQL tables for GTFS logging and analytics
 export const createGtfsTables = async () => {
-  console.log("Here I Am - Creating GTFS PostgreSQL tables if not exist")
+  console.log("Creating GTFS PostgreSQL tables if they don't exist")
 
   try {
     // Check if tables already exist
