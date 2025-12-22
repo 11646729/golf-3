@@ -489,6 +489,8 @@ const getAllTripUpdates = async (req, res) => {
 
 // Create necessary PostgreSQL tables for GTFS logging and analytics
 export const createGtfsTables = async () => {
+  console.log("Here I Am - Creating GTFS PostgreSQL tables if not exist")
+
   try {
     // Check if tables already exist
     const tableCheck = await getDb().get(`

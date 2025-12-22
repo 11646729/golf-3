@@ -58,9 +58,9 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
 // -------------------------------------------------------
 export const createPortArrivalsTable = async () => {
   try {
-    const db = getDb()
+    // const db = getDb()
     // PostgreSQL and SQLite compatible table creation
-    const sql = `
+    await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY, 
         databaseversion TEXT NOT NULL, 
@@ -80,9 +80,9 @@ export const createPortArrivalsTable = async () => {
         vesseletdtime TEXT, 
         vesselnameurl TEXT
       )
-    `
+    `)
 
-    await getDb().run(sql)
+    // await getDb().run(sql)
     console.log("Empty portarrivals table created")
   } catch (error) {
     console.error("Error in createPortArrivalsTable: ", error.message)
