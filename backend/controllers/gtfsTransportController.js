@@ -40,7 +40,7 @@ const defaultConfigPath = new URL(
 ).pathname
 const configPath =
   process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath
-// console.log(`Using GTFS config file: ${configPath}`)
+console.log(`Using GTFS config file: ${configPath}`)
 const config = readRouteFile(configPath)
 
 // -------------------------------------------------------

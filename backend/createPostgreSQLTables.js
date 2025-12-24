@@ -16,6 +16,18 @@ export const prepareEmptyGTFSTables = async (req, res) => {
 
 const prepareEmptyAgencyTable = async () => {
   try {
+    //     // Check if tables already exist
+    // const tableCheck = await getDb().get(`
+    //   SELECT COUNT(*) as count FROM information_schema.tables
+    //   WHERE table_schema = 'public'
+    //   AND table_name IN ('agency', 'stops')
+    // `)
+
+    // // If all 2 tables exist, skip creation
+    // if (tableCheck && parseInt(tableCheck.count) === 2) {
+    //   return
+    // }
+
     // Check if agency table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
       `SELECT EXISTS (
