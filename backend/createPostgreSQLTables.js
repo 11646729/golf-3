@@ -16,18 +16,6 @@ export const prepareEmptyGTFSTables = async (req, res) => {
 
 const prepareEmptyAgencyTable = async () => {
   try {
-    //     // Check if tables already exist
-    // const tableCheck = await getDb().get(`
-    //   SELECT COUNT(*) as count FROM information_schema.tables
-    //   WHERE table_schema = 'public'
-    //   AND table_name IN ('agency', 'stops')
-    // `)
-
-    // // If all 2 tables exist, skip creation
-    // if (tableCheck && parseInt(tableCheck.count) === 2) {
-    //   return
-    // }
-
     // Check if agency table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
       `SELECT EXISTS (
@@ -43,9 +31,10 @@ const prepareEmptyAgencyTable = async () => {
       await getDb().run("DROP TABLE IF EXISTS agency")
     } else {
       console.log("agency table does not exist - creating the empty table")
+    }
 
-      // GTFS Agency table
-      await getDb().run(`
+    // GTFS Agency table
+    await getDb().run(`
         CREATE TABLE IF NOT EXISTS agency (
           agency_id TEXT PRIMARY KEY,
           agency_name TEXT NOT NULL,
@@ -58,7 +47,8 @@ const prepareEmptyAgencyTable = async () => {
           cemv_support INTEGER CHECK(cemv_support >= 0 AND cemv_support <= 2)
         )
       `)
-    }
+
+    console.log("✓ agency table created successfully")
   } catch (error) {
     console.error("Error preparing agency table:", error)
     res.status(500).send("Error preparing agency table")
@@ -82,9 +72,10 @@ const prepareEmptyStopsTable = async () => {
       await getDb().run("DROP TABLE IF EXISTS stops")
     } else {
       console.log("stops table does not exist - creating the empty table")
+    }
 
-      // GTFS Stops table
-      await getDb().run(`
+    // GTFS Stops table
+    await getDb().run(`
         CREATE TABLE IF NOT EXISTS stops (
         stop_id text PRIMARY KEY,
         stop_code text,
@@ -104,7 +95,7 @@ const prepareEmptyStopsTable = async () => {
         stop_access smallint CHECK (stop_access BETWEEN 0 AND 1)
       )
     `)
-    }
+    console.log("✓ stops table created successfully")
   } catch (error) {
     console.error("Error preparing stops table:", error)
     res.status(500).send("Error preparing stops table")
