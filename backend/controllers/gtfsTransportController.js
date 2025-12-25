@@ -19,7 +19,7 @@ import axios from "axios"
 import { promisify } from "util"
 import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
-import { prepareEmptyGTFSTables } from "../createPostgreSQLTables.js"
+import { prepareEmptyGTFSTables } from "../prepare/prepareEmptyGTFSTables.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
