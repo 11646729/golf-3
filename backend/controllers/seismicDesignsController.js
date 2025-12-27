@@ -21,7 +21,7 @@ export var index = (req, res) => {
 // -------------------------------------------------------
 // Prepare empty seismicdesigns Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptySeismicDesignsTable = async (req, res) => {
+export const createSeismicDesignsTable = async (req, res) => {
   try {
     // Check if seismicdesigns table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
@@ -39,12 +39,12 @@ export const prepareEmptySeismicDesignsTable = async (req, res) => {
     } else {
       // Else create table
       console.log("seismicdesigns table does not exist")
-      await createSeismicDesignsTable()
+      await createSeismicDesignsTableStructure()
     }
 
     res.send({ message: "Seismic Designs table prepared successfully" })
   } catch (error) {
-    console.error("Error in prepareEmptySeismicDesignsTable:", error.message)
+    console.error("Error in createSeismicDesignsTable:", error.message)
     res.status(500).send({ error: "Failed to prepare Seismic Designs table" })
   }
 }
@@ -52,7 +52,7 @@ export const prepareEmptySeismicDesignsTable = async (req, res) => {
 // -------------------------------------------------------
 // Create seismicdesigns Table in PostgreSQL database
 // -------------------------------------------------------
-const createSeismicDesignsTable = async () => {
+const createSeismicDesignsTableStructure = async () => {
   try {
     const sql = `
       CREATE TABLE IF NOT EXISTS seismicdesigns (
@@ -65,7 +65,7 @@ const createSeismicDesignsTable = async () => {
     await getDb().run(sql)
     console.log("Empty seismicdesigns table created")
   } catch (error) {
-    console.error("Error in createSeismicDesignsTable:", error.message)
+    console.error("Error in createSeismicDesignsTableStructure:", error.message)
     throw error
   }
 }

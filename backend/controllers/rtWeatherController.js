@@ -21,7 +21,7 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Prepare empty temperatures Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyTemperaturesTable = async (req, res) => {
+export const createTemperaturesTable = async (req, res) => {
   try {
     // Check if temperatures table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
@@ -39,14 +39,14 @@ export const prepareEmptyTemperaturesTable = async (req, res) => {
     } else {
       // Else create table
       console.log("temperatures table does not exist")
-      await createTemperaturesTable()
+      await createTemperaturesTableStructure()
     }
 
     if (res) {
       res.send({ message: "Temperature table prepared successfully" })
     }
   } catch (error) {
-    console.error("Error in prepareEmptyTemperaturesTable:", error.message)
+    console.error("Error in createTemperaturesTable:", error.message)
     if (res) {
       res.status(500).send({ error: "Failed to prepare temperature table" })
     }
@@ -56,7 +56,7 @@ export const prepareEmptyTemperaturesTable = async (req, res) => {
 // -------------------------------------------------------
 // Create temperatures Table in PostgreSQL Database
 // -------------------------------------------------------
-const createTemperaturesTable = async () => {
+const createTemperaturesTableStructure = async () => {
   try {
     const sql = `
       CREATE TABLE IF NOT EXISTS temperatures (

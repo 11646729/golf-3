@@ -1,7 +1,7 @@
 import express from "express"
 import {
   index,
-  prepareEmptyTemperaturesTable,
+  createTemperaturesTable,
   getTemperaturesFromDatabase,
 } from "../controllers/rtWeatherController.js"
 
@@ -14,7 +14,7 @@ var rtWeatherRouter = express.Router()
 rtWeatherRouter.get("/", index)
 
 // Prepare the temperatures table in the database
-rtWeatherRouter.post("/prepareTemperaturesTable", prepareEmptyTemperaturesTable)
+rtWeatherRouter.post("/createTemperaturesTable", createTemperaturesTable)
 
 // GET all temperature readings from the database
 rtWeatherRouter.get("/getTemperaturesData", getTemperaturesFromDatabase)

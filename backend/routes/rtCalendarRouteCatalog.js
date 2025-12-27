@@ -1,7 +1,7 @@
 import express from "express"
 import {
   index,
-  prepareEmptyRTCalendarTable,
+  createRTCalendarTable,
   importRTCalendarEventsFromFile,
   getGoogleCalendarEvents,
   getGoogleCalendarList,
@@ -17,8 +17,8 @@ rtCalendarRouter.get("/", index)
 
 // Prepare the RTCalendar table in the database
 rtCalendarRouter.post(
-  "/prepareEmptyRTCalendarTable",
-  prepareEmptyRTCalendarTable
+  "/createRTCalendarTable",
+  createRTCalendarTable
 )
 
 // POST all RT Calendar Events into the database

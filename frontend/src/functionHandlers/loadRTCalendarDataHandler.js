@@ -26,7 +26,7 @@ const importRTCalendarEventsFromFile = async (url) => {
 export const loadRTCalendarEventsHandler = () => {
   // Prepare empty RTCalendar table in the database & show result
   prepareEmptyRTCalendarTable(
-    "http://localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable"
+    "http://localhost:4000/api/rtcalendar/createRTCalendarTable"
   )
   // Initial import of the RTCalendar file data into the database
   importRTCalendarEventsFromFile(

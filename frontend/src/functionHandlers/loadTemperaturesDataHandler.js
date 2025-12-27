@@ -26,7 +26,7 @@ export const getTemperaturesData = async (url) => {
 export const loadTemperaturesDataHandler = () => {
   // Prepare empty temperatures table in the database & show result
   prepareTemperaturesTable(
-    "http://localhost:4000/api/weather/prepareTemperaturesTable"
+    "http://localhost:4000/api/weather/createTemperaturesTable"
   )
 }
 

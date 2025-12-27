@@ -1,7 +1,7 @@
 import express from "express"
 import {
   index,
-  prepareEmptySeismicDesignsTable,
+  createSeismicDesignsTable,
   // importSeismicDesignsData,
   getSeismicDesigns,
 } from "../controllers/seismicDesignsController.js"
@@ -16,8 +16,8 @@ seismicDesignsRouter.get("/", index)
 
 // Prepare the seismicdesigns table in the database
 seismicDesignsRouter.post(
-  "/prepareSeismicDesignsTable",
-  prepareEmptySeismicDesignsTable
+  "/createSeismicDesignsTable",
+  createSeismicDesignsTable
 )
 
 // POST all Seismic Designs data into the database

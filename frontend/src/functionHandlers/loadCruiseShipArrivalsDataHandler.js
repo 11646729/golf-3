@@ -74,11 +74,11 @@ export const getPortArrivalsData = async (url) => {
 export const loadCruiseShipArrivalsDataHandler = async () => {
   try {
     await preparePortArrivalsTable(
-      "http://localhost:4000/api/cruise/preparePortArrivalsTable"
+      "http://localhost:4000/api/cruise/createPortArrivalsTable"
     )
 
     await prepareVesselsTable(
-      "http://localhost:4000/api/cruise/prepareVesselsTable"
+      "http://localhost:4000/api/cruise/createVesselsTable"
     )
 
     await importPortArrivalsAndVesselsData(

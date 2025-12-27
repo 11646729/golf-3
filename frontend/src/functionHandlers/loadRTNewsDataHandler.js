@@ -25,9 +25,7 @@ const importRTNewsItemsFromFile = async (url) => {
 // -------------------------------------------------------
 export const loadRTNewsItemsHandler = () => {
   // Prepare empty RTNews table in the database & show result
-  prepareEmptyRTNewsTable(
-    "http://localhost:4000/api/rtnews/prepareEmptyRTNewsTable"
-  )
+  prepareEmptyRTNewsTable("http://localhost:4000/api/rtnews/createRTNewsTable")
 
   // Initial import of the RTNews Items file data into the database
   importRTNewsItemsFromFile(

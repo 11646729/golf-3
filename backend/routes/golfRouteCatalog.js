@@ -1,7 +1,7 @@
 import express from "express"
 import {
   index,
-  prepareEmptyGolfCoursesTable,
+  createGolfCoursesTable,
   getGolfCourses,
   importGolfCoursesData,
 } from "../controllers/golfCourseController.js"
@@ -15,7 +15,7 @@ var golfRouter = express.Router()
 golfRouter.get("/", index)
 
 // Prepare the golfcourses table in the database
-golfRouter.post("/prepareGolfCoursesTable", prepareEmptyGolfCoursesTable)
+golfRouter.post("/createGolfCoursesTable", createGolfCoursesTable)
 
 // POST all Golf Courses data into the database
 golfRouter.post("/importGolfCoursesData", importGolfCoursesData)

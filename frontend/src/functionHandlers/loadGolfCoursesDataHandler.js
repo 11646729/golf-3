@@ -57,7 +57,7 @@ export const getGolfCoursesData = async (url) => {
 export const loadGolfCoursesDataHandler = () => {
   // Prepare empty golf courses table in the database & show result
   prepareGolfCoursesTable(
-    "http://localhost:4000/api/golf/prepareGolfCoursesTable"
+    "http://localhost:4000/api/golf/createGolfCoursesTable"
   )
 
   // Initial import of the golf course file data into the database

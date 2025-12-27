@@ -15,7 +15,7 @@ const getDb = () => {
 // -------------------------------------------------------
 // Prepare empty vessels Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyVesselsTable = async (req, res) => {
+export const createVesselsTable = async (req, res) => {
   try {
     const db = getDb()
     // Check if vessels table exists using PostgreSQL system tables
@@ -36,7 +36,7 @@ export const prepareEmptyVesselsTable = async (req, res) => {
     }
 
     // Create the table
-    await createVesselsTable()
+    await createVesselsTableStructure()
 
     res.send({ message: "Vessels table prepared successfully" }).status(200)
   } catch (error) {
@@ -46,7 +46,7 @@ export const prepareEmptyVesselsTable = async (req, res) => {
 } // -------------------------------------------------------
 // Create vessels Table in the database
 // -------------------------------------------------------
-export const createVesselsTable = async () => {
+const createVesselsTableStructure = async () => {
   try {
     const db = getDb()
     // PostgreSQL table creation
@@ -83,7 +83,7 @@ export const createVesselsTable = async () => {
     await db.run(sql)
     console.log("Empty vessels table created")
   } catch (error) {
-    console.error("Error in createVesselsTable: ", error.message)
+    console.error("Error in createVesselsTableStructure: ", error.message)
   }
 }
 

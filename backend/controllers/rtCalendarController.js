@@ -27,9 +27,9 @@ export var index = (req, res) => {
 
 // -------------------------------------------------------
 // Prepare empty RTCalendar Table ready to import events
-// Path: localhost:4000/api/rtcalendar/prepareEmptyRTCalendarTable
+// Path: localhost:4000/api/rtcalendar/createRTCalendarTable
 // -------------------------------------------------------
-export const prepareEmptyRTCalendarTable = async (req, res) => {
+export const createRTCalendarTable = async (req, res) => {
   try {
     // Check if rtcalendar table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
@@ -47,12 +47,12 @@ export const prepareEmptyRTCalendarTable = async (req, res) => {
     } else {
       // Else create table
       console.log("rtcalendar table does not exist")
-      await createRTCalendarTable()
+      await createRTCalendarTableStructure()
     }
 
     res.send({ message: "RTCalendar table prepared successfully" })
   } catch (error) {
-    console.error("Error in prepareEmptyRTCalendarTable:", error.message)
+    console.error("Error in createRTCalendarTable:", error.message)
     res.status(500).send({ error: "Failed to prepare RTCalendar table" })
   }
 }
@@ -60,7 +60,7 @@ export const prepareEmptyRTCalendarTable = async (req, res) => {
 // -------------------------------------------------------
 // Local function to create empty RTCalendar Table in the database
 // -------------------------------------------------------
-const createRTCalendarTable = async () => {
+const createRTCalendarTableStructure = async () => {
   try {
     const sql = `
       CREATE TABLE IF NOT EXISTS rtcalendar (
@@ -73,7 +73,7 @@ const createRTCalendarTable = async () => {
     await getDb().run(sql)
     console.log("Empty rtCalendar table created")
   } catch (error) {
-    console.error("Error in createRTCalendarTable:", error.message)
+    console.error("Error in createRTCalendarTableStructure:", error.message)
     throw error
   }
 }

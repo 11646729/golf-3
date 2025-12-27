@@ -15,7 +15,7 @@ export var index = (req, res) => {
 // -------------------------------------------------------
 // Prepare empty golfcourses Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyGolfCoursesTable = async (req, res) => {
+export const createGolfCoursesTable = async (req, res) => {
   console.log("Preparing empty golfcourses table...")
 
   const db = await openSqlDbConnection()
@@ -30,7 +30,7 @@ export const prepareEmptyGolfCoursesTable = async (req, res) => {
     } catch (err) {
       // Table doesn't exist, create it
       console.log("golfcourses table does not exist")
-      await createGolfCoursesTable(db)
+      await createGolfCoursesTableStructure(db)
     }
     res.send("Returned Data")
   } else {
@@ -42,7 +42,7 @@ export const prepareEmptyGolfCoursesTable = async (req, res) => {
 // -------------------------------------------------------
 // Create empty golfcourses Table in the database
 // -------------------------------------------------------
-const createGolfCoursesTable = async (db) => {
+const createGolfCoursesTableStructure = async (db) => {
   if (db === null) return
 
   const sql = `
@@ -65,7 +65,7 @@ const createGolfCoursesTable = async (db) => {
     await db.run(sql)
     console.log("Empty golfcourses table created")
   } catch (e) {
-    console.error("Error in createGolfCoursesTable: ", e.message)
+    console.error("Error in createGolfCoursesTableStructure: ", e.message)
   }
 }
 

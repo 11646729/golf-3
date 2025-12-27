@@ -22,7 +22,7 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Prepare empty portarrivals Table ready to import data
 // -------------------------------------------------------
-export const prepareEmptyPortArrivalsTable = async (req, res) => {
+export const createPortArrivalsTable = async (req, res) => {
   try {
     // Check if portarrivals table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
@@ -44,7 +44,7 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
     }
 
     // Create the table
-    await createPortArrivalsTable()
+    await createPortArrivalsTableStructure()
 
     res.send("Port arrivals table prepared successfully").status(200)
   } catch (error) {
@@ -56,7 +56,7 @@ export const prepareEmptyPortArrivalsTable = async (req, res) => {
 // -------------------------------------------------------
 // Create portarrivals Table in the database
 // -------------------------------------------------------
-export const createPortArrivalsTable = async () => {
+const createPortArrivalsTableStructure = async () => {
   try {
     // const db = getDb()
     // PostgreSQL and SQLite compatible table creation
@@ -85,7 +85,7 @@ export const createPortArrivalsTable = async () => {
     // await getDb().run(sql)
     console.log("Empty portarrivals table created")
   } catch (error) {
-    console.error("Error in createPortArrivalsTable: ", error.message)
+    console.error("Error in createPortArrivalsTableStructure: ", error.message)
   }
 }
 

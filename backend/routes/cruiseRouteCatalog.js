@@ -1,12 +1,12 @@
 import express from "express"
 import {
   index,
-  prepareEmptyPortArrivalsTable,
+  createPortArrivalsTable,
   getPortArrivals,
   savePortArrival,
 } from "../controllers/portArrivalsController.js"
 import {
-  prepareEmptyVesselsTable,
+  createVesselsTable,
   getVesselPosition,
   // saveVesselDetails,
 } from "../controllers/vesselController.js"
@@ -24,7 +24,7 @@ cruiseRouter.get("/", index)
 // PortArrivals Routes
 // ---------------------------------------------------
 // Prepare the Port Arrivals table in the database
-cruiseRouter.post("/preparePortArrivalsTable", prepareEmptyPortArrivalsTable)
+cruiseRouter.post("/createPortArrivalsTable", createPortArrivalsTable)
 
 // POST a Port Arrival to the database
 cruiseRouter.post("/portArrivals", savePortArrival)
@@ -36,7 +36,7 @@ cruiseRouter.get("/getPortArrivals", getPortArrivals)
 // Vessel Routes
 // ---------------------------------------------------
 // Prepare the vessels table in the database
-cruiseRouter.post("/prepareVesselsTable", prepareEmptyVesselsTable)
+cruiseRouter.post("/createVesselsTable", createVesselsTable)
 
 // POST all Port Arrivals & Vessels data to the database
 cruiseRouter.post(

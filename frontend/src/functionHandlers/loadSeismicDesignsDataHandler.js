@@ -36,7 +36,7 @@ export const getSeismicDesignsData = async (url) => {
 export const loadSeismicDesignsDataHandler = () => {
   // Prepare empty seismicdesigns table in the database & show result
   prepareSeismicDesignsTable(
-    "http://localhost:4000/api/golf/prepareSeismicDesignsTable"
+    "http://localhost:4000/api/golf/createSeismicDesignsTable"
   )
 
   // Initial import of the Seismic Designs file data into the database

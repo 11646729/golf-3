@@ -16,9 +16,9 @@ export var index = (req, res) => {
 
 // -------------------------------------------------------
 // Prepare empty RTNews Table ready to import events
-// Path: localhost:4000/api/rtnews/prepareEmptyRTNewsTable
+// Path: localhost:4000/api/rtnews/createRTNewsTable
 // -------------------------------------------------------
-export const prepareEmptyRTNewsTable = async (req, res) => {
+export const createRTNewsTable = async (req, res) => {
   try {
     // Check if rtnews table exists using PostgreSQL system tables
     const tableExists = await db.get(
@@ -36,12 +36,12 @@ export const prepareEmptyRTNewsTable = async (req, res) => {
     } else {
       // Else create table
       console.log("rtnews table does not exist")
-      await createRTNewsTable()
+      await createRTNewsTableStructure()
     }
 
     res.send({ message: "RTNews table prepared successfully" })
   } catch (error) {
-    console.error("Error in prepareEmptyRTNewsTable:", error.message)
+    console.error("Error in createRTNewsTable:", error.message)
     res.status(500).send({ error: "Failed to prepare RTNews table" })
   }
 }
@@ -49,7 +49,7 @@ export const prepareEmptyRTNewsTable = async (req, res) => {
 // -------------------------------------------------------
 // Local function to create empty RTNews Table in the database
 // -------------------------------------------------------
-const createRTNewsTable = async () => {
+const createRTNewsTableStructure = async () => {
   try {
     const sql = `
       CREATE TABLE IF NOT EXISTS rtnews (
@@ -79,7 +79,7 @@ const createRTNewsTable = async () => {
     await db.run(sql)
     console.log("Empty rtNews table created")
   } catch (error) {
-    console.error("Error in createRTNewsTable:", error.message)
+    console.error("Error in createRTNewsTableStructure:", error.message)
     throw error
   }
 }
