@@ -30,7 +30,7 @@ const getDb = () => {
   return db
 }
 
-createGTFSTables()
+// createGTFSTables()
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
