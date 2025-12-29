@@ -30,12 +30,12 @@ const getDb = () => {
   return db
 }
 
-// createGTFSTables()
+createGTFSTables()
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
 const defaultConfigPath = new URL(
-  "../gtfs_config_files/configTransportForIreland.json",
+  "../gtfs_config_files/configTransportForIrelandPostgres.json",
   import.meta.url
 ).pathname
 const configPath =
@@ -485,71 +485,5 @@ const getAllTripUpdates = async (req, res) => {
     }
   }
 }
-
-// -------------------------------------------------------
-// PostgreSQL Helper Functions for GTFS Analytics
-// -------------------------------------------------------
-
-// Create necessary PostgreSQL tables for GTFS logging and analytics
-export const createGtfsTables = async () => {
-  console.log("Creating GTFS PostgreSQL tables if they don't exist")
-
-  try {
-    // Check if tables already exist
-    const tableCheck = await getDb().get(`
-      SELECT COUNT(*) as count FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name IN ('api_access_log', 'gtfs_import_log', 'gtfs_realtime_log')
-    `)
-
-    // If all 3 tables exist, skip creation
-    if (tableCheck && parseInt(tableCheck.count) === 3) {
-      return
-    }
-
-    // API access log table
-    await getDb().run(`
-      CREATE TABLE IF NOT EXISTS api_access_log (
-        id SERIAL PRIMARY KEY,
-        endpoint VARCHAR(255) NOT NULL,
-        timestamp TIMESTAMP NOT NULL,
-        ip_address VARCHAR(45),
-        record_count INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `)
-
-    // GTFS import log table
-    await getDb().run(`
-      CREATE TABLE IF NOT EXISTS gtfs_import_log (
-        id SERIAL PRIMARY KEY,
-        import_date TIMESTAMP NOT NULL,
-        status VARCHAR(20) NOT NULL,
-        duration_ms INTEGER,
-        file_size_mb DECIMAL(10,2),
-        error_message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `)
-
-    // GTFS realtime log table
-    await getDb().run(`
-      CREATE TABLE IF NOT EXISTS gtfs_realtime_log (
-        id SERIAL PRIMARY KEY,
-        update_date TIMESTAMP NOT NULL,
-        status VARCHAR(20) NOT NULL,
-        error_message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `)
-
-    console.log("GTFS PostgreSQL logging tables created successfully")
-  } catch (error) {
-    console.error("Failed to create GTFS PostgreSQL tables:", error.message)
-  }
-}
-
-// Initialize GTFS tables on startup
-createGtfsTables()
 
 export default index

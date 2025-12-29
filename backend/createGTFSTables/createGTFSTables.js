@@ -1,3 +1,4 @@
+import { createAnalyticsTables } from "./createAnalyticsTables.js"
 import { createAgencyTable } from "./createAgencyTable.js"
 import { createStopsTable } from "./createStopsTable.js"
 import { createRoutesTable } from "./createRoutesTable.js"
@@ -32,6 +33,7 @@ import { createFeedInfoTable } from "./createFeedInfoTable.js"
 import { createAttributionsTable } from "./createAttributionsTable.js"
 
 export const createGTFSTables = async (req, res) => {
+  await createAnalyticsTables(res)
   await createAgencyTable(res)
   await createStopsTable(res)
   await createRoutesTable(res)
