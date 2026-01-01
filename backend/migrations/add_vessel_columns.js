@@ -70,7 +70,6 @@ const run = async () => {
 
           const col = missing[i]
           const notnull = col.notnull ? "NOT NULL" : ""
-          // SQLite ignores DEFAULT '' for NOT NULL unless provided — keep simple
           const sql = `ALTER TABLE vessels ADD COLUMN ${col.name} ${col.type} ${notnull} DEFAULT ${col.default}`
 
           db.run(sql, [], (aErr) => {

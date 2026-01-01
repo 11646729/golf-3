@@ -100,7 +100,7 @@ const deleteSeismicDesigns = async () => {
 }
 
 // -------------------------------------------------------
-// Import Seismic Designs Table in the SQLite Database
+// Import Seismic Designs Table in the PostgreSQL Database
 // -------------------------------------------------------
 export const importSeismicDesignsData = (req, res) => {
   // Open a Database Connection
@@ -120,7 +120,7 @@ export const importSeismicDesignsData = (req, res) => {
           console.error(err.message)
         }
 
-        // Save the data in the seismicdesigns Table in the SQLite database
+        // Save the data in the seismicdesigns Table in the PostgreSQL database
         const courses = JSON.parse(data)
         populateSeismicDesigns(courses)
       }

@@ -20,6 +20,7 @@ import { promisify } from "util"
 import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
+import { importGTFSStaticData } from "../importGTFSStaticData.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -70,100 +71,49 @@ export var index = async (req, res) => {
 }
 
 // -------------------------------------------------------
-// Function to import latest GTFS Static file data to SQLite database
+// Function to import latest GTFS Static file data to PostgreSQL database
 // -------------------------------------------------------
-export var importStaticGtfsToSQLite = async () => {
+export var importStaticGtfsToPostgres = async (req, res) => {
   const startTime = new Date()
 
   try {
-    //  Firstly download the most recent zip file of GTFS Static files
-    const finishedDownload = promisify(stream.finished)
-    const writer = fs.createWriteStream(config.tempFile)
+    const results = await importGTFSStaticData()
 
-    const response = await axios({
-      method: "GET",
-      url: config.agencies[0].url,
-      responseType: "stream",
-    })
-
-    response.data.pipe(writer)
-
-    await finishedDownload(writer)
-      .then(() => {
-        // Getting information for a file
-        fs.stat(config.tempFile, (err, stats) => {
-          console.log(
-            "Zip file containing Static GTFS files imported successfully. "
-          )
-
-          if (err) {
-            console.log(err)
-          }
-
-          fs.unlink(config.tempFile, (err) => {
-            if (err) return console.log(err)
-            console.log("Temporary File deleted successfully")
-          })
-        })
-      })
-
-      //  Secondly unzip the GTFS Static files from the zipfile
-      .then(() => {
-        decompress(config.tempFile, config.agencies[0].path)
-          // sqlitePath)
-          .then((files) => {
-            // console.log(files)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      })
-      //  Thirdly import the GTFS Static files into the gtfs.db database
-      .then(async () => {
-        try {
-          await importGtfs(config)
-          console.log("Import Successful")
-
-          // Log successful import to PostgreSQL
-          const endTime = new Date()
-          const duration = endTime - startTime
-
-          await getDb().run(
-            `INSERT INTO gtfs_import_log (import_date, status, duration_ms, file_size_mb) 
-             VALUES (?, ?, ?, ?)`,
-            [startTime.toISOString(), "success", duration, 0] // file size can be calculated if needed
-          )
-        } catch (err) {
-          console.error(err)
-
-          // Log failed import to PostgreSQL
-          await getDb().run(
-            `INSERT INTO gtfs_import_log (import_date, status, error_message) 
-             VALUES (?, ?, ?)`,
-            [startTime.toISOString(), "failed", err.message]
-          )
-        }
-      })
-  } catch (error) {
-    console.log("\n\nError in importGtfsToSQLite: ", error)
-
-    // Log error to PostgreSQL
     try {
+      const duration = Date.now() - startTime.getTime()
       await getDb().run(
-        `INSERT INTO gtfs_import_log (import_date, status, error_message) 
-         VALUES (?, ?, ?)`,
-        [startTime.toISOString(), "error", error.message]
+        `INSERT INTO gtfs_import_log (import_date, status, duration_ms)
+         VALUES (?, ?, ?)
+         ON CONFLICT DO NOTHING`,
+        [startTime.toISOString(), "success", duration]
       )
     } catch (logError) {
-      console.log("Failed to log error to PostgreSQL:", logError.message)
+      console.log("Failed to log import success:", logError.message)
     }
+
+    res.status(200).send({ status: "ok", results })
+  } catch (error) {
+    console.log("Error importing GTFS static data:", error)
+
+    try {
+      await getDb().run(
+        `INSERT INTO gtfs_import_log (import_date, status, error_message)
+         VALUES (?, ?, ?)
+         ON CONFLICT DO NOTHING`,
+        [startTime.toISOString(), "failed", error.message]
+      )
+    } catch (logError) {
+      console.log("Failed to log import failure:", logError.message)
+    }
+
+    res.status(500).send({ status: "error", message: error.message })
   }
 }
 
 // -------------------------------------------------------
-// Function to import latest GTFS Realtime file data to SQLite database
+// Function to import latest GTFS Realtime file data to PostgreSQL database
 // -------------------------------------------------------
-export var updateRealtimeGtfsToSQLite = async () => {
+export var updateRealtimeGtfsToPostgres = async () => {
   const startTime = new Date()
 
   try {

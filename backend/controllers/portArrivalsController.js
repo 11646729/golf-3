@@ -59,7 +59,6 @@ export const createPortArrivalsTable = async (req, res) => {
 const createPortArrivalsTableStructure = async () => {
   try {
     // const db = getDb()
-    // PostgreSQL and SQLite compatible table creation
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY, 
@@ -125,7 +124,7 @@ export const getPortArrivals = async (req, res, next) => {
 }
 
 // -------------------------------------------------------
-// Save Port Arrival details to SQLite database
+// Save Port Arrival details to PostgreSQL database
 // -------------------------------------------------------
 export const savePortArrival = async (req, res) => {
   try {
@@ -346,7 +345,7 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
       vessel_name_url,
     ]
 
-    // Now save in SQLite
+    // Now save in PostgreSQL database
     await savePortArrivalInternal(newPortArrival)
   }
 
