@@ -1,5 +1,5 @@
 import {
-  importGtfs,
+  // importGtfs,
   // exportGtfs,
   updateGtfsRealtime,
   closeDb,
@@ -12,11 +12,11 @@ import {
   getTripUpdates,
   getTrips,
 } from "gtfs"
-import * as fs from "fs"
-import * as stream from "stream"
-import decompress from "decompress"
-import axios from "axios"
-import { promisify } from "util"
+// import * as fs from "fs"
+// import * as stream from "stream"
+// import decompress from "decompress"
+// import axios from "axios"
+// import { promisify } from "util"
 import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
@@ -73,7 +73,7 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Function to import latest GTFS Static file data to PostgreSQL database
 // -------------------------------------------------------
-export var importStaticGtfsToPostgres = async (req, res) => {
+export var importStaticGtfsToPostgreSQL = async (req, res) => {
   const startTime = new Date()
 
   try {
@@ -113,7 +113,7 @@ export var importStaticGtfsToPostgres = async (req, res) => {
 // -------------------------------------------------------
 // Function to import latest GTFS Realtime file data to PostgreSQL database
 // -------------------------------------------------------
-export var updateRealtimeGtfsToPostgres = async () => {
+export var updateRealtimeGtfsToPostgreSQL = async () => {
   const startTime = new Date()
 
   try {

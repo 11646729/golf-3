@@ -1,8 +1,8 @@
 import express from "express"
 import {
   index,
-  importStaticGtfsToPostgres,
-  updateRealtimeGtfsToSQLite,
+  importStaticGtfsToPostgreSQL,
+  updateRealtimeGtfsToPostgreSQL,
   getAllAgencies,
   getRoutesForSingleAgency,
   getShapesForSingleRoute,
@@ -19,13 +19,13 @@ var gtfsRouter = express.Router()
 // GET catalogue home page
 gtfsRouter.get("/", index)
 
-// POST all Static GTFS data into the SQL database
-gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToPostgres)
+// POST all Static GTFS data into the PostgreSQL database
+gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToPostgreSQL)
 
-// POST all Realtime GTFS data into the SQL database
-gtfsRouter.post("/updateRealtimeGTFSData", updateRealtimeGtfsToSQLite)
+// POST all Realtime GTFS data into the PostgreSQL database
+gtfsRouter.post("/updateRealtimeGTFSData", updateRealtimeGtfsToPostgreSQL)
 
-// POST all Realtime GTFS data into the SQL database
+// POST all Realtime GTFS data into the PostgreSQL database
 gtfsRouter.post(
   "/startRegularUpdatesOfRealtimeGTFSData",
   startRegularUpdatesOfRealtimeGTFSData
