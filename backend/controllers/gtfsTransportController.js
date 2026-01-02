@@ -31,8 +31,6 @@ const getDb = () => {
   return db
 }
 
-createGTFSTables()
-
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
 const defaultConfigPath = new URL(
@@ -77,7 +75,11 @@ export var importStaticGtfsToPostgreSQL = async (req, res) => {
   const startTime = new Date()
 
   try {
-    const results = await importGTFSStaticData()
+    // Ensure GTFS tables exist in PostgreSQL
+    const createTablesResults = await createGTFSTables()
+
+    // Fetch GTFS static data from URL
+    const fetchGTFSDataResults = await importGTFSStaticData()
 
     try {
       const duration = Date.now() - startTime.getTime()
@@ -91,7 +93,8 @@ export var importStaticGtfsToPostgreSQL = async (req, res) => {
       console.log("Failed to log import success:", logError.message)
     }
 
-    res.status(200).send({ status: "ok", results })
+    res.status(200).send({ status: "ok", createTablesResults })
+    res.status(200).send({ status: "ok", fetchGTFSDataResults })
   } catch (error) {
     console.log("Error importing GTFS static data:", error)
 

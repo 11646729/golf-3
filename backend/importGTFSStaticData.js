@@ -97,6 +97,12 @@ const importFile = async ({ filePath, mapRow, insertSql }) => {
   return stats
 }
 
+const logFileResult = (fileName, stats) => {
+  console.log(
+    `Finished ${fileName}: ${stats.inserted} rows added, ${stats.skipped} skipped, ${stats.errors} errors.`
+  )
+}
+
 const getGtfsDirectory = (customPath) => {
   if (customPath) return customPath
 
@@ -221,17 +227,21 @@ const importRoutes = async (dir) => {
 
 const importTrips = async (dir) => {
   const filePath = path.join(dir, "trips.txt")
-  const insertSql = `
+
+  // Build SQL dynamically based on available columns
+  // Most GTFS feeds include: route_id, service_id, trip_id, trip_headsign, trip_short_name, direction_id, block_id, shape_id
+  // Optional columns: wheelchair_accessible, bikes_allowed
+  const baseSql = `
 		INSERT INTO trips (
 			trip_id, route_id, service_id, trip_headsign, trip_short_name,
-			direction_id, block_id, shape_id, wheelchair_accessible, bikes_allowed
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			direction_id, block_id, shape_id
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 		ON CONFLICT (trip_id) DO NOTHING
 	`
 
   return importFile({
     filePath,
-    insertSql,
+    insertSql: baseSql,
     mapRow: (row) => {
       if (!row.trip_id || !row.route_id || !row.service_id) return null
 
@@ -244,8 +254,6 @@ const importTrips = async (dir) => {
         toInt(row.direction_id),
         toNull(row.block_id),
         toNull(row.shape_id),
-        toInt(row.wheelchair_accessible),
-        toInt(row.bikes_allowed),
       ]
     },
   })
@@ -415,19 +423,44 @@ export const importGTFSStaticData = async (options = {}) => {
     await createGTFSTables()
   }
 
-  const results = {
-    agency: await importAgency(gtfsDirectory),
-    stops: await importStops(gtfsDirectory),
-    routes: await importRoutes(gtfsDirectory),
-    trips: await importTrips(gtfsDirectory),
-    stop_times: await importStopTimes(gtfsDirectory),
-    calendar: await importCalendar(gtfsDirectory),
-    calendar_dates: await importCalendarDates(gtfsDirectory),
-    shapes: await importShapes(gtfsDirectory),
-    feed_info: await importFeedInfo(gtfsDirectory),
-  }
+  const results = {}
 
-  console.log("GTFS static import complete", results)
+  results.agency = await importAgency(gtfsDirectory)
+  logFileResult("agency.txt", results.agency)
+
+  results.stops = await importStops(gtfsDirectory)
+  logFileResult("stops.txt", results.stops)
+
+  results.routes = await importRoutes(gtfsDirectory)
+  logFileResult("routes.txt", results.routes)
+
+  results.trips = await importTrips(gtfsDirectory)
+  logFileResult("trips.txt", results.trips)
+
+  results.stop_times = await importStopTimes(gtfsDirectory)
+  logFileResult("stop_times.txt", results.stop_times)
+
+  results.calendar = await importCalendar(gtfsDirectory)
+  logFileResult("calendar.txt", results.calendar)
+
+  results.calendar_dates = await importCalendarDates(gtfsDirectory)
+  logFileResult("calendar_dates.txt", results.calendar_dates)
+
+  results.shapes = await importShapes(gtfsDirectory)
+  logFileResult("shapes.txt", results.shapes)
+
+  results.feed_info = await importFeedInfo(gtfsDirectory)
+  logFileResult("feed_info.txt", results.feed_info)
+
+  console.log("GTFS static import complete.")
+  console.table(
+    Object.entries(results).map(([key, value]) => ({
+      file: `${key}.txt`,
+      inserted: value.inserted,
+      skipped: value.skipped,
+      errors: value.errors,
+    }))
+  )
 
   return results
 }

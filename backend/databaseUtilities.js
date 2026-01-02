@@ -55,12 +55,10 @@ async function getConnection() {
     throw new Error("DATABASE_URL must be a valid PostgreSQL URL")
   }
 
-  console.log("Connecting to PostgreSQL database...")
-
   connecting = (async () => {
     client = new pg.Client(url)
     await client.connect()
-    console.log("Connected to PostgreSQL database")
+    console.log("Connected to PostgreSQL database...")
     connecting = null
   })()
 
