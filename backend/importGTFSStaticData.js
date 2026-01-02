@@ -1,8 +1,11 @@
 import fs from "fs"
 import path from "path"
 import { parse } from "csv-parse"
+import { from as copyFrom } from "pg-copy-streams"
+import { pipeline } from "stream/promises"
+import { Transform } from "stream"
 import dotenv from "dotenv"
-import { DatabaseAdapter } from "./databaseUtilities.js"
+import { DatabaseAdapter, createDatabaseAdapter } from "./databaseUtilities.js"
 import { createGTFSTables } from "./createGTFSTables/createGTFSTables.js"
 import readRouteFile from "./readGtfsFiles.js"
 
@@ -62,6 +65,115 @@ const streamCsvRows = async (filePath, onRow) => {
   }
 }
 
+/**
+ * Import using PostgreSQL COPY command for faster bulk inserts
+ * @param {Object} options
+ * @param {string} options.filePath - Path to CSV file
+ * @param {string} options.tableName - Target table name
+ * @param {string[]} options.columns - Column names in order
+ * @param {Function} options.mapRow - Function to transform row values
+ */
+const importFileWithCopy = async ({ filePath, tableName, columns, mapRow }) => {
+  const stats = { inserted: 0, skipped: 0, errors: 0 }
+
+  if (!fs.existsSync(filePath)) {
+    console.warn(`File not found, skipping: ${filePath}`)
+    return stats
+  }
+
+  const adapter = await createDatabaseAdapter()
+  const client = adapter.client
+
+  // Create COPY command with conflict handling via temporary table
+  const tempTable = `temp_${tableName}_${Date.now()}`
+
+  try {
+    // Create temporary table
+    await client.query(`
+      CREATE TEMP TABLE ${tempTable} (LIKE ${tableName} INCLUDING DEFAULTS)
+    `)
+
+    // COPY into temporary table using TEXT format with tab delimiter
+    const copyQuery = `COPY ${tempTable} (${columns.join(
+      ", "
+    )}) FROM STDIN WITH (FORMAT text, NULL '\\N', DELIMITER E'\\t')`
+    const stream = client.query(copyFrom(copyQuery))
+
+    // Transform CSV rows to PostgreSQL TEXT format
+    const transformStream = new Transform({
+      objectMode: true,
+      transform(row, encoding, callback) {
+        try {
+          const params = mapRow(row)
+          if (!params) {
+            stats.skipped += 1
+            callback()
+            return
+          }
+
+          // Convert to TEXT row: escape values and join with tabs
+          const textRow =
+            params
+              .map((val) => {
+                if (val === null || val === undefined) return "\\N"
+                // Escape special characters for PostgreSQL TEXT format
+                const str = String(val)
+                return str
+                  .replace(/\\/g, "\\\\")
+                  .replace(/\t/g, "\\t")
+                  .replace(/\n/g, "\\n")
+                  .replace(/\r/g, "\\r")
+              })
+              .join("\t") + "\n"
+
+          callback(null, textRow)
+        } catch (error) {
+          stats.errors += 1
+          console.error(
+            `Failed to transform row from ${path.basename(filePath)}:`,
+            error.message
+          )
+          callback()
+        }
+      },
+    })
+
+    // Create CSV parser
+    const csvStream = fs.createReadStream(filePath).pipe(parse(csvOptions))
+
+    // Pipeline: CSV -> Transform -> COPY
+    await pipeline(csvStream, transformStream, stream)
+
+    // Insert from temp table to main table with conflict handling
+    const result = await client.query(`
+      INSERT INTO ${tableName} (${columns.join(", ")})
+      SELECT ${columns.join(", ")} FROM ${tempTable}
+      ON CONFLICT DO NOTHING
+    `)
+
+    stats.inserted = result.rowCount || 0
+
+    // Drop temporary table
+    await client.query(`DROP TABLE ${tempTable}`)
+  } catch (error) {
+    stats.errors += 1
+    console.error(
+      `Failed to import ${path.basename(filePath)} using COPY:`,
+      error.message
+    )
+
+    // Try to clean up temp table
+    try {
+      await client.query(`DROP TABLE IF EXISTS ${tempTable}`)
+    } catch (cleanupError) {
+      // Ignore cleanup errors
+    }
+  }
+
+  return stats
+}
+
+// Fallback to row-by-row for small files or when COPY fails
 const importFile = async ({ filePath, mapRow, insertSql }) => {
   const stats = { inserted: 0, skipped: 0, errors: 0 }
 
@@ -121,17 +233,22 @@ const getGtfsDirectory = (customPath) => {
 
 const importAgency = async (dir) => {
   const filePath = path.join(dir, "agency.txt")
-  const insertSql = `
-		INSERT INTO agency (
-			agency_id, agency_name, agency_url, agency_timezone, agency_lang,
-			agency_phone, agency_fare_url, agency_email, cemv_support
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (agency_id) DO NOTHING
-	`
+  const columns = [
+    "agency_id",
+    "agency_name",
+    "agency_url",
+    "agency_timezone",
+    "agency_lang",
+    "agency_phone",
+    "agency_fare_url",
+    "agency_email",
+    "cemv_support",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "agency",
+    columns,
     mapRow: (row) => {
       if (!row.agency_id || !row.agency_name || !row.agency_url) return null
 
@@ -152,18 +269,29 @@ const importAgency = async (dir) => {
 
 const importStops = async (dir) => {
   const filePath = path.join(dir, "stops.txt")
-  const insertSql = `
-		INSERT INTO stops (
-			stop_id, stop_code, stop_name, tts_stop_name, stop_desc, stop_lat, stop_lon,
-			zone_id, stop_url, location_type, parent_station, stop_timezone,
-			wheelchair_boarding, level_id, platform_code, stop_access
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (stop_id) DO NOTHING
-	`
+  const columns = [
+    "stop_id",
+    "stop_code",
+    "stop_name",
+    "tts_stop_name",
+    "stop_desc",
+    "stop_lat",
+    "stop_lon",
+    "zone_id",
+    "stop_url",
+    "location_type",
+    "parent_station",
+    "stop_timezone",
+    "wheelchair_boarding",
+    "level_id",
+    "platform_code",
+    "stop_access",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "stops",
+    columns,
     mapRow: (row) => {
       if (!row.stop_id) return null
 
@@ -191,18 +319,26 @@ const importStops = async (dir) => {
 
 const importRoutes = async (dir) => {
   const filePath = path.join(dir, "routes.txt")
-  const insertSql = `
-		INSERT INTO routes (
-			route_id, agency_id, route_short_name, route_long_name, route_desc,
-			route_type, route_url, route_color, route_text_color, route_sort_order,
-			continuous_pickup, continuous_drop_off, network_id
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (route_id) DO NOTHING
-	`
+  const columns = [
+    "route_id",
+    "agency_id",
+    "route_short_name",
+    "route_long_name",
+    "route_desc",
+    "route_type",
+    "route_url",
+    "route_color",
+    "route_text_color",
+    "route_sort_order",
+    "continuous_pickup",
+    "continuous_drop_off",
+    "network_id",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "routes",
+    columns,
     mapRow: (row) => {
       if (!row.route_id || !row.route_type) return null
 
@@ -227,21 +363,21 @@ const importRoutes = async (dir) => {
 
 const importTrips = async (dir) => {
   const filePath = path.join(dir, "trips.txt")
+  const columns = [
+    "trip_id",
+    "route_id",
+    "service_id",
+    "trip_headsign",
+    "trip_short_name",
+    "direction_id",
+    "block_id",
+    "shape_id",
+  ]
 
-  // Build SQL dynamically based on available columns
-  // Most GTFS feeds include: route_id, service_id, trip_id, trip_headsign, trip_short_name, direction_id, block_id, shape_id
-  // Optional columns: wheelchair_accessible, bikes_allowed
-  const baseSql = `
-		INSERT INTO trips (
-			trip_id, route_id, service_id, trip_headsign, trip_short_name,
-			direction_id, block_id, shape_id
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (trip_id) DO NOTHING
-	`
-
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql: baseSql,
+    tableName: "trips",
+    columns,
     mapRow: (row) => {
       if (!row.trip_id || !row.route_id || !row.service_id) return null
 
@@ -261,18 +397,25 @@ const importTrips = async (dir) => {
 
 const importStopTimes = async (dir) => {
   const filePath = path.join(dir, "stop_times.txt")
-  const insertSql = `
-		INSERT INTO stop_times (
-			trip_id, arrival_time, departure_time, stop_id, stop_sequence,
-			stop_headsign, pickup_type, drop_off_type, continuous_pickup,
-			continuous_drop_off, shape_dist_traveled, timepoint
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (trip_id, stop_sequence) DO NOTHING
-	`
+  const columns = [
+    "trip_id",
+    "arrival_time",
+    "departure_time",
+    "stop_id",
+    "stop_sequence",
+    "stop_headsign",
+    "pickup_type",
+    "drop_off_type",
+    "continuous_pickup",
+    "continuous_drop_off",
+    "shape_dist_traveled",
+    "timepoint",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "stop_times",
+    columns,
     mapRow: (row) => {
       if (!row.trip_id || !row.stop_id || !row.stop_sequence) return null
 
@@ -296,17 +439,23 @@ const importStopTimes = async (dir) => {
 
 const importCalendar = async (dir) => {
   const filePath = path.join(dir, "calendar.txt")
-  const insertSql = `
-		INSERT INTO calendar (
-			service_id, monday, tuesday, wednesday, thursday, friday, saturday,
-			sunday, start_date, end_date
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (service_id) DO NOTHING
-	`
+  const columns = [
+    "service_id",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+    "start_date",
+    "end_date",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "calendar",
+    columns,
     mapRow: (row) => {
       if (!row.service_id) return null
 
@@ -328,16 +477,12 @@ const importCalendar = async (dir) => {
 
 const importCalendarDates = async (dir) => {
   const filePath = path.join(dir, "calendar_dates.txt")
-  const insertSql = `
-		INSERT INTO calendar_dates (
-			service_id, date, exception_type, holiday_name
-		) VALUES (?, ?, ?, ?)
-		ON CONFLICT (service_id, date) DO NOTHING
-	`
+  const columns = ["service_id", "date", "exception_type", "holiday_name"]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "calendar_dates",
+    columns,
     mapRow: (row) => {
       if (!row.service_id || !row.date || !row.exception_type) return null
 
@@ -353,16 +498,18 @@ const importCalendarDates = async (dir) => {
 
 const importShapes = async (dir) => {
   const filePath = path.join(dir, "shapes.txt")
-  const insertSql = `
-		INSERT INTO shapes (
-			shape_id, shape_pt_lat, shape_pt_lon, shape_pt_sequence, shape_dist_traveled
-		) VALUES (?, ?, ?, ?, ?)
-		ON CONFLICT (shape_id, shape_pt_sequence) DO NOTHING
-	`
+  const columns = [
+    "shape_id",
+    "shape_pt_lat",
+    "shape_pt_lon",
+    "shape_pt_sequence",
+    "shape_dist_traveled",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "shapes",
+    columns,
     mapRow: (row) => {
       if (!row.shape_id || !row.shape_pt_sequence) return null
 
@@ -379,18 +526,23 @@ const importShapes = async (dir) => {
 
 const importFeedInfo = async (dir) => {
   const filePath = path.join(dir, "feed_info.txt")
-  const insertSql = `
-		INSERT INTO feed_info (
-			feed_publisher_name, feed_publisher_url, feed_lang, default_lang,
-			feed_start_date, feed_end_date, feed_version, feed_contact_email,
-			feed_contact_url, feed_id
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON CONFLICT (feed_id) DO NOTHING
-	`
+  const columns = [
+    "feed_publisher_name",
+    "feed_publisher_url",
+    "feed_lang",
+    "default_lang",
+    "feed_start_date",
+    "feed_end_date",
+    "feed_version",
+    "feed_contact_email",
+    "feed_contact_url",
+    "feed_id",
+  ]
 
-  return importFile({
+  return importFileWithCopy({
     filePath,
-    insertSql,
+    tableName: "feed_info",
+    columns,
     mapRow: (row) => {
       if (!row.feed_publisher_name || !row.feed_publisher_url || !row.feed_lang)
         return null
