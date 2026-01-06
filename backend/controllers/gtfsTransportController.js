@@ -17,10 +17,11 @@ import {
 // import decompress from "decompress"
 // import axios from "axios"
 // import { promisify } from "util"
-import readRouteFile from "../readGtfsFiles.js"
+// import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
+import getZipTimestamps from "../gtfs_config_files/readZipFile.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -33,15 +34,15 @@ const getDb = () => {
 
 // Use an environment variable if provided, otherwise fall back to the
 // repository config file in gtfs_config_files.
-const defaultConfigPath = new URL(
-  "../gtfs_config_files/configTransportForIrelandPostgres.json",
-  import.meta.url
-).pathname
+// const defaultConfigPath = new URL(
+//   "../gtfs_config_files/configTransportForIrelandPostgres.json",
+//   import.meta.url
+// ).pathname
 
-const configPath =
-  process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath
+// const configPath = process.env.TRANSPORT_FOR_IRELAND_FILEPATH
+//  || defaultConfigPath
 
-console.log(`Using GTFS config file: ${configPath}`)
+// console.log(`Using GTFS config file: ${configPath}`)
 
 // const config = readRouteFile(configPath)
 // console.log(config)
@@ -77,12 +78,29 @@ export var index = async (req, res) => {
 export var importStaticGtfsToPostgreSQL = async (req, res) => {
   const startTime = new Date()
 
+  const url =
+    "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
+
   try {
+    const test = getZipTimestamps(url)
+
+    return
+
     // Ensure GTFS tables exist in PostgreSQL
     const createTablesResults = await createGTFSTables()
 
+    // Fetch URL for GTFS static data from environment variable
+    const gtfsStaticDataUrl = process.env.TRANSPORT_FOR_IRELAND_FILEPATH
+    console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
+
     // Fetch GTFS static data from URL
-    const fetchGTFSDataResults = await importGTFSStaticData()
+    if (!gtfsStaticDataUrl) {
+      throw new Error("GTFS static data URL is not defined")
+    }
+
+    // Download and unzip GTFS static data
+
+    // const fetchGTFSDataResults = await importGTFSStaticData()
 
     try {
       const duration = Date.now() - startTime.getTime()
