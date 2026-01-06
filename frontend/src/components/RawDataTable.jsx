@@ -45,7 +45,7 @@ const tableData = [
   {
     id: 4,
     datatype: "GTFS Transport Data",
-    buttontext: "Initialise All Static & Realtime GTFS Data",
+    buttontext: "Initialise Static GTFS Data",
     buttonbackgroundcolor: "darkred",
   },
   {

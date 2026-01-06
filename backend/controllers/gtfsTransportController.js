@@ -37,11 +37,14 @@ const defaultConfigPath = new URL(
   "../gtfs_config_files/configTransportForIrelandPostgres.json",
   import.meta.url
 ).pathname
+
 const configPath =
   process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath
-console.log(`Using GTFS config file: ${configPath}`)
-const config = readRouteFile(configPath)
 
+console.log(`Using GTFS config file: ${configPath}`)
+
+// const config = readRouteFile(configPath)
+// console.log(config)
 // -------------------------------------------------------
 // Catalogue Home page
 // Path: localhost:4000/api/gtfs
