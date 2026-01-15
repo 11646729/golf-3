@@ -2,21 +2,29 @@ import fetch from "node-fetch"
 import yauzl from "yauzl"
 import fs from "fs"
 import path from "path"
+import dotenv from "dotenv"
 import { fileURLToPath } from "url"
-
-const url =
-  "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const dataDir = path.resolve(__dirname, "../gtfs_data/TransportForIreland")
-const localZipPath = path.join(dataDir, "GTFS_Realtime.zip")
+dotenv.config({ path: path.resolve(__dirname, ".env"), override: false })
 
-async function getZipTimestamps(url) {
+// Store GTFS data inside the backend folder
+const dataDir = path.resolve(__dirname, "gtfs_data/TransportForIreland")
+const localZipPath = path.join(dataDir, "GTFS_Realtime.zip")
+// /Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/GTFS_Realtime.zip
+
+const masterZipPath =
+  process.env.TRANSPORT_FOR_IRELAND_FILEPATH ||
+  "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
+
+getZipTimestamps()
+
+export default async function getZipTimestamps() {
   try {
     await fs.promises.mkdir(dataDir, { recursive: true })
 
-    const headResponse = await fetch(url, { method: "HEAD" })
+    const headResponse = await fetch(masterZipPath, { method: "HEAD" })
     if (!headResponse.ok) {
       throw new Error(`HEAD request failed with status ${headResponse.status}`)
     }
@@ -48,7 +56,7 @@ async function getZipTimestamps(url) {
     }
 
     console.log("Downloading ZIP (newer or missing locally)...")
-    const response = await fetch(url)
+    const response = await fetch(masterZipPath)
     if (!response.ok) {
       throw new Error(`Download failed with status ${response.status}`)
     }
@@ -110,7 +118,3 @@ function extractZipBuffer(buffer, targetDir) {
     })
   })
 }
-
-getZipTimestamps(url)
-
-export default getZipTimestamps

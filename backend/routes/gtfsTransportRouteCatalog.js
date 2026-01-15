@@ -1,7 +1,7 @@
 import express from "express"
 import {
   index,
-  importStaticGtfsToPostgreSQL,
+  importStaticGtfsData,
   updateRealtimeGtfsToPostgreSQL,
   getAllAgencies,
   getRoutesForSingleAgency,
@@ -20,7 +20,7 @@ var gtfsRouter = express.Router()
 gtfsRouter.get("/", index)
 
 // POST all Static GTFS data into the PostgreSQL database
-gtfsRouter.post("/importStaticGTFSData", importStaticGtfsToPostgreSQL)
+gtfsRouter.post("/importStaticGTFSData", importStaticGtfsData)
 
 // POST all Realtime GTFS data into the PostgreSQL database
 gtfsRouter.post("/updateRealtimeGTFSData", updateRealtimeGtfsToPostgreSQL)

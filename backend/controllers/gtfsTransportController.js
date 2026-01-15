@@ -1,6 +1,4 @@
 import {
-  // importGtfs,
-  // exportGtfs,
   updateGtfsRealtime,
   closeDb,
   openDb,
@@ -12,16 +10,10 @@ import {
   getTripUpdates,
   getTrips,
 } from "gtfs"
-// import * as fs from "fs"
-// import * as stream from "stream"
-// import decompress from "decompress"
-// import axios from "axios"
-// import { promisify } from "util"
-// import readRouteFile from "../readGtfsFiles.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
-import getZipTimestamps from "../gtfs_config_files/readZipFile.js"
+// import getZipTimestamps from "../readZipFile.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -32,20 +24,6 @@ const getDb = () => {
   return db
 }
 
-// Use an environment variable if provided, otherwise fall back to the
-// repository config file in gtfs_config_files.
-// const defaultConfigPath = new URL(
-//   "../gtfs_config_files/configTransportForIrelandPostgres.json",
-//   import.meta.url
-// ).pathname
-
-// const configPath = process.env.TRANSPORT_FOR_IRELAND_FILEPATH
-//  || defaultConfigPath
-
-// console.log(`Using GTFS config file: ${configPath}`)
-
-// const config = readRouteFile(configPath)
-// console.log(config)
 // -------------------------------------------------------
 // Catalogue Home page
 // Path: localhost:4000/api/gtfs
@@ -75,32 +53,23 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Function to import latest GTFS Static file data to PostgreSQL database
 // -------------------------------------------------------
-export var importStaticGtfsToPostgreSQL = async (req, res) => {
+export var importStaticGtfsData = async (req, res) => {
   const startTime = new Date()
 
-  const url =
-    "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
-
   try {
-    const test = getZipTimestamps(url)
-
-    return
-
     // Ensure GTFS tables exist in PostgreSQL
     const createTablesResults = await createGTFSTables()
 
     // Fetch URL for GTFS static data from environment variable
-    const gtfsStaticDataUrl = process.env.TRANSPORT_FOR_IRELAND_FILEPATH
+    const gtfsStaticDataUrl = process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH
     console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
 
     // Fetch GTFS static data from URL
-    if (!gtfsStaticDataUrl) {
+    if (!process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH) {
       throw new Error("GTFS static data URL is not defined")
     }
 
-    // Download and unzip GTFS static data
-
-    // const fetchGTFSDataResults = await importGTFSStaticData()
+    const fetchGTFSDataResults = await importGTFSStaticData()
 
     try {
       const duration = Date.now() - startTime.getTime()
