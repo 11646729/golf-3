@@ -35,7 +35,7 @@ export var index = async (req, res) => {
       `INSERT INTO api_access_log (endpoint, timestamp, ip_address) 
        VALUES (?, ?, ?) 
        ON CONFLICT DO NOTHING`,
-      ["/api/gtfs", new Date().toISOString(), req.ip || "unknown"]
+      ["/api/gtfs", new Date().toISOString(), req.ip || "unknown"],
     )
   } catch (error) {
     console.log("Failed to log API access:", error.message)
@@ -77,14 +77,14 @@ export var importStaticGtfsData = async (req, res) => {
         `INSERT INTO gtfs_import_log (import_date, status, duration_ms)
          VALUES (?, ?, ?)
          ON CONFLICT DO NOTHING`,
-        [startTime.toISOString(), "success", duration]
+        [startTime.toISOString(), "success", duration],
       )
     } catch (logError) {
       console.log("Failed to log import success:", logError.message)
     }
 
     res.status(200).send({ status: "ok", createTablesResults })
-    res.status(200).send({ status: "ok", fetchGTFSDataResults })
+    // res.status(200).send({ status: "ok", fetchGTFSDataResults })
   } catch (error) {
     console.log("Error importing GTFS static data:", error)
 
@@ -93,7 +93,7 @@ export var importStaticGtfsData = async (req, res) => {
         `INSERT INTO gtfs_import_log (import_date, status, error_message)
          VALUES (?, ?, ?)
          ON CONFLICT DO NOTHING`,
-        [startTime.toISOString(), "failed", error.message]
+        [startTime.toISOString(), "failed", error.message],
       )
     } catch (logError) {
       console.log("Failed to log import failure:", logError.message)
@@ -116,7 +116,7 @@ export var updateRealtimeGtfsToPostgreSQL = async () => {
     await getDb().run(
       `INSERT INTO gtfs_realtime_log (update_date, status) 
        VALUES (?, ?)`,
-      [startTime.toISOString(), "success"]
+      [startTime.toISOString(), "success"],
     )
   } catch (error) {
     console.error("Realtime update failed:", error)
@@ -125,7 +125,7 @@ export var updateRealtimeGtfsToPostgreSQL = async () => {
     await getDb().run(
       `INSERT INTO gtfs_realtime_log (update_date, status, error_message) 
        VALUES (?, ?, ?)`,
-      [startTime.toISOString(), "failed", error.message]
+      [startTime.toISOString(), "failed", error.message],
     )
   }
 }
@@ -150,7 +150,7 @@ export var getAllAgencies = async (req, res) => {
     try {
       const agencies = getAgencies(
         {}, // No query filters
-        ["agency_id", "agency_name"] // Only return these fields
+        ["agency_id", "agency_name"], // Only return these fields
       )
 
       // Log successful query to PostgreSQL
@@ -162,7 +162,7 @@ export var getAllAgencies = async (req, res) => {
           new Date().toISOString(),
           req.ip || "unknown",
           agencies.length,
-        ]
+        ],
       )
 
       res.send(agencies)
@@ -189,7 +189,7 @@ export var getRoutesForSingleAgency = async (req, res) => {
     try {
       const transportRoutes = getRoutes(
         { agency_id: req.query.transportAgencyId }, // Query filters
-        ["route_id", "agency_id", "route_short_name", "route_long_name"] // Only return these fields
+        ["route_id", "agency_id", "route_short_name", "route_long_name"], // Only return these fields
       )
 
       // Log successful query to PostgreSQL
@@ -201,7 +201,7 @@ export var getRoutesForSingleAgency = async (req, res) => {
           new Date().toISOString(),
           req.ip || "unknown",
           transportRoutes.length,
-        ]
+        ],
       )
 
       res.send(transportRoutes)
@@ -228,7 +228,7 @@ export var getShapesForSingleRoute = async (req, res) => {
     try {
       const transportShapes = getShapes(
         { route_id: req.query.routeId }, // Query filters
-        ["shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence"] // Only return these fields
+        ["shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence"], // Only return these fields
       )
 
       // Log successful query to PostgreSQL
@@ -240,7 +240,7 @@ export var getShapesForSingleRoute = async (req, res) => {
           new Date().toISOString(),
           req.ip || "unknown",
           transportShapes.length,
-        ]
+        ],
       )
 
       res.send(transportShapes)
@@ -268,7 +268,7 @@ export var getStopsForSingleRoute = async (req, res) => {
       const transportStops = getStops(
         { route_id: req.query.routeId }, // Query filters
         ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
-        [["stop_id", "ASC"]] // Sort by this field and direction
+        [["stop_id", "ASC"]], // Sort by this field and direction
       )
 
       // Log successful query to PostgreSQL
@@ -280,7 +280,7 @@ export var getStopsForSingleRoute = async (req, res) => {
           new Date().toISOString(),
           req.ip || "unknown",
           transportStops.length,
-        ]
+        ],
       )
 
       res.send(transportStops)
@@ -307,7 +307,7 @@ export const getAllVehiclePositions = async (req, res) => {
     try {
       const vehiclePositions = getVehiclePositions(
         { trip_id: "4039_7117" }, // Query filters
-        ["vehicle_id", "latitude", "longitude"] // Only return these fields
+        ["vehicle_id", "latitude", "longitude"], // Only return these fields
       )
 
       console.log(vehiclePositions)
@@ -322,7 +322,7 @@ export const getAllVehiclePositions = async (req, res) => {
             new Date().toISOString(),
             req?.ip || "unknown",
             vehiclePositions.length,
-          ]
+          ],
         )
 
         res.send(vehiclePositions)
@@ -367,7 +367,7 @@ const getAllTrips = async (req, res) => {
             new Date().toISOString(),
             req?.ip || "unknown",
             trips.length,
-          ]
+          ],
         )
 
         res.send(trips)
@@ -409,7 +409,7 @@ const getAllTripUpdates = async (req, res) => {
             new Date().toISOString(),
             req?.ip || "unknown",
             tripUpdates.length,
-          ]
+          ],
         )
 
         res.send(tripUpdates)

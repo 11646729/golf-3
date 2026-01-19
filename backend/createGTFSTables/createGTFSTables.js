@@ -1,4 +1,3 @@
-import { createAnalyticsTables } from "./createAnalyticsTables.js"
 import { createAgencyTable } from "./createAgencyTable.js"
 import { createStopsTable } from "./createStopsTable.js"
 import { createRoutesTable } from "./createRoutesTable.js"
@@ -31,9 +30,9 @@ import { createBookingRulesTable } from "./createBookingRulesTable.js"
 import { createTranslationsTable } from "./createTranslationsTable.js"
 import { createFeedInfoTable } from "./createFeedInfoTable.js"
 import { createAttributionsTable } from "./createAttributionsTable.js"
+import { createAnalyticsTables } from "./createAnalyticsTables.js"
 
 export const createGTFSTables = async (req, res) => {
-  await createAnalyticsTables(res)
   await createAgencyTable(res)
   await createStopsTable(res)
   await createRoutesTable(res)
@@ -66,4 +65,5 @@ export const createGTFSTables = async (req, res) => {
   await createTranslationsTable(res)
   await createFeedInfoTable(res)
   await createAttributionsTable(res)
+  await createAnalyticsTables(res)
 }
