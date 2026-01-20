@@ -13,7 +13,6 @@ import {
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
-// import getZipTimestamps from "../readZipFile.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -65,7 +64,7 @@ export var importStaticGtfsData = async (req, res) => {
     console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
 
     // Fetch GTFS static data from URL
-    if (!process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH) {
+    if (!gtfsStaticDataUrl) {
       throw new Error("GTFS static data URL is not defined")
     }
 
@@ -82,9 +81,6 @@ export var importStaticGtfsData = async (req, res) => {
     } catch (logError) {
       console.log("Failed to log import success:", logError.message)
     }
-
-    res.status(200).send({ status: "ok", createTablesResults })
-    // res.status(200).send({ status: "ok", fetchGTFSDataResults })
   } catch (error) {
     console.log("Error importing GTFS static data:", error)
 

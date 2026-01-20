@@ -12,7 +12,6 @@ dotenv.config({ path: path.resolve(__dirname, ".env"), override: false })
 // Store GTFS data inside the backend folder
 const dataDir = path.resolve(__dirname, "gtfs_data/TransportForIreland")
 const localZipPath = path.join(dataDir, "GTFS_Realtime.zip")
-// /Users/briansmith/Documents/GTD/golf-3/backend/gtfs_data/TransportForIreland/GTFS_Realtime.zip
 
 const masterZipPath =
   process.env.TRANSPORT_FOR_IRELAND_FILEPATH ||
