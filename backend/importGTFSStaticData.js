@@ -18,7 +18,7 @@ const db = new DatabaseAdapter()
 
 const defaultConfigPath = new URL(
   "./gtfs_config_files/configTransportForIrelandPostgres.json",
-  import.meta.url
+  import.meta.url,
 ).pathname
 
 const csvOptions = {
@@ -95,7 +95,7 @@ const importFileWithCopy = async ({ filePath, tableName, columns, mapRow }) => {
 
     // COPY into temporary table using TEXT format with tab delimiter
     const copyQuery = `COPY ${tempTable} (${columns.join(
-      ", "
+      ", ",
     )}) FROM STDIN WITH (FORMAT text, NULL '\\N', DELIMITER E'\\t')`
     const stream = client.query(copyFrom(copyQuery))
 
@@ -131,7 +131,7 @@ const importFileWithCopy = async ({ filePath, tableName, columns, mapRow }) => {
           stats.errors += 1
           console.error(
             `Failed to transform row from ${path.basename(filePath)}:`,
-            error.message
+            error.message,
           )
           callback()
         }
@@ -159,7 +159,7 @@ const importFileWithCopy = async ({ filePath, tableName, columns, mapRow }) => {
     stats.errors += 1
     console.error(
       `Failed to import ${path.basename(filePath)} using COPY:`,
-      error.message
+      error.message,
     )
 
     // Try to clean up temp table
@@ -211,7 +211,7 @@ const importFile = async ({ filePath, mapRow, insertSql }) => {
 
 const logFileResult = (fileName, stats) => {
   console.log(
-    `Finished ${fileName}: ${stats.inserted} rows added, ${stats.skipped} skipped, ${stats.errors} errors.`
+    `Finished ${fileName}: ${stats.inserted} rows added, ${stats.skipped} skipped, ${stats.errors} errors.`,
   )
 }
 
@@ -580,7 +580,7 @@ export const importGTFSStaticData = async (options = {}) => {
       `Table preparation completed in ${(
         (tableEndTime - tableStartTime) /
         1000
-      ).toFixed(2)}s`
+      ).toFixed(2)}s`,
     )
   }
 
@@ -648,8 +648,8 @@ export const importGTFSStaticData = async (options = {}) => {
   console.log("GTFS static import complete.")
   console.log(
     `Total import time: ${totalTime.toFixed(2)}s (${(totalTime / 60).toFixed(
-      2
-    )} minutes)`
+      2,
+    )} minutes)`,
   )
   console.log("=".repeat(60) + "\n")
 
@@ -660,7 +660,7 @@ export const importGTFSStaticData = async (options = {}) => {
       skipped: value.skipped,
       errors: value.errors,
       time_seconds: (timings[key] / 1000).toFixed(2),
-    }))
+    })),
   )
 
   return results

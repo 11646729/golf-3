@@ -13,6 +13,7 @@ import {
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
+import getZipTimestamps from "../readZipFile.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -56,30 +57,47 @@ export var importStaticGtfsData = async (req, res) => {
   const startTime = new Date()
 
   try {
-    // Ensure GTFS tables exist in PostgreSQL
-    const createTablesResults = await createGTFSTables()
+    // Read ZIP timestamps and download/extract if newer
+    const temp = await getZipTimestamps()
 
-    // Fetch URL for GTFS static data from environment variable
-    const gtfsStaticDataUrl = process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH
-    console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
+    if (temp === "SameDate") {
+      return res
+        .send({
+          status: "no_update",
+          message: "GTFS data is already up to date",
+        })
+        .status(200)
+    } else {
+      console.log("Proceeding with GTFS data import...")
 
-    // Fetch GTFS static data from URL
-    if (!gtfsStaticDataUrl) {
-      throw new Error("GTFS static data URL is not defined")
-    }
+      // Ensure GTFS tables exist in PostgreSQL
+      const createTablesResults = await createGTFSTables()
 
-    const fetchGTFSDataResults = await importGTFSStaticData()
+      // Fetch URL for GTFS static data from environment variable
+      const gtfsStaticDataUrl = process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH
+      console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
 
-    try {
-      const duration = Date.now() - startTime.getTime()
-      await getDb().run(
-        `INSERT INTO gtfs_import_log (import_date, status, duration_ms)
+      // Fetch GTFS static data from URL
+      if (!gtfsStaticDataUrl) {
+        throw new Error("GTFS static data URL is not defined")
+      } else {
+        console.log("Fetching GTFS static data...")
+      }
+      const fetchGTFSDataResults = await importGTFSStaticData()
+
+      console.log(fetchGTFSDataResults)
+
+      try {
+        const duration = Date.now() - startTime.getTime()
+        await getDb().run(
+          `INSERT INTO gtfs_import_log (import_date, status, duration_ms)
          VALUES (?, ?, ?)
          ON CONFLICT DO NOTHING`,
-        [startTime.toISOString(), "success", duration],
-      )
-    } catch (logError) {
-      console.log("Failed to log import success:", logError.message)
+          [startTime.toISOString(), "success", duration],
+        )
+      } catch (logError) {
+        console.log("Failed to log import success:", logError.message)
+      }
     }
   } catch (error) {
     console.log("Error importing GTFS static data:", error)
