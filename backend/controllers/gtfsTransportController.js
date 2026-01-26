@@ -13,7 +13,7 @@ import {
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
-import getZipTimestamps from "../readZipFile.js"
+import readZipTimestamps from "../readZipTimestamps.js"
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -58,7 +58,7 @@ export var importStaticGtfsData = async (req, res) => {
 
   try {
     // Read ZIP timestamps and download/extract if newer
-    const temp = await getZipTimestamps()
+    const temp = await readZipTimestamps()
 
     if (temp === "SameDate") {
       return res
@@ -70,22 +70,17 @@ export var importStaticGtfsData = async (req, res) => {
     } else {
       console.log("Proceeding with GTFS data import...")
 
-      // Ensure GTFS tables exist in PostgreSQL
-      const createTablesResults = await createGTFSTables()
-
       // Fetch URL for GTFS static data from environment variable
       const gtfsStaticDataUrl = process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH
-      console.log(`GTFS Static Data URL: ${gtfsStaticDataUrl}`)
 
       // Fetch GTFS static data from URL
       if (!gtfsStaticDataUrl) {
         throw new Error("GTFS static data URL is not defined")
       } else {
         console.log("Fetching GTFS static data...")
-      }
-      const fetchGTFSDataResults = await importGTFSStaticData()
 
-      console.log(fetchGTFSDataResults)
+        await importGTFSStaticData()
+      }
 
       try {
         const duration = Date.now() - startTime.getTime()

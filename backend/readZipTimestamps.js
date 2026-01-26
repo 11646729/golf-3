@@ -17,9 +17,7 @@ const masterZipPath =
   process.env.TRANSPORT_FOR_IRELAND_FILEPATH ||
   "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
 
-// getZipTimestamps()
-
-export default async function getZipTimestamps() {
+export default async function readZipTimestamps() {
   try {
     await fs.promises.mkdir(dataDir, { recursive: true })
 
