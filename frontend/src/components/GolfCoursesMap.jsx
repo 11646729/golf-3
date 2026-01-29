@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   APIProvider,
   Map,
@@ -25,6 +25,38 @@ const defaultMapCenter = {
   lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
   lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
 }
+
+const MapErrorFallback = ({ error }) => (
+  <div
+    style={{
+      height: "750px",
+      width: "750px",
+      border: "1px solid #ccc",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#f5f5f5",
+      borderRadius: "4px",
+    }}
+  >
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      <h3 style={{ color: "#d32f2f", marginBottom: "10px" }}>
+        Unable to Load Map
+      </h3>
+      <p style={{ color: "#666", marginBottom: "10px" }}>
+        {error || "Google Maps failed to load"}
+      </p>
+      <p style={{ fontSize: "12px", color: "#999" }}>
+        Please check your Google Maps API key configuration and ensure it has
+        the required APIs enabled (Maps SDK for JavaScript).
+      </p>
+      <p style={{ fontSize: "12px", color: "#999", marginTop: "10px" }}>
+        Error details: Check the browser console for more information.
+      </p>
+    </div>
+  </div>
+)
 
 // Helper to parse and validate coordinates
 const parseCoordinate = (value) => {
@@ -53,17 +85,21 @@ const FitBoundsLayer = ({ courses }) => {
       return
     }
 
-    // Adjust the viewport so every course marker is visible
-    const bounds = new window.google.maps.LatLngBounds()
-    courses.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
+    try {
+      // Adjust the viewport so every course marker is visible
+      const bounds = new window.google.maps.LatLngBounds()
+      courses.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
 
-    if (courses.length === 1) {
-      map.setCenter(bounds.getCenter())
-      map.setZoom(Math.min(map.getZoom() ?? defaultMapZoom, 15))
-      return
+      if (courses.length === 1) {
+        map.setCenter(bounds.getCenter())
+        map.setZoom(Math.min(map.getZoom() ?? defaultMapZoom, 15))
+        return
+      }
+
+      map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
+    } catch (error) {
+      console.error("Error fitting map bounds:", error)
     }
-
-    map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
   }, [map, courses])
 
   return null
@@ -89,13 +125,49 @@ const CustomCircle = ({
 )
 
 const GolfCoursesMap = ({ golfcourses = [] }) => {
+  const [mapError, setMapError] = useState(null)
   const validCourses = useMemo(
     () => getValidCourses(golfcourses),
     [golfcourses],
   )
 
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+
+  // Validate API key is configured
+  if (!apiKey) {
+    const errorMsg =
+      "Google Maps API key is not configured. Please set VITE_GOOGLE_MAPS_API_KEY in your .env file."
+    console.error(errorMsg)
+    return (
+      <>
+        <Title>{GolfCoursesMapTitle}</Title>
+        <MapErrorFallback error={errorMsg} />
+      </>
+    )
+  }
+
+  // Handle API loading errors
+  const handleApiLoadError = (error) => {
+    const errorMsg = `Google Maps API Error: ${error?.message || "Unknown error"}`
+    console.error(errorMsg, error)
+    setMapError(errorMsg)
+  }
+
+  if (mapError) {
+    return (
+      <>
+        <Title>{GolfCoursesMapTitle}</Title>
+        <MapErrorFallback error={mapError} />
+      </>
+    )
+  }
+
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+    <APIProvider
+      apiKey={apiKey}
+      onLoad={() => console.log("Google Maps API loaded successfully")}
+      onLoadError={handleApiLoadError}
+    >
       <Title>{GolfCoursesMapTitle}</Title>
       <div className="golfcoursesmapcontainer">
         <Map
