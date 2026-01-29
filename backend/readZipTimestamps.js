@@ -31,8 +31,6 @@ export default async function readZipTimestamps() {
       ? new Date(remoteLastModifiedHeader)
       : null
 
-    console.log("HTTP Last-Modified:", remoteLastModifiedHeader || "N/A")
-
     let isSameDate = false
     if (
       fs.existsSync(localZipPath) &&
@@ -51,12 +49,12 @@ export default async function readZipTimestamps() {
     if (isSameDate) {
       const temp = "SameDate"
       // Same Date - skip download and extraction
-      console.log("Same Date - Do Not Download new ZIP file")
       return temp
     } else {
       const temp = "DifferentDate"
       // Different Date or no local file - download and extract
       console.log("Downloading ZIP (newer or missing locally)...")
+
       const response = await fetch(masterZipPath)
       if (!response.ok) {
         throw new Error(`Download failed with status ${response.status}`)

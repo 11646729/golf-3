@@ -8,7 +8,6 @@
     "start": "DOTENV_CONFIG_QUIET=true node server.js",
     "dev": "DOTENV_CONFIG_QUIET=true nodemon server.js",
     "migrate:vessels": "node migrations/add_vessel_columns.js",
-    "migrate:postgres": "node migrations/sqlite_to_postgres_migration.js",
     "test": "node objecttest.js",
     "test1": "node isInsideArea.js",
     "googletest": "node googlemappolygon,html"

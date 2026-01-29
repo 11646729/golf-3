@@ -17,7 +17,7 @@ export const loadStaticGTFSDataHandler = async () => {
   await axios
     .post(url, params, config)
     .then(() =>
-      alert("Static GTFS data has been imported into PostgreSQL database")
+      alert("Static GTFS data is up to date in the PostgreSQL database."),
     )
     .catch((err) => console.log(err))
 }
@@ -30,7 +30,6 @@ export const getAllAgenciesFrontEnd = async (url) => {
   if (url == null) return
 
   // Ok to headers
-  const params = {}
   const config = {
     timeout: 20000,
     headers: {
@@ -38,7 +37,7 @@ export const getAllAgenciesFrontEnd = async (url) => {
     },
   }
 
-  const responseData = await axios.get(url, params, config)
+  const responseData = await axios.get(url, config)
 
   return responseData.data.map(function (row) {
     return { agencyid: row.agency_id, label: row.agency_name }
@@ -50,7 +49,7 @@ export const getAllAgenciesFrontEnd = async (url) => {
 // -------------------------------------------------------
 export const getRoutesForSingleAgencyFrontEnd = async (
   url,
-  transportAgencyId
+  transportAgencyId,
 ) => {
   // Guard clauses
   if (url == null) return
@@ -82,7 +81,7 @@ export const getRoutesForSingleAgencyFrontEnd = async (
 export const getShapesForSingleRouteFrontEnd = async (
   url,
   transportRouteId,
-  transportRoutesArray
+  transportRoutesArray,
 ) => {
   // Guard clauses
   if (url == null) return
@@ -146,7 +145,7 @@ const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
     if (tempArray.length > 0) {
       tempArray.sort(
         (a, b) =>
-          parseFloat(a.shape_pt_sequence) - parseFloat(b.shape_pt_sequence)
+          parseFloat(a.shape_pt_sequence) - parseFloat(b.shape_pt_sequence),
       )
 
       // Iterate over shape_pt_sequence & store all lat & lng values in an object
@@ -184,7 +183,7 @@ const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
 export const getStopsForSingleRouteFrontEnd = async (
   url,
   transportRouteId,
-  transportRoutesArray
+  transportRoutesArray,
 ) => {
   // Guard clauses
   if (url == null) return
@@ -192,7 +191,6 @@ export const getStopsForSingleRouteFrontEnd = async (
   if (transportRoutesArray.length === 0) return
 
   // Ok to headers
-  const params = {}
   const config = {
     timeout: 20000,
     headers: {
@@ -201,7 +199,7 @@ export const getStopsForSingleRouteFrontEnd = async (
   }
 
   return await axios
-    .get(url, params, config)
+    .get(url, config)
     .then((response) => response.data)
     .catch((err) => console.log(err))
 }

@@ -91,7 +91,7 @@ const CustomCircle = ({
 const GolfCoursesMap = ({ golfcourses = [] }) => {
   const validCourses = useMemo(
     () => getValidCourses(golfcourses),
-    [golfcourses]
+    [golfcourses],
   )
 
   return (
@@ -109,7 +109,7 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
           <FitBoundsLayer courses={validCourses} />
           {validCourses.map((course) => (
             <AdvancedMarker
-              key={course.name}
+              key={course.courseid}
               position={{ lat: course.lat, lng: course.lng }}
             >
               <CustomCircle />

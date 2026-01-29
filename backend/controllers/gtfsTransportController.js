@@ -1,19 +1,17 @@
-import {
-  updateGtfsRealtime,
-  closeDb,
-  openDb,
-  getAgencies,
-  getRoutes,
-  getShapes,
-  getStops,
-  getVehiclePositions,
-  getTripUpdates,
-  getTrips,
-} from "gtfs"
 import { DatabaseAdapter } from "../databaseUtilities.js"
-import { createGTFSTables } from "../createGTFSTables/createGTFSTables.js"
 import { importGTFSStaticData } from "../importGTFSStaticData.js"
 import readZipTimestamps from "../readZipTimestamps.js"
+import readRouteFile from "../readGtfsFiles.js"
+
+// Load GTFS config
+const defaultConfigPath = new URL(
+  "../gtfs_config_files/configTransportForIrelandPostgres.json",
+  import.meta.url,
+).pathname
+
+const config = readRouteFile(
+  process.env.TRANSPORT_FOR_IRELAND_FILEPATH || defaultConfigPath,
+)
 
 // Database adapter for PostgreSQL integration (for logging, analytics, etc.) - created lazily
 let db = null
@@ -61,6 +59,8 @@ export var importStaticGtfsData = async (req, res) => {
     const temp = await readZipTimestamps()
 
     if (temp === "SameDate") {
+      console.log("GTFS data is already up to date; no import needed.")
+
       return res
         .send({
           status: "no_update",
@@ -68,7 +68,8 @@ export var importStaticGtfsData = async (req, res) => {
         })
         .status(200)
     } else {
-      console.log("Proceeding with GTFS data import...")
+      // Import GTFS static data into PostgreSQL
+      console.log("Importing GTFS static data into PostgreSQL...")
 
       // Fetch URL for GTFS static data from environment variable
       const gtfsStaticDataUrl = process.env.RAW_TRANSPORT_FOR_IRELAND_FILEPATH
@@ -80,6 +81,15 @@ export var importStaticGtfsData = async (req, res) => {
         console.log("Fetching GTFS static data...")
 
         await importGTFSStaticData()
+
+        console.log("GTFS static data import complete.")
+
+        return res
+          .send({
+            status: "success",
+            message: "GTFS data is up to date",
+          })
+          .status(200)
       }
 
       try {
@@ -107,8 +117,6 @@ export var importStaticGtfsData = async (req, res) => {
     } catch (logError) {
       console.log("Failed to log import failure:", logError.message)
     }
-
-    res.status(500).send({ status: "error", message: error.message })
   }
 }
 
@@ -119,7 +127,9 @@ export var updateRealtimeGtfsToPostgreSQL = async () => {
   const startTime = new Date()
 
   try {
-    await updateGtfsRealtime(config)
+    // TODO: Implement PostgreSQL-based GTFS realtime update
+    // The gtfs library's updateGtfsRealtime uses SQLite and has been removed
+    console.log("GTFS realtime update - PostgreSQL implementation needed")
 
     // Log successful realtime update to PostgreSQL
     await getDb().run(
@@ -150,40 +160,30 @@ export var startRegularUpdatesOfRealtimeGTFSData = async () => {
 
 // -------------------------------------------------------
 // Get All Transport Agencies
-// Path: localhost:4000/api/gtfs/agencies
+// Path: localhost:4000/api/gtfs/transportagencies
 // -------------------------------------------------------
 export var getAllAgencies = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const agencies = await getDb().all(
+      `SELECT agency_id, agency_name FROM agency`,
+    )
 
-  if (gtfsDb !== null) {
-    try {
-      const agencies = getAgencies(
-        {}, // No query filters
-        ["agency_id", "agency_name"], // Only return these fields
-      )
+    // Log successful query to PostgreSQL
+    await getDb().run(
+      `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+       VALUES (?, ?, ?, ?)`,
+      [
+        "/api/gtfs/transportagencies",
+        new Date().toISOString(),
+        req.ip || "unknown",
+        agencies.length,
+      ],
+    )
 
-      // Log successful query to PostgreSQL
-      await getDb().run(
-        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-         VALUES (?, ?, ?, ?)`,
-        [
-          "/api/gtfs/agencies",
-          new Date().toISOString(),
-          req.ip || "unknown",
-          agencies.length,
-        ],
-      )
-
-      res.send(agencies)
-    } catch (e) {
-      console.error(e.message)
-      res.status(500).send({ error: "Failed to fetch agencies" })
-    }
-
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
-    res.status(500).send({ error: "Database connection failed" })
+    res.send(agencies)
+  } catch (e) {
+    console.error(e.message)
+    res.status(500).send({ error: "Failed to fetch agencies" })
   }
 }
 
@@ -192,37 +192,29 @@ export var getAllAgencies = async (req, res) => {
 // Path: localhost:4000/api/gtfs/routesforsingleagency
 // -------------------------------------------------------
 export var getRoutesForSingleAgency = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const transportRoutes = await getDb().all(
+      `SELECT route_id, agency_id, route_short_name, route_long_name 
+       FROM routes WHERE agency_id = ?`,
+      [req.query.transportAgencyId],
+    )
 
-  if (gtfsDb !== null) {
-    try {
-      const transportRoutes = getRoutes(
-        { agency_id: req.query.transportAgencyId }, // Query filters
-        ["route_id", "agency_id", "route_short_name", "route_long_name"], // Only return these fields
-      )
+    // Log successful query to PostgreSQL
+    await getDb().run(
+      `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+       VALUES (?, ?, ?, ?)`,
+      [
+        "/api/gtfs/routesforsingleagency",
+        new Date().toISOString(),
+        req.ip || "unknown",
+        transportRoutes.length,
+      ],
+    )
 
-      // Log successful query to PostgreSQL
-      await getDb().run(
-        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-         VALUES (?, ?, ?, ?)`,
-        [
-          "/api/gtfs/routesforsingleagency",
-          new Date().toISOString(),
-          req.ip || "unknown",
-          transportRoutes.length,
-        ],
-      )
-
-      res.send(transportRoutes)
-    } catch (e) {
-      console.error(e.message)
-      res.status(500).send({ error: "Failed to fetch routes" })
-    }
-
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
-    res.status(500).send({ error: "Database connection failed" })
+    res.send(transportRoutes)
+  } catch (e) {
+    console.error(e.message)
+    res.status(500).send({ error: "Failed to fetch routes" })
   }
 }
 
@@ -231,37 +223,31 @@ export var getRoutesForSingleAgency = async (req, res) => {
 // Path: localhost:4000/api/gtfs/shapesforsingleroute
 // -------------------------------------------------------
 export var getShapesForSingleRoute = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const transportShapes = await getDb().all(
+      `SELECT shape_id, shape_pt_lat, shape_pt_lon, shape_pt_sequence 
+       FROM shapes WHERE shape_id IN (
+         SELECT DISTINCT shape_id FROM trips WHERE route_id = ?
+       ) ORDER BY shape_pt_sequence ASC`,
+      [req.query.routeId],
+    )
 
-  if (gtfsDb !== null) {
-    try {
-      const transportShapes = getShapes(
-        { route_id: req.query.routeId }, // Query filters
-        ["shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence"], // Only return these fields
-      )
+    // Log successful query to PostgreSQL
+    await getDb().run(
+      `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+       VALUES (?, ?, ?, ?)`,
+      [
+        "/api/gtfs/shapesforsingleroute",
+        new Date().toISOString(),
+        req.ip || "unknown",
+        transportShapes.length,
+      ],
+    )
 
-      // Log successful query to PostgreSQL
-      await getDb().run(
-        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-         VALUES (?, ?, ?, ?)`,
-        [
-          "/api/gtfs/shapesforsingleroute",
-          new Date().toISOString(),
-          req.ip || "unknown",
-          transportShapes.length,
-        ],
-      )
-
-      res.send(transportShapes)
-    } catch (e) {
-      console.error(e.message)
-      res.status(500).send({ error: "Failed to fetch shapes" })
-    }
-
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
-    res.status(500).send({ error: "Database connection failed" })
+    res.send(transportShapes)
+  } catch (e) {
+    console.error(e.message)
+    res.status(500).send({ error: "Failed to fetch shapes" })
   }
 }
 
@@ -270,38 +256,33 @@ export var getShapesForSingleRoute = async (req, res) => {
 // Path: localhost:4000/api/gtfs/stopsforsingleroute
 // -------------------------------------------------------
 export var getStopsForSingleRoute = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const transportStops = await getDb().all(
+      `SELECT DISTINCT s.stop_id, s.stop_lat, s.stop_lon 
+       FROM stops s
+       JOIN stop_times st ON s.stop_id = st.stop_id
+       JOIN trips t ON st.trip_id = t.trip_id
+       WHERE t.route_id = ?
+       ORDER BY s.stop_id ASC`,
+      [req.query.routeId],
+    )
 
-  if (gtfsDb !== null) {
-    try {
-      const transportStops = getStops(
-        { route_id: req.query.routeId }, // Query filters
-        ["stop_id", "stop_lat", "stop_lon"], // Only return these fields
-        [["stop_id", "ASC"]], // Sort by this field and direction
-      )
+    // Log successful query to PostgreSQL
+    await getDb().run(
+      `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+       VALUES (?, ?, ?, ?)`,
+      [
+        "/api/gtfs/stopsforsingleroute",
+        new Date().toISOString(),
+        req.ip || "unknown",
+        transportStops.length,
+      ],
+    )
 
-      // Log successful query to PostgreSQL
-      await getDb().run(
-        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-         VALUES (?, ?, ?, ?)`,
-        [
-          "/api/gtfs/stopsforsingleroute",
-          new Date().toISOString(),
-          req.ip || "unknown",
-          transportStops.length,
-        ],
-      )
-
-      res.send(transportStops)
-    } catch (e) {
-      console.error(e.message)
-      res.status(500).send({ error: "Failed to fetch stops" })
-    }
-
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
-    res.status(500).send({ error: "Database connection failed" })
+    res.send(transportStops)
+  } catch (e) {
+    console.error(e.message)
+    res.status(500).send({ error: "Failed to fetch stops" })
   }
 }
 
@@ -310,43 +291,34 @@ export var getStopsForSingleRoute = async (req, res) => {
 // Path: localhost:4000/api/gtfs/vehiclepositions
 // -------------------------------------------------------
 export const getAllVehiclePositions = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const vehiclePositions = await getDb().all(
+      `SELECT vehicle_id, latitude, longitude 
+       FROM vehicle_positions WHERE trip_id = ?`,
+      ["4039_7117"],
+    )
 
-  if (gtfsDb !== null) {
-    try {
-      const vehiclePositions = getVehiclePositions(
-        { trip_id: "4039_7117" }, // Query filters
-        ["vehicle_id", "latitude", "longitude"], // Only return these fields
+    console.log(vehiclePositions)
+
+    if (res) {
+      // Log successful query to PostgreSQL
+      await getDb().run(
+        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+         VALUES (?, ?, ?, ?)`,
+        [
+          "/api/gtfs/vehiclepositions",
+          new Date().toISOString(),
+          req?.ip || "unknown",
+          vehiclePositions.length,
+        ],
       )
 
-      console.log(vehiclePositions)
-
-      if (res) {
-        // Log successful query to PostgreSQL
-        await getDb().run(
-          `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-           VALUES (?, ?, ?, ?)`,
-          [
-            "/api/gtfs/vehiclepositions",
-            new Date().toISOString(),
-            req?.ip || "unknown",
-            vehiclePositions.length,
-          ],
-        )
-
-        res.send(vehiclePositions)
-      }
-    } catch (e) {
-      console.error(e.message)
-      if (res) {
-        res.status(500).send({ error: "Failed to fetch vehicle positions" })
-      }
+      res.send(vehiclePositions)
     }
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
+  } catch (e) {
+    console.error(e.message)
     if (res) {
-      res.status(500).send({ error: "Database connection failed" })
+      res.status(500).send({ error: "Failed to fetch vehicle positions" })
     }
   }
 }
@@ -356,42 +328,32 @@ export const getAllVehiclePositions = async (req, res) => {
 // Path: localhost:4000/api/gtfs/trips
 // -------------------------------------------------------
 const getAllTrips = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const trips = await getDb().all(
+      `SELECT * FROM trips WHERE route_id = ? AND direction_id = ?`,
+      ["4021_65706", 1],
+    )
+    console.log(trips)
 
-  if (gtfsDb !== null) {
-    try {
-      const trips = getTrips({
-        route_id: "4021_65706",
-        direction_id: 1,
-      })
-      console.log(trips)
-
-      if (res) {
-        // Log successful query to PostgreSQL
-        await getDb().run(
-          `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-           VALUES (?, ?, ?, ?)`,
-          [
-            "/api/gtfs/trips",
-            new Date().toISOString(),
-            req?.ip || "unknown",
-            trips.length,
-          ],
-        )
-
-        res.send(trips)
-      }
-    } catch (e) {
-      console.error(e.message)
-      if (res) {
-        res.status(500).send({ error: "Failed to fetch trips" })
-      }
-    }
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
     if (res) {
-      res.status(500).send({ error: "Database connection failed" })
+      // Log successful query to PostgreSQL
+      await getDb().run(
+        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+         VALUES (?, ?, ?, ?)`,
+        [
+          "/api/gtfs/trips",
+          new Date().toISOString(),
+          req?.ip || "unknown",
+          trips.length,
+        ],
+      )
+
+      res.send(trips)
+    }
+  } catch (e) {
+    console.error(e.message)
+    if (res) {
+      res.status(500).send({ error: "Failed to fetch trips" })
     }
   }
 }
@@ -401,39 +363,29 @@ const getAllTrips = async (req, res) => {
 // Path: localhost:4000/api/gtfs/tripupdates
 // -------------------------------------------------------
 const getAllTripUpdates = async (req, res) => {
-  const gtfsDb = openDb(config)
+  try {
+    const tripUpdates = await getDb().all(`SELECT * FROM trip_updates`)
+    console.log(tripUpdates)
 
-  if (gtfsDb !== null) {
-    try {
-      const tripUpdates = getTripUpdates()
-      console.log(tripUpdates)
-
-      if (res) {
-        // Log successful query to PostgreSQL
-        await getDb().run(
-          `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
-           VALUES (?, ?, ?, ?)`,
-          [
-            "/api/gtfs/tripupdates",
-            new Date().toISOString(),
-            req?.ip || "unknown",
-            tripUpdates.length,
-          ],
-        )
-
-        res.send(tripUpdates)
-      }
-    } catch (e) {
-      console.error(e.message)
-      if (res) {
-        res.status(500).send({ error: "Failed to fetch trip updates" })
-      }
-    }
-    closeDb(gtfsDb)
-  } else {
-    console.error("Cannot connect to GTFS database")
     if (res) {
-      res.status(500).send({ error: "Database connection failed" })
+      // Log successful query to PostgreSQL
+      await getDb().run(
+        `INSERT INTO api_access_log (endpoint, timestamp, ip_address, record_count) 
+         VALUES (?, ?, ?, ?)`,
+        [
+          "/api/gtfs/tripupdates",
+          new Date().toISOString(),
+          req?.ip || "unknown",
+          tripUpdates.length,
+        ],
+      )
+
+      res.send(tripUpdates)
+    }
+  } catch (e) {
+    console.error(e.message)
+    if (res) {
+      res.status(500).send({ error: "Failed to fetch trip updates" })
     }
   }
 }
