@@ -40,11 +40,11 @@ const NearbyCrimesMap = (props) => {
       lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
       lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
     }),
-    []
+    [],
   )
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div className="nearbycrimesmapcontainer">
         <Title>{NearbyCrimesMapTitle}</Title>
         <Map

@@ -31,7 +31,7 @@ const TransportRoutesMap = (props) => {
 
   const [map, setMap] = useState(null)
   const [mapZoom] = useState(
-    parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+    parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10),
   )
   const [mapCenter] = useState({
     lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
@@ -57,18 +57,25 @@ const TransportRoutesMap = (props) => {
     setMap(null)
   }, [])
 
+  // Helper to parse and validate coordinates
+  const parseCoordinate = (value) => {
+    const num = parseFloat(value)
+    return Number.isFinite(num) ? num : null
+  }
+
   // Now compute bounds of map to display
   useEffect(() => {
     if (map) {
       if (transportStopsArray.length > 0) {
         const bounds = new window.google.maps.LatLngBounds()
 
-        transportStopsArray.map((transportStop) =>
-          bounds.extend({
-            lat: transportStop.stop_lat,
-            lng: transportStop.stop_lon,
-          })
-        )
+        transportStopsArray.forEach((transportStop) => {
+          const lat = parseCoordinate(transportStop.stop_lat)
+          const lng = parseCoordinate(transportStop.stop_lon)
+          if (lat !== null && lng !== null) {
+            bounds.extend({ lat, lng })
+          }
+        })
         map.fitBounds(bounds)
       }
     }
@@ -100,7 +107,7 @@ const TransportRoutesMap = (props) => {
   }
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div>
         <div>
           <Title>{transportAgencyName}</Title>
@@ -134,19 +141,25 @@ const TransportRoutesMap = (props) => {
                 ))
               : null} */}
             {transportStopsArray
-              ? transportStopsArray.map((transportStop) => (
-                  <Marker
-                    key={transportStop.stop_id}
-                    position={{
-                      lat: transportStop.stop_lat,
-                      lng: transportStop.stop_lon,
-                    }}
-                    icon={transportStopIcon}
-                    // onClick={() => {
-                    //   handleBusStopClick()
-                    // }}
-                  />
-                ))
+              ? transportStopsArray
+                  .filter((transportStop) => {
+                    const lat = parseCoordinate(transportStop.stop_lat)
+                    const lng = parseCoordinate(transportStop.stop_lon)
+                    return lat !== null && lng !== null
+                  })
+                  .map((transportStop) => (
+                    <Marker
+                      key={transportStop.stop_id}
+                      position={{
+                        lat: parseCoordinate(transportStop.stop_lat),
+                        lng: parseCoordinate(transportStop.stop_lon),
+                      }}
+                      icon={transportStopIcon}
+                      // onClick={() => {
+                      //   handleBusStopClick()
+                      // }}
+                    />
+                  ))
               : null}
             {/* {transportStopSelected ? (
               <InfoWindow
