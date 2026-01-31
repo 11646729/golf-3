@@ -1,15 +1,82 @@
-import { useState, useEffect, useCallback, memo } from "react"
+import { useState, useEffect, memo, useMemo } from "react"
 import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
-  Marker,
+  AdvancedMarker,
+  useMap,
   // Polyline,
   // InfoWindow,
 } from "@vis.gl/react-google-maps"
+import Title from "./Title"
 import "../styles/transportroutes.scss"
 
-import Title from "./Title"
+// Helper to parse and validate coordinates
+const parseCoordinate = (value) => {
+  const num = parseFloat(value)
+  return Number.isFinite(num) ? num : null
+}
+
+// Helper to get valid transport stops with parsed coordinates
+const getValidStops = (stops = []) =>
+  stops.reduce((list, stop) => {
+    const lat = parseCoordinate(stop.stop_lat)
+    const lng = parseCoordinate(stop.stop_lon)
+
+    if (lat === null || lng === null) {
+      return list
+    }
+
+    list.push({ ...stop, lat, lng })
+    return list
+  }, [])
+
+const FitBoundsLayer = ({ stops, defaultZoom }) => {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!map || stops.length === 0) {
+      return
+    }
+
+    try {
+      // Adjust the viewport so every stop marker is visible
+      const bounds = new window.google.maps.LatLngBounds()
+      stops.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
+
+      if (stops.length === 1) {
+        map.setCenter(bounds.getCenter())
+        map.setZoom(Math.min(map.getZoom() ?? defaultZoom, 15))
+        return
+      }
+
+      map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
+    } catch (error) {
+      console.error("Error fitting map bounds:", error)
+    }
+  }, [map, stops, defaultZoom])
+
+  return null
+}
+
+const CustomCircle = ({
+  color = "#6dbef1",
+  size = 10,
+  borderColor = "#ffffff",
+  borderWidth = 1,
+}) => (
+  <div
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      backgroundColor: color,
+      borderRadius: "50%",
+      border: `${borderWidth}px solid ${borderColor}`,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+      cursor: "pointer",
+    }}
+  />
+)
 
 // -------------------------------------------------------
 // React View component
@@ -29,7 +96,6 @@ const TransportRoutesMap = (props) => {
     transportStopsArray: PropTypes.array,
   }
 
-  const [map, setMap] = useState(null)
   const [mapZoom] = useState(
     parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10),
   )
@@ -47,39 +113,13 @@ const TransportRoutesMap = (props) => {
     marginBottom: 20,
   }
 
-  // Store a reference to the google map instance in state
-  const onLoadHandler = useCallback((Mymap) => {
-    setMap(Mymap)
-  }, [])
+  // Memoize valid stops to avoid recalculating on every render
+  const validStops = useMemo(
+    () => getValidStops(transportStopsArray),
+    [transportStopsArray],
+  )
 
-  // Clear the reference to the google map instance
-  const onUnmountHandler = useCallback(() => {
-    setMap(null)
-  }, [])
-
-  // Helper to parse and validate coordinates
-  const parseCoordinate = (value) => {
-    const num = parseFloat(value)
-    return Number.isFinite(num) ? num : null
-  }
-
-  // Now compute bounds of map to display
-  useEffect(() => {
-    if (map) {
-      if (transportStopsArray.length > 0) {
-        const bounds = new window.google.maps.LatLngBounds()
-
-        transportStopsArray.forEach((transportStop) => {
-          const lat = parseCoordinate(transportStop.stop_lat)
-          const lng = parseCoordinate(transportStop.stop_lon)
-          if (lat !== null && lng !== null) {
-            bounds.extend({ lat, lng })
-          }
-        })
-        map.fitBounds(bounds)
-      }
-    }
-  }, [map, transportStopsArray])
+  console.log("Valid Stops:", validStops)
 
   // const handleTransportStopClick = (event) => {
   //   console.log(event)
@@ -97,15 +137,6 @@ const TransportRoutesMap = (props) => {
   //   // setTransportRouteSelected(transportRoute)
   // }
 
-  const transportStopIcon = {
-    path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
-    fillColor: "#6dbef1",
-    fillOpacity: 0.7,
-    scale: 0.015, // to reduce the size of icons
-    strokeColor: "#1342B4",
-    strokeWeight: 1,
-  }
-
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div>
@@ -120,9 +151,8 @@ const TransportRoutesMap = (props) => {
             mapId="transport-routes-map"
             disableDefaultUI={true}
             zoomControl={true}
-            onLoad={onLoadHandler}
-            onUnmount={onUnmountHandler}
           >
+            <FitBoundsLayer stops={validStops} defaultZoom={mapZoom} />
             {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
             {/* {transportShapesArray
               ? transportShapesArray.map((transportShape) => (
@@ -140,44 +170,14 @@ const TransportRoutesMap = (props) => {
                   />
                 ))
               : null} */}
-            {transportStopsArray
-              ? transportStopsArray
-                  .filter((transportStop) => {
-                    const lat = parseCoordinate(transportStop.stop_lat)
-                    const lng = parseCoordinate(transportStop.stop_lon)
-                    return lat !== null && lng !== null
-                  })
-                  .map((transportStop) => (
-                    <Marker
-                      key={transportStop.stop_id}
-                      position={{
-                        lat: parseCoordinate(transportStop.stop_lat),
-                        lng: parseCoordinate(transportStop.stop_lon),
-                      }}
-                      icon={transportStopIcon}
-                      // onClick={() => {
-                      //   handleBusStopClick()
-                      // }}
-                    />
-                  ))
-              : null}
-            {/* {transportStopSelected ? (
-              <InfoWindow
-                position={{
-                  lat: transportStopSelected.stop_lat,
-                  lng: transportStopSelected.stop_lon,
-                }}
-                onCloseClick={() => {
-                  setTransportStopSelected(null)
-                }}
+            {validStops.map((transportStop) => (
+              <AdvancedMarker
+                key={transportStop.stop_id}
+                position={{ lat: transportStop.lat, lng: transportStop.lng }}
               >
-                <div style={classes.divStyle}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {transportStopSelected.stop_name}
-                  </Typography>
-                </div>
-              </InfoWindow>
-            ) : null} */}
+                <CustomCircle />
+              </AdvancedMarker>
+            ))}
           </Map>
         </div>
       </div>
