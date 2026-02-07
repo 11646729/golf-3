@@ -119,7 +119,7 @@ const getShapeIDs = (busShapesArray) => {
   ]
 
   // And sort into ascending order
-  uniqueShapeIds.sort((a, b) => parseFloat(a.shape_id) - parseFloat(b.shape_id))
+  uniqueShapeIds.sort((a, b) => parseFloat(a) - parseFloat(b))
 
   return uniqueShapeIds
 }
@@ -129,6 +129,11 @@ const getShapeIDs = (busShapesArray) => {
 // -------------------------------------------------------
 const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
   const modifiedShapeArray = []
+
+  const parseCoordinate = (value) => {
+    const num = parseFloat(value)
+    return Number.isFinite(num) ? num : null
+  }
 
   for (let k = 0; k < uniqueShapeIDs.length; k += 1) {
     const tempArray = []
@@ -151,26 +156,28 @@ const reformatShapesData = (uniqueShapeIDs, busShapesArray) => {
       // Iterate over shape_pt_sequence & store all lat & lng values in an object
       let j = 0
       do {
-        const coords = {
-          lat: tempArray[j].shape_pt_lat,
-          lng: tempArray[j].shape_pt_lon,
-        }
+        const lat = parseCoordinate(tempArray[j].shape_pt_lat)
+        const lng = parseCoordinate(tempArray[j].shape_pt_lon)
 
-        finalArray.push(coords)
+        if (lat !== null && lng !== null) {
+          finalArray.push({ lat, lng })
+        }
 
         j += 1
       } while (j < tempArray.length)
 
       // Add other relevant values into the object
-      const modifiedShape = {
-        shapeKey: uniqueShapeIDs[k],
-        shapeCoordinates: finalArray,
-        display: "yes",
-        defaultColor: "#C2272D",
-      }
+      if (finalArray.length > 0) {
+        const modifiedShape = {
+          shapeKey: uniqueShapeIDs[k],
+          shapeCoordinates: finalArray,
+          display: "yes",
+          defaultColor: "#C2272D",
+        }
 
-      // Store the object in modifiedShapeArray
-      modifiedShapeArray.push(modifiedShape)
+        // Store the object in modifiedShapeArray
+        modifiedShapeArray.push(modifiedShape)
+      }
     }
   }
 

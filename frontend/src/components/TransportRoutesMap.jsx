@@ -1,15 +1,24 @@
-import { useState, useEffect, memo, useMemo } from "react"
+import { useState, useEffect, useCallback, memo, useMemo } from "react"
 import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
   AdvancedMarker,
   useMap,
-  // Polyline,
-  // InfoWindow,
+  InfoWindow,
 } from "@vis.gl/react-google-maps"
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Link,
+  CardActions,
+} from "@mui/material"
 import Title from "./Title"
 import "../styles/transportroutes.scss"
+import { Polyline } from "../../polyline"
 
 // Helper to parse and validate coordinates
 const parseCoordinate = (value) => {
@@ -96,6 +105,8 @@ const TransportRoutesMap = (props) => {
     transportStopsArray: PropTypes.array,
   }
 
+  console.log(transportShapesArray)
+
   const [mapZoom] = useState(
     parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10),
   )
@@ -103,6 +114,7 @@ const TransportRoutesMap = (props) => {
     lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
     lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   })
+  const [selectedMarker, setSelectedMarker] = useState(null)
 
   const mapContainerStyle = {
     height: "750px",
@@ -119,13 +131,15 @@ const TransportRoutesMap = (props) => {
     [transportStopsArray],
   )
 
-  console.log("Valid Stops:", validStops)
+  // Memoize the selected stop object
+  const selectedStop = useMemo(() => {
+    if (!selectedMarker) return null
+    return validStops.find((stop) => stop.stop_id === selectedMarker) || null
+  }, [selectedMarker, validStops])
 
-  // const handleTransportStopClick = (event) => {
-  //   console.log(event)
-  //   // console.log(transportStopSelected)
-  //   // setTransportStopSelected(transportStop)
-  // }
+  const handleMarkerClick = useCallback((markerId) => {
+    setSelectedMarker(markerId)
+  }, [])
 
   // const handleTransportShapeClick = (event) => {
   //   console.log(event)
@@ -153,31 +167,67 @@ const TransportRoutesMap = (props) => {
             zoomControl={true}
           >
             <FitBoundsLayer stops={validStops} defaultZoom={mapZoom} />
+
             {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
-            {/* {transportShapesArray
+            {transportShapesArray
               ? transportShapesArray.map((transportShape) => (
                   <Polyline
                     key={transportShape.shapeKey}
                     path={transportShape.shapeCoordinates}
                     options={{
-                      strokeColor: transportShape.defaultColor,
+                      strokeColor: "#FF0000",
                       strokeOpacity: "1.0",
-                      strokeWeight: 2,
+                      strokeWeight: 1,
                     }}
                     // onClick={() => {
                     //   handleTransportShapeClick()
                     // }}
                   />
                 ))
-              : null} */}
+              : null}
             {validStops.map((transportStop) => (
               <AdvancedMarker
                 key={transportStop.stop_id}
                 position={{ lat: transportStop.lat, lng: transportStop.lng }}
+                onClick={() => handleMarkerClick(transportStop.stop_id)}
               >
                 <CustomCircle />
               </AdvancedMarker>
             ))}
+            {selectedStop && (
+              <InfoWindow
+                position={{
+                  lat: selectedStop.lat,
+                  lng: selectedStop.lng,
+                }}
+                onCloseClick={() => setSelectedMarker(null)}
+              >
+                <Card>
+                  <CardMedia
+                    style={{
+                      height: 0,
+                      paddingTop: "40%",
+                      marginTop: "30",
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {selectedStop.stop_name || "Unnamed Stop"}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      component={Link}
+                      // to="/golfcoursespage"§
+                    >
+                      View
+                    </Button>
+                  </CardActions>
+                </Card>
+              </InfoWindow>
+            )}
           </Map>
         </div>
       </div>

@@ -258,7 +258,7 @@ export var getShapesForSingleRoute = async (req, res) => {
 export var getStopsForSingleRoute = async (req, res) => {
   try {
     const transportStops = await getDb().all(
-      `SELECT DISTINCT s.stop_id, s.stop_lat, s.stop_lon 
+      `SELECT DISTINCT s.stop_id, s.stop_lat, s.stop_lon, s.stop_name 
        FROM stops s
        JOIN stop_times st ON s.stop_id = st.stop_id
        JOIN trips t ON st.trip_id = t.trip_id
