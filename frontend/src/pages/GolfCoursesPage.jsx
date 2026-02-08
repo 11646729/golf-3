@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import GolfCoursesTable from "../components/GolfCoursesTable"
 import GolfCoursesMap from "../components/GolfCoursesMap"
-import MapErrorBoundary from "../components/MapErrorBoundary"
 import { getGolfCoursesData } from "../functionHandlers/loadGolfCoursesDataHandler"
 import "../styles/golfcourses.scss"
 
@@ -47,9 +46,7 @@ const GolfCoursesPage = () => {
         <GolfCoursesTable golfcourses={golfcourses} />
       </div>
       <div className="golfcoursesmapcontainer">
-        <MapErrorBoundary>
-          <GolfCoursesMap isLoading={isLoading} golfcourses={golfcourses} />
-        </MapErrorBoundary>
+        <GolfCoursesMap isLoading={isLoading} golfcourses={golfcourses} />
       </div>
     </div>
   )

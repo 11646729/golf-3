@@ -1,10 +1,20 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import {
   APIProvider,
   Map,
   AdvancedMarker,
   useMap,
+  InfoWindow,
 } from "@vis.gl/react-google-maps"
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Link,
+  CardActions,
+} from "@mui/material"
 import Title from "./Title"
 import "../styles/golfcoursesmap.scss"
 
@@ -126,6 +136,8 @@ const CustomCircle = ({
 
 const GolfCoursesMap = ({ golfcourses = [] }) => {
   const [mapError, setMapError] = useState(null)
+  const [selectedMarker, setSelectedMarker] = useState(null)
+
   const validCourses = useMemo(
     () => getValidCourses(golfcourses),
     [golfcourses],
@@ -162,6 +174,20 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
     )
   }
 
+  // Memoize the selected stop object
+  const selectedCourse = useMemo(() => {
+    if (!selectedMarker) return null
+    return (
+      validCourses.find((course) => course.courseid === selectedMarker) || null
+    )
+  }, [selectedMarker, validCourses])
+
+  console.log(selectedCourse)
+
+  const handleMarkerClick = useCallback((markerId) => {
+    setSelectedMarker(markerId)
+  }, [])
+
   return (
     <APIProvider
       apiKey={apiKey}
@@ -183,10 +209,52 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
             <AdvancedMarker
               key={course.courseid}
               position={{ lat: course.lat, lng: course.lng }}
+              onClick={() => handleMarkerClick(course.courseid)}
             >
               <CustomCircle />
             </AdvancedMarker>
           ))}
+          {selectedCourse ? (
+            <InfoWindow
+              position={{
+                lat: selectedCourse.lat,
+                lng: selectedCourse.lng,
+              }}
+              onCloseClick={() => {
+                setSelectedMarker(null)
+              }}
+            >
+              <Card>
+                <CardMedia
+                  style={{
+                    height: 0,
+                    paddingTop: "40%",
+                    marginTop: "30",
+                  }}
+                  image={selectedCourse.photourl}
+                  title={selectedCourse.phototitle}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {selectedCourse.name}
+                  </Typography>
+                  <Typography component="p">
+                    {selectedCourse.description}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    component={Link}
+                    // to="/golfcoursespage"
+                  >
+                    View
+                  </Button>
+                </CardActions>
+              </Card>
+            </InfoWindow>
+          ) : null}
         </Map>
       </div>
     </APIProvider>
