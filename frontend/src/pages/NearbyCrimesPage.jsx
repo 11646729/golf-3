@@ -22,9 +22,16 @@ const NearbyCrimesPage = () => {
 
   // build Crimes Url - set dateInfo to "" to fetch most recent data
   // const crimesUrl = `${process.env.VITE_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}${dateInfo}`
+
+  // Example
+  //  https://data.police.uk/api/crimes-street/all-crime?date=2024-01&lat=52.629729&lng=-1.131592
+
   const crimesUrl = `${import.meta.env.VITE_CRIMES_ENDPOINT}?lat=${
     mapCenter.lat
   }&lng=${mapCenter.lng}`
+
+  console.log("Crimes URL: ", crimesUrl)
+  // console.log(rawCrimesData)
 
   // Download crimes data
   useEffect(() => {
@@ -42,14 +49,14 @@ const NearbyCrimesPage = () => {
   return (
     <div className="nearbycrimescontainer">
       <div className="nearbycrimesinputpanelcontainer">
-        <NearbyCrimesInputPanel
+        {/* <NearbyCrimesInputPanel
           isLoading={isLoading}
           homeCheckboxStatus // Leaving it blank means true, "={false} otherwise"
           latestCheckboxStatus
-        />
+        /> */}
       </div>
       <div className="nearbycrimesmapcontainer">
-        <NearbyCrimesMap crimesData={rawCrimesData} />
+        {/* <NearbyCrimesMap crimesData={rawCrimesData} /> */}
       </div>
     </div>
   )

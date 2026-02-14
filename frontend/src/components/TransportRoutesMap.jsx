@@ -105,8 +105,6 @@ const TransportRoutesMap = (props) => {
     transportStopsArray: PropTypes.array,
   }
 
-  console.log(transportShapesArray)
-
   const [mapZoom] = useState(
     parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10),
   )
