@@ -15,6 +15,7 @@ import rtWeatherRouter from "./routes/rtWeatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
 import gtfsTransportRouter from "./routes/gtfsTransportRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
+import crimesRouter from "./routes/crimesRouteCatalog.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -57,6 +58,7 @@ app.use("/api/rtnews", rtNewsRouter)
 app.use("/api/golf", golfRouter)
 app.use("/api/weather", rtWeatherRouter)
 app.use("/api/cruise", cruiseRouter)
+app.use("/api/crimes", crimesRouter)
 app.use("/api/gtfs", gtfsTransportRouter)
 app.use("/api/seismicdesigns", seismicDesignsRouter)
 
