@@ -1,5 +1,4 @@
 import { DatabaseAdapter } from "../databaseUtilities.js"
-// import { openSqlDbConnection } from "../databaseUtilities.js"
 
 // Database adapter for PostgreSQL - created lazily
 let db = null
@@ -22,7 +21,6 @@ export var index = (req, res) => {
 // Prepare empty crimes Table ready to import data
 // -------------------------------------------------------
 export const createCrimesTable = async (req, res) => {
-  // console.log("In crimesController.js - Preparing empty crimes table...")
   try {
     // Check if crimes table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
