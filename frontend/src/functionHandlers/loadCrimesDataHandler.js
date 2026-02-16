@@ -48,8 +48,6 @@ export const getCrimesData = async (url) => {
 // Function to fetch all Crimes data into the SQL database
 // -------------------------------------------------------
 export const loadCrimesDataHandler = () => {
-  alert("In loadCrimesDataHandler function")
-
   // Prepare empty crimes table in the database & show result
   prepareCrimesTable("http://localhost:4000/api/crimes/createCrimesTable")
 
