@@ -31,7 +31,7 @@ const NearbyCrimesPage = () => {
   }&lng=${mapCenter.lng}`
 
   console.log("Crimes URL: ", crimesUrl)
-  // console.log(rawCrimesData)
+  console.log(rawCrimesData)
 
   // Download crimes data
   useEffect(() => {
