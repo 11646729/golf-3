@@ -18,7 +18,8 @@ const NearbyCrimesPage = () => {
   }
 
   // Required output from DataPicker
-  // const dateInfo = "&date=2022-06"
+  // const dateInfo = "date=2022-06&"
+  // const dateInfo = "" // To fetch most recent data, leave dateInfo as empty string
 
   // build Crimes Url - set dateInfo to "" to fetch most recent data
   // const crimesUrl = `${process.env.VITE_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}${dateInfo}`
