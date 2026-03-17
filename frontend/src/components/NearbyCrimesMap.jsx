@@ -3,8 +3,9 @@ import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
-  // MarkerClusterer,
-  Marker,
+  AdvancedMarker,
+  useMap,
+  InfoWindow,
 } from "@vis.gl/react-google-maps"
 import Title from "./Title"
 import "../styles/nearbycrimesmap.scss"
@@ -14,6 +15,25 @@ const NearbyCrimesMapTitle = "Crimes Location Map"
 const options = {
   imagePath: "../../static/images/m", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
 }
+
+const CustomCircle = ({
+  color = "#78a32e",
+  size = 15,
+  borderColor = "#ffffff",
+  borderWidth = 1,
+}) => (
+  <div
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      backgroundColor: color,
+      borderRadius: "50%",
+      border: `${borderWidth}px solid ${borderColor}`,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+      cursor: "pointer",
+    }}
+  />
+)
 
 const NearbyCrimesMap = (props) => {
   // const [selected, setSelected] = useState(null)
@@ -55,20 +75,20 @@ const NearbyCrimesMap = (props) => {
           disableDefaultUI={true}
           zoomControl={true}
         >
-          {/* <Marker position={mapCenter} icon={iconPin} /> */}
-
           {/* Note: MarkerClusterer not yet available in vis.gl, using simple markers */}
           {crimesData.map((crime) => (
-            <Marker
-              key={`crime-${crime.crimeid}`}
+            <AdvancedMarker
+              key={`crime-${crime.id}`}
               position={{
-                lat: parseFloat(crime.location_latitude),
-                lng: parseFloat(crime.location_longitude),
+                lat: parseFloat(crime.location.latitude),
+                lng: parseFloat(crime.location.longitude),
               }}
-              onClick={() => {
-                console.log(crime)
-              }}
-            />
+              //   onClick={() => {
+              //     console.log(crime)
+              //   }}
+            >
+              <CustomCircle />
+            </AdvancedMarker>
           ))}
         </Map>
       </div>
