@@ -17,8 +17,6 @@ const NearbyCrimesPage = () => {
     "2024-01",
   )
 
-  console.log(rawCrimesData)
-
   return (
     <div className="nearbycrimescontainer">
       <div className="nearbycrimesinputpanelcontainer">
