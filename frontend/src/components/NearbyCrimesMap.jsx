@@ -60,10 +60,10 @@ const NearbyCrimesMap = (props) => {
           {/* Note: MarkerClusterer not yet available in vis.gl, using simple markers */}
           {crimesData.map((crime) => (
             <Marker
-              key={`crime-${crime.id}`}
+              key={`crime-${crime.crimeid}`}
               position={{
-                lat: parseFloat(crime.latitude),
-                lng: parseFloat(crime.longitude),
+                lat: parseFloat(crime.location_latitude),
+                lng: parseFloat(crime.location_longitude),
               }}
               onClick={() => {
                 console.log(crime)
