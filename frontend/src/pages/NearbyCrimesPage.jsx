@@ -14,8 +14,8 @@ const NearbyCrimesPage = () => {
   const { crimes: rawCrimesData, isLoading } = useNearbyCrimes(
     lat,
     lng,
-    "2024-01",
-  )
+    "2025-02",
+  ) // TODO: make the dates dynamic based on user input
 
   return (
     <div className="nearbycrimescontainer">

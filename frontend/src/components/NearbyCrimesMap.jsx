@@ -1,4 +1,4 @@
-import { useMemo, memo } from "react"
+import { useMemo, memo, useState, useCallback } from "react"
 import PropTypes from "prop-types"
 import {
   APIProvider,
@@ -7,6 +7,7 @@ import {
   useMap,
   InfoWindow,
 } from "@vis.gl/react-google-maps"
+import { Typography } from "@mui/material"
 import Title from "./Title"
 import "../styles/nearbycrimesmap.scss"
 
@@ -36,7 +37,7 @@ const CustomCircle = ({
 )
 
 const NearbyCrimesMap = (props) => {
-  // const [selected, setSelected] = useState(null)
+  const [selectedMarker, setSelectedMarker] = useState(null)
 
   const { crimesData } = props
 
@@ -63,6 +64,15 @@ const NearbyCrimesMap = (props) => {
     [],
   )
 
+  const selectedCrime = useMemo(() => {
+    if (!selectedMarker) return null
+    return crimesData.find((crime) => crime.id === selectedMarker) || null
+  }, [selectedMarker, crimesData])
+
+  const handleMarkerClick = useCallback((crimeId) => {
+    setSelectedMarker(crimeId)
+  }, [])
+
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div className="nearbycrimesmapcontainer">
@@ -74,6 +84,7 @@ const NearbyCrimesMap = (props) => {
           mapId="nearby-crimes-map"
           disableDefaultUI={true}
           zoomControl={true}
+          scrollwheel={true}
         >
           {/* Note: MarkerClusterer not yet available in vis.gl, using simple markers */}
           {crimesData.map((crime) => (
@@ -83,13 +94,49 @@ const NearbyCrimesMap = (props) => {
                 lat: parseFloat(crime.location.latitude),
                 lng: parseFloat(crime.location.longitude),
               }}
-              //   onClick={() => {
-              //     console.log(crime)
-              //   }}
+              onClick={() => handleMarkerClick(crime.id)}
             >
               <CustomCircle />
             </AdvancedMarker>
           ))}
+          {selectedCrime
+            ? (console.log("Selected crime:", selectedCrime),
+              (
+                <InfoWindow
+                  position={{
+                    lat: parseFloat(selectedCrime.location.latitude),
+                    lng: parseFloat(selectedCrime.location.longitude),
+                  }}
+                  onCloseClick={() => setSelectedMarker(null)}
+                >
+                  <div style={{ padding: "4px 8px" }}>
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        fontWeight: "bold",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {selectedCrime.category.replace(/-/g, " ")}
+                    </Typography>
+                    <Typography variant="body2">
+                      {selectedCrime.location.street?.name || "Unknown street"}
+                    </Typography>
+                    {selectedCrime.outcome_status && (
+                      <Typography
+                        variant="body2"
+                        style={{ color: "#666", marginTop: 4 }}
+                      >
+                        Outcome: {selectedCrime.outcome_status.category}
+                      </Typography>
+                    )}
+                    <Typography variant="body2" style={{ color: "#666" }}>
+                      Month: {selectedCrime.month}
+                    </Typography>
+                  </div>
+                </InfoWindow>
+              ))
+            : null}
         </Map>
       </div>
     </APIProvider>
