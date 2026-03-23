@@ -4,18 +4,20 @@ import {
   APIProvider,
   Map,
   AdvancedMarker,
-  useMap,
   InfoWindow,
 } from "@vis.gl/react-google-maps"
-import { Typography } from "@mui/material"
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Link,
+  CardActions,
+} from "@mui/material"
 import Title from "./Title"
 import "../styles/nearbycrimesmap.scss"
 
 const NearbyCrimesMapTitle = "Crimes Location Map"
-
-const options = {
-  imagePath: "../../static/images/m", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
-}
 
 const CustomCircle = ({
   color = "#78a32e",
@@ -109,31 +111,44 @@ const NearbyCrimesMap = (props) => {
                   }}
                   onCloseClick={() => setSelectedMarker(null)}
                 >
-                  <div style={{ padding: "4px 8px" }}>
-                    <Typography
-                      variant="subtitle1"
-                      style={{
-                        fontWeight: "bold",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {selectedCrime.category.replace(/-/g, " ")}
-                    </Typography>
-                    <Typography variant="body2">
-                      {selectedCrime.location.street?.name || "Unknown street"}
-                    </Typography>
-                    {selectedCrime.outcome_status && (
+                  <Card>
+                    <CardContent>
                       <Typography
-                        variant="body2"
-                        style={{ color: "#666", marginTop: 4 }}
+                        variant="subtitle1"
+                        style={{
+                          fontWeight: "bold",
+                          textTransform: "capitalize",
+                        }}
                       >
-                        Outcome: {selectedCrime.outcome_status.category}
+                        {selectedCrime.category.replace(/-/g, " ")}
                       </Typography>
-                    )}
-                    <Typography variant="body2" style={{ color: "#666" }}>
-                      Month: {selectedCrime.month}
-                    </Typography>
-                  </div>
+                      <Typography variant="body2">
+                        {selectedCrime.location.street?.name ||
+                          "Unknown street"}
+                      </Typography>
+                      {selectedCrime.outcome_status && (
+                        <Typography
+                          variant="body2"
+                          style={{ color: "#666", marginTop: 4 }}
+                        >
+                          Outcome: {selectedCrime.outcome_status.category}
+                        </Typography>
+                      )}
+                      <Typography variant="body2" style={{ color: "#666" }}>
+                        Month: {selectedCrime.month}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        size="small"
+                        color="primary"
+                        component={Link}
+                        // to="/golfcoursespage"
+                      >
+                        View
+                      </Button>
+                    </CardActions>
+                  </Card>
                 </InfoWindow>
               ))
             : null}
