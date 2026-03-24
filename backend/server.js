@@ -5,6 +5,7 @@ import path from "path"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
+import { createDatabaseAdapter } from "./databaseUtilities.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
@@ -15,6 +16,7 @@ import rtWeatherRouter from "./routes/rtWeatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
 import gtfsTransportRouter from "./routes/gtfsTransportRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
+import crimesRouter from "./routes/crimesRouteCatalog.js"
 
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
@@ -43,7 +45,7 @@ app.use(
     ],
     methods: "GET, POST, PUT, DELETE",
     allowedHeaders: "Content-Type, Authorization",
-  })
+  }),
 )
 
 // -----------------------------------------------------
@@ -57,11 +59,12 @@ app.use("/api/rtnews", rtNewsRouter)
 app.use("/api/golf", golfRouter)
 app.use("/api/weather", rtWeatherRouter)
 app.use("/api/cruise", cruiseRouter)
+app.use("/api/crimes", crimesRouter)
 app.use("/api/gtfs", gtfsTransportRouter)
 app.use("/api/seismicdesigns", seismicDesignsRouter)
 
 // This returns an error HTML response code for any other request
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404)
 })
 
@@ -80,11 +83,18 @@ enableRealtimeData(io) // Socket.io system
 // setupRabbitMQAndEmitMessages(io) // RabbitMQ system
 // -----------------------------------------------------
 
-// Start Express server
-httpServer.listen(port, (err) => {
-  if (err) {
-    throw err
-  } else {
-    console.log("Server running on port: " + port)
-  }
-})
+// Connect to DB eagerly before accepting requests, then start server
+createDatabaseAdapter()
+  .then(() => {
+    httpServer.listen(port, (err) => {
+      if (err) {
+        throw err
+      } else {
+        console.log("Server running on port: " + port)
+      }
+    })
+  })
+  .catch((err) => {
+    console.error("Failed to connect to database:", err.message)
+    process.exit(1)
+  })

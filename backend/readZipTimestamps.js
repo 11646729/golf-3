@@ -17,9 +17,7 @@ const masterZipPath =
   process.env.TRANSPORT_FOR_IRELAND_FILEPATH ||
   "https://www.transportforireland.ie/transitData/Data/GTFS_Realtime.zip"
 
-getZipTimestamps()
-
-export default async function getZipTimestamps() {
+export default async function readZipTimestamps() {
   try {
     await fs.promises.mkdir(dataDir, { recursive: true })
 
@@ -32,8 +30,6 @@ export default async function getZipTimestamps() {
     const remoteLastModified = remoteLastModifiedHeader
       ? new Date(remoteLastModifiedHeader)
       : null
-
-    console.log("HTTP Last-Modified:", remoteLastModifiedHeader || "N/A")
 
     let isSameDate = false
     if (
@@ -49,27 +45,33 @@ export default async function getZipTimestamps() {
       }
     }
 
+    // Decide whether to download and extract
     if (isSameDate) {
-      console.log("Same Date")
-      return
-    }
+      const temp = "SameDate"
+      // Same Date - skip download and extraction
+      return temp
+    } else {
+      const temp = "DifferentDate"
+      // Different Date or no local file - download and extract
+      console.log("Downloading ZIP (newer or missing locally)...")
 
-    console.log("Downloading ZIP (newer or missing locally)...")
-    const response = await fetch(masterZipPath)
-    if (!response.ok) {
-      throw new Error(`Download failed with status ${response.status}`)
-    }
-    // arrayBuffer avoids deprecated response.buffer(); convert to Node Buffer for yauzl
-    const buffer = Buffer.from(await response.arrayBuffer())
+      const response = await fetch(masterZipPath)
+      if (!response.ok) {
+        throw new Error(`Download failed with status ${response.status}`)
+      }
+      // arrayBuffer avoids deprecated response.buffer(); convert to Node Buffer for yauzl
+      const buffer = Buffer.from(await response.arrayBuffer())
 
-    await fs.promises.writeFile(localZipPath, buffer)
-    if (remoteLastModified && !Number.isNaN(remoteLastModified.getTime())) {
-      await fs.promises.utimes(localZipPath, new Date(), remoteLastModified)
-    }
+      await fs.promises.writeFile(localZipPath, buffer)
+      if (remoteLastModified && !Number.isNaN(remoteLastModified.getTime())) {
+        await fs.promises.utimes(localZipPath, new Date(), remoteLastModified)
+      }
 
-    console.log("Extracting ZIP...")
-    await extractZipBuffer(buffer, dataDir)
-    console.log("Extraction complete.")
+      console.log("Extracting ZIP...")
+      await extractZipBuffer(buffer, dataDir)
+      console.log("Extraction complete.")
+      return temp
+    }
   } catch (error) {
     console.error("Error:", error.message)
   }

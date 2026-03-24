@@ -1,15 +1,91 @@
-import { useState, useEffect, useCallback, memo } from "react"
+import { useState, useEffect, useCallback, memo, useMemo } from "react"
 import PropTypes from "prop-types"
 import {
   APIProvider,
   Map,
-  Marker,
-  // Polyline,
-  // InfoWindow,
+  AdvancedMarker,
+  useMap,
+  InfoWindow,
 } from "@vis.gl/react-google-maps"
-import "../styles/transportroutes.scss"
-
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Link,
+  CardActions,
+} from "@mui/material"
 import Title from "./Title"
+import "../styles/transportroutes.scss"
+import { Polyline } from "../../polyline"
+
+// Helper to parse and validate coordinates
+const parseCoordinate = (value) => {
+  const num = parseFloat(value)
+  return Number.isFinite(num) ? num : null
+}
+
+// Helper to get valid transport stops with parsed coordinates
+const getValidStops = (stops = []) =>
+  stops.reduce((list, stop) => {
+    const lat = parseCoordinate(stop.stop_lat)
+    const lng = parseCoordinate(stop.stop_lon)
+
+    if (lat === null || lng === null) {
+      return list
+    }
+
+    list.push({ ...stop, lat, lng })
+    return list
+  }, [])
+
+const FitBoundsLayer = ({ stops, defaultZoom }) => {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!map || stops.length === 0) {
+      return
+    }
+
+    try {
+      // Adjust the viewport so every stop marker is visible
+      const bounds = new window.google.maps.LatLngBounds()
+      stops.forEach(({ lat, lng }) => bounds.extend({ lat, lng }))
+
+      if (stops.length === 1) {
+        map.setCenter(bounds.getCenter())
+        map.setZoom(Math.min(map.getZoom() ?? defaultZoom, 15))
+        return
+      }
+
+      map.fitBounds(bounds, { top: 20, right: 20, bottom: 20, left: 20 })
+    } catch (error) {
+      console.error("Error fitting map bounds:", error)
+    }
+  }, [map, stops, defaultZoom])
+
+  return null
+}
+
+const CustomCircle = ({
+  color = "#6dbef1",
+  size = 10,
+  borderColor = "#ffffff",
+  borderWidth = 1,
+}) => (
+  <div
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      backgroundColor: color,
+      borderRadius: "50%",
+      border: `${borderWidth}px solid ${borderColor}`,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+      cursor: "pointer",
+    }}
+  />
+)
 
 // -------------------------------------------------------
 // React View component
@@ -29,14 +105,14 @@ const TransportRoutesMap = (props) => {
     transportStopsArray: PropTypes.array,
   }
 
-  const [map, setMap] = useState(null)
   const [mapZoom] = useState(
-    parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
+    parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10),
   )
   const [mapCenter] = useState({
     lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
     lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
   })
+  const [selectedMarker, setSelectedMarker] = useState(null)
 
   const mapContainerStyle = {
     height: "750px",
@@ -47,38 +123,21 @@ const TransportRoutesMap = (props) => {
     marginBottom: 20,
   }
 
-  // Store a reference to the google map instance in state
-  const onLoadHandler = useCallback((Mymap) => {
-    setMap(Mymap)
+  // Memoize valid stops to avoid recalculating on every render
+  const validStops = useMemo(
+    () => getValidStops(transportStopsArray),
+    [transportStopsArray],
+  )
+
+  // Memoize the selected stop object
+  const selectedStop = useMemo(() => {
+    if (!selectedMarker) return null
+    return validStops.find((stop) => stop.stop_id === selectedMarker) || null
+  }, [selectedMarker, validStops])
+
+  const handleMarkerClick = useCallback((markerId) => {
+    setSelectedMarker(markerId)
   }, [])
-
-  // Clear the reference to the google map instance
-  const onUnmountHandler = useCallback(() => {
-    setMap(null)
-  }, [])
-
-  // Now compute bounds of map to display
-  useEffect(() => {
-    if (map) {
-      if (transportStopsArray.length > 0) {
-        const bounds = new window.google.maps.LatLngBounds()
-
-        transportStopsArray.map((transportStop) =>
-          bounds.extend({
-            lat: transportStop.stop_lat,
-            lng: transportStop.stop_lon,
-          })
-        )
-        map.fitBounds(bounds)
-      }
-    }
-  }, [map, transportStopsArray])
-
-  // const handleTransportStopClick = (event) => {
-  //   console.log(event)
-  //   // console.log(transportStopSelected)
-  //   // setTransportStopSelected(transportStop)
-  // }
 
   // const handleTransportShapeClick = (event) => {
   //   console.log(event)
@@ -90,17 +149,8 @@ const TransportRoutesMap = (props) => {
   //   // setTransportRouteSelected(transportRoute)
   // }
 
-  const transportStopIcon = {
-    path: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z",
-    fillColor: "#6dbef1",
-    fillOpacity: 0.7,
-    scale: 0.015, // to reduce the size of icons
-    strokeColor: "#1342B4",
-    strokeWeight: 1,
-  }
-
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_KEY}>
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div>
         <div>
           <Title>{transportAgencyName}</Title>
@@ -113,58 +163,69 @@ const TransportRoutesMap = (props) => {
             mapId="transport-routes-map"
             disableDefaultUI={true}
             zoomControl={true}
-            onLoad={onLoadHandler}
-            onUnmount={onUnmountHandler}
           >
+            <FitBoundsLayer stops={validStops} defaultZoom={mapZoom} />
+
             {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
-            {/* {transportShapesArray
+            {transportShapesArray
               ? transportShapesArray.map((transportShape) => (
                   <Polyline
                     key={transportShape.shapeKey}
                     path={transportShape.shapeCoordinates}
                     options={{
-                      strokeColor: transportShape.defaultColor,
+                      strokeColor: "#FF0000",
                       strokeOpacity: "1.0",
-                      strokeWeight: 2,
+                      strokeWeight: 1,
                     }}
                     // onClick={() => {
                     //   handleTransportShapeClick()
                     // }}
                   />
                 ))
-              : null} */}
-            {transportStopsArray
-              ? transportStopsArray.map((transportStop) => (
-                  <Marker
-                    key={transportStop.stop_id}
-                    position={{
-                      lat: transportStop.stop_lat,
-                      lng: transportStop.stop_lon,
-                    }}
-                    icon={transportStopIcon}
-                    // onClick={() => {
-                    //   handleBusStopClick()
-                    // }}
-                  />
-                ))
               : null}
-            {/* {transportStopSelected ? (
+            {validStops.map((transportStop) => (
+              <AdvancedMarker
+                key={transportStop.stop_id}
+                position={{ lat: transportStop.lat, lng: transportStop.lng }}
+                onClick={() => handleMarkerClick(transportStop.stop_id)}
+              >
+                <CustomCircle />
+              </AdvancedMarker>
+            ))}
+            {selectedStop && (
               <InfoWindow
                 position={{
-                  lat: transportStopSelected.stop_lat,
-                  lng: transportStopSelected.stop_lon,
+                  lat: selectedStop.lat,
+                  lng: selectedStop.lng,
                 }}
-                onCloseClick={() => {
-                  setTransportStopSelected(null)
-                }}
+                onCloseClick={() => setSelectedMarker(null)}
               >
-                <div style={classes.divStyle}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {transportStopSelected.stop_name}
-                  </Typography>
-                </div>
+                <Card>
+                  <CardMedia
+                    style={{
+                      height: 0,
+                      paddingTop: "40%",
+                      marginTop: "30",
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {selectedStop.stop_name || "Unnamed Stop"}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      component={Link}
+                      // to="/golfcoursespage"§
+                    >
+                      View
+                    </Button>
+                  </CardActions>
+                </Card>
               </InfoWindow>
-            ) : null} */}
+            )}
           </Map>
         </div>
       </div>
