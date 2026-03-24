@@ -41,7 +41,7 @@ class DatabaseAdapter {
 }
 
 // -------------------------------------------------------
-// Get or create database connection
+// Get or create database connection (with retry)
 // -------------------------------------------------------
 async function getConnection() {
   if (client) return client
@@ -56,13 +56,27 @@ async function getConnection() {
   }
 
   connecting = (async () => {
-    client = new pg.Client(url)
-    await client.connect()
-    console.log("Connected to PostgreSQL database...")
-    connecting = null
+    const maxAttempts = 5
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const pgClient = new pg.Client(url)
+        await pgClient.connect()
+        client = pgClient
+        console.log("Connected to PostgreSQL database...")
+        return
+      } catch (err) {
+        console.error(`DB connection attempt ${attempt}/${maxAttempts} failed:`, err.message)
+        if (attempt === maxAttempts) throw err
+        await new Promise((r) => setTimeout(r, 2000 * attempt))
+      }
+    }
   })()
 
-  await connecting
+  try {
+    await connecting
+  } finally {
+    connecting = null
+  }
   return client
 }
 
@@ -101,7 +115,7 @@ export const openSqlDbConnection = async () => {
   return new LazyDatabaseAdapter()
 }
 
-export const closeSqlDbConnection = (adapter) => {
+export const closeSqlDbConnection = (_adapter) => {
   // No-op: using singleton connection that lives for app lifetime
 }
 

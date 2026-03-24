@@ -1,62 +1,33 @@
-import { useState, useEffect, memo } from "react"
+import { memo } from "react"
 import NearbyCrimesInputPanel from "../components/NearbyCrimesInputPanel"
 import NearbyCrimesMap from "../components/NearbyCrimesMap"
-import { getCrimesData } from "../functionHandlers/loadCrimesDataHandler"
+import useNearbyCrimes from "../functionHandlers/useNearbyCrimes"
 import "../styles/nearbycrimes.scss"
 
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
 const NearbyCrimesPage = () => {
-  const [rawCrimesData, setCrimesData] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const lat = parseFloat(import.meta.env.VITE_HOME_LATITUDE)
+  const lng = parseFloat(import.meta.env.VITE_HOME_LONGITUDE)
 
-  // Required for location of crimes data to fetch
-  const mapCenter = {
-    lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
-    lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
-  }
-
-  // Required output from DataPicker
-  // const dateInfo = "&date=2022-06"
-
-  // build Crimes Url - set dateInfo to "" to fetch most recent data
-  // const crimesUrl = `${process.env.VITE_CRIMES_ENDPOINT}?lat=${mapCenter.lat}&lng=${mapCenter.lng}${dateInfo}`
-
-  // Example
-  //  https://data.police.uk/api/crimes-street/all-crime?date=2024-01&lat=52.629729&lng=-1.131592
-
-  const crimesUrl = `${import.meta.env.VITE_CRIMES_ENDPOINT}?lat=${
-    mapCenter.lat
-  }&lng=${mapCenter.lng}`
-
-  console.log("Crimes URL: ", crimesUrl)
-  // console.log(rawCrimesData)
-
-  // Download crimes data
-  useEffect(() => {
-    getCrimesData(crimesUrl)
-      .then((returnedCrimesData) => {
-        setCrimesData(returnedCrimesData)
-
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [crimesUrl])
+  const { crimes: rawCrimesData, isLoading } = useNearbyCrimes(
+    lat,
+    lng,
+    "2025-02",
+  ) // TODO: make the dates dynamic based on user input
 
   return (
     <div className="nearbycrimescontainer">
       <div className="nearbycrimesinputpanelcontainer">
-        {/* <NearbyCrimesInputPanel
+        <NearbyCrimesInputPanel
           isLoading={isLoading}
           homeCheckboxStatus // Leaving it blank means true, "={false} otherwise"
           latestCheckboxStatus
-        /> */}
+        />
       </div>
       <div className="nearbycrimesmapcontainer">
-        {/* <NearbyCrimesMap crimesData={rawCrimesData} /> */}
+        <NearbyCrimesMap crimesData={rawCrimesData} />
       </div>
     </div>
   )

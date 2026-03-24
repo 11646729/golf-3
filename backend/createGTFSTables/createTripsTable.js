@@ -44,6 +44,10 @@ export const createTripsTable = async (res) => {
         )
       `)
 
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_trips_route_id ON trips(route_id)`)
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_trips_service_id ON trips(service_id)`)
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_trips_shape_id ON trips(shape_id)`)
+
     console.log("✓ trips table created successfully")
   } catch (error) {
     console.error("Error preparing trips table:", error)

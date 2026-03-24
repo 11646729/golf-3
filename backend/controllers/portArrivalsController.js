@@ -80,6 +80,8 @@ const createPortArrivalsTableStructure = async () => {
       )
     `)
 
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`)
+
     console.log("Empty portarrivals table created")
   } catch (error) {
     console.error("Error in createPortArrivalsTableStructure: ", error.message)
