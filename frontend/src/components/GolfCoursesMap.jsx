@@ -203,6 +203,7 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
           mapId="golf-courses-map"
           disableDefaultUI={true}
           zoomControl={true}
+          scrollwheel={true}
         >
           <FitBoundsLayer courses={validCourses} />
           {validCourses.map((course) => (

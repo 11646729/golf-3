@@ -47,6 +47,8 @@ export const createRoutesTable = async (res) => {
         )
       `)
 
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_routes_agency_id ON routes(agency_id)`)
+
     console.log("✓ routes table created successfully")
   } catch (error) {
     console.error("Error preparing routes table:", error)
