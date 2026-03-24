@@ -47,6 +47,8 @@ export const createStopTimesTable = async (res) => {
         )
       `)
 
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_stop_times_stop_id ON stop_times(stop_id)`)
+
     console.log("✓ stop_times table created successfully")
   } catch (error) {
     console.error("Error preparing stop_times table:", error)
