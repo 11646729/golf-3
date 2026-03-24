@@ -1,8 +1,5 @@
 import fs from "fs"
-import {
-  openSqlDbConnection,
-  closeSqlDbConnection,
-} from "../databaseUtilities.js"
+import { openSqlDbConnection } from "../databaseUtilities.js"
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -77,7 +74,7 @@ const deleteGolfCoursesData = async (db) => {
 
   try {
     const result = await db.all(
-      "SELECT COUNT(courseid) AS count FROM golfcourses"
+      "SELECT COUNT(courseid) AS count FROM golfcourses",
     )
 
     if (result[0].count > 0) {
@@ -113,7 +110,7 @@ export const importGolfCoursesData = async (req, res) => {
   try {
     const data = fs.readFileSync(
       process.env.RAW_GOLF_COURSE_DATA_FILEPATH,
-      "utf8"
+      "utf8",
     )
     const courses = JSON.parse(data)
     await populateGolfCoursesTable(db, courses)
@@ -150,7 +147,7 @@ const populateGolfCoursesTable = async (db, courses) => {
     }
     console.log(
       "No of new Golf Courses created & saved: ",
-      courses.features.length
+      courses.features.length,
     )
   } catch (e) {
     console.error(e.message)

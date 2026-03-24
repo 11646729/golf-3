@@ -30,7 +30,7 @@ export const createPortArrivalsTable = async (req, res) => {
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'portarrivals'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -39,7 +39,7 @@ export const createPortArrivalsTable = async (req, res) => {
       await getDb().run("DROP TABLE IF EXISTS portarrivals")
     } else {
       console.log(
-        "portarrivals table does not exist - creating the empty table"
+        "portarrivals table does not exist - creating the empty table",
       )
     }
 
@@ -58,7 +58,6 @@ export const createPortArrivalsTable = async (req, res) => {
 // -------------------------------------------------------
 const createPortArrivalsTableStructure = async () => {
   try {
-    // const db = getDb()
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY, 
@@ -81,7 +80,8 @@ const createPortArrivalsTableStructure = async () => {
       )
     `)
 
-    // await getDb().run(sql)
+    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`)
+
     console.log("Empty portarrivals table created")
   } catch (error) {
     console.error("Error in createPortArrivalsTableStructure: ", error.message)
@@ -102,7 +102,7 @@ export const getPortArrivals = async (req, res, next) => {
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 12) // Changed from 3 to 12 months
 
     console.log(
-      `Fetching port arrivals between ${yesterday.toISOString()} and ${threeMonthsFromNow.toISOString()}`
+      `Fetching port arrivals between ${yesterday.toISOString()} and ${threeMonthsFromNow.toISOString()}`,
     )
 
     const sql =
@@ -136,7 +136,7 @@ export const savePortArrival = async (req, res) => {
 
     // Count the records in the database
     const countResult = await getDb().get(
-      "SELECT COUNT(portarrivalid) AS count FROM portarrivals"
+      "SELECT COUNT(portarrivalid) AS count FROM portarrivals",
     )
     console.log(`Current port arrivals count: ${countResult.count}`)
 
@@ -177,7 +177,7 @@ const savePortArrivalInternal = async (newPortArrival) => {
 export const getAndSavePortArrivals = async (
   scheduledPeriods,
   port,
-  portName
+  portName,
 ) => {
   let allVesselArrivals = []
   let periodVesselArrivals = []
@@ -188,7 +188,7 @@ export const getAndSavePortArrivals = async (
     periodVesselArrivals = await getSingleMonthPortArrival(
       period,
       port,
-      portName
+      portName,
     )
 
     let j = 0
@@ -219,7 +219,7 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
     console.error(
       "getSingleMonthPortArrival axios.get failed for",
       arrivalUrl,
-      err?.message || err
+      err?.message || err,
     )
     // Return empty list of vessel URLs for this period so importer can continue
     return []
@@ -266,7 +266,7 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
       "Wednesday",
       "Thursday",
       "Friday",
-      "Saturday"
+      "Saturday",
     )
     // -------------------------------------------------------
 
