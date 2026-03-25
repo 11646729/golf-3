@@ -20,6 +20,7 @@
     "serve-static": "1.16.2",
     "cookie": "0.7.2",
     "send": "1.2.0",
-    "mime": "1.6.0"
+    "mime": "1.6.0",
+    "immutable": "5.1.5"
   }
 }
