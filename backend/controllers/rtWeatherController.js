@@ -15,7 +15,7 @@ const getDb = () => {
 // Path: localhost:4000/api/weather/
 // -------------------------------------------------------
 export var index = async (req, res) => {
-  res.send({ response: "I am alive" }).status(200)
+  res.status(200).send({ response: "I am alive" })
 }
 
 // -------------------------------------------------------

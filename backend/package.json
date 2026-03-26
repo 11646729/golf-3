@@ -10,7 +10,7 @@
     "migrate:vessels": "node migrations/add_vessel_columns.js",
     "test": "node objecttest.js",
     "test1": "node isInsideArea.js",
-    "googletest": "node googlemappolygon,html"
+    "googletest": "node googlemappolygon.html"
   },
   "keywords": [],
   "author": "Brian Smith",

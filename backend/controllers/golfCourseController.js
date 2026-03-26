@@ -6,7 +6,7 @@ import { openSqlDbConnection } from "../databaseUtilities.js"
 // Path: localhost:4000/api/golf/
 // -------------------------------------------------------
 export var index = (req, res) => {
-  res.send({ response: "Golf Route Catalog home page" }).status(200)
+  res.status(200).send({ response: "Golf Route Catalog home page" })
 }
 
 // -------------------------------------------------------

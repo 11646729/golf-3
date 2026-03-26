@@ -15,7 +15,7 @@ const getDb = () => {
 // Path: localhost:4000/api/seismicdesigns/
 // -------------------------------------------------------
 export var index = (req, res) => {
-  res.send({ response: "Seismic Designs Route Catalog home page" }).status(200)
+  res.status(200).send({ response: "Seismic Designs Route Catalog home page" })
 }
 
 // -------------------------------------------------------

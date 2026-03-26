@@ -16,7 +16,7 @@ const getDb = () => {
 // Path: localhost:4000/api/cruise/
 // -------------------------------------------------------
 export var index = async (req, res) => {
-  res.send({ response: "Port Arrivals Catalog home page" }).status(200)
+  res.status(200).send({ response: "Port Arrivals Catalog home page" })
 }
 
 // -------------------------------------------------------
@@ -46,7 +46,7 @@ export const createPortArrivalsTable = async (req, res) => {
     // Create the table
     await createPortArrivalsTableStructure()
 
-    res.send("Port arrivals table prepared successfully").status(200)
+    res.status(200).send("Port arrivals table prepared successfully")
   } catch (error) {
     console.error("Error preparing port arrivals table:", error)
     res.status(500).send("Error preparing port arrivals table")

@@ -11,7 +11,7 @@ const db = new DatabaseAdapter()
 // Path: localhost:4000/api/rtnews/
 // -------------------------------------------------------
 export var index = (req, res) => {
-  res.send({ response: "Real Time News Catalog home page" }).status(200)
+  res.status(200).send({ response: "Real Time News Catalog home page" })
 }
 
 // -------------------------------------------------------

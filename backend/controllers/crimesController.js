@@ -21,7 +21,7 @@ const DEFAULT_CRIMES_URL =
 // Path: localhost:4000/api/crimes/
 // -------------------------------------------------------
 export var index = (req, res) => {
-  res.send({ response: "Crimes Catalog home page" }).status(200)
+  res.status(200).send({ response: "Crimes Catalog home page" })
 }
 
 // -------------------------------------------------------
@@ -49,7 +49,7 @@ export const createCrimesTable = async (req, res) => {
     // Create the table
     await createCrimesTableStructure()
 
-    res.send("Crimes table prepared successfully").status(200)
+    res.status(200).send("Crimes table prepared successfully")
   } catch (error) {
     console.error("Error preparing crimes table:", error)
     res.status(500).send("Error preparing crimes table")

@@ -22,7 +22,7 @@ const getDb = () => {
 // Path: localhost:4000/api/rtcalendar/
 // -------------------------------------------------------
 export var index = (req, res) => {
-  res.send({ response: "Real Time Calendar Catalog home page" }).status(200)
+  res.status(200).send({ response: "Real Time Calendar Catalog home page" })
 }
 
 // -------------------------------------------------------

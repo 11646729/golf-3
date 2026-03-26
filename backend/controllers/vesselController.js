@@ -38,7 +38,7 @@ export const createVesselsTable = async (req, res) => {
     // Create the table
     await createVesselsTableStructure()
 
-    res.send({ message: "Vessels table prepared successfully" }).status(200)
+    res.status(200).send({ message: "Vessels table prepared successfully" })
   } catch (error) {
     console.error("Error preparing vessels table:", error)
     res.status(500).send({ error: "Error preparing vessels table" })
