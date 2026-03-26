@@ -11,6 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "overrides": {
+    "picomatch": ">=2.3.2"
+  },
   "dependencies": {
     "amqplib": "^0.10.0",
     "body-parser": "^2.2.2",
