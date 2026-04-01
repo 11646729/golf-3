@@ -1,5 +1,5 @@
-import * as cheerio from "cheerio"
 import dotenv from "dotenv"
+import { getBrowser } from "./puppeteerBrowser.js"
 import { getAndSavePortArrivals } from "./controllers/portArrivalsController.js"
 import {
   saveVesselDetails,
@@ -86,8 +86,6 @@ export const importPortArrivalsAndVessels = async (req, res) => {
 // Path: Local function called by importPortArrivalsAndVessels
 // -------------------------------------------------------
 const getScheduleMonths = async (portName) => {
-  let scheduledPeriods = []
-
   let initialPeriod = new Date().toISOString().slice(0, 7)
 
   let initialUrl =
@@ -97,22 +95,19 @@ const getScheduleMonths = async (portName) => {
     initialPeriod +
     "#schedule"
 
-  // Fetch the initial html page
-  const response = await fetch(initialUrl)
-  const data = await response.text()
+  const browser = await getBrowser()
+  const page = await browser.newPage()
 
-  // Load cheerio
-  const $ = cheerio.load(data)
+  try {
+    await page.goto(initialUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
-  $("#schedule > div:nth-child(2) > div.col-xs-8.thisMonth option").each(
-    (i, item) => {
-      const monthYearString = $(item).attr("value")
+    const scheduledPeriods = await page.$$eval(
+      "#schedule > div:nth-child(2) > div.col-xs-8.thisMonth option",
+      (options) => options.map((opt) => ({ monthYearString: opt.value }))
+    )
 
-      scheduledPeriods.push({
-        monthYearString,
-      })
-    }
-  )
-
-  return scheduledPeriods
+    return scheduledPeriods
+  } finally {
+    await page.close()
+  }
 }

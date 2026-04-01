@@ -1,6 +1,5 @@
-import axios from "axios"
-import * as cheerio from "cheerio"
 import { DatabaseAdapter } from "../databaseUtilities.js"
+import { getBrowser } from "../puppeteerBrowser.js"
 
 // Database adapter for PostgreSQL - created lazily
 let db = null
@@ -27,8 +26,8 @@ export const createPortArrivalsTable = async (req, res) => {
     // Check if portarrivals table exists using PostgreSQL system tables
     const tableExists = await getDb().get(
       `SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
         AND table_name = 'portarrivals'
       )`,
     )
@@ -60,22 +59,22 @@ const createPortArrivalsTableStructure = async () => {
   try {
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
-        portarrivalid SERIAL PRIMARY KEY, 
-        databaseversion TEXT NOT NULL, 
-        sentencecaseport TEXT NOT NULL, 
-        portname TEXT NOT NULL, 
-        portunlocode TEXT NOT NULL, 
-        portcoordinatelng REAL CHECK( portcoordinatelng >= -180 AND portcoordinatelng <= 180 ), 
-        portcoordinatelat REAL CHECK( portcoordinatelat >= -90 AND portcoordinatelat <= 90 ), 
-        cruiseline TEXT, 
-        cruiselinelogo TEXT, 
-        vesselshortcruisename TEXT, 
-        arrivaldate TEXT, 
-        weekday TEXT, 
-        vesseleta TEXT, 
-        vesseletatime TEXT, 
-        vesseletd TEXT, 
-        vesseletdtime TEXT, 
+        portarrivalid SERIAL PRIMARY KEY,
+        databaseversion TEXT NOT NULL,
+        sentencecaseport TEXT NOT NULL,
+        portname TEXT NOT NULL,
+        portunlocode TEXT NOT NULL,
+        portcoordinatelng REAL CHECK( portcoordinatelng >= -180 AND portcoordinatelng <= 180 ),
+        portcoordinatelat REAL CHECK( portcoordinatelat >= -90 AND portcoordinatelat <= 90 ),
+        cruiseline TEXT,
+        cruiselinelogo TEXT,
+        vesselshortcruisename TEXT,
+        arrivaldate TEXT,
+        weekday TEXT,
+        vesseleta TEXT,
+        vesseletatime TEXT,
+        vesseletd TEXT,
+        vesseletdtime TEXT,
         vesselnameurl TEXT
       )
     `)
@@ -157,10 +156,8 @@ export const savePortArrival = async (req, res) => {
 // -------------------------------------------------------
 const savePortArrivalInternal = async (newPortArrival) => {
   try {
-    const db = getDb()
     if (!newPortArrival) return
 
-    // Use placeholder syntax that works with both databases
     const sql1 =
       "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
@@ -211,83 +208,89 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
   let arrivalUrl =
     process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
 
-  let html
+  const browser = await getBrowser()
+  const page = await browser.newPage()
+
+  let rows = []
   try {
-    const resp = await axios.get(arrivalUrl)
-    html = resp.data
+    await page.goto(arrivalUrl, { waitUntil: "networkidle2", timeout: 30000 })
+
+    rows = await page.evaluate(() => {
+      const trs = Array.from(
+        document.querySelectorAll(".portItemSchedule tr")
+      ).slice(1) // skip header row
+
+      return trs.map((tr) => {
+        const tds = Array.from(tr.querySelectorAll("td"))
+        const anchor = tr.querySelector("a")
+        const img = tr.querySelector("img")
+        const span = tds[0]?.querySelector("span")
+
+        return {
+          vessel_short_cruise_name: anchor?.textContent?.trim() ?? "",
+          arrivalDate: span?.innerHTML?.replace(/,/, "") ?? "",
+          vessel_eta_time: tds[2]?.innerHTML?.trim() ?? "",
+          vessel_etd_time: tds[tds.length - 1]?.innerHTML?.trim() ?? "",
+          cruise_line_logo_url: img?.getAttribute("src") ?? "",
+          raw_cruise_line: img?.getAttribute("title") ?? "",
+          vessel_name_url: anchor?.getAttribute("href") ?? "",
+        }
+      })
+    })
   } catch (err) {
     console.error(
-      "getSingleMonthPortArrival axios.get failed for",
+      "getSingleMonthPortArrival failed for",
       arrivalUrl,
       err?.message || err,
     )
-    // Return empty list of vessel URLs for this period so importer can continue
     return []
+  } finally {
+    await page.close()
   }
 
-  // load up cheerio
-  const $ = cheerio.load(html)
+  const weekdayArray = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ]
 
-  // let vesselArrival = []
+  // Port Name Associated values
+  const port_name = portName
+  const portLat = port + "_PORT_LATITUDE"
+  const portLng = port + "_PORT_LONGITUDE"
+  const portUnLocode = port + "_PORT_UN_LOCODE"
+
+  const sentence_case_port = port
+    .split(" ")
+    .map((w) => w[0].toUpperCase() + w.substr(1).toLowerCase())
+    .join(" ")
+
+  const port_un_locode = process.env[portUnLocode]
+  const portcoordinateslat = process.env[portLat]
+  const portcoordinateslng = process.env[portLng]
+
   let vesselUrls = []
 
-  // Get all the table rows and process them
-  const rows = $(".portItemSchedule tr").toArray()
-
-  for (let i = 1; i < rows.length; i++) {
-    // Start from 1 to ignore table heading
-    const item = rows[i]
-
-    // Port Name Associated values
-    const port_name = portName
-    const portLat = port + "_PORT_LATITUDE"
-    const portLng = port + "_PORT_LONGITUDE"
-    const portUnLocode = port + "_PORT_UN_LOCODE"
-
-    var sentence_case_port = port
-      .split(" ")
-      .map((w) => w[0].toUpperCase() + w.substr(1).toLowerCase())
-      .join(" ")
-
-    // Port UN Locode
-    const port_un_locode = process.env[portUnLocode]
-
-    // Port Coordinates
-    const portcoordinateslat = process.env[portLat]
-    const portcoordinateslng = process.env[portLng]
-
-    // Name of Vessel
-    const vessel_short_cruise_name = $(item).find("a").text()
-
-    let weekdayArray = new Array(
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    )
-    // -------------------------------------------------------
-
-    //  Scrape Date of Arrival
-    let arrivalDate = $(item)
-      .children("td")
-      .children("span")
-      .html()
-      .replace(/,/, "") // Removes the comma
+  for (const item of rows) {
+    const {
+      vessel_short_cruise_name,
+      arrivalDate,
+      vessel_eta_time: raw_eta,
+      vessel_etd_time: raw_etd,
+      cruise_line_logo_url,
+      raw_cruise_line,
+      vessel_name_url,
+    } = item
 
     // -------------------------------------------------------
     // Expected Time of Arrival
-    let vessel_eta_time = $(item).children("td").next("td").next("td").html()
-    let vessel_eta = ""
+    let vessel_eta_time = raw_eta || "11:59"
 
-    // If No Arrival Time Given
-    if (vessel_eta_time == "") {
-      vessel_eta_time = "11:59"
-    }
-
-    vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
+    let vessel_eta = Date.parse(arrivalDate + " " + vessel_eta_time + " GMT")
     let a = new Date(vessel_eta)
     vessel_eta = a.toISOString()
 
@@ -296,35 +299,24 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
 
     // -------------------------------------------------------
     // Expected Time of Departure
-    let vessel_etd_time = $(item).children("td").last("td").html()
-    let vessel_etd = ""
+    let vessel_etd_time = raw_etd || "11:59"
 
-    if (vessel_etd_time == "") {
-      vessel_etd_time = "11:59"
-    }
-
-    vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
+    let vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
     vessel_etd = new Date(vessel_etd).toISOString()
     // -------------------------------------------------------
 
-    // Url of Cruise Line Logo image
-    const cruise_line_logo_url = $(item).find("img").attr("src")
-
     // Name of Cruise Line
-    const raw_cruise_line = $(item).find("img").attr("title")
     const cruise_line = raw_cruise_line.substr(0, raw_cruise_line.length - 20)
 
     // Url of Vessel Web Page
-    const vessel_name_url = $(item).find("a").attr("href")
     if (
       typeof vessel_name_url === "string" ||
       vessel_name_url instanceof String
     ) {
-      // it's a string
       vesselUrls.push(vessel_name_url)
+    } else {
+      console.log("Error, vessel_name_url is not a string")
     }
-    // it's something else
-    else console.log("Error, vessel_name_url is not a string")
 
     const newPortArrival = [
       process.env.DATABASE_VERSION,
