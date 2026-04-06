@@ -60,7 +60,7 @@ export const getPortArrivalsData = async (url) => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS, params }
 
   return await axios
-    .get(url, params, config)
+    .get(url, config)
     .then((returnedData) => returnedData.data)
     .catch((err) => {
       console.error("getPortArrivalsData error:", err?.message || err)

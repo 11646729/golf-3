@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "DOTENV_CONFIG_QUIET=true node server.js",
+    "start": "DOTENV_CONFIG_QUIET=true node server.js || true",
     "dev": "DOTENV_CONFIG_QUIET=true nodemon server.js",
     "migrate:vessels": "node migrations/add_vessel_columns.js",
     "test": "node objecttest.js",

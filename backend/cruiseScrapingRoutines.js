@@ -18,6 +18,9 @@ export const importPortArrivalsAndVessels = async (req, res) => {
 
   console.log("Importing Port Arrivals & Vessel Details")
 
+  // Respond immediately so the client is not left waiting during the long scrape
+  res.status(202).json({ message: "Import started in background" })
+
   const port = process.env.BELFAST_PORT_NAME.toUpperCase()
   // const port = process.env.GEIRANGER_PORT_NAME.toUpperCase()
   // const port = process.env.BERGEN_PORT_NAME.toUpperCase()
