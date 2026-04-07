@@ -23,7 +23,7 @@ export const createVesselsTable = async (req, res) => {
         SELECT FROM information_schema.tables
         WHERE table_schema = 'public'
         AND table_name = 'vessels'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -67,10 +67,8 @@ const createVesselsTableStructure = async () => {
         vesselgrosstonnage INTEGER,
         vesselaveragespeedknots REAL,
         vesselmaxspeedknots REAL,
-        vesselaveragedraughtmetres REAL,
         vesselimonumber INTEGER,
-        vesselmmsnumber INTEGER,
-        vesselcallsign TEXT NOT NULL,
+        vesselmmsinumber INTEGER,
         vesseltypicalpassengers TEXT,
         vesseltypicalcrew INTEGER,
         currentpositionlng REAL CHECK( currentpositionlng >= -180 AND currentpositionlng <= 180 ),
@@ -97,12 +95,12 @@ export const saveVesselDetails = async (newVessel) => {
 
     // Count the records in the database
     const countResult = await db.get(
-      "SELECT COUNT(vesselid) AS count FROM vessels"
+      "SELECT COUNT(vesselid) AS count FROM vessels",
     )
 
     // Use placeholder syntax that works with PostgreSQL database
     const sql_insert =
-      "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselaveragedraughtmetres, vesselimonumber, vesselmmsnumber, vesselcallsign, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO vessels (databaseversion, vesselnameurl, vesselname, vesseltitle, vesselurl, vesseltype, vesselflag, vesselshortoperator, vessellongoperator, vesselyearbuilt, vessellengthmetres, vesselwidthmetres, vesselgrosstonnage, vesselaveragespeedknots, vesselmaxspeedknots, vesselimonumber, vesselmmsinumber, vesseltypicalpassengers, vesseltypicalcrew, currentpositionlng, currentpositionlat, currentpositiontime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
     await db.run(sql_insert, newVessel)
   } catch (error) {
@@ -111,26 +109,22 @@ export const saveVesselDetails = async (newVessel) => {
 }
 
 // -------------------------------------------------------
-// Find vesselNameUrl from vessels Table in PostgreSQL database
+// Get vessel positions from PostgreSQL database
 // -------------------------------------------------------
 export const getVesselPosition = async (req, res) => {
   try {
-    // Validate input
     if (!req.query.portArrivals) {
       return res.status(400).json({ error: "No port arrivals provided" })
     }
 
-    // Remove duplicates and store Urls in arrivals array
-    let portArrivalsParam = req.query.portArrivals
-
-    // Handle both string and array cases
+    const portArrivalsParam = req.query.portArrivals
     let arrivals
+
     if (Array.isArray(portArrivalsParam)) {
       arrivals = Array.from(new Set(portArrivalsParam)).filter(
-        (url) => url && url.trim()
+        (url) => url && url.trim(),
       )
     } else if (typeof portArrivalsParam === "string") {
-      // If it's a single string, convert to array
       arrivals = portArrivalsParam.trim() ? [portArrivalsParam] : []
     } else {
       return res.status(400).json({ error: "Invalid port arrivals format" })
@@ -140,204 +134,29 @@ export const getVesselPosition = async (req, res) => {
       return res.status(400).json({ error: "No valid arrival URLs provided" })
     }
 
-    const browser = await getBrowser()
-    const page = await browser.newPage()
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    const db = getDb()
+    const placeholders = arrivals.map((_, i) => `$${i + 1}`).join(", ")
+    const rows = await db.all(
+      `SELECT vesselname, vesselnameurl, vesselimonumber, vesselmmsinumber,
+              currentpositionlat, currentpositionlng, currentpositiontime
+       FROM vessels
+       WHERE vesselnameurl IN (${placeholders})`,
+      arrivals,
     )
 
-    // Now get current location & destination
-    var shipPositions = []
-
-    try {
-      for (let j = 0; j < arrivals.length; j++) {
-        try {
-          await page.goto(arrivals[j], {
-            waitUntil: "networkidle2",
-            timeout: 10000,
-          })
-
-          // Paragraph containing position & time reported
-          const positionParagraph = await page
-            .$eval(
-              "#container > main > section > article > section > div:nth-child(3) > div > div.col-md-4.currentItineraryInfo > p",
-              (el) => el.textContent.trim()
-            )
-            .catch(() => "")
-
-          if (!positionParagraph) {
-            console.warn(`No position paragraph found for ${arrivals[j]}`)
-            continue
-          }
-
-          // Name of Vessel - safer extraction
-          let vesselName = "Unknown"
-          if (positionParagraph.includes("is ")) {
-            const nameEnd = positionParagraph.indexOf("is ") - 1
-            if (nameEnd > 24) {
-              vesselName = positionParagraph.substring(24, nameEnd).trim()
-            }
-          }
-
-          // Reported Position - safer coordinate extraction
-          var latitude = null
-          var longitude = null
-
-          if (
-            positionParagraph.includes("coordinates ") &&
-            positionParagraph.includes("/")
-          ) {
-            try {
-              const coordStart = positionParagraph.indexOf("coordinates ") + 12
-              const coordEnd = positionParagraph.indexOf(")", coordStart)
-
-              if (coordEnd > coordStart) {
-                const coordString = positionParagraph.substring(
-                  coordStart,
-                  coordEnd
-                )
-                const parts = coordString.split("/")
-
-                if (parts.length === 2) {
-                  latitude = parseFloat(parts[0].trim())
-                  longitude = parseFloat(parts[1].trim())
-
-                  // Validate coordinates
-                  if (
-                    isNaN(latitude) ||
-                    isNaN(longitude) ||
-                    latitude < -90 ||
-                    latitude > 90 ||
-                    longitude < -180 ||
-                    longitude > 180
-                  ) {
-                    latitude = null
-                    longitude = null
-                    console.warn(
-                      `Invalid coordinates for ${arrivals[j]}: ${coordString}`
-                    )
-                  }
-                }
-              }
-            } catch (coordError) {
-              console.warn(
-                `Error parsing coordinates for ${arrivals[j]}:`,
-                coordError.message
-              )
-            }
-          }
-
-          // AIS Reported Time - safer time extraction
-          let secs = 0,
-            mins = 0,
-            hrs = 0
-
-          try {
-            // Extract seconds
-            if (positionParagraph.includes("second")) {
-              const secondsMatch = positionParagraph.match(/(\d+)\s+seconds?/)
-              if (secondsMatch) {
-                secs = parseInt(secondsMatch[1]) || 0
-              }
-            }
-
-            // Extract minutes
-            if (positionParagraph.includes("minute")) {
-              const minutesMatch = positionParagraph.match(/(\d+)\s+minutes?/)
-              if (minutesMatch) {
-                mins = parseInt(minutesMatch[1]) || 0
-              }
-            }
-
-            // Extract hours
-            if (positionParagraph.includes("hour")) {
-              const hoursMatch = positionParagraph.match(/(\d+)\s+hours?/)
-              if (hoursMatch) {
-                hrs = parseInt(hoursMatch[1]) || 0
-              }
-            }
-          } catch (timeError) {
-            console.warn(
-              `Error parsing time for ${arrivals[j]}:`,
-              timeError.message
-            )
-          }
-
-          var aistimestamp = null
-          try {
-            var aistime = moment
-              .utc()
-              .subtract(hrs, "hours")
-              .subtract(mins, "minutes")
-              .subtract(secs, "seconds")
-            aistimestamp = new Date(aistime.format())
-          } catch (timestampError) {
-            console.warn(
-              `Error creating timestamp for ${arrivals[j]}:`,
-              timestampError.message
-            )
-            aistimestamp = new Date()
-          }
-
-          // Destination - safer extraction
-          var destination = "Unknown"
-          try {
-            if (
-              positionParagraph.includes("route to ") &&
-              positionParagraph.includes(". The")
-            ) {
-              var vesselDest = positionParagraph
-                .substring(
-                  positionParagraph.indexOf("route to ") + 9,
-                  positionParagraph.indexOf(". The")
-                )
-                .trim()
-
-              if (vesselDest && vesselDest.length > 0) {
-                destination =
-                  vesselDest[0].toUpperCase() +
-                  vesselDest.substring(1).toLowerCase()
-              }
-            }
-          } catch (destError) {
-            console.warn(
-              `Error parsing destination for ${arrivals[j]}:`,
-              destError.message
-            )
-          }
-
-          var shipPosition = {
-            index: j,
-            vesselUrl: arrivals[j],
-            vesselName: vesselName,
-            lat: latitude,
-            lng: longitude,
-            timestamp: aistimestamp,
-            destination: destination,
-          }
-
-          shipPositions.push(shipPosition)
-        } catch (vesselError) {
-          console.error(
-            `❌ Error processing vessel ${arrivals[j]}:`,
-            vesselError.message
-          )
-          // Continue with next vessel instead of failing completely
-          shipPositions.push({
-            index: j,
-            vesselUrl: arrivals[j],
-            vesselName: "Error",
-            lat: null,
-            lng: null,
-            timestamp: new Date(),
-            destination: "Unknown",
-            error: vesselError.message,
-          })
-        }
+    const shipPositions = arrivals.map((url, index) => {
+      const row = rows.find((r) => r.vesselnameurl === url)
+      return {
+        index,
+        vesselUrl: url,
+        vesselName: row?.vesselname ?? "Unknown",
+        lat: row?.currentpositionlat ?? null,
+        lng: row?.currentpositionlng ?? null,
+        timestamp: row?.currentpositiontime ?? null,
+        imo: row?.vesselimonumber ?? null,
+        mmsi: row?.vesselmmsinumber ?? null,
       }
-    } finally {
-      await page.close()
-    }
+    })
 
     res.json(shipPositions)
   } catch (error) {
@@ -346,6 +165,57 @@ export const getVesselPosition = async (req, res) => {
       error: "Failed to get vessel positions",
       message: error.message,
     })
+  }
+}
+
+// ----------------------------------------------------------
+// Fetch IMO and MMSI numbers from VesselFinder by vessel name
+// ----------------------------------------------------------
+const scrapeImoAndMmsiFromVesselFinder = async (vessel_name) => {
+  let vfPage = null
+  try {
+    const browser = await getBrowser()
+    vfPage = await browser.newPage()
+    const searchUrl = `https://www.vesselFinder.com/vessels?name=${encodeURIComponent(vessel_name)}`
+    await vfPage.goto(searchUrl, { waitUntil: "networkidle2", timeout: 30000 })
+
+    // VesselFinder detail links use the IMO as the path: /vessels/details/XXXXXXX
+    const detailPath = await vfPage.evaluate(() => {
+      const link = document.querySelector('a[href*="/vessels/details/"]')
+      return link ? link.getAttribute("href") : null
+    })
+
+    if (!detailPath) {
+      console.warn(`No VesselFinder result found for "${vessel_name}"`)
+      return { imoNumber: null, mmsiNumber: null }
+    }
+
+    const imoMatch = detailPath.match(/\/vessels\/details\/(\d+)/)
+    const imoNumber = imoMatch ? parseInt(imoMatch[1]) : null
+
+    // Navigate to detail page to extract MMSI
+    await vfPage.goto(`https://www.vesselFinder.com${detailPath}`, {
+      waitUntil: "networkidle2",
+      timeout: 30000,
+    })
+
+    const mmsiNumber = await vfPage.evaluate(() => {
+      // The detail page shows "IMO / MMSI" as a label with "XXXXXXX / XXXXXXXXX" as value
+      // Also appears in body text as "MMSI XXXXXXXXX"
+      const bodyText = document.body.innerText
+      const match = bodyText.match(/MMSI[\s:/]+(\d{9})/)
+      return match ? parseInt(match[1]) : null
+    })
+
+    console.log(
+      `VesselFinder — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`,
+    )
+    return { imoNumber, mmsiNumber }
+  } catch (err) {
+    console.warn("Could not scrape VesselFinder for", vessel_name, err?.message)
+    return { imoNumber: null, mmsiNumber: null }
+  } finally {
+    if (vfPage) await vfPage.close()
   }
 }
 
@@ -364,7 +234,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
       const data = await page.evaluate(() => {
         const getTdNext = (label) => {
           const td = Array.from(document.querySelectorAll("td")).find(
-            (t) => t.textContent.trim() === label
+            (t) => t.textContent.trim() === label,
           )
           return td?.nextElementSibling?.textContent?.trim() ?? ""
         }
@@ -372,12 +242,12 @@ export const scrapeVesselDetails = async (vessel_url) => {
         const vessel_title =
           document
             .querySelector(
-              "#container > main > section > article > header > h1"
+              "#container > main > section > article > header > h1",
             )
             ?.textContent?.trim() ?? ""
 
         const coverLink = document.querySelector(
-          "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a"
+          "#container > main > section > article > section > div.row.coverItem > div:nth-child(1) > a",
         )
 
         return {
@@ -415,7 +285,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Short Name of Vessel Operator
       const vessel_short_operator = vessel_title.substr(
         0,
-        vessel_title.indexOf(" ")
+        vessel_title.indexOf(" "),
       )
 
       // Long Name of Vessel Operator
@@ -424,14 +294,14 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Year of Build
       let vessel_year_built = data.vessel_year_built_temp.substr(
         0,
-        data.vessel_year_built_temp.indexOf("/") - 2
+        data.vessel_year_built_temp.indexOf("/") - 2,
       )
       if (vessel_year_built === "") vessel_year_built = "Not Known"
 
       // Length of Vessel in metres
       let vessel_length_metres = data.vessel_length_metres_temp.substr(
         0,
-        data.vessel_length_metres_temp.indexOf("/") - 3
+        data.vessel_length_metres_temp.indexOf("/") - 3,
       )
       vessel_length_metres =
         vessel_length_metres === ""
@@ -441,7 +311,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Width of Vessel in metres
       let vessel_width_metres = data.vessel_width_metres_temp.substr(
         0,
-        data.vessel_width_metres_temp.indexOf("/") - 3
+        data.vessel_width_metres_temp.indexOf("/") - 3,
       )
       vessel_width_metres =
         vessel_width_metres === ""
@@ -451,7 +321,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Gross Tonnage of Vessel
       let vessel_gross_tonnage = data.vessel_gross_tonnage_temp.substr(
         0,
-        data.vessel_gross_tonnage_temp.indexOf(" ")
+        data.vessel_gross_tonnage_temp.indexOf(" "),
       )
       vessel_gross_tonnage =
         vessel_gross_tonnage === ""
@@ -464,15 +334,16 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Vessel Maximum Speed
       let vessel_max_speed_knots = data.vessel_max_speed_knots_temp.substr(
         0,
-        data.vessel_max_speed_knots_temp.indexOf("/") - 4
+        data.vessel_max_speed_knots_temp.indexOf("/") - 4,
       )
       vessel_max_speed_knots =
         vessel_max_speed_knots === ""
           ? null
           : parseFloat(vessel_max_speed_knots) || null
 
-      // Vessel Callsign
-      const vessel_callsign = "C6BR5"
+      // IMO and MMSI numbers from VesselFinder
+      const { imoNumber: vessel_imo_number, mmsiNumber: vessel_mmsi_number } =
+        await scrapeImoAndMmsiFromVesselFinder(vessel_title)
 
       // Typical Number of Passengers
       const vessel_typical_passengers =
@@ -481,7 +352,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
       // Typical Number of Crew
       let vessel_typical_crew = data.vessel_typical_crew_raw
       vessel_typical_crew =
-        vessel_typical_crew === "" ? null : parseInt(vessel_typical_crew) || null
+        vessel_typical_crew === ""
+          ? null
+          : parseInt(vessel_typical_crew) || null
 
       // Scrape current position from the position paragraph
       let vessel_current_position_lat = null
@@ -494,7 +367,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
           const scripts = Array.from(document.querySelectorAll("script"))
           for (const script of scripts) {
             const match = script.textContent.match(
-              /"shipCurrentPositionMap"\s*:\s*\{([^}]+)\}/
+              /"shipCurrentPositionMap"\s*:\s*\{([^}]+)\}/,
             )
             if (match) {
               const latMatch = match[1].match(/"lat"\s*:\s*([-\d.]+)/)
@@ -527,11 +400,13 @@ export const scrapeVesselDetails = async (vessel_url) => {
         const positionParagraph = await page
           .$eval(
             "#container > main > section > article > section > div:nth-child(3) > div > div.col-md-4.currentItineraryInfo > p",
-            (el) => el.textContent.trim()
+            (el) => el.textContent.trim(),
           )
           .catch(() => "")
 
-        let secs = 0, mins = 0, hrs = 0
+        let secs = 0,
+          mins = 0,
+          hrs = 0
         const secondsMatch = positionParagraph.match(/(\d+)\s+seconds?/)
         const minutesMatch = positionParagraph.match(/(\d+)\s+minutes?/)
         const hoursMatch = positionParagraph.match(/(\d+)\s+hours?/)
@@ -546,15 +421,19 @@ export const scrapeVesselDetails = async (vessel_url) => {
           .subtract(secs, "seconds")
         vessel_current_position_time = new Date(aistime.format()).toISOString()
       } catch (posErr) {
-        console.warn("Could not scrape position for", vessel_url, posErr.message)
+        console.warn(
+          "Could not scrape position for",
+          vessel_url,
+          posErr.message,
+        )
       }
 
       const scrapedVessel = [
         process.env.DATABASE_VERSION,
-        vessel_url, // vesselnameurl
-        vessel_title, // vesselname (using title as name)
-        vessel_photo_title, // vesseltitle
-        vessel_photourl, // vesselurl
+        vessel_url,
+        vessel_title,
+        vessel_photo_title,
+        vessel_photourl,
         vessel_type,
         vessel_flag,
         vessel_short_operator,
@@ -565,10 +444,8 @@ export const scrapeVesselDetails = async (vessel_url) => {
         vessel_gross_tonnage,
         vessel_average_speed_knots,
         vessel_max_speed_knots,
-        7.9, // vesselaveragedraughtmetres (REAL)
-        8217881, // vesselimonumber (INTEGER)
-        311000343, // vesselmmsnumber (INTEGER)
-        vessel_callsign,
+        vessel_imo_number,
+        vessel_mmsi_number,
         vessel_typical_passengers,
         vessel_typical_crew,
         vessel_current_position_lng,
@@ -584,7 +461,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
     console.error(
       "scrapeVesselDetails error for",
       vessel_url,
-      err?.message || err
+      err?.message || err,
     )
     return null
   }
