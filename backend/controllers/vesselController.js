@@ -176,6 +176,16 @@ const scrapeImoAndMmsiFromVesselFinder = async (vessel_name) => {
   try {
     const browser = await getBrowser()
     vfPage = await browser.newPage()
+
+    // Set realistic user agent and viewport to avoid headless browser detection
+    await vfPage.setUserAgent(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    )
+    await vfPage.setViewport({ width: 1280, height: 800 })
+    await vfPage.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, "webdriver", { get: () => undefined })
+    })
+
     const searchUrl = `https://www.vesselFinder.com/vessels?name=${encodeURIComponent(vessel_name)}`
     await vfPage.goto(searchUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
@@ -193,23 +203,26 @@ const scrapeImoAndMmsiFromVesselFinder = async (vessel_name) => {
     const imoMatch = detailPath.match(/\/vessels\/details\/(\d+)/)
     const imoNumber = imoMatch ? parseInt(imoMatch[1]) : null
 
-    // Navigate to detail page to extract MMSI
-    await vfPage.goto(`https://www.vesselFinder.com${detailPath}`, {
-      waitUntil: "networkidle2",
-      timeout: 30000,
-    })
+    // Navigate to detail page to extract MMSI — wrapped separately so a failure
+    // here does not discard the already-extracted imoNumber
+    let mmsiNumber = null
+    try {
+      const detailUrl = detailPath.startsWith("http")
+        ? detailPath
+        : `https://www.vesselFinder.com${detailPath}`
+      await vfPage.goto(detailUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
-    const mmsiNumber = await vfPage.evaluate(() => {
-      // The detail page shows "IMO / MMSI" as a label with "XXXXXXX / XXXXXXXXX" as value
-      // Also appears in body text as "MMSI XXXXXXXXX"
-      const bodyText = document.body.innerText
-      const match = bodyText.match(/MMSI[\s:/]+(\d{9})/)
-      return match ? parseInt(match[1]) : null
-    })
+      mmsiNumber = await vfPage.evaluate(() => {
+        const bodyText = document.body.innerText
+        // Matches "MMSI 215105000" or "MMSI: 215105000" etc.
+        const match = bodyText.match(/MMSI[\s:/,]+(\d{9})/)
+        return match ? parseInt(match[1]) : null
+      })
+    } catch (mmsiErr) {
+      console.warn(`Could not fetch MMSI detail page for "${vessel_name}":`, mmsiErr?.message)
+    }
 
-    console.log(
-      `VesselFinder — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`,
-    )
+    console.log(`VesselFinder — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`)
     return { imoNumber, mmsiNumber }
   } catch (err) {
     console.warn("Could not scrape VesselFinder for", vessel_name, err?.message)
@@ -266,8 +279,8 @@ export const scrapeVesselDetails = async (vessel_url) => {
         }
       })
 
-      // Title
-      const vessel_title = data.vessel_title
+      // Title — strip operator prefixes not wanted in the vessel name
+      const vessel_title = data.vessel_title.replace(/^Fred Olsen\s*/i, "").trim()
 
       // Photo Title
       const vessel_photo_title = data.vessel_photo_title
