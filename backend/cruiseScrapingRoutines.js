@@ -13,31 +13,26 @@ dotenv.config({ quiet: true })
 // Import Port Arrivals & Vessel Details
 // -------------------------------------------------------
 export const importPortArrivalsAndVessels = async (req, res) => {
-  // Get the Port Name & Associated values
-  //  let port = req.query.portName.toUpperCase()
-
   console.log("Importing Port Arrivals & Vessel Details")
 
   // Respond immediately so the client is not left waiting during the long scrape
   res.status(202).json({ message: "Import started in background" })
 
   const port = process.env.BELFAST_PORT_NAME.toUpperCase()
-  // const port = process.env.GEIRANGER_PORT_NAME.toUpperCase()
-  // const port = process.env.BERGEN_PORT_NAME.toUpperCase()
   const portUrl = port + "_PORT_URL"
   const portName = process.env[portUrl]
 
-  // Thirdly get the available Months & Years for chosen Port
+  // Firstly get the available Months & Years for chosen Port
   const scheduledPeriods = await getScheduleMonths(portName)
 
   if (scheduledPeriods.length === 0) {
     console.log("CruiseMapper currently has no ship schedule for Selected Port")
   } else {
-    // Fourthly get all the Vessel Arrivals per Month
+    // Secondly get all the Vessel Arrivals per Month
     let vesselUrls = await getAndSavePortArrivals(
       scheduledPeriods,
       port,
-      portName
+      portName,
     )
 
     // Now remove duplicates and store Urls in DeduplicatedVesselUrlArray array
@@ -52,13 +47,13 @@ export const importPortArrivalsAndVessels = async (req, res) => {
       let scrapedVessel = null
       try {
         scrapedVessel = await scrapeVesselDetails(
-          DeduplicatedVesselUrlArray[loop]
+          DeduplicatedVesselUrlArray[loop],
         )
       } catch (err) {
         console.error(
           "scrapeVesselDetails failed for ",
           DeduplicatedVesselUrlArray[loop],
-          err?.message || err
+          err?.message || err,
         )
       }
 
@@ -71,7 +66,7 @@ export const importPortArrivalsAndVessels = async (req, res) => {
       } else {
         console.warn(
           "Skipping vessel due to scrape failure:",
-          DeduplicatedVesselUrlArray[loop]
+          DeduplicatedVesselUrlArray[loop],
         )
       }
 
@@ -106,7 +101,7 @@ const getScheduleMonths = async (portName) => {
 
     const scheduledPeriods = await page.$$eval(
       "#schedule > div:nth-child(2) > div.col-xs-8.thisMonth option",
-      (options) => options.map((opt) => ({ monthYearString: opt.value }))
+      (options) => options.map((opt) => ({ monthYearString: opt.value })),
     )
 
     return scheduledPeriods

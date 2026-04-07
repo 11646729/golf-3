@@ -46,14 +46,41 @@ const importPortArrivalsAndVesselsData = async (url) => {
     .catch((err) => {
       console.error(
         "importPortArrivalsAndVesselsData error:",
-        err?.message || err
+        err?.message || err,
       )
       throw err
     })
 }
 
 // -------------------------------------------------------
+// Function to store all Cruise PortArrivals & Vessel data in the SQL database
+// Used by RawDataTable.jsx when the "Load Cruise Ship Arrivals Data" button is clicked
+// -------------------------------------------------------
+export const loadCruiseShipArrivalsDataHandler = async () => {
+  try {
+    await preparePortArrivalsTable(
+      "http://localhost:4000/api/cruise/createPortArrivalsTable",
+    )
+
+    await prepareVesselsTable(
+      "http://localhost:4000/api/cruise/createVesselsTable",
+    )
+
+    await importPortArrivalsAndVesselsData(
+      "http://localhost:4000/api/cruise/importPortArrivalsAndVesselsData",
+    )
+  } catch (err) {
+    console.error(
+      "loadCruiseShipArrivalsDataHandler failed:",
+      err?.message || err,
+    )
+    throw err
+  }
+}
+
+// -------------------------------------------------------
 // Function to fetch all Cruise Vessel data
+// Used by CruiseShipArrivalsDataTable.jsx to display the data in a table
 // -------------------------------------------------------
 export const getPortArrivalsData = async (url) => {
   const params = { portName: import.meta.env.VITE_PORT_NAME }
@@ -66,31 +93,6 @@ export const getPortArrivalsData = async (url) => {
       console.error("getPortArrivalsData error:", err?.message || err)
       throw err
     })
-}
-
-// -------------------------------------------------------
-// Function to store all Cruise PortArrivals & Vessel data in the SQL database
-// -------------------------------------------------------
-export const loadCruiseShipArrivalsDataHandler = async () => {
-  try {
-    await preparePortArrivalsTable(
-      "http://localhost:4000/api/cruise/createPortArrivalsTable"
-    )
-
-    await prepareVesselsTable(
-      "http://localhost:4000/api/cruise/createVesselsTable"
-    )
-
-    await importPortArrivalsAndVesselsData(
-      "http://localhost:4000/api/cruise/importPortArrivalsAndVesselsData"
-    )
-  } catch (err) {
-    console.error(
-      "loadCruiseShipArrivalsDataHandler failed:",
-      err?.message || err
-    )
-    throw err
-  }
 }
 
 export { getPortArrivalsData as default }

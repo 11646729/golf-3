@@ -483,9 +483,71 @@ export const scrapeVesselDetails = async (vessel_url) => {
       vessel_typical_crew =
         vessel_typical_crew === "" ? null : parseInt(vessel_typical_crew) || null
 
-      const vessel_current_position_lng = 0.0
-      const vessel_current_position_lat = 0.0
-      const vessel_current_position_time = "Not Known"
+      // Scrape current position from the position paragraph
+      let vessel_current_position_lat = null
+      let vessel_current_position_lng = null
+      let vessel_current_position_time = "Not Known"
+
+      try {
+        // Extract coordinates from the shipCurrentPositionMap JSON in script tags
+        const mapPosition = await page.evaluate(() => {
+          const scripts = Array.from(document.querySelectorAll("script"))
+          for (const script of scripts) {
+            const match = script.textContent.match(
+              /"shipCurrentPositionMap"\s*:\s*\{([^}]+)\}/
+            )
+            if (match) {
+              const latMatch = match[1].match(/"lat"\s*:\s*([-\d.]+)/)
+              const lonMatch = match[1].match(/"lon"\s*:\s*([-\d.]+)/)
+              if (latMatch && lonMatch) {
+                return {
+                  lat: parseFloat(latMatch[1]),
+                  lng: parseFloat(lonMatch[1]),
+                }
+              }
+            }
+          }
+          return null
+        })
+
+        if (
+          mapPosition &&
+          !isNaN(mapPosition.lat) &&
+          !isNaN(mapPosition.lng) &&
+          mapPosition.lat >= -90 &&
+          mapPosition.lat <= 90 &&
+          mapPosition.lng >= -180 &&
+          mapPosition.lng <= 180
+        ) {
+          vessel_current_position_lat = mapPosition.lat
+          vessel_current_position_lng = mapPosition.lng
+        }
+
+        // Calculate AIS reported time from the position paragraph
+        const positionParagraph = await page
+          .$eval(
+            "#container > main > section > article > section > div:nth-child(3) > div > div.col-md-4.currentItineraryInfo > p",
+            (el) => el.textContent.trim()
+          )
+          .catch(() => "")
+
+        let secs = 0, mins = 0, hrs = 0
+        const secondsMatch = positionParagraph.match(/(\d+)\s+seconds?/)
+        const minutesMatch = positionParagraph.match(/(\d+)\s+minutes?/)
+        const hoursMatch = positionParagraph.match(/(\d+)\s+hours?/)
+        if (secondsMatch) secs = parseInt(secondsMatch[1]) || 0
+        if (minutesMatch) mins = parseInt(minutesMatch[1]) || 0
+        if (hoursMatch) hrs = parseInt(hoursMatch[1]) || 0
+
+        const aistime = moment
+          .utc()
+          .subtract(hrs, "hours")
+          .subtract(mins, "minutes")
+          .subtract(secs, "seconds")
+        vessel_current_position_time = new Date(aistime.format()).toISOString()
+      } catch (posErr) {
+        console.warn("Could not scrape position for", vessel_url, posErr.message)
+      }
 
       const scrapedVessel = [
         process.env.DATABASE_VERSION,
