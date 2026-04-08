@@ -169,66 +169,58 @@ export const getVesselPosition = async (req, res) => {
 }
 
 // ----------------------------------------------------------
-// Fetch IMO and MMSI numbers from VesselFinder by vessel name
+// Fetch IMO and MMSI numbers from MyShipTracking by vessel name
+// Both values are embedded in the first search result URL:
+// /vessels/celebrity-apex-mmsi-215105000-imo-9838383
 // ----------------------------------------------------------
-const scrapeImoAndMmsiFromVesselFinder = async (vessel_name) => {
-  let vfPage = null
+const scrapeImoAndMmsiFromMyShipTracking = async (vessel_name) => {
+  let page = null
   try {
     const browser = await getBrowser()
-    vfPage = await browser.newPage()
+    page = await browser.newPage()
 
     // Set realistic user agent and viewport to avoid headless browser detection
-    await vfPage.setUserAgent(
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    await page.setUserAgent(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     )
-    await vfPage.setViewport({ width: 1280, height: 800 })
-    await vfPage.evaluateOnNewDocument(() => {
+    await page.setViewport({ width: 1280, height: 800 })
+    await page.evaluateOnNewDocument(() => {
       Object.defineProperty(navigator, "webdriver", { get: () => undefined })
     })
 
-    const searchUrl = `https://www.vesselFinder.com/vessels?name=${encodeURIComponent(vessel_name)}`
-    await vfPage.goto(searchUrl, { waitUntil: "networkidle2", timeout: 30000 })
+    const searchUrl = `https://www.myshiptracking.com/vessels?name=${encodeURIComponent(vessel_name)}`
+    await page.goto(searchUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
-    // VesselFinder detail links use the IMO as the path: /vessels/details/XXXXXXX
-    const detailPath = await vfPage.evaluate(() => {
-      const link = document.querySelector('a[href*="/vessels/details/"]')
+    // Both IMO and MMSI are embedded in the first result URL:
+    // /vessels/celebrity-apex-mmsi-215105000-imo-9838383
+    const resultHref = await page.evaluate(() => {
+      const link = document.querySelector('a[href*="-mmsi-"][href*="-imo-"]')
       return link ? link.getAttribute("href") : null
     })
 
-    if (!detailPath) {
-      console.warn(`No VesselFinder result found for "${vessel_name}"`)
+    if (!resultHref) {
+      console.warn(`No MyShipTracking result found for "${vessel_name}"`)
       return { imoNumber: null, mmsiNumber: null }
     }
 
-    const imoMatch = detailPath.match(/\/vessels\/details\/(\d+)/)
+    const mmsiMatch = resultHref.match(/-mmsi-(\d+)/)
+    const imoMatch = resultHref.match(/-imo-(\d+)/)
+    const mmsiNumber = mmsiMatch ? parseInt(mmsiMatch[1]) : null
     const imoNumber = imoMatch ? parseInt(imoMatch[1]) : null
 
-    // Navigate to detail page to extract MMSI — wrapped separately so a failure
-    // here does not discard the already-extracted imoNumber
-    let mmsiNumber = null
-    try {
-      const detailUrl = detailPath.startsWith("http")
-        ? detailPath
-        : `https://www.vesselFinder.com${detailPath}`
-      await vfPage.goto(detailUrl, { waitUntil: "networkidle2", timeout: 30000 })
-
-      mmsiNumber = await vfPage.evaluate(() => {
-        const bodyText = document.body.innerText
-        // Matches "MMSI 215105000" or "MMSI: 215105000" etc.
-        const match = bodyText.match(/MMSI[\s:/,]+(\d{9})/)
-        return match ? parseInt(match[1]) : null
-      })
-    } catch (mmsiErr) {
-      console.warn(`Could not fetch MMSI detail page for "${vessel_name}":`, mmsiErr?.message)
-    }
-
-    console.log(`VesselFinder — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`)
+    console.log(
+      `MyShipTracking — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`,
+    )
     return { imoNumber, mmsiNumber }
   } catch (err) {
-    console.warn("Could not scrape VesselFinder for", vessel_name, err?.message)
+    console.warn(
+      "Could not scrape MyShipTracking for",
+      vessel_name,
+      err?.message,
+    )
     return { imoNumber: null, mmsiNumber: null }
   } finally {
-    if (vfPage) await vfPage.close()
+    if (page) await page.close()
   }
 }
 
@@ -280,7 +272,12 @@ export const scrapeVesselDetails = async (vessel_url) => {
       })
 
       // Title — strip operator prefixes not wanted in the vessel name
-      const vessel_title = data.vessel_title.replace(/^Fred Olsen\s*/i, "").trim()
+      const vessel_title = data.vessel_title
+        .replace(/^Fred Olsen\s*/i, "")
+        .replace(/^MSC\s*/i, "")
+        .replace(/^Oceania\s*/i, "")
+        .replace(/^ms\s*/i, "")
+        .trim()
 
       // Photo Title
       const vessel_photo_title = data.vessel_photo_title
@@ -354,9 +351,9 @@ export const scrapeVesselDetails = async (vessel_url) => {
           ? null
           : parseFloat(vessel_max_speed_knots) || null
 
-      // IMO and MMSI numbers from VesselFinder
+      // IMO and MMSI numbers from MyShipTracking
       const { imoNumber: vessel_imo_number, mmsiNumber: vessel_mmsi_number } =
-        await scrapeImoAndMmsiFromVesselFinder(vessel_title)
+        await scrapeImoAndMmsiFromMyShipTracking(vessel_title)
 
       // Typical Number of Passengers
       const vessel_typical_passengers =
