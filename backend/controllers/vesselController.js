@@ -170,8 +170,9 @@ export const getVesselPosition = async (req, res) => {
 
 // ----------------------------------------------------------
 // Fetch IMO and MMSI numbers from MyShipTracking by vessel name
-// Both values are embedded in the first search result URL:
-// /vessels/celebrity-apex-mmsi-215105000-imo-9838383
+// Scans all search result rows and returns the first one where
+// the AIS type is "Passengers ship". Both IMO and MMSI are embedded
+// in the result URL: /vessels/celebrity-apex-mmsi-215105000-imo-9838383
 // ----------------------------------------------------------
 const scrapeImoAndMmsiFromMyShipTracking = async (vessel_name) => {
   let page = null
@@ -191,20 +192,40 @@ const scrapeImoAndMmsiFromMyShipTracking = async (vessel_name) => {
     const searchUrl = `https://www.myshiptracking.com/vessels?name=${encodeURIComponent(vessel_name)}`
     await page.goto(searchUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
-    // Both IMO and MMSI are embedded in the first result URL:
-    // /vessels/celebrity-apex-mmsi-215105000-imo-9838383
-    const resultHref = await page.evaluate(() => {
-      const link = document.querySelector('a[href*="-mmsi-"][href*="-imo-"]')
-      return link ? link.getAttribute("href") : null
+    // Collect all result rows that have IMO and MMSI in the link href,
+    // along with the AIS type from the third column of each row
+    const rows = await page.evaluate(() => {
+      const links = Array.from(
+        document.querySelectorAll('a[href*="-mmsi-"][href*="-imo-"]'),
+      )
+      return links.map((link) => {
+        const row = link.closest("tr")
+        const aisType = row
+          ? (row.querySelector("td:nth-child(3)")?.textContent?.trim() ?? "")
+          : ""
+        return { href: link.getAttribute("href"), aisType }
+      })
     })
 
-    if (!resultHref) {
+    if (!rows.length) {
       console.warn(`No MyShipTracking result found for "${vessel_name}"`)
       return { imoNumber: null, mmsiNumber: null }
     }
 
-    const mmsiMatch = resultHref.match(/-mmsi-(\d+)/)
-    const imoMatch = resultHref.match(/-imo-(\d+)/)
+    // Use the first row whose AIS type is "Passengers ship"
+    const match = rows.find(
+      (r) => r.aisType.toLowerCase() === "passengers ship",
+    )
+
+    if (!match) {
+      console.log(
+        `MyShipTracking — "${vessel_name}": no Passengers ship result found (types: ${rows.map((r) => r.aisType).join(", ")})`,
+      )
+      return { imoNumber: null, mmsiNumber: null }
+    }
+
+    const mmsiMatch = match.href.match(/-mmsi-(\d+)/)
+    const imoMatch = match.href.match(/-imo-(\d+)/)
     const mmsiNumber = mmsiMatch ? parseInt(mmsiMatch[1]) : null
     const imoNumber = imoMatch ? parseInt(imoMatch[1]) : null
 
@@ -287,7 +308,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
         "https://www.cruisemapper.com" + data.vessel_photourl_path
 
       // Vessel Type
-      const vessel_type = "Passenger Ship"
+      const vessel_type = "Passengers Ship"
 
       // Vessel Flag
       const vessel_flag = data.vessel_flag || "Not Known"
