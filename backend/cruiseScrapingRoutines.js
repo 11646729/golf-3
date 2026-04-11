@@ -12,7 +12,7 @@ dotenv.config({ quiet: true })
 // -------------------------------------------------------
 // Import Port Arrivals & Vessel Details
 // -------------------------------------------------------
-export const importPortArrivalsAndVessels = async (req, res) => {
+export const importPortArrivalsAndVessels = async (_req, res) => {
   console.log("Importing Port Arrivals & Vessel Details")
 
   // Respond immediately so the client is not left waiting during the long scrape

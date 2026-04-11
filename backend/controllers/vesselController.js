@@ -212,27 +212,53 @@ const scrapeImoAndMmsiFromMyShipTracking = async (vessel_name) => {
       return { imoNumber: null, mmsiNumber: null }
     }
 
-    // Use the first row whose AIS type is "Passengers ship"
-    const match = rows.find(
-      (r) => r.aisType.toLowerCase() === "passengers ship",
+    // Parse IMO & MMSI from each row's href
+    const parsedRows = rows.map((r) => {
+      const mmsiMatch = r.href.match(/-mmsi-(\d+)/)
+      const imoMatch = r.href.match(/-imo-(\d+)/)
+      return {
+        aisType: r.aisType,
+        href: r.href,
+        imo: imoMatch ? parseInt(imoMatch[1]) : null,
+        mmsi: mmsiMatch ? parseInt(mmsiMatch[1]) : null,
+      }
+    })
+
+    // Remove duplicate rows where both IMO & MMSI are the same
+    const seen = new Set()
+    const uniqueRows = parsedRows.filter((r) => {
+      const key = `${r.imo}-${r.mmsi}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+
+    const passengerRows = uniqueRows.filter((r) => {
+      const type = r.aisType.toLowerCase()
+      return type === "passenger ship" || type === "passengers ship"
+    })
+
+    console.log(`MyShipTracking — "${vessel_name}": ${rows.length} row(s) returned, ${passengerRows.length} Passenger Ship vessel(s):`)
+    passengerRows.forEach((r, i) =>
+      console.log(`  Vessel ${i + 1}: AIS type="${r.aisType}", IMO=${r.imo}, MMSI=${r.mmsi}, href="${r.href}"`),
+    )
+
+    // Use the first unique row whose AIS type is "Passenger"
+    const match = uniqueRows.find(
+      (r) => r.aisType.toLowerCase() === "passenger",
     )
 
     if (!match) {
       console.log(
-        `MyShipTracking — "${vessel_name}": no Passengers ship result found (types: ${rows.map((r) => r.aisType).join(", ")})`,
+        `MyShipTracking — "${vessel_name}": no Passenger result found (types: ${uniqueRows.map((r) => r.aisType).join(", ")})`,
       )
       return { imoNumber: null, mmsiNumber: null }
     }
 
-    const mmsiMatch = match.href.match(/-mmsi-(\d+)/)
-    const imoMatch = match.href.match(/-imo-(\d+)/)
-    const mmsiNumber = mmsiMatch ? parseInt(mmsiMatch[1]) : null
-    const imoNumber = imoMatch ? parseInt(imoMatch[1]) : null
-
     console.log(
-      `MyShipTracking — "${vessel_name}": IMO ${imoNumber}, MMSI ${mmsiNumber}`,
+      `MyShipTracking — "${vessel_name}": IMO ${match.imo}, MMSI ${match.mmsi}`,
     )
-    return { imoNumber, mmsiNumber }
+    return { imoNumber: match.imo, mmsiNumber: match.mmsi }
   } catch (err) {
     console.warn(
       "Could not scrape MyShipTracking for",
@@ -308,7 +334,7 @@ export const scrapeVesselDetails = async (vessel_url) => {
         "https://www.cruisemapper.com" + data.vessel_photourl_path
 
       // Vessel Type
-      const vessel_type = "Passengers Ship"
+      const vessel_type = "Passenger"
 
       // Vessel Flag
       const vessel_flag = data.vessel_flag || "Not Known"
