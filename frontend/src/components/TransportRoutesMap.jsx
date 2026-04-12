@@ -93,16 +93,16 @@ const CustomCircle = ({
 const TransportRoutesMap = (props) => {
   const {
     transportAgencyName,
-    // transportRoutesArray,
     transportShapesArray,
     transportStopsArray,
+    vehiclePositions = [],
   } = props
 
   TransportRoutesMap.propTypes = {
     transportAgencyName: PropTypes.string,
-    // transportRoutesArray: PropTypes.array,
     transportShapesArray: PropTypes.array,
     transportStopsArray: PropTypes.array,
+    vehiclePositions: PropTypes.array,
   }
 
   const [mapZoom] = useState(
@@ -138,6 +138,21 @@ const TransportRoutesMap = (props) => {
   const handleMarkerClick = useCallback((markerId) => {
     setSelectedMarker(markerId)
   }, [])
+
+  const VehicleBusIcon = ({ bearing }) => (
+    <div
+      style={{
+        width: "16px",
+        height: "16px",
+        backgroundColor: "#f59e0b",
+        borderRadius: "3px",
+        border: "2px solid #ffffff",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+        cursor: "pointer",
+        transform: bearing != null ? `rotate(${bearing}deg)` : "none",
+      }}
+    />
+  )
 
   // const handleTransportShapeClick = (event) => {
   //   console.log(event)
@@ -192,6 +207,17 @@ const TransportRoutesMap = (props) => {
                 <CustomCircle />
               </AdvancedMarker>
             ))}
+            {/* Live vehicle markers */}
+            {vehiclePositions.map((vehicle) => (
+              <AdvancedMarker
+                key={vehicle.vehicle_id}
+                position={{ lat: vehicle.latitude, lng: vehicle.longitude }}
+                title={`Vehicle ${vehicle.vehicle_id}${vehicle.speed != null ? ` · ${Math.round(vehicle.speed)} km/h` : ""}`}
+              >
+                <VehicleBusIcon bearing={vehicle.bearing} />
+              </AdvancedMarker>
+            ))}
+
             {selectedStop && (
               <InfoWindow
                 position={{

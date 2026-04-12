@@ -1,4 +1,5 @@
-import { useState, useEffect, memo } from "react"
+import { useState, useEffect, useRef, memo } from "react"
+import socketIOClient from "socket.io-client"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import { Autocomplete, TextField } from "@mui/material"
 import { styled } from "@mui/material/styles"
@@ -50,6 +51,9 @@ const TransportRoutesPage = () => {
   const [transportShapesArray, setTransportShapesArray] = useState([])
   const [transportStopsArray, setTransportStopsArray] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [vehiclePositions, setVehiclePositions] = useState([])
+  const [selectedRouteId, setSelectedRouteId] = useState(null)
+  const hasReceivedFirstData = useRef(false)
 
   // build agenciesData Url
   const transportAgenciesDataUrl =
@@ -60,6 +64,31 @@ const TransportRoutesPage = () => {
     "http://localhost:4000/api/gtfs/shapesforsingleroute?routeId="
   const stopsDataBaseUrl =
     "http://localhost:4000/api/gtfs/stopsforsingleroute?routeId="
+
+  // Socket.io — vehicle positions
+  useEffect(() => {
+    const socket = socketIOClient(
+      import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL ||
+        "http://localhost:4000",
+      { autoConnect: false },
+    )
+    socket.connect()
+
+    socket.on("FromGtfsVehiclePositions", (positions) => {
+      if (hasReceivedFirstData.current) return
+      hasReceivedFirstData.current = true
+      console.log("GTFS vehicle positions (first fetch):", positions)
+      if (selectedRouteId) {
+        setVehiclePositions(
+          positions.filter((v) => v.route_id === selectedRouteId),
+        )
+      } else {
+        setVehiclePositions(positions)
+      }
+    })
+
+    return () => socket.disconnect()
+  }, [selectedRouteId])
 
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
@@ -85,7 +114,7 @@ const TransportRoutesPage = () => {
                 setTransportAgencyName(newValue.label)
                 getRoutesForSingleAgencyFrontEnd(
                   routesDataBaseUrl + newValue.agencyid,
-                  transportAgencyId
+                  transportAgencyId,
                 ).then((returnedData) => {
                   setTransportRoutesArray(returnedData)
                 })
@@ -122,20 +151,21 @@ const TransportRoutesPage = () => {
               id="routes-box"
               disabled={!transportAgencyId}
               onChange={(_, newValue) => {
+                setSelectedRouteId(newValue.routeid)
                 getShapesForSingleRouteFrontEnd(
                   shapesDataBaseUrl + newValue.routeid,
                   newValue.routeid,
-                  transportRoutesArray
+                  transportRoutesArray,
                 )
                   .then((returnedData) => {
                     setTransportShapesArray(returnedData)
                   })
-                  .then(console.log(newValue.routeid))
+                  .then(console.log("Route Id: " + newValue.routeid))
                 const stopsDataUrl = stopsDataBaseUrl + newValue.routeid
                 getStopsForSingleRouteFrontEnd(
                   stopsDataUrl,
                   newValue.routeid,
-                  transportRoutesArray
+                  transportRoutesArray,
                 ).then((returnedData) => {
                   setTransportStopsArray(returnedData)
                 })
@@ -170,9 +200,9 @@ const TransportRoutesPage = () => {
         <TransportRoutesMap
           isLoading={isLoading}
           transportAgencyName={transportAgencyName}
-          // transportRoutesArray={transportRoutesArray}
           transportShapesArray={transportShapesArray}
           transportStopsArray={transportStopsArray}
+          vehiclePositions={vehiclePositions}
         />
       </div>
     </div>

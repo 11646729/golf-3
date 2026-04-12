@@ -1,18 +1,22 @@
 import nodeCron from "node-cron"
 import { emitHeartbeatData } from "./controllers/rtHeartbeatController.js"
-import {
-  emitCalendarEventsData,
-  getGoogleCalendarEvents,
-} from "./controllers/rtCalendarController.js"
+// import {
+//   emitCalendarEventsData,
+//   getGoogleCalendarEvents,
+// } from "./controllers/rtCalendarController.js"
 import {
   emitTemperatureData,
   getOpenWeatherData,
   reformatTemperatureValue,
 } from "./controllers/rtWeatherController.js"
+// import {
+//   emitNewsHeadlinesData,
+//   getNewsHeadlinesItems,
+// } from "./controllers/rtNewsController.js"
 import {
-  emitNewsHeadlinesData,
-  getNewsHeadlinesItems,
-} from "./controllers/rtNewsController.js"
+  emitVehiclePositions,
+  updateAndGetVehiclePositions,
+} from "./controllers/rtGtfsController.js"
 
 // -------------------------------------------------------
 // TO WORK PROPERLY FRONTEND MUST BE SWITCH ON BEFORE BACKEND
@@ -22,47 +26,56 @@ export const enableRealtimeData = (io) => {
   // From socket-io code
   // -------------------------------------------------------------------
   let Heartbeat,
-    CalendarEventsInterval,
+    // CalendarEventsInterval,
     TemperatureInterval,
-    NewsHeadlinesInterval
+    // NewsHeadlinesInterval,
+    GtfsVehiclePositionsInterval
 
   io.on("connection", (socket) => {
     console.log("New client connected")
 
     if (
       Heartbeat ||
-      CalendarEventsInterval ||
+      // CalendarEventsInterval ||
       TemperatureInterval ||
-      NewsHeadlinesInterval
+      // NewsHeadlinesInterval ||
+      GtfsVehiclePositionsInterval
     ) {
       Heartbeat.stop()
-      CalendarEventsInterval.stop()
+      // CalendarEventsInterval.stop()
       TemperatureInterval.stop()
-      NewsHeadlinesInterval.stop()
+      // NewsHeadlinesInterval.stop()
+      GtfsVehiclePositionsInterval.stop()
     }
 
     Heartbeat = nodeCron.schedule("*/1 * * * * *", () => {
       getHeartbeatApiAndEmit(socket)
     })
 
-    CalendarEventsInterval = nodeCron.schedule("*/1 * * * * *", () => {
-      getCalendarEventsApiAndEmit(socket)
-    })
+    // CalendarEventsInterval = nodeCron.schedule("*/1 * * * * *", () => {
+    //   getCalendarEventsApiAndEmit(socket)
+    // })
 
     TemperatureInterval = nodeCron.schedule("*/1 * * * * *", () => {
       getTemperatureApiAndEmit(socket)
     })
 
-    NewsHeadlinesInterval = nodeCron.schedule("*/2 * * * * *", () => {
-      getNewsHeadlinesApiAndEmit(socket)
+    // NewsHeadlinesInterval = nodeCron.schedule("*/2 * * * * *", () => {
+    //   getNewsHeadlinesApiAndEmit(socket)
+    // })
+
+    // Poll every 60 seconds
+    GtfsVehiclePositionsInterval = nodeCron.schedule("*/1 * * * *", () => {
+      getGtfsVehiclePositionsAndEmit(socket)
     })
 
     socket.on("disconnect", () => {
       console.log("Client disconnected")
       Heartbeat.stop()
-      CalendarEventsInterval.stop()
+      // CalendarEventsInterval.stop()
       TemperatureInterval.stop()
-      NewsHeadlinesInterval.stop()
+      // NewsHeadlinesInterval.stop()
+      GtfsVehiclePositionsInterval.stop()
     })
   })
 
@@ -78,12 +91,12 @@ export const enableRealtimeData = (io) => {
   // -----------------------------
   // Fetch Google Calendar Events data
   // -----------------------------
-  const getCalendarEventsApiAndEmit = (socket) => {
-    getGoogleCalendarEvents().then((result) => {
-      // Emit 2 events isLoading & sendData to client
-      emitCalendarEventsData(socket, result, false)
-    })
-  }
+  // const getCalendarEventsApiAndEmit = (socket) => {
+  //   getGoogleCalendarEvents().then((result) => {
+  //     // Emit 2 events isLoading & sendData to client
+  //     emitCalendarEventsData(socket, result, false)
+  //   })
+  // }
 
   // -----------------------------
   // Fetch Temperature data
@@ -131,18 +144,31 @@ export const enableRealtimeData = (io) => {
   }
 
   // -----------------------------
+  // Fetch GTFS Realtime vehicle positions
+  // -----------------------------
+  const getGtfsVehiclePositionsAndEmit = (socket) => {
+    updateAndGetVehiclePositions()
+      .then((positions) => {
+        emitVehiclePositions(socket, positions, false)
+      })
+      .catch((error) => {
+        console.error("GTFS realtime fetch error:", error.message)
+      })
+  }
+
+  // -----------------------------
   // Fetch News Headline data
   // -----------------------------
-  const getNewsHeadlinesApiAndEmit = (socket) => {
-    const liveNewsTopHeadlinesUrl =
-      "https://newsapi.org/v2/top-headlines" +
-      "?sources=bbc-news" +
-      "&apiKey=" +
-      process.env.RT_NEWS_API
-
-    getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
-      // Emit 2 events isLoading & sendData to client
-      emitNewsHeadlinesData(socket, result, false)
-    })
-  }
+  // const getNewsHeadlinesApiAndEmit = (socket) => {
+  //   const liveNewsTopHeadlinesUrl =
+  //     "https://newsapi.org/v2/top-headlines" +
+  //     "?sources=bbc-news" +
+  //     "&apiKey=" +
+  //     process.env.RT_NEWS_API
+  //
+  //   getNewsHeadlinesItems(liveNewsTopHeadlinesUrl).then((result) => {
+  //     // Emit 2 events isLoading & sendData to client
+  //     emitNewsHeadlinesData(socket, result, false)
+  //   })
+  // }
 }

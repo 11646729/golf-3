@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react"
 import socketIOClient from "socket.io-client"
-import RTCalendar from "../components/RTCalendar"
-import RTNews from "../components/RTNews"
+// import RTCalendar from "../components/RTCalendar"
+// import RTNews from "../components/RTNews"
 import RTWeather from "../components/RTWeather"
 import "../styles/realtimehome.scss"
 
@@ -35,13 +35,13 @@ const RealTimeHomePage = () => {
 const ClientComponent = () => {
   const [heartbeatEvents, setHeartbeatEvents] = useState([])
   // const [isLoadingHeartbeatEvents, setIsLoadingHeartbeatEvents] = useState(true)
-  const [calendarEvents, setCalendarEvents] = useState([])
-  const [isLoadingCalendarEvents, setIsLoadingCalendarEvents] = useState(true)
+  // const [calendarEvents, setCalendarEvents] = useState([])
+  // const [isLoadingCalendarEvents, setIsLoadingCalendarEvents] = useState(true)
   const [temperatureReadings, setTemperatureReadings] = useState([])
   const [isLoadingTemperatureData, setIsLoadingTemperatureData] = useState(true)
-  const [newsHeadlinesItems, setNewsHeadlinesItems] = useState([])
-  const [isLoadingNewsHeadlinesData, setIsLoadingNewsHeadlinesData] =
-    useState(true)
+  // const [newsHeadlinesItems, setNewsHeadlinesItems] = useState([])
+  // const [isLoadingNewsHeadlinesData, setIsLoadingNewsHeadlinesData] =
+  //   useState(true)
 
   useEffect(() => {
     const socket = socketIOClient(
@@ -62,21 +62,21 @@ const ClientComponent = () => {
       setHeartbeatEvents(response)
     })
 
-    socket.on("FromIsLoadingCalendarEvents", (response) => {
-      setIsLoadingCalendarEvents(response)
-    })
+    // socket.on("FromIsLoadingCalendarEvents", (response) => {
+    //   setIsLoadingCalendarEvents(response)
+    // })
 
-    socket.on("FromCalendarEventsAPI", (response) => {
-      setCalendarEvents(response)
-    })
+    // socket.on("FromCalendarEventsAPI", (response) => {
+    //   setCalendarEvents(response)
+    // })
 
-    socket.on("FromIsLoadingNewsHeadlinesData", (response) => {
-      setIsLoadingNewsHeadlinesData(response)
-    })
+    // socket.on("FromIsLoadingNewsHeadlinesData", (response) => {
+    //   setIsLoadingNewsHeadlinesData(response)
+    // })
 
-    socket.on("FromNewsHeadlinesAPI", (data) => {
-      setNewsHeadlinesItems(data)
-    })
+    // socket.on("FromNewsHeadlinesAPI", (data) => {
+    //   setNewsHeadlinesItems(data)
+    // })
 
     socket.on("FromIsLoadingTemperatureData", (response) => {
       setIsLoadingTemperatureData(response)
@@ -111,18 +111,18 @@ const ClientComponent = () => {
         The time is: <time> {heartbeatEvents}</time>
       </p>
       <div className="home">
-        <div className="box box1">
+        {/* <div className="box box1">
           <RTCalendar
             isLoadingCalendarEvents={isLoadingCalendarEvents}
             calendarEvents={calendarEvents}
           />
-        </div>
-        <div className="box box2">
+        </div> */}
+        {/* <div className="box box2">
           <RTNews
             isLoadingNewsHeadlinesData={isLoadingNewsHeadlinesData}
             newsHeadlinesItems={newsHeadlinesItems}
           />
-        </div>
+        </div> */}
         <div className="box box3">
           <RTWeather
             isLoadingTemperatureData={isLoadingTemperatureData}

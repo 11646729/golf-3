@@ -6,11 +6,12 @@ import { createServer } from "http"
 import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
 import { createDatabaseAdapter } from "./databaseUtilities.js"
+import { createVehiclePositionsTable } from "./controllers/rtGtfsController.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
-import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
-import rtNewsRouter from "./routes/rtNewsRouteCatalog.js"
+// import rtCalendarRouter from "./routes/rtCalendarRouteCatalog.js"
+// import rtNewsRouter from "./routes/rtNewsRouteCatalog.js"
 import golfRouter from "./routes/golfRouteCatalog.js"
 import rtWeatherRouter from "./routes/rtWeatherRouteCatalog.js"
 import cruiseRouter from "./routes/cruiseRouteCatalog.js"
@@ -54,8 +55,8 @@ app.use(
 // -----------------------------------------------------
 
 // Routes
-app.use("/api/rtcalendar", rtCalendarRouter)
-app.use("/api/rtnews", rtNewsRouter)
+// app.use("/api/rtcalendar", rtCalendarRouter)
+// app.use("/api/rtnews", rtNewsRouter)
 app.use("/api/golf", golfRouter)
 app.use("/api/weather", rtWeatherRouter)
 app.use("/api/cruise", cruiseRouter)
@@ -85,6 +86,7 @@ enableRealtimeData(io) // Socket.io system
 
 // Connect to DB eagerly before accepting requests, then start server
 createDatabaseAdapter()
+  .then(() => createVehiclePositionsTable())
   .then(() => {
     httpServer.listen(port, (err) => {
       if (err) {
