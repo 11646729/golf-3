@@ -40,7 +40,7 @@ export const getAllAgenciesFrontEnd = async (url) => {
   const responseData = await axios.get(url, config)
 
   return responseData.data.map(function (row) {
-    return { agencyid: row.agency_id, label: row.agency_name }
+    return { agencyid: row.agency_id, label: `${row.agency_name} (${row.agency_id})` }
   })
 }
 
