@@ -67,6 +67,8 @@ const TransportRoutesPage = () => {
 
   // Socket.io — vehicle positions
   useEffect(() => {
+    hasReceivedFirstData.current = false
+
     const socket = socketIOClient(
       import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL ||
         "http://localhost:4000",
@@ -82,13 +84,20 @@ const TransportRoutesPage = () => {
         setVehiclePositions(
           positions.filter((v) => v.route_id === selectedRouteId),
         )
+      } else if (transportRoutesArray.length > 0) {
+        const agencyRouteIds = new Set(
+          transportRoutesArray.map((r) => r.routeid),
+        )
+        setVehiclePositions(
+          positions.filter((v) => agencyRouteIds.has(v.route_id)),
+        )
       } else {
-        setVehiclePositions(positions)
+        setVehiclePositions([])
       }
     })
 
     return () => socket.disconnect()
-  }, [selectedRouteId])
+  }, [selectedRouteId, transportRoutesArray])
 
   useEffect(() => {
     getAllAgenciesFrontEnd(transportAgenciesDataUrl)
@@ -182,7 +191,7 @@ const TransportRoutesPage = () => {
                 <TextField
                   {...params}
                   sx={{ input: { color: "white" }, width: 580 }}
-                  label="Routes"
+                  label="Route"
                   InputLabelProps={{
                     ...params.InputLabelProps,
                     style: {
