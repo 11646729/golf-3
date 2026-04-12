@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from "react"
+import { useState, useEffect, memo } from "react"
 import socketIOClient from "socket.io-client"
 import TransportRoutesMap from "../components/TransportRoutesMap"
 import { Autocomplete, TextField } from "@mui/material"
@@ -53,7 +53,6 @@ const TransportRoutesPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [vehiclePositions, setVehiclePositions] = useState([])
   const [selectedRouteId, setSelectedRouteId] = useState(null)
-  const hasReceivedFirstData = useRef(false)
 
   // build agenciesData Url
   const transportAgenciesDataUrl =
@@ -67,8 +66,6 @@ const TransportRoutesPage = () => {
 
   // Socket.io — vehicle positions
   useEffect(() => {
-    hasReceivedFirstData.current = false
-
     const socket = socketIOClient(
       import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL ||
         "http://localhost:4000",
@@ -77,9 +74,7 @@ const TransportRoutesPage = () => {
     socket.connect()
 
     socket.on("FromGtfsVehiclePositions", (positions) => {
-      if (hasReceivedFirstData.current) return
-      hasReceivedFirstData.current = true
-      console.log("GTFS vehicle positions (first fetch):", positions)
+      console.log("GTFS vehicle positions:", positions)
       if (selectedRouteId) {
         setVehiclePositions(
           positions.filter((v) => v.route_id === selectedRouteId),
