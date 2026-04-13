@@ -126,7 +126,17 @@ const TransportRoutesPage = () => {
               options={transportAgencyArray}
               renderOption={(props, option) => {
                 return (
-                  <li {...props} key={option.agencyid}>
+                  <li
+                    {...props}
+                    key={option.agencyid}
+                    style={
+                      !option.label.includes("Go-Ahead") &&
+                      !option.label.includes("Dublin Bus") &&
+                      !option.label.includes("Bus Éireann")
+                        ? { color: "lightgray" }
+                        : undefined
+                    }
+                  >
                     {option.label}
                   </li>
                 )

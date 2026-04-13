@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"
+import { memo, useState } from "react"
 import PropTypes from "prop-types"
 import Button from "@mui/material/Button"
 import Paper from "@mui/material/Paper"
@@ -15,8 +15,8 @@ import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperature
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
-import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
-import { startRegularUpdatesOfRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
+// import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
+// import { startRegularUpdatesOfRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
@@ -45,41 +45,29 @@ const tableData = [
   {
     id: 4,
     datatype: "GTFS Transport Data",
-    buttontext: "Initialise Static GTFS Data",
+    buttontext: "Fetch Static GTFS Data",
     buttonbackgroundcolor: "darkred",
   },
   {
     id: 5,
-    datatype: "GTFS Transport Data",
-    buttontext: "Update Realtime GTFS Data",
-    buttonbackgroundcolor: "darkred",
-  },
-  {
-    id: 6,
-    datatype: "GTFS Transport Data",
-    buttontext: "Update GTFS Trip & Vehicle Position Data",
-    buttonbackgroundcolor: "darkblue",
-  },
-  {
-    id: 7,
     datatype: "Crime Data",
     buttontext: "Fetch Crime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 8,
+    id: 6,
     datatype: "Realtime Calendar & News Data",
     buttontext: "Start Calendar & News Realtime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 9,
+    id: 7,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 10,
+    id: 8,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
     buttonbackgroundcolor: "darkred",
@@ -105,12 +93,8 @@ const RawDataTable = (props) => {
     setPage(0)
   }
 
-  // const [toggle, setToggle] = useState(false)
-  // const [buttonBackgroundColor, setButtonBackgroundColor] = useState("darkred")
-
+  // Define the logic for handling the button click based on the row ID
   const handleClick = (id) => {
-    // Define the logic for handling the button click based on the row ID
-
     switch (id) {
       case 1:
         loadTemperaturesDataHandler()
@@ -125,22 +109,15 @@ const RawDataTable = (props) => {
         loadStaticGTFSDataHandler()
         break
       case 5:
-        loadRealtimeGTFSDataHandler()
-        break
-      case 6:
-        // setToggle(!toggle)
-        startRegularUpdatesOfRealtimeGTFSDataHandler()
-        break
-      case 7:
         loadCrimesDataHandler()
         break
-      case 8:
+      case 6:
         startRealtimeDataHandler()
         break
-      case 9:
+      case 7:
         loadRTCalendarEventsHandler()
         break
-      case 10:
+      case 9:
         loadRTNewsItemsHandler()
         break
 
