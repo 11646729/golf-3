@@ -15,8 +15,6 @@ import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperature
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
-// import { loadRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
-// import { startRegularUpdatesOfRealtimeGTFSDataHandler } from "../functionHandlers/loadRealtimeGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
