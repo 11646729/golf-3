@@ -104,10 +104,7 @@ const CruisesTable = (props) => {
   }
 
   const handleOpen = (imageUrl) => {
-    // setSelectedImage(element.vesselurl)
-    setSelectedImage(
-      "https://www.cruisemapper.com/images/ships/693-large-53e3a7161e428b65688f14b84d61c610.jpg"
-    )
+    setSelectedImage(imageUrl)
     setOpen(true)
   }
 
@@ -182,10 +179,9 @@ const CruisesTable = (props) => {
                         <div className="cruisesshipname">
                           <Link
                             component="button"
-                            onClick={() => {
-                              setOpen(true)
-                              handleOpen(modifiedPortArrivals.portarrivalid)
-                            }}
+                            onClick={() =>
+                              handleOpen(modifiedPortArrivals.vesselurl)
+                            }
                           >
                             {modifiedPortArrivals.vesselshortcruisename}
                           </Link>
@@ -205,7 +201,7 @@ const CruisesTable = (props) => {
                       <button
                         className="cruisesbutton"
                         onClick={() =>
-                          handleOpen(modifiedPortArrivals.portarrivalid)
+                          handleOpen(modifiedPortArrivals.vesselurl)
                         }
                       >
                         Show
@@ -220,8 +216,7 @@ const CruisesTable = (props) => {
             <Box sx={style}>
               {selectedImage && (
                 <img
-                  // src={selectedImage}
-                  src="https://www.cruisemapper.com/images/ships/2200-7ae75f1d27c.jpg"
+                  src={selectedImage}
                   alt="Selected"
                   style={{ width: "100%" }}
                 />

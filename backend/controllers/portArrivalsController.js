@@ -105,7 +105,7 @@ export const getPortArrivals = async (req, res, next) => {
     )
 
     const sql =
-      "SELECT * FROM portarrivals WHERE vesseleta >= ? AND vesseleta < ?"
+      "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
     const results = await getDb().all(sql, params)
