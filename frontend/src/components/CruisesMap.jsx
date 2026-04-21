@@ -112,7 +112,7 @@ const getSelectedPosition = (positions, markerId) =>
     ? positions.find((position) => position._markerId === markerId)
     : null
 
-const CruisesMap = ({ vesselPositions = [] }) => {
+const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
   const validPositions = useMemo(
     () => normaliseVesselPositions(vesselPositions),
     [vesselPositions]
@@ -130,7 +130,9 @@ const CruisesMap = ({ vesselPositions = [] }) => {
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <Title>{CruiseMapTitle}</Title>
+      <div className="cruisesmaptitlecontainer">
+        <Title>{CruiseMapTitle}</Title>
+      </div>
       {/* <div className="cruisesmapcontainer"> */}
       <Map
         defaultZoom={defaultMapZoom}
@@ -160,16 +162,19 @@ const CruisesMap = ({ vesselPositions = [] }) => {
             onCloseClick={handleInfoWindowClose}
           >
             <Card>
-              <CardMedia
-                style={{
-                  height: 0,
-                  paddingTop: "40%",
-                  marginTop: "30",
-                }}
-              />
+              {selectedPosition.vesselImageUrl && (
+                <CardMedia
+                  component="img"
+                  image={selectedPosition.vesselImageUrl}
+                  alt={selectedPosition.vesselName ?? "Vessel"}
+                  style={{ height: 160, objectFit: "cover" }}
+                />
+              )}
               <CardContent>
                 <Typography gutterBottom variant="h6" component="h3">
-                  {selectedPosition.vesselName ?? "Vessel"}
+                  {vesselDetails.find(
+                    (d) => d.vesselnameurl === selectedPosition.vesselUrl
+                  )?.vesselshortcruisename ?? selectedPosition.vesselName ?? "Vessel"}
                 </Typography>
                 {selectedPosition.timestamp ? (
                   <Typography component="p">

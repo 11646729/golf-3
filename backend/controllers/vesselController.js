@@ -137,7 +137,7 @@ export const getVesselPosition = async (req, res) => {
     const db = getDb()
     const placeholders = arrivals.map((_, i) => `$${i + 1}`).join(", ")
     const rows = await db.all(
-      `SELECT vesselname, vesselnameurl, vesselimonumber, vesselmmsinumber,
+      `SELECT vesselname, vesselnameurl, vesselurl, vesselimonumber, vesselmmsinumber,
               currentpositionlat, currentpositionlng, currentpositiontime
        FROM vessels
        WHERE vesselnameurl IN (${placeholders})`,
@@ -150,6 +150,7 @@ export const getVesselPosition = async (req, res) => {
         index,
         vesselUrl: url,
         vesselName: row?.vesselname ?? "Unknown",
+        vesselImageUrl: row?.vesselurl ?? null,
         lat: row?.currentpositionlat ?? null,
         lng: row?.currentpositionlng ?? null,
         timestamp: row?.currentpositiontime ?? null,

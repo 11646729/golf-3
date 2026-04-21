@@ -28,7 +28,8 @@ const CruiseCard = () => {
           Cruise Ship Arrivals
         </Typography>
         <Typography>
-          Details about the Cruise Ships arriving soon in Belfast
+          Details about the Cruise Ships arriving in the next 3 months in
+          Belfast
         </Typography>
       </CardContent>
       <CardActions>

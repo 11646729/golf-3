@@ -102,10 +102,6 @@ export const getPortArrivals = async (req, res, next) => {
     const threeMonthsFromNow = new Date()
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
-    console.log(
-      `Fetching port arrivals between ${yesterday.toISOString()} and ${threeMonthsFromNow.toISOString()}`,
-    )
-
     const sql =
       "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
@@ -113,6 +109,14 @@ export const getPortArrivals = async (req, res, next) => {
     const results = await getDb().all(sql, params)
 
     // Code here to convert 23:59 to Not Known
+    results.forEach((result) => {
+      if (result.vesseletatime === "23:59") {
+        result.vesseletatime = "Not Known"
+      }
+      if (result.vesseletdtime === "23:59") {
+        result.vesseletdtime = "Not Known"
+      }
+    })
 
     res.json({
       message: "success",

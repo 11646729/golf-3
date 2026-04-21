@@ -27,7 +27,7 @@ const style = {
   p: 4,
 }
 
-const CruisesTableTitle = "Cruise Ships Arriving Soon"
+const CruisesTableTitle = "Cruise Ships Arriving in the next 3 Months"
 
 const columns = [
   { id: "date", label: "Arrival Date", minWidth: 10, align: "center" },

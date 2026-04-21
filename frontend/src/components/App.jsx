@@ -17,82 +17,82 @@ import RealTimeHomePage from "../pages/RealTimePage"
 
 import "../styles/global.scss"
 
-const App = () => {
-  const Layout = () => {
-    return (
-      <div className="main">
-        <Header />
-        <div className="container">
-          <div className="menuContainer">
-            <Menu />
-          </div>
-          <div className="contentContainer">
-            <Outlet />
-          </div>
+const Layout = () => {
+  return (
+    <div className="main">
+      <Header />
+      <div className="container">
+        <div className="menuContainer">
+          <Menu />
         </div>
-        <Footer />
+        <div className="contentContainer">
+          <Outlet />
+        </div>
       </div>
-    )
-  }
+      <Footer />
+    </div>
+  )
+}
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        {
-          path: "/",
-          element: <HomePage />,
-        },
-        {
-          path: "/realtimehomepage",
-          element: <RealTimeHomePage />,
-        },
-        {
-          path: "/rawdatapage",
-          element: <RawDataPage />,
-        },
-        {
-          path: "/weatherpage",
-          element: <WeatherPage />,
-        },
-        {
-          path: "/golfcoursespage",
-          element: <GolfCoursesPage />,
-        },
-        {
-          path: "/nearbycrimespage",
-          element: <NearbyCrimesPage />,
-        },
-        {
-          path: "/cruisespage",
-          element: <CruisesPage />,
-        },
-        {
-          path: "/transportroutespage",
-          element: <TransportRoutesPage />,
-        },
-        {
-          path: "/seismicarraydesignpage",
-          element: <SeismicArrayDesignPage />,
-        },
-        {
-          path: "/seismic3dradialdisplaypage",
-          element: <Seismic3DRadialDisplayPage />,
-        },
-        {
-          path: "*",
-          element: (
-            <div>
-              <h1>Not found!</h1>
-              <p>Sorry your page was not found!</p>
-            </div>
-          ),
-        },
-      ],
-    },
-  ])
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/realtimehomepage",
+        element: <RealTimeHomePage />,
+      },
+      {
+        path: "/rawdatapage",
+        element: <RawDataPage />,
+      },
+      {
+        path: "/weatherpage",
+        element: <WeatherPage />,
+      },
+      {
+        path: "/golfcoursespage",
+        element: <GolfCoursesPage />,
+      },
+      {
+        path: "/nearbycrimespage",
+        element: <NearbyCrimesPage />,
+      },
+      {
+        path: "/cruisespage",
+        element: <CruisesPage />,
+      },
+      {
+        path: "/transportroutespage",
+        element: <TransportRoutesPage />,
+      },
+      {
+        path: "/seismicarraydesignpage",
+        element: <SeismicArrayDesignPage />,
+      },
+      {
+        path: "/seismic3dradialdisplaypage",
+        element: <Seismic3DRadialDisplayPage />,
+      },
+      {
+        path: "*",
+        element: (
+          <div>
+            <h1>Not found!</h1>
+            <p>Sorry your page was not found!</p>
+          </div>
+        ),
+      },
+    ],
+  },
+])
 
+const App = () => {
   return <RouterProvider router={router} />
 }
 
