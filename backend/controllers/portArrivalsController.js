@@ -79,7 +79,9 @@ const createPortArrivalsTableStructure = async () => {
       )
     `)
 
-    await getDb().run(`CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`)
+    await getDb().run(
+      `CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`,
+    )
 
     console.log("Empty portarrivals table created")
   } catch (error) {
@@ -98,7 +100,7 @@ export const getPortArrivals = async (req, res, next) => {
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
     const threeMonthsFromNow = new Date()
-    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 12) // Changed from 3 to 12 months
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
     console.log(
       `Fetching port arrivals between ${yesterday.toISOString()} and ${threeMonthsFromNow.toISOString()}`,
@@ -217,7 +219,7 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
 
     rows = await page.evaluate(() => {
       const trs = Array.from(
-        document.querySelectorAll(".portItemSchedule tr")
+        document.querySelectorAll(".portItemSchedule tr"),
       ).slice(1) // skip header row
 
       return trs.map((tr) => {
