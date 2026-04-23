@@ -27,7 +27,7 @@ const mapContainerStyle = {
   marginBottom: 0,
 }
 
-const CruiseMapTitle = "Cruise Ship Positions Now"
+const CruiseMapTitle = "Latest Cruise Ship Positions"
 
 const defaultMapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
 
@@ -117,14 +117,14 @@ const getSelectedPosition = (positions, markerId) =>
 const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
   const validPositions = useMemo(
     () => normaliseVesselPositions(vesselPositions),
-    [vesselPositions]
+    [vesselPositions],
   )
 
   const [selectedId, setSelectedId] = useState(null)
 
   const selectedPosition = useMemo(
     () => getSelectedPosition(validPositions, selectedId),
-    [validPositions, selectedId]
+    [validPositions, selectedId],
   )
 
   const handleMarkerClick = (markerId) => setSelectedId(markerId)
@@ -175,8 +175,10 @@ const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
               <CardContent>
                 <Typography gutterBottom variant="h6" component="h3">
                   {vesselDetails.find(
-                    (d) => d.vesselnameurl === selectedPosition.vesselUrl
-                  )?.vesselshortcruisename ?? selectedPosition.vesselName ?? "Vessel"}
+                    (d) => d.vesselnameurl === selectedPosition.vesselUrl,
+                  )?.vesselshortcruisename ??
+                    selectedPosition.vesselName ??
+                    "Vessel"}
                 </Typography>
                 {selectedPosition.timestamp ? (
                   <Typography component="p">
