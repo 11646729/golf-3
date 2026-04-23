@@ -119,10 +119,8 @@ const CruisesTable = (props) => {
         <Title>{CruisesTableTitle}</Title>
       </div>
 
-      <Paper
-      // sx={{ paddingLeft: "20px", paddingRight: "20px", paddingTop: "20px" }}
-      >
-        <TableContainer>
+      <Paper sx={{ height: 600, display: "flex", flexDirection: "column" }}>
+        <TableContainer sx={{ flex: 1, overflow: "auto" }}>
           <Table
             stickyHeader
             aria-label="sticky table"

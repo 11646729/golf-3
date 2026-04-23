@@ -10,7 +10,10 @@ import {
   getVesselPosition,
   // saveVesselDetails,
 } from "../controllers/vesselController.js"
-import { importPortArrivalsAndVessels } from "../cruiseScrapingRoutines.js"
+import {
+  importPortArrivalsAndVessels,
+  getImportStatus,
+} from "../cruiseScrapingRoutines.js"
 
 var cruiseRouter = express.Router()
 
@@ -46,6 +49,9 @@ cruiseRouter.post(
 
 // POST a vessel to the database
 // cruiseRouter.post("/vesselDetails", saveVesselDetails)
+
+// GET current import job status (for frontend polling)
+cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
 
 // GET all vessel positions
 cruiseRouter.get("/vesselPositions", getVesselPosition)

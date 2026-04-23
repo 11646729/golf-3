@@ -20,6 +20,8 @@ const mapContainerStyle = {
   height: "600px",
   width: "100%",
   border: "1px solid #ccc",
+  borderRadius: "4px",
+  overflow: "hidden",
   marginLeft: 0,
   marginRight: 0,
   marginBottom: 0,

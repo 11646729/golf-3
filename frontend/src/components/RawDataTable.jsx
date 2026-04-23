@@ -13,7 +13,6 @@ import Title from "./Title"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
-import { loadCruiseShipArrivalsDataHandler } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
@@ -36,36 +35,30 @@ const tableData = [
   },
   {
     id: 3,
-    datatype: "Cruise Ship Arrivals Data",
-    buttontext: "Fetch Cruise Ships",
-    buttonbackgroundcolor: "darkred",
-  },
-  {
-    id: 4,
     datatype: "GTFS Transport Data",
     buttontext: "Fetch Static GTFS Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 5,
+    id: 4,
     datatype: "Crime Data",
     buttontext: "Fetch Crime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 6,
+    id: 5,
     datatype: "Realtime Calendar & News Data",
     buttontext: "Start Calendar & News Realtime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 7,
+    id: 6,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 8,
+    id: 7,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
     buttonbackgroundcolor: "darkred",
@@ -101,21 +94,18 @@ const RawDataTable = (props) => {
         loadGolfCoursesDataHandler()
         break
       case 3:
-        loadCruiseShipArrivalsDataHandler()
-        break
-      case 4:
         loadStaticGTFSDataHandler()
         break
-      case 5:
+      case 4:
         loadCrimesDataHandler()
         break
-      case 6:
+      case 5:
         startRealtimeDataHandler()
         break
-      case 7:
+      case 6:
         loadRTCalendarEventsHandler()
         break
-      case 9:
+      case 7:
         loadRTNewsItemsHandler()
         break
 
@@ -162,6 +152,7 @@ const RawDataTable = (props) => {
                         // ml: 6,
                         textTransform: "capitalize",
                         backgroundColor: row.buttonbackgroundcolor,
+                        color: "white",
                       }}
                       variant="contained"
                       onClick={() => handleClick(row.id)}
