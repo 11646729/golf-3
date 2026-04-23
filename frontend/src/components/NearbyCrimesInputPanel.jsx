@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import Title from "./Title"
 import "../styles/nearbycrimesinputpanel.scss"
 
-const NearbyCrimesPanelTitle = "Nearby Crimes"
+const NearbyCrimesPanelTitle = "Nearby Crimes Table"
 const HomeCheckboxLabel = "Home Location"
 const LatestCheckboxLabel = "Latest Available Data"
 

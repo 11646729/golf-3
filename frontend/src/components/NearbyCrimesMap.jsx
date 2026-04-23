@@ -17,7 +17,18 @@ import {
 import Title from "./Title"
 import "../styles/nearbycrimesmap.scss"
 
-const NearbyCrimesMapTitle = "Crimes Location Map"
+const NearbyCrimesMapTitle = "Nearby Crimes Location Map"
+
+const mapContainerStyle = {
+  height: "600px",
+  width: "100%",
+  border: "1px solid #ccc",
+  borderRadius: "4px",
+  overflow: "hidden",
+  marginLeft: 0,
+  marginRight: 0,
+  marginBottom: 0,
+}
 
 const CustomCircle = ({
   color = "#78a32e",
@@ -47,15 +58,6 @@ const NearbyCrimesMap = (props) => {
     crimesData: PropTypes.array,
   }
 
-  const mapContainerStyle = {
-    height: "750px",
-    width: "750px",
-    border: "1px solid #ccc",
-    marginLeft: 20,
-    marginRight: 10,
-    marginBottom: 20,
-  }
-
   const mapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
 
   const mapCenter = useMemo(
@@ -77,8 +79,10 @@ const NearbyCrimesMap = (props) => {
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <div className="nearbycrimesmapcontainer">
+      <div className="nearbycrimesmaptitlecontainer">
         <Title>{NearbyCrimesMapTitle}</Title>
+      </div>
+      <div className="nearbycrimesmapcontainer">
         <Map
           style={mapContainerStyle}
           defaultZoom={mapZoom}
