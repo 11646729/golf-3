@@ -19,15 +19,17 @@ import Title from "./Title"
 import "../styles/golfcoursesmap.scss"
 
 const mapContainerStyle = {
-  height: "750px",
-  width: "750px",
+  height: "600px",
+  width: "100%",
   border: "1px solid #ccc",
+  borderRadius: "4px",
+  overflow: "hidden",
   marginLeft: 0,
   marginRight: 0,
   marginBottom: 0,
 }
 
-const GolfCoursesMapTitle = "Golf Course Locations"
+const GolfCoursesMapTitle = "Golf Courses Locations"
 
 const defaultMapZoom = parseInt(import.meta.env.VITE_MAP_DEFAULT_ZOOM, 10)
 
@@ -39,8 +41,8 @@ const defaultMapCenter = {
 const MapErrorFallback = ({ error }) => (
   <div
     style={{
-      height: "750px",
-      width: "750px",
+      height: "600px",
+      width: "100%",
       border: "1px solid #ccc",
       display: "flex",
       flexDirection: "column",
@@ -152,7 +154,9 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
     console.error(errorMsg)
     return (
       <>
-        <Title>{GolfCoursesMapTitle}</Title>
+        <div className="golfcoursesmaptitlecontainer">
+          <Title>{GolfCoursesMapTitle}</Title>
+        </div>
         <MapErrorFallback error={errorMsg} />
       </>
     )
@@ -168,7 +172,9 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
   if (mapError) {
     return (
       <>
-        <Title>{GolfCoursesMapTitle}</Title>
+        <div className="golfcoursesmaptitlecontainer">
+          <Title>{GolfCoursesMapTitle}</Title>
+        </div>
         <MapErrorFallback error={mapError} />
       </>
     )
@@ -194,7 +200,9 @@ const GolfCoursesMap = ({ golfcourses = [] }) => {
       onLoad={() => console.log("Google Maps API loaded successfully")}
       onLoadError={handleApiLoadError}
     >
-      <Title>{GolfCoursesMapTitle}</Title>
+      <div className="golfcoursesmaptitlecontainer">
+        <Title>{GolfCoursesMapTitle}</Title>
+      </div>
       <div className="golfcoursesmapcontainer">
         <Map
           defaultZoom={defaultMapZoom}

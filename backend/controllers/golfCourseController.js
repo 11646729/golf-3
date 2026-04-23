@@ -1,6 +1,30 @@
 import fs from "fs"
 import { openSqlDbConnection } from "../databaseUtilities.js"
 
+// Ensure the single-row status table exists (idempotent)
+const ensureGolfImportStatusTable = async (db) => {
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS golfimportstatus (
+      singleton BOOLEAN PRIMARY KEY DEFAULT TRUE,
+      lastupdated TEXT,
+      CONSTRAINT single_row CHECK (singleton = TRUE)
+    )
+  `)
+}
+
+// GET /api/golf/importStatus
+export const getGolfImportStatus = async (_req, res) => {
+  try {
+    const db = await openSqlDbConnection()
+    await ensureGolfImportStatusTable(db)
+    const row = await db.get("SELECT lastupdated FROM golfimportstatus LIMIT 1")
+    res.json({ lastUpdated: row?.lastupdated ?? null })
+  } catch (err) {
+    console.error("Error in getGolfImportStatus:", err)
+    res.json({ lastUpdated: null })
+  }
+}
+
 // -------------------------------------------------------
 // Catalogue Home page
 // Path: localhost:4000/api/golf/
@@ -114,6 +138,13 @@ export const importGolfCoursesData = async (req, res) => {
     )
     const courses = JSON.parse(data)
     await populateGolfCoursesTable(db, courses)
+    await ensureGolfImportStatusTable(db)
+    await db.run(
+      `INSERT INTO golfimportstatus (singleton, lastupdated)
+       VALUES (TRUE, ?)
+       ON CONFLICT (singleton) DO UPDATE SET lastupdated = EXCLUDED.lastupdated`,
+      [new Date().toISOString()],
+    )
     res.send({ message: "Golf courses imported successfully" })
   } catch (err) {
     console.error("Error in importGolfCoursesData: ", err.message)

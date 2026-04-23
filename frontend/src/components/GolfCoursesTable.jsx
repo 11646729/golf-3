@@ -14,11 +14,11 @@ const GolfCoursesTable = (props) => {
 
   return (
     <div>
-      <div className="golfcoursestablecontainer">
+      <div className="golfcoursestabletitlecontainer">
         <Title>{GolfCoursesTableTitle}</Title>
       </div>
       {/* golfcourses={golfcourses} */}
-      golf courses selection
+      {/* golf courses selection */}
     </div>
   )
 }

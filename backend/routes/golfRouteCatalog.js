@@ -4,6 +4,7 @@ import {
   createGolfCoursesTable,
   getGolfCourses,
   importGolfCoursesData,
+  getGolfImportStatus,
 } from "../controllers/golfCourseController.js"
 
 var golfRouter = express.Router()
@@ -19,6 +20,9 @@ golfRouter.post("/createGolfCoursesTable", createGolfCoursesTable)
 
 // POST all Golf Courses data into the database
 golfRouter.post("/importGolfCoursesData", importGolfCoursesData)
+
+// GET current import status (last updated timestamp)
+golfRouter.get("/importStatus", getGolfImportStatus)
 
 // GET all Golf Courses data from the database
 golfRouter.get("/getGolfCourses", getGolfCourses)

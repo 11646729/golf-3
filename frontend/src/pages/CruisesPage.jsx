@@ -103,12 +103,27 @@ const CruisesPage = () => {
     error: "#e65100",
   }[fetchStatus]
 
+  const lastPositionDate = (() => {
+    const raw = vesselPositions.find((v) => v?.timestamp)?.timestamp
+    if (!raw || raw === "Not Known") return null
+    const d = new Date(raw)
+    return isNaN(d.getTime()) ? null : d
+  })()
+
+  const lastPositionFormatted = lastPositionDate
+    ? lastPositionDate.toLocaleDateString("en-GB")
+    : null
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const downloadedBeforeToday = !lastPositionDate || lastPositionDate < today
+
   return (
     <div>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}>
         <Button
           variant="contained"
-          disabled={fetchStatus === "loading"}
+          disabled={fetchStatus === "loading" || !downloadedBeforeToday}
           onClick={handleFetchData}
           sx={{
             textTransform: "capitalize",
@@ -116,6 +131,7 @@ const CruisesPage = () => {
             backgroundColor: buttonBg,
             color: "white",
             "&:hover": { backgroundColor: buttonBg ?? undefined },
+            "&.Mui-disabled": { color: "white" },
           }}
         >
           {buttonLabel}
@@ -132,6 +148,11 @@ const CruisesPage = () => {
           </Box>
         )}
       </Box>
+      {lastPositionFormatted && (
+        <Typography variant="caption" sx={{ mx: 2.5, display: "block" }}>
+          Last date: {lastPositionFormatted}
+        </Typography>
+      )}
       <div className="cruisescontainer">
         <div className="cruisestablecontainer">
           <CruisesTable portArrivals={portArrivals} />

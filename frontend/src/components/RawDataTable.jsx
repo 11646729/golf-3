@@ -12,7 +12,6 @@ import TableRow from "@mui/material/TableRow"
 import Title from "./Title"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
-import { loadGolfCoursesDataHandler } from "../functionHandlers/loadGolfCoursesDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
 import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
@@ -29,36 +28,30 @@ const tableData = [
   },
   {
     id: 2,
-    datatype: "Golf Course Data",
-    buttontext: "Fetch Golf Courses",
-    buttonbackgroundcolor: "darkred",
-  },
-  {
-    id: 3,
     datatype: "GTFS Transport Data",
     buttontext: "Fetch Static GTFS Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 4,
+    id: 3,
     datatype: "Crime Data",
     buttontext: "Fetch Crime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 5,
+    id: 4,
     datatype: "Realtime Calendar & News Data",
     buttontext: "Start Calendar & News Realtime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 6,
+    id: 5,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 7,
+    id: 6,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
     buttonbackgroundcolor: "darkred",
@@ -91,21 +84,18 @@ const RawDataTable = (props) => {
         loadTemperaturesDataHandler()
         break
       case 2:
-        loadGolfCoursesDataHandler()
-        break
-      case 3:
         loadStaticGTFSDataHandler()
         break
-      case 4:
+      case 3:
         loadCrimesDataHandler()
         break
-      case 5:
+      case 4:
         startRealtimeDataHandler()
         break
-      case 6:
+      case 5:
         loadRTCalendarEventsHandler()
         break
-      case 7:
+      case 6:
         loadRTNewsItemsHandler()
         break
 
