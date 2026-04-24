@@ -130,8 +130,7 @@ const TransportRoutesPage = () => {
       />
     <div className="transportroutescontainer">
       <div className="transportroutestablescontainer">
-        <div className="transportroutestables2container">
-          <div className="transportagenciestablecontainer">
+        <div className="transportroutesselectioncontainer">
             <StyledAutocomplete
               id="agency-box"
               disablePortal
@@ -229,7 +228,6 @@ const TransportRoutesPage = () => {
                 />
               )}
             />
-          </div>
         </div>
       </div>
       <div className="transportroutesmapcontainer">

@@ -5,7 +5,7 @@ import { from as copyFrom } from "pg-copy-streams"
 import { pipeline } from "stream/promises"
 import { Transform } from "stream"
 import dotenv from "dotenv"
-import { DatabaseAdapter, createDatabaseAdapter } from "./databaseUtilities.js"
+import { DatabaseAdapter, createDatabaseAdapter, withTransaction } from "./databaseUtilities.js"
 import { createGTFSTables } from "./createGTFSTables/createGTFSTables.js"
 import readRouteFile from "./readGtfsFiles.js"
 
@@ -571,85 +571,80 @@ export const importGTFSStaticData = async (options = {}) => {
 
   console.log(`Starting GTFS static import from: ${gtfsDirectory}`)
 
-  if (!options.skipTablePreparation) {
-    console.log("Preparing GTFS tables in PostgreSQL...")
-    const tableStartTime = Date.now()
-    await createGTFSTables()
-    const tableEndTime = Date.now()
-    console.log(
-      `Table preparation completed in ${(
-        (tableEndTime - tableStartTime) /
-        1000
-      ).toFixed(2)}s`,
-    )
-  }
-
   const results = {}
   const timings = {}
 
-  let startTime = Date.now()
-  results.agency = await importAgency(gtfsDirectory)
-  timings.agency = Date.now() - startTime
-  logFileResult("agency.txt", results.agency)
-  console.log(`  Time: ${(timings.agency / 1000).toFixed(2)}s`)
+  await withTransaction(async () => {
+    if (!options.skipTablePreparation) {
+      console.log("Preparing GTFS tables in PostgreSQL...")
+      const tableStartTime = Date.now()
+      await createGTFSTables()
+      console.log(
+        `Table preparation completed in ${((Date.now() - tableStartTime) / 1000).toFixed(2)}s`,
+      )
+    }
 
-  startTime = Date.now()
-  results.stops = await importStops(gtfsDirectory)
-  timings.stops = Date.now() - startTime
-  logFileResult("stops.txt", results.stops)
-  console.log(`  Time: ${(timings.stops / 1000).toFixed(2)}s`)
+    let startTime = Date.now()
+    results.agency = await importAgency(gtfsDirectory)
+    timings.agency = Date.now() - startTime
+    logFileResult("agency.txt", results.agency)
+    console.log(`  Time: ${(timings.agency / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.routes = await importRoutes(gtfsDirectory)
-  timings.routes = Date.now() - startTime
-  logFileResult("routes.txt", results.routes)
-  console.log(`  Time: ${(timings.routes / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.stops = await importStops(gtfsDirectory)
+    timings.stops = Date.now() - startTime
+    logFileResult("stops.txt", results.stops)
+    console.log(`  Time: ${(timings.stops / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.trips = await importTrips(gtfsDirectory)
-  timings.trips = Date.now() - startTime
-  logFileResult("trips.txt", results.trips)
-  console.log(`  Time: ${(timings.trips / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.routes = await importRoutes(gtfsDirectory)
+    timings.routes = Date.now() - startTime
+    logFileResult("routes.txt", results.routes)
+    console.log(`  Time: ${(timings.routes / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.stop_times = await importStopTimes(gtfsDirectory)
-  timings.stop_times = Date.now() - startTime
-  logFileResult("stop_times.txt", results.stop_times)
-  console.log(`  Time: ${(timings.stop_times / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.trips = await importTrips(gtfsDirectory)
+    timings.trips = Date.now() - startTime
+    logFileResult("trips.txt", results.trips)
+    console.log(`  Time: ${(timings.trips / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.calendar = await importCalendar(gtfsDirectory)
-  timings.calendar = Date.now() - startTime
-  logFileResult("calendar.txt", results.calendar)
-  console.log(`  Time: ${(timings.calendar / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.stop_times = await importStopTimes(gtfsDirectory)
+    timings.stop_times = Date.now() - startTime
+    logFileResult("stop_times.txt", results.stop_times)
+    console.log(`  Time: ${(timings.stop_times / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.calendar_dates = await importCalendarDates(gtfsDirectory)
-  timings.calendar_dates = Date.now() - startTime
-  logFileResult("calendar_dates.txt", results.calendar_dates)
-  console.log(`  Time: ${(timings.calendar_dates / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.calendar = await importCalendar(gtfsDirectory)
+    timings.calendar = Date.now() - startTime
+    logFileResult("calendar.txt", results.calendar)
+    console.log(`  Time: ${(timings.calendar / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.shapes = await importShapes(gtfsDirectory)
-  timings.shapes = Date.now() - startTime
-  logFileResult("shapes.txt", results.shapes)
-  console.log(`  Time: ${(timings.shapes / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.calendar_dates = await importCalendarDates(gtfsDirectory)
+    timings.calendar_dates = Date.now() - startTime
+    logFileResult("calendar_dates.txt", results.calendar_dates)
+    console.log(`  Time: ${(timings.calendar_dates / 1000).toFixed(2)}s`)
 
-  startTime = Date.now()
-  results.feed_info = await importFeedInfo(gtfsDirectory)
-  timings.feed_info = Date.now() - startTime
-  logFileResult("feed_info.txt", results.feed_info)
-  console.log(`  Time: ${(timings.feed_info / 1000).toFixed(2)}s`)
+    startTime = Date.now()
+    results.shapes = await importShapes(gtfsDirectory)
+    timings.shapes = Date.now() - startTime
+    logFileResult("shapes.txt", results.shapes)
+    console.log(`  Time: ${(timings.shapes / 1000).toFixed(2)}s`)
 
-  const overallEndTime = Date.now()
-  const totalTime = (overallEndTime - overallStartTime) / 1000
+    startTime = Date.now()
+    results.feed_info = await importFeedInfo(gtfsDirectory)
+    timings.feed_info = Date.now() - startTime
+    logFileResult("feed_info.txt", results.feed_info)
+    console.log(`  Time: ${(timings.feed_info / 1000).toFixed(2)}s`)
+  })
+
+  const totalTime = (Date.now() - overallStartTime) / 1000
 
   console.log("\n" + "=".repeat(60))
   console.log("GTFS static import complete.")
   console.log(
-    `Total import time: ${totalTime.toFixed(2)}s (${(totalTime / 60).toFixed(
-      2,
-    )} minutes)`,
+    `Total import time: ${totalTime.toFixed(2)}s (${(totalTime / 60).toFixed(2)} minutes)`,
   )
   console.log("=".repeat(60) + "\n")
 

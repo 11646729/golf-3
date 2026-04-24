@@ -8,24 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createFareLegRulesTable = async (res) => {
+export const createFareLegRulesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'fare_leg_rules'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("fare_leg_rules table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS fare_leg_rules")
-    } else {
-      console.log(
-        "fare_leg_rules table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS fare_leg_rules (
@@ -51,6 +35,6 @@ export const createFareLegRulesTable = async (res) => {
     console.log("✓ fare_leg_rules table created successfully")
   } catch (error) {
     console.error("Error preparing fare_leg_rules table:", error)
-    res.status(500).send("Error preparing fare_leg_rules table")
+    throw error
   }
 }

@@ -190,11 +190,9 @@ const TransportRoutesMap = (props) => {
                 <Polyline
                   key={transportShape.shapeKey}
                   path={transportShape.shapeCoordinates}
-                  options={{
-                    strokeColor: "#FF0000",
-                    strokeOpacity: "1.0",
-                    strokeWeight: 1,
-                  }}
+                  strokeColor="#FF0000"
+                  strokeOpacity={1.0}
+                  strokeWeight={2}
                   // onClick={() => {
                   //   handleTransportShapeClick()
                   // }}

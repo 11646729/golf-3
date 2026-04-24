@@ -123,3 +123,23 @@ export const closeSqlDbConnection = (_adapter) => {
 export { LazyDatabaseAdapter as DatabaseAdapter }
 export const createDatabaseAdapter = async () =>
   new DatabaseAdapter(await getConnection())
+
+// Run fn inside a single BEGIN/COMMIT/ROLLBACK block on the shared connection.
+// All operations that go through getConnection() (DatabaseAdapter, createDatabaseAdapter)
+// share the same pg.Client, so they are automatically included in this transaction.
+export const withTransaction = async (fn) => {
+  const pgClient = await getConnection()
+  await pgClient.query("BEGIN")
+  try {
+    const result = await fn()
+    await pgClient.query("COMMIT")
+    return result
+  } catch (err) {
+    try {
+      await pgClient.query("ROLLBACK")
+    } catch (rollbackErr) {
+      console.error("ROLLBACK failed:", rollbackErr.message)
+    }
+    throw err
+  }
+}

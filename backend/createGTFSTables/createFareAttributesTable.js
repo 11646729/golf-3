@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createFareAttributesTable = async (res) => {
+export const createFareAttributesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'fare_attributes'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("fare_attributes table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS fare_attributes")
-    } else {
-      console.log(
-        "fare_attributes table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS fare_attributes (
@@ -43,6 +27,6 @@ export const createFareAttributesTable = async (res) => {
     console.log("✓ fare_attributes table created successfully")
   } catch (error) {
     console.error("Error preparing fare_attributes table:", error)
-    res.status(500).send("Error preparing fare_attributes table")
+    throw error
   }
 }

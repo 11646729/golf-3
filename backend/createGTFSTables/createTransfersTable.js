@@ -8,22 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createTransfersTable = async (res) => {
+export const createTransfersTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'transfers'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("transfers table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS transfers")
-    } else {
-      console.log("transfers table does not exist - creating the empty table")
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS transfers (
@@ -49,6 +35,6 @@ export const createTransfersTable = async (res) => {
     console.log("✓ transfers table created successfully")
   } catch (error) {
     console.error("Error preparing transfers table:", error)
-    res.status(500).send("Error preparing transfers table")
+    throw error
   }
 }

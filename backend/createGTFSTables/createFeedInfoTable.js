@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createFeedInfoTable = async (res) => {
+export const createFeedInfoTable = async () => {
   try {
-    // Check if feed_info table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'feed_info'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("feed_info table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS feed_info")
-    } else {
-      console.log("feed_info table does not exist - creating the empty table")
-    }
 
     // GTFS Feed Info table
     await getDb().run(`
@@ -47,6 +31,6 @@ export const createFeedInfoTable = async (res) => {
     console.log("✓ feed_info table created successfully")
   } catch (error) {
     console.error("Error preparing feed_info table:", error)
-    res.status(500).send("Error preparing feed_info table")
+    throw error
   }
 }

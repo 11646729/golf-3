@@ -8,22 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createTimeframesTable = async (res) => {
+export const createTimeframesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'timeframes'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("timeframes table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS timeframes")
-    } else {
-      console.log("timeframes table does not exist - creating the empty table")
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS timeframes (
@@ -38,6 +24,6 @@ export const createTimeframesTable = async (res) => {
     console.log("✓ timeframes table created successfully")
   } catch (error) {
     console.error("Error preparing timeframes table:", error)
-    res.status(500).send("Error preparing timeframes table")
+    throw error
   }
 }

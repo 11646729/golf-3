@@ -8,24 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createRiderCategoriesTable = async (res) => {
+export const createRiderCategoriesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'rider_categories'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("rider_categories table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS rider_categories")
-    } else {
-      console.log(
-        "rider_categories table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS rider_categories (
@@ -39,6 +23,6 @@ export const createRiderCategoriesTable = async (res) => {
     console.log("✓ rider_categories table created successfully")
   } catch (error) {
     console.error("Error preparing rider_categories table:", error)
-    res.status(500).send("Error preparing rider_categories table")
+    throw error
   }
 }

@@ -1,3 +1,4 @@
+import { DatabaseAdapter } from "../databaseUtilities.js"
 import { createAgencyTable } from "./createAgencyTable.js"
 import { createStopsTable } from "./createStopsTable.js"
 import { createRoutesTable } from "./createRoutesTable.js"
@@ -32,38 +33,66 @@ import { createFeedInfoTable } from "./createFeedInfoTable.js"
 import { createAttributionsTable } from "./createAttributionsTable.js"
 import { createAnalyticsTables } from "./createAnalyticsTables.js"
 
-export const createGTFSTables = async (req, res) => {
-  await createAgencyTable(res)
-  await createStopsTable(res)
-  await createRoutesTable(res)
-  await createTripsTable(res)
-  await createStopTimesTable(res)
-  await createCalendarTable(res)
-  await createCalendarDatesTable(res)
-  await createFareAttributesTable(res)
-  await createFareRulesTable(res)
-  await createTimeframesTable(res)
-  await createRiderCategoriesTable(res)
-  await createFareMediaTable(res)
-  await createFareProductsTable(res)
-  await createFareLegRulesTable(res)
-  await createFareLegJoinRulesTable(res)
-  await createFareTransferRulesTable(res)
-  await createAreasTable(res)
-  await createStopAreasTable(res)
-  await createNetworksTable(res)
-  await createRouteNetworksTable(res)
-  await createShapesTable(res)
-  await createFrequenciesTable(res)
-  await createTransfersTable(res)
-  await createPathwaysTable(res)
-  await createLevelsTable(res)
-  await createLocationGroupsTable(res)
-  await createLocationGroupStopsTable(res)
-  await createLocationsGeojsonTable(res)
-  await createBookingRulesTable(res)
-  await createTranslationsTable(res)
-  await createFeedInfoTable(res)
-  await createAttributionsTable(res)
-  await createAnalyticsTables(res)
+// The 9 tables that are populated on every import run.
+// Truncated (not dropped) so that a transaction ROLLBACK restores the previous data.
+// Analytics log tables are intentionally excluded — they accumulate history across runs.
+const DATA_TABLES = [
+  "stop_times",
+  "shapes",
+  "calendar_dates",
+  "calendar",
+  "trips",
+  "routes",
+  "stops",
+  "agency",
+  "feed_info",
+]
+
+let db = null
+const getDb = () => {
+  if (!db) db = new DatabaseAdapter()
+  return db
+}
+
+export const createGTFSTables = async () => {
+  await createAgencyTable()
+  await createStopsTable()
+  await createRoutesTable()
+  await createTripsTable()
+  await createStopTimesTable()
+  await createCalendarTable()
+  await createCalendarDatesTable()
+  await createFareAttributesTable()
+  await createFareRulesTable()
+  await createTimeframesTable()
+  await createRiderCategoriesTable()
+  await createFareMediaTable()
+  await createFareProductsTable()
+  await createFareLegRulesTable()
+  await createFareLegJoinRulesTable()
+  await createFareTransferRulesTable()
+  await createAreasTable()
+  await createStopAreasTable()
+  await createNetworksTable()
+  await createRouteNetworksTable()
+  await createShapesTable()
+  await createFrequenciesTable()
+  await createTransfersTable()
+  await createPathwaysTable()
+  await createLevelsTable()
+  await createLocationGroupsTable()
+  await createLocationGroupStopsTable()
+  await createLocationsGeojsonTable()
+  await createBookingRulesTable()
+  await createTranslationsTable()
+  await createFeedInfoTable()
+  await createAttributionsTable()
+  await createAnalyticsTables()
+
+  // Clear previous import data so fresh rows can be loaded.
+  // TRUNCATE is orders of magnitude faster than DELETE for large tables
+  // (shapes and stop_times can have millions of rows).
+  console.log("Truncating data tables for fresh import...")
+  await getDb().run(`TRUNCATE ${DATA_TABLES.join(", ")}`)
+  console.log("✓ Data tables cleared")
 }

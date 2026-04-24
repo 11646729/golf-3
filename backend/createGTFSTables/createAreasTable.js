@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createAreasTable = async (res) => {
+export const createAreasTable = async () => {
   try {
-    // Check if area table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'areas'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("areas table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS areas")
-    } else {
-      console.log("areas table does not exist - creating the empty table")
-    }
 
     // GTFS Area table (for flex services)
     await getDb().run(`
@@ -41,6 +25,6 @@ export const createAreasTable = async (res) => {
     console.log("✓ area table created successfully")
   } catch (error) {
     console.error("Error preparing areas table:", error)
-    res.status(500).send("Error preparing areas table")
+    throw error
   }
 }

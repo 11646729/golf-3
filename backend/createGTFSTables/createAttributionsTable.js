@@ -8,24 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createAttributionsTable = async (res) => {
+export const createAttributionsTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'attributions'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("attributions table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS attributions")
-    } else {
-      console.log(
-        "attributions table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS attributions (
@@ -46,6 +30,6 @@ export const createAttributionsTable = async (res) => {
     console.log("✓ attributions table created successfully")
   } catch (error) {
     console.error("Error preparing attributions table:", error)
-    res.status(500).send("Error preparing attributions table")
+    throw error
   }
 }

@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createStopTimesTable = async (res) => {
+export const createStopTimesTable = async () => {
   try {
-    // Check if stop_times table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'stop_times'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("stop_times table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS stop_times")
-    } else {
-      console.log("stop_times table does not exist - creating the empty table")
-    }
 
     // GTFS Stop Times table
     await getDb().run(`
@@ -52,6 +36,6 @@ export const createStopTimesTable = async (res) => {
     console.log("✓ stop_times table created successfully")
   } catch (error) {
     console.error("Error preparing stop_times table:", error)
-    res.status(500).send("Error preparing stop_times table")
+    throw error
   }
 }

@@ -8,22 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createPathwaysTable = async (res) => {
+export const createPathwaysTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'pathways'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("pathways table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS pathways")
-    } else {
-      console.log("pathways table does not exist - creating the empty table")
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS pathways (
@@ -45,6 +31,6 @@ export const createPathwaysTable = async (res) => {
     console.log("✓ pathways table created successfully")
   } catch (error) {
     console.error("Error preparing pathways table:", error)
-    res.status(500).send("Error preparing pathways table")
+    throw error
   }
 }

@@ -8,22 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createFrequenciesTable = async (res) => {
+export const createFrequenciesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'frequencies'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("frequencies table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS frequencies")
-    } else {
-      console.log("frequencies table does not exist - creating the empty table")
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS frequencies (
@@ -39,6 +25,6 @@ export const createFrequenciesTable = async (res) => {
     console.log("✓ frequencies table created successfully")
   } catch (error) {
     console.error("Error preparing frequencies table:", error)
-    res.status(500).send("Error preparing frequencies table")
+    throw error
   }
 }

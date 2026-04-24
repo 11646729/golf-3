@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createAgencyTable = async (res) => {
+export const createAgencyTable = async () => {
   try {
-    // Check if agency table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'agency'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("agency table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS agency")
-    } else {
-      console.log("agency table does not exist - creating the empty table")
-    }
 
     // GTFS Agency table
     await getDb().run(`
@@ -46,6 +30,6 @@ export const createAgencyTable = async (res) => {
     console.log("✓ agency table created successfully")
   } catch (error) {
     console.error("Error preparing agency table:", error)
-    res.status(500).send("Error preparing agency table")
+    throw error
   }
 }

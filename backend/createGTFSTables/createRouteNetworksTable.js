@@ -8,24 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createRouteNetworksTable = async (res) => {
+export const createRouteNetworksTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'route_networks'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("route_networks table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS route_networks")
-    } else {
-      console.log(
-        "route_networks table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS route_networks (
@@ -38,6 +22,6 @@ export const createRouteNetworksTable = async (res) => {
     console.log("✓ route_networks table created successfully")
   } catch (error) {
     console.error("Error preparing route_networks table:", error)
-    res.status(500).send("Error preparing route_networks table")
+    throw error
   }
 }

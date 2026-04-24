@@ -9,27 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createAnalyticsTables = async (res) => {
+export const createAnalyticsTables = async () => {
   try {
-    // Check if tables already exist
-    const tableCheck = await getDb().get(`
-      SELECT COUNT(*) as count FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name IN ('api_access_log', 'gtfs_import_log', 'gtfs_realtime_log')
-    `)
-
-    // If all 3 tables exist, skip creation
-    if (tableCheck && parseInt(tableCheck.count) === 3) {
-      // If exists then delete the tables and recreate
-      console.log("analytics logging tables exist - dropping and recreating")
-      await getDb().run(
-        "DROP TABLE IF EXISTS api_access_log, gtfs_import_log, gtfs_realtime_log"
-      )
-    } else {
-      console.log(
-        "analytics logging tables do not exist - creating the empty tables"
-      )
-    }
 
     // API access log table
     await getDb().run(`
@@ -70,6 +51,6 @@ export const createAnalyticsTables = async (res) => {
     console.log("✓ analytics logging tables created successfully")
   } catch (error) {
     console.error("Failed to create analytic logging tables:", error.message)
-    res.status(500).send("Error preparing analytics logging tables")
+    throw error
   }
 }

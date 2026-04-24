@@ -8,24 +8,8 @@ const getDb = () => {
   return db
 }
 
-export const createBookingRulesTable = async (res) => {
+export const createBookingRulesTable = async () => {
   try {
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'booking_rules'
-      )`
-    )
-
-    if (tableExists.exists) {
-      console.log("booking_rules table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS booking_rules")
-    } else {
-      console.log(
-        "booking_rules table does not exist - creating the empty table"
-      )
-    }
 
     await getDb().run(`
         CREATE TABLE IF NOT EXISTS booking_rules (
@@ -50,6 +34,6 @@ export const createBookingRulesTable = async (res) => {
     console.log("✓ booking_rules table created successfully")
   } catch (error) {
     console.error("Error preparing booking_rules table:", error)
-    res.status(500).send("Error preparing booking_rules table")
+    throw error
   }
 }

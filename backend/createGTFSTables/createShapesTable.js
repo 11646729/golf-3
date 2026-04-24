@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createShapesTable = async (res) => {
+export const createShapesTable = async () => {
   try {
-    // Check if shapes table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'shapes'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("shapes table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS shapes")
-    } else {
-      console.log("shapes table does not exist - creating the empty table")
-    }
 
     // GTFS Shapes table
     await getDb().run(`
@@ -43,6 +27,6 @@ export const createShapesTable = async (res) => {
     console.log("✓ shapes table created successfully")
   } catch (error) {
     console.error("Error preparing shapes table:", error)
-    res.status(500).send("Error preparing shapes table")
+    throw error
   }
 }

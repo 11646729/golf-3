@@ -9,24 +9,8 @@ const getDb = () => {
   return db
 }
 
-export const createCalendarTable = async (res) => {
+export const createCalendarTable = async () => {
   try {
-    // Check if calendar table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'calendar'
-      )`
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("calendar table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS calendar")
-    } else {
-      console.log("calendar table does not exist - creating the empty table")
-    }
 
     // GTFS Calendar table
     await getDb().run(`
@@ -47,6 +31,6 @@ export const createCalendarTable = async (res) => {
     console.log("✓ calendar table created successfully")
   } catch (error) {
     console.error("Error preparing calendar table:", error)
-    res.status(500).send("Error preparing calendar table")
+    throw error
   }
 }
