@@ -12,7 +12,6 @@ import TableRow from "@mui/material/TableRow"
 import Title from "./Title"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
-import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
@@ -27,24 +26,18 @@ const tableData = [
   },
   {
     id: 2,
-    datatype: "GTFS Transport Data",
-    buttontext: "Fetch Static GTFS Data",
-    buttonbackgroundcolor: "darkred",
-  },
-  {
-    id: 3,
     datatype: "Realtime Calendar & News Data",
     buttontext: "Start Calendar & News Realtime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 4,
+    id: 3,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 5,
+    id: 4,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
     buttonbackgroundcolor: "darkred",
@@ -77,15 +70,12 @@ const RawDataTable = (props) => {
         loadTemperaturesDataHandler()
         break
       case 2:
-        loadStaticGTFSDataHandler()
-        break
-      case 3:
         startRealtimeDataHandler()
         break
-      case 4:
+      case 3:
         loadRTCalendarEventsHandler()
         break
-      case 5:
+      case 4:
         loadRTNewsItemsHandler()
         break
 
