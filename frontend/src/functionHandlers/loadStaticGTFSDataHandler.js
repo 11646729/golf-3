@@ -4,22 +4,16 @@ import axios from "axios"
 // Function to fetch Static GTFS data into the PostgreSQL database
 // -------------------------------------------------------
 export const loadStaticGTFSDataHandler = async () => {
-  // This function prepares empty PostgreSQL tables & imports Static GTFS Data
   const url = "http://localhost:4000/api/gtfs/importStaticGTFSData"
-  const params = {}
   const config = {
     timeout: 20000,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
   }
 
-  await axios
-    .post(url, params, config)
-    .then(() =>
-      alert("Static GTFS data is up to date in the PostgreSQL database."),
-    )
-    .catch((err) => console.log(err))
+  await axios.post(url, {}, config).catch((err) => {
+    console.error("loadStaticGTFSDataHandler error:", err?.message || err)
+    throw err
+  })
 }
 
 // -------------------------------------------------------

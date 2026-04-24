@@ -20,6 +20,8 @@ import Title from "./Title"
 import "../styles/transportroutes.scss"
 import { Polyline } from "../../polyline"
 
+const TransportRoutesMapTitle = "Transport Map in Ireland"
+
 // Helper to parse and validate coordinates
 const parseCoordinate = (value) => {
   const num = parseFloat(value)
@@ -115,12 +117,14 @@ const TransportRoutesMap = (props) => {
   const [selectedMarker, setSelectedMarker] = useState(null)
 
   const mapContainerStyle = {
-    height: "750px",
-    width: "750px",
+    height: "600px",
+    width: "100%",
     border: "1px solid #ccc",
-    marginLeft: 20,
-    marginRight: 10,
-    marginBottom: 20,
+    borderRadius: "4px",
+    overflow: "hidden",
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 0,
   }
 
   // Memoize valid stops to avoid recalculating on every render
@@ -166,94 +170,92 @@ const TransportRoutesMap = (props) => {
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <div>
-        <div>
-          <Title>{transportAgencyName}</Title>
-        </div>
-        <div className="transportroutesmapcontainer">
-          <Map
-            style={mapContainerStyle}
-            defaultCenter={mapCenter}
-            defaultZoom={mapZoom}
-            mapId="transport-routes-map"
-            disableDefaultUI={true}
-            zoomControl={true}
-          >
-            <FitBoundsLayer stops={validStops} defaultZoom={mapZoom} />
+      <div className="transportroutesmaptitlecontainer">
+        <Title>{TransportRoutesMapTitle}</Title>
+      </div>
+      <div className="transportroutesmapinnercontainer">
+        <Map
+          style={mapContainerStyle}
+          defaultCenter={mapCenter}
+          defaultZoom={mapZoom}
+          mapId="transport-routes-map"
+          disableDefaultUI={true}
+          zoomControl={true}
+        >
+          <FitBoundsLayer stops={validStops} defaultZoom={mapZoom} />
 
-            {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
-            {transportShapesArray
-              ? transportShapesArray.map((transportShape) => (
-                  <Polyline
-                    key={transportShape.shapeKey}
-                    path={transportShape.shapeCoordinates}
-                    options={{
-                      strokeColor: "#FF0000",
-                      strokeOpacity: "1.0",
-                      strokeWeight: 1,
-                    }}
-                    // onClick={() => {
-                    //   handleTransportShapeClick()
-                    // }}
-                  />
-                ))
-              : null}
-            {validStops.map((transportStop) => (
-              <AdvancedMarker
-                key={transportStop.stop_id}
-                position={{ lat: transportStop.lat, lng: transportStop.lng }}
-                onClick={() => handleMarkerClick(transportStop.stop_id)}
-              >
-                <CustomCircle />
-              </AdvancedMarker>
-            ))}
-            {/* Live vehicle markers */}
-            {vehiclePositions.map((vehicle) => (
-              <AdvancedMarker
-                key={vehicle.vehicle_id}
-                position={{ lat: vehicle.latitude, lng: vehicle.longitude }}
-                title={`Vehicle ${vehicle.vehicle_id}${vehicle.speed != null ? ` · ${Math.round(vehicle.speed)} km/h` : ""}`}
-              >
-                <VehicleBusIcon bearing={vehicle.bearing} />
-              </AdvancedMarker>
-            ))}
+          {/* Note: Polyline not yet available in vis.gl/react-google-maps */}
+          {transportShapesArray
+            ? transportShapesArray.map((transportShape) => (
+                <Polyline
+                  key={transportShape.shapeKey}
+                  path={transportShape.shapeCoordinates}
+                  options={{
+                    strokeColor: "#FF0000",
+                    strokeOpacity: "1.0",
+                    strokeWeight: 1,
+                  }}
+                  // onClick={() => {
+                  //   handleTransportShapeClick()
+                  // }}
+                />
+              ))
+            : null}
+          {validStops.map((transportStop) => (
+            <AdvancedMarker
+              key={transportStop.stop_id}
+              position={{ lat: transportStop.lat, lng: transportStop.lng }}
+              onClick={() => handleMarkerClick(transportStop.stop_id)}
+            >
+              <CustomCircle />
+            </AdvancedMarker>
+          ))}
+          {/* Live vehicle markers */}
+          {vehiclePositions.map((vehicle) => (
+            <AdvancedMarker
+              key={vehicle.vehicle_id}
+              position={{ lat: vehicle.latitude, lng: vehicle.longitude }}
+              title={`Vehicle ${vehicle.vehicle_id}${vehicle.speed != null ? ` · ${Math.round(vehicle.speed)} km/h` : ""}`}
+            >
+              <VehicleBusIcon bearing={vehicle.bearing} />
+            </AdvancedMarker>
+          ))}
 
-            {selectedStop && (
-              <InfoWindow
-                position={{
-                  lat: selectedStop.lat,
-                  lng: selectedStop.lng,
-                }}
-                onCloseClick={() => setSelectedMarker(null)}
-              >
-                <Card>
-                  <CardMedia
-                    style={{
-                      height: 0,
-                      paddingTop: "40%",
-                      marginTop: "30",
-                    }}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {selectedStop.stop_name || "Unnamed Stop"}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      color="primary"
-                      component={Link}
-                      // to="/golfcoursespage"§
-                    >
-                      View
-                    </Button>
-                  </CardActions>
-                </Card>
-              </InfoWindow>
-            )}
-          </Map>
-        </div>
+          {selectedStop && (
+            <InfoWindow
+              position={{
+                lat: selectedStop.lat,
+                lng: selectedStop.lng,
+              }}
+              onCloseClick={() => setSelectedMarker(null)}
+            >
+              <Card>
+                <CardMedia
+                  style={{
+                    height: 0,
+                    paddingTop: "40%",
+                    marginTop: "30",
+                  }}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {selectedStop.stop_name || "Unnamed Stop"}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    component={Link}
+                    // to="/golfcoursespage"§
+                  >
+                    View
+                  </Button>
+                </CardActions>
+              </Card>
+            </InfoWindow>
+          )}
+        </Map>
       </div>
     </APIProvider>
   )

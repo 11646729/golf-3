@@ -1,38 +1,28 @@
+.transportroutesmaptitlecontainer {
+  margin-top: 35px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.transportroutesmapinnercontainer {
+  margin-left: 0px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
 .transportroutescontainer {
   display: flex;
 
   .transportroutestablescontainer {
     flex: 2;
-    font-size: 20px;
-    font-weight: 600;
-    padding-left: 20px;
-    padding-top: 30px;
-    -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-    min-height: 500px;
-
-    .transportroutestables2container {
-      display: flex;
-      flex-direction: column;
-
-      .transportroutesagenciescontained {
-        flex: 2;
-      }
-
-      .transportroutesroutescontainer {
-        flex: 2;
-      }
-    }
   }
 
   .transportroutesmapcontainer {
     flex: 2;
-    font-size: 20px;
-    font-weight: 600;
-    padding-left: 20px;
-    padding-top: 30px;
-    -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-    min-height: 800px;
   }
 }

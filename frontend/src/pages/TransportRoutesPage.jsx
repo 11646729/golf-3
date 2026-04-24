@@ -1,9 +1,11 @@
 import { useState, useEffect, memo } from "react"
 import socketIOClient from "socket.io-client"
 import TransportRoutesMap from "../components/TransportRoutesMap"
+import TransportRoutesImportButton from "../components/TransportRoutesImportButton"
 import { Autocomplete, TextField } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import {
+  loadStaticGTFSDataHandler,
   getAllAgenciesFrontEnd,
   getRoutesForSingleAgencyFrontEnd,
   getShapesForSingleRouteFrontEnd,
@@ -53,6 +55,8 @@ const TransportRoutesPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [vehiclePositions, setVehiclePositions] = useState([])
   const [selectedRouteId, setSelectedRouteId] = useState(null)
+  const [fetchStatus, setFetchStatus] = useState("idle")
+  const [lastImportDate, setLastImportDate] = useState(null)
 
   // build agenciesData Url
   const transportAgenciesDataUrl =
@@ -105,7 +109,25 @@ const TransportRoutesPage = () => {
       })
   }, [])
 
+  const handleFetchData = async () => {
+    setFetchStatus("loading")
+    try {
+      await loadStaticGTFSDataHandler()
+      setLastImportDate(new Date())
+      setFetchStatus("complete")
+    } catch (err) {
+      console.error(err)
+      setFetchStatus("error")
+    }
+  }
+
   return (
+    <div>
+      <TransportRoutesImportButton
+        fetchStatus={fetchStatus}
+        lastImportDate={lastImportDate}
+        onFetch={handleFetchData}
+      />
     <div className="transportroutescontainer">
       <div className="transportroutestablescontainer">
         <div className="transportroutestables2container">
@@ -146,7 +168,7 @@ const TransportRoutesPage = () => {
                   {...params}
                   sx={{
                     input: { color: "white" },
-                    width: 580,
+                    width: "100%",
                     marginBottom: 4,
                   }}
                   label="Agency"
@@ -195,7 +217,7 @@ const TransportRoutesPage = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  sx={{ input: { color: "white" }, width: 580 }}
+                  sx={{ input: { color: "white" }, width: "100%" }}
                   label="Route"
                   InputLabelProps={{
                     ...params.InputLabelProps,
@@ -219,6 +241,7 @@ const TransportRoutesPage = () => {
           vehiclePositions={vehiclePositions}
         />
       </div>
+    </div>
     </div>
   )
 }
