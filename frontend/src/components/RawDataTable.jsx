@@ -13,7 +13,6 @@ import Title from "./Title"
 
 import { loadTemperaturesDataHandler } from "../functionHandlers/loadTemperaturesDataHandler"
 import { loadStaticGTFSDataHandler } from "../functionHandlers/loadStaticGTFSDataHandler"
-import { loadCrimesDataHandler } from "../functionHandlers/loadCrimesDataHandler"
 import { startRealtimeDataHandler } from "../functionHandlers/startRealtimeDataHandler"
 import { loadRTCalendarEventsHandler } from "../functionHandlers/loadRTCalendarDataHandler"
 import { loadRTNewsItemsHandler } from "../functionHandlers/loadRTNewsDataHandler"
@@ -34,24 +33,18 @@ const tableData = [
   },
   {
     id: 3,
-    datatype: "Crime Data",
-    buttontext: "Fetch Crime Data",
-    buttonbackgroundcolor: "darkred",
-  },
-  {
-    id: 4,
     datatype: "Realtime Calendar & News Data",
     buttontext: "Start Calendar & News Realtime Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 5,
+    id: 4,
     datatype: "Realtime Calendar Data",
     buttontext: "Fetch Realtime Calendar Data",
     buttonbackgroundcolor: "darkred",
   },
   {
-    id: 6,
+    id: 5,
     datatype: "Realtime News Data",
     buttontext: "Fetch Realtime News Data",
     buttonbackgroundcolor: "darkred",
@@ -87,15 +80,12 @@ const RawDataTable = (props) => {
         loadStaticGTFSDataHandler()
         break
       case 3:
-        loadCrimesDataHandler()
-        break
-      case 4:
         startRealtimeDataHandler()
         break
-      case 5:
+      case 4:
         loadRTCalendarEventsHandler()
         break
-      case 6:
+      case 5:
         loadRTNewsItemsHandler()
         break
 

@@ -1,6 +1,28 @@
 import axios from "axios"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 
+const ensureCrimesImportStatusTable = async (db) => {
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS crimesimportstatus (
+      singleton BOOLEAN PRIMARY KEY DEFAULT TRUE,
+      lastupdated TEXT,
+      CONSTRAINT single_row CHECK (singleton = TRUE)
+    )
+  `)
+}
+
+export const getCrimesImportStatus = async (_req, res) => {
+  try {
+    const db = getDb()
+    await ensureCrimesImportStatusTable(db)
+    const row = await db.get("SELECT lastupdated FROM crimesimportstatus LIMIT 1")
+    res.json({ lastUpdated: row?.lastupdated ?? null })
+  } catch (err) {
+    console.error("Error in getCrimesImportStatus:", err)
+    res.json({ lastUpdated: null })
+  }
+}
+
 // Database adapter for PostgreSQL - created lazily
 let db = null
 const getDb = () => {
@@ -139,6 +161,14 @@ export const importCrimesData = async (req, res) => {
     const crimes = Array.isArray(crimesResponse.data) ? crimesResponse.data : []
 
     await populateCrimesTable(crimes, { date, lat, lng })
+
+    await ensureCrimesImportStatusTable(getDb())
+    await getDb().run(
+      `INSERT INTO crimesimportstatus (singleton, lastupdated)
+       VALUES (TRUE, ?)
+       ON CONFLICT (singleton) DO UPDATE SET lastupdated = EXCLUDED.lastupdated`,
+      [new Date().toISOString()],
+    )
 
     res.status(200).json({
       message: "Crimes data imported successfully",

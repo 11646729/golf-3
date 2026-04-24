@@ -4,6 +4,7 @@ import {
   createCrimesTable,
   importCrimesData,
   getCrimesData,
+  getCrimesImportStatus,
 } from "../controllers/crimesController.js"
 
 var crimesRouter = express.Router()
@@ -19,6 +20,9 @@ crimesRouter.post("/createCrimesTable", createCrimesTable)
 
 // POST all Crimes data into the database
 crimesRouter.post("/importCrimesData", importCrimesData)
+
+// GET current import status (last updated timestamp)
+crimesRouter.get("/importStatus", getCrimesImportStatus)
 
 // GET all Crimes data from the database
 crimesRouter.get("/getCrimes", getCrimesData)

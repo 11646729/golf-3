@@ -1,5 +1,22 @@
 import axios from "axios"
 
+const DEFAULT_TIMEOUT = 20000
+const DEFAULT_HEADERS = { "Content-Type": "application/json" }
+
+// -------------------------------------------------------
+// Fetches the last import timestamp from the backend
+// -------------------------------------------------------
+export const getCrimesImportStatus = async () => {
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+  return await axios
+    .get("http://localhost:4000/api/crimes/importStatus", config)
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error("getCrimesImportStatus error:", err?.message || err)
+      return { lastUpdated: null }
+    })
+}
+
 // -------------------------------------------------------
 // Function to prepare the crimes table in the SQL database
 // -------------------------------------------------------
@@ -47,12 +64,14 @@ export const getCrimesData = async (url) => {
 // -------------------------------------------------------
 // Function to fetch all Crimes data into the SQL database
 // -------------------------------------------------------
-export const loadCrimesDataHandler = () => {
-  // Prepare empty crimes table in the database & show result
-  prepareCrimesTable("http://localhost:4000/api/crimes/createCrimesTable")
-
-  // Initial import of the crimes file data into the database
-  initialImportOfCrimesData("http://localhost:4000/api/crimes/importCrimesData")
+export const loadCrimesDataHandler = async () => {
+  try {
+    await prepareCrimesTable("http://localhost:4000/api/crimes/createCrimesTable")
+    await initialImportOfCrimesData("http://localhost:4000/api/crimes/importCrimesData")
+  } catch (err) {
+    console.error("loadCrimesDataHandler failed:", err?.message || err)
+    throw err
+  }
 }
 
 export { getCrimesData as default }
