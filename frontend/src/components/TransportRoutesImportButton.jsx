@@ -16,7 +16,11 @@ const buttonBg = {
   error: "#e65100",
 }
 
-const TransportRoutesImportButton = ({ fetchStatus, lastImportDate, onFetch }) => {
+const TransportRoutesImportButton = ({
+  fetchStatus,
+  lastImportDate,
+  onFetch,
+}) => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const downloadedBeforeToday = !lastImportDate || lastImportDate < today
@@ -27,7 +31,9 @@ const TransportRoutesImportButton = ({ fetchStatus, lastImportDate, onFetch }) =
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}
+      >
         <Button
           variant="contained"
           disabled={fetchStatus === "loading" || !downloadedBeforeToday}
@@ -45,7 +51,10 @@ const TransportRoutesImportButton = ({ fetchStatus, lastImportDate, onFetch }) =
         </Button>
         {fetchStatus === "loading" && (
           <Box sx={{ flex: 1, maxWidth: 400 }}>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5, color: "white" }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mb: 0.5, color: "white" }}
+            >
               Importing GTFS data…
             </Typography>
             <LinearProgress />
@@ -54,7 +63,7 @@ const TransportRoutesImportButton = ({ fetchStatus, lastImportDate, onFetch }) =
       </Box>
       {lastImportFormatted && (
         <Typography variant="caption" sx={{ mx: 2.5, display: "block" }}>
-          Last date: {lastImportFormatted}
+          Last date updated: {lastImportFormatted}
         </Typography>
       )}
     </>

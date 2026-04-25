@@ -69,7 +69,9 @@ const NearbyCrimesPage = () => {
 
   return (
     <div>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}
+      >
         <Button
           variant="contained"
           disabled={fetchStatus === "loading" || !downloadedBeforeToday}
@@ -87,7 +89,10 @@ const NearbyCrimesPage = () => {
         </Button>
         {fetchStatus === "loading" && (
           <Box sx={{ flex: 1, maxWidth: 400 }}>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5, color: "white" }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mb: 0.5, color: "white" }}
+            >
               Importing crimes data…
             </Typography>
             <LinearProgress />
@@ -96,7 +101,7 @@ const NearbyCrimesPage = () => {
       </Box>
       {lastImportFormatted && (
         <Typography variant="caption" sx={{ mx: 2.5, display: "block" }}>
-          Last date: {lastImportFormatted}
+          Last date updated: {lastImportFormatted}
         </Typography>
       )}
       <div className="nearbycrimescontainer">

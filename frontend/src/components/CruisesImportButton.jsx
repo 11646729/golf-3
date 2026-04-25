@@ -21,7 +21,12 @@ const buttonBg = {
   error: "#e65100",
 }
 
-const CruisesImportButton = ({ fetchStatus, jobProgress, lastPositionDate, onFetch }) => {
+const CruisesImportButton = ({
+  fetchStatus,
+  jobProgress,
+  lastPositionDate,
+  onFetch,
+}) => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const downloadedBeforeToday = !lastPositionDate || lastPositionDate < today
@@ -32,17 +37,21 @@ const CruisesImportButton = ({ fetchStatus, jobProgress, lastPositionDate, onFet
 
   const progressValue =
     jobProgress?.phase === "scraping_vessels" && jobProgress.totalVessels > 0
-      ? Math.round((jobProgress.vesselsScraped / jobProgress.totalVessels) * 100)
+      ? Math.round(
+          (jobProgress.vesselsScraped / jobProgress.totalVessels) * 100,
+        )
       : null
 
   const progressLabel =
     jobProgress?.phase === "scraping_vessels"
       ? `Scraping vessel ${jobProgress.vesselsScraped} of ${jobProgress.totalVessels}…`
-      : PHASE_LABELS[jobProgress?.phase] ?? "Fetching cruise ship arrivals…"
+      : (PHASE_LABELS[jobProgress?.phase] ?? "Fetching cruise ship arrivals…")
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}
+      >
         <Button
           variant="contained"
           disabled={fetchStatus === "loading" || !downloadedBeforeToday}
@@ -60,7 +69,10 @@ const CruisesImportButton = ({ fetchStatus, jobProgress, lastPositionDate, onFet
         </Button>
         {fetchStatus === "loading" && (
           <Box sx={{ flex: 1, maxWidth: 400 }}>
-            <Typography variant="caption" sx={{ display: "block", mb: 0.5, color: "white" }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mb: 0.5, color: "white" }}
+            >
               {progressLabel}
             </Typography>
             <LinearProgress
@@ -72,7 +84,7 @@ const CruisesImportButton = ({ fetchStatus, jobProgress, lastPositionDate, onFet
       </Box>
       {lastPositionFormatted && (
         <Typography variant="caption" sx={{ mx: 2.5, display: "block" }}>
-          Last date: {lastPositionFormatted}
+          Last date updated: {lastPositionFormatted}
         </Typography>
       )}
     </>
