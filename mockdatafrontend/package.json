@@ -21,7 +21,8 @@
     "sass": "^1.93.2"
   },
   "overrides": {
-    "picomatch": ">=2.3.2"
+    "picomatch": ">=2.3.2",
+    "postcss": ">=8.5.10"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
