@@ -363,3 +363,192 @@ POST http://localhost:4000/api/cruise/importBelfastSchedule
 
 The response returns `{ imported, modDate, rowCount }` directly (no polling needed —
 the import is fast since it is a single HTTP fetch + text parse, not a Puppeteer scrape).
+
+---
+
+## Q&A
+
+**Q: How does the program get vessel details after getting port arrivals information?**
+
+After the port arrivals scrape completes, the program runs a second scraping phase
+to collect full vessel details. The flow is:
+
+**1. Arrival scraping returns vessel URLs**
+
+`getAndSavePortArrivals()` (`portArrivalsController.js`) scrapes each month's
+schedule table on CruiseMapper. Every arrival row contains an `<a href>` linking
+to that vessel's detail page on CruiseMapper. These URLs are collected and returned
+as an array alongside each saved arrival record.
+
+**2. De-duplication**
+
+Back in `cruiseScrapingRoutines.js` the URL array is de-duplicated with `new Set()`
+— the same ship (e.g. MAJESTIC PRINCESS) appears across multiple months but only
+needs to be scraped once.
+
+**3. `scrapeVesselDetails(url)` — two-site scrape per vessel** (`vesselController.js`)
+
+For each unique vessel URL the function performs two separate Puppeteer scrapes:
+
+*CruiseMapper vessel page* (the URL from the arrival row):
+- Name, flag, operator, year built, length, beam, gross tonnage, max speed, passengers, crew
+- Current position — extracted from a `shipCurrentPositionMap` JSON block embedded in a `<script>` tag
+- AIS timestamp — parsed from a paragraph like "reported X hours Y minutes ago",
+  subtracted from `moment.utc()` to produce an ISO timestamp
+
+*MyShipTracking* (second scrape, using the vessel name):
+- Searches `myshiptracking.com/vessels?name=...`
+- Finds rows whose `href` contains `-mmsi-NNNN-imo-NNNN`
+- Filters for AIS type `"Passenger Ship"` / `"Passengers Ship"`
+- Extracts IMO and MMSI numbers from the URL
+
+**4. Save to `vessels` table**
+
+The assembled 22-field array is saved via `saveVesselDetails()`. The `vessels` table
+is later joined to `portarrivals` on `vesselnameurl` to attach the vessel photo URL
+when displaying the table, and `currentpositionlat` / `currentpositionlng` are used
+to plot markers on `CruisesMap`.
+
+---
+
+**Q: If I use the proposal for getting vessel arrivals from the Belfast Harbour PDF file as suggested in this document, what is an alternative method to get the vessel details other than referring to a URL from CruiseMapper?**
+
+The CruiseMapper vessel URL currently serves three purposes: getting static vessel
+specs, getting IMO/MMSI numbers, and getting a current position snapshot. The
+Belfast Harbour PDF gives the vessel name but no URL, so a different chain is needed
+to get those same things.
+
+**Step 1 — Get IMO/MMSI from MyShipTracking (already done)**
+
+`scrapeVesselDetails` already scrapes MyShipTracking by vessel name to get the MMSI
+and IMO numbers. This part works without a CruiseMapper URL — the vessel name from
+the PDF is sufficient. No change needed here.
+
+**Step 2 — Get static vessel specs from MyShipTracking**
+
+CruiseMapper vessel pages provide flag, operator, year built, dimensions, gross
+tonnage, max speed, passengers, and crew. The MyShipTracking page already scraped
+for IMO/MMSI also shows vessel specs; the scraper could be extended to pull them
+from there rather than needing a CruiseMapper URL. Alternative sources include:
+- **FleetMon / VesselFinder** — free-tier APIs returning specs by IMO number
+- **IMO GISIS registry** (`gisis.imo.org`) — authoritative but requires a login
+
+**Step 3 — Get current position from aisstream.io (already planned)**
+
+This is the most significant change — and it is fully designed in
+`ais-stream-plan-01.md`. Instead of scraping a position snapshot from CruiseMapper
+at import time, the planned AIS stream service:
+- Loads all MMSI numbers from the `vessels` table on server startup
+- Connects to a persistent WebSocket at `wss://stream.aisstream.io/v0/stream`
+- Continuously updates `currentpositionlat`, `currentpositionlng`,
+  `currentpositiontime` as AIS messages arrive
+- Covers the Irish Sea / Belfast approaches bounding box
+
+This is a better outcome than scraping CruiseMapper — positions become continuously
+live rather than a stale snapshot from whenever the import last ran. The
+`getLiveVesselPositions` frontend handler and `CruisesMap` require no changes since
+they read from the same `vessels` table columns.
+
+**Summary of the revised chain:**
+
+```
+Belfast Harbour PDF  →  vessel name
+  ↓
+MyShipTracking scrape (by name)  →  IMO, MMSI, vessel specs
+  ↓
+aisstream.io WebSocket (by MMSI)  →  continuous live position updates
+```
+
+---
+
+**Q: How do you ensure that we select the correct vessel when there are multiple vessels in MyShipTracking with the same vessel name?**
+
+The current code in `scrapeImoAndMmsiFromMyShipTracking` (`vesselController.js`)
+uses AIS vessel type as the only disambiguation criterion. However there is a bug —
+the logging step filters for `"passenger ship"` / `"passengers ship"` but the
+actual selection looks for exactly `"passenger"`, which is a different AIS type.
+These two criteria don't match, so `match` is likely `null` in most cases, causing
+the function to return `{ imoNumber: null, mmsiNumber: null }` even when passenger
+ships were found in the results.
+
+```js
+// logs passenger ships (for information only)
+const passengerRows = uniqueRows.filter((r) => {
+  const type = r.aisType.toLowerCase()
+  return type === "passenger ship" || type === "passengers ship"
+})
+
+// selects the vessel to use — bug: "passenger" ≠ "passenger ship"
+const match = uniqueRows.find(
+  (r) => r.aisType.toLowerCase() === "passenger",
+)
+```
+
+Assuming that bug is fixed so the filter and the selection use the same AIS type,
+the strategy is: pick the first result whose AIS type is "Passenger Ship". This
+works for most cruise ships since cargo vessels, tankers, and tugs won't share that
+type. However it does not guarantee the correct vessel when two passenger ships
+genuinely share a name.
+
+**Better disambiguation strategies** using data already available from the Belfast
+Harbour PDF:
+
+1. **Cruise line name** — the PDF provides the cruise line (e.g. `VIKING`,
+   `PRINCESS`, `MSC`). MyShipTracking results include the operator. Matching the
+   cruise line against the operator rules out most false positives — two ships named
+   "SPIRIT" are unlikely to be operated by the same cruise line.
+
+2. **Vessel length** — the PDF provides vessel length in metres. The `vessels` table
+   already has a `vessellengthmetres` column. The length from the PDF could be used
+   to validate a match (e.g. reject a result if its scraped length differs by more
+   than 10%).
+
+3. **IMO number cross-check** — once an IMO number is found it can be verified
+   against a second source (e.g. VesselFinder or the aisstream.io vessel data) since
+   IMO numbers are permanently assigned and globally unique.
+
+Combining the cruise line name match with the AIS type filter would eliminate almost
+all ambiguity for the Belfast cruise schedule use case.
+
+---
+
+**Q: What information is available from one entry in gisis.imo.org?**
+
+**Core identifiers**
+- IMO number
+- Vessel name
+- Call sign (radio identifier)
+- Flag state (country of registration)
+
+**Physical characteristics**
+- Gross tonnage
+- Ship type / classification
+
+**Administrative**
+- Owner(s)
+- Operator(s)
+- Classification society (the body managing safety compliance, e.g. Lloyd's Register, Bureau Veritas)
+- Associated company particulars
+
+**Regulatory / history**
+- Certificates issued under the IMO number
+- Port State Control inspection records
+- Marine casualty and incident history
+
+**Practical limitations for this use case:**
+
+- GISIS requires a login even for the public portal, making automated scraping
+  difficult
+- It does not include vessel dimensions (length, beam) or passenger/crew capacity —
+  those remain more reliably available from CruiseMapper or MyShipTracking
+- It does not provide current position data
+- The data is sourced from IHS Maritime (S&P Global) under a licensing agreement
+  with the IMO, so there is no free API
+
+**What it adds over MyShipTracking:** The owner, operator, and classification society
+fields are authoritative and officially maintained, making it useful for verifying
+that an IMO number found on MyShipTracking actually belongs to the correct vessel.
+For the disambiguation problem, cross-checking the operator name from GISIS against
+the cruise line from the Belfast Harbour PDF would be a reliable confirmation step —
+but given the login requirement, MyShipTracking is the more practical source for
+automated lookups.
