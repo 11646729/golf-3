@@ -54,6 +54,10 @@
     "xmlhttprequest-ssl": "^4.0.0",
     "yauzl": "^3.2.1"
   },
+  "overrides": {
+    "basic-ftp": "5.3.1",
+    "ip-address": ">=10.2.0"
+  },
   "devDependencies": {
     "minimist": "^1.2.8",
     "nodemon": "^3.0.2"
