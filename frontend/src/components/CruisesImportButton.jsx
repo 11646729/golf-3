@@ -26,6 +26,9 @@ const CruisesImportButton = ({
   jobProgress,
   lastPositionDate,
   onFetch,
+  belfastFetchStatus,
+  lastBelfastImportDate,
+  onBelfastFetch,
 }) => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -33,6 +36,10 @@ const CruisesImportButton = ({
 
   const lastPositionFormatted = lastPositionDate
     ? lastPositionDate.toLocaleDateString("en-GB")
+    : null
+
+  const lastBelfastFormatted = lastBelfastImportDate
+    ? lastBelfastImportDate.toLocaleDateString("en-GB")
     : null
 
   const progressValue =
@@ -82,11 +89,50 @@ const CruisesImportButton = ({
           </Box>
         )}
       </Box>
-      {lastPositionFormatted && (
-        <Typography variant="caption" sx={{ mx: 2.5, display: "block" }}>
-          Last date updated: {lastPositionFormatted}
-        </Typography>
-      )}
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: 2, mx: 2.5, my: 1.5 }}
+      >
+        <Button
+          variant="contained"
+          disabled={belfastFetchStatus === "loading"}
+          onClick={onBelfastFetch}
+          sx={{
+            textTransform: "capitalize",
+            minWidth: 200,
+            backgroundColor: buttonBg[belfastFetchStatus],
+            color: "white",
+            "&:hover": {
+              backgroundColor: buttonBg[belfastFetchStatus] ?? undefined,
+            },
+            "&.Mui-disabled": { color: "white" },
+          }}
+        >
+          {belfastFetchStatus === "idle"
+            ? "Belfast Schedule"
+            : belfastFetchStatus === "loading"
+              ? "Importing…"
+              : belfastFetchStatus === "complete"
+                ? "Import Complete"
+                : "Import Failed – Retry"}
+        </Button>
+        {belfastFetchStatus === "loading" && (
+          <Box sx={{ flex: 1, maxWidth: 400 }}>
+            <LinearProgress />
+          </Box>
+        )}
+      </Box>
+      <Box sx={{ mx: 2.5, mb: 1.5 }}>
+        {lastPositionFormatted && (
+          <Typography variant="caption" sx={{ display: "block" }}>
+            CruiseMapper last updated: {lastPositionFormatted}
+          </Typography>
+        )}
+        {lastBelfastFormatted && (
+          <Typography variant="caption" sx={{ display: "block" }}>
+            Belfast Harbour schedule last imported: {lastBelfastFormatted}
+          </Typography>
+        )}
+      </Box>
     </>
   )
 }

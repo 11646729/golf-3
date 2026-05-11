@@ -138,4 +138,35 @@ export const getPortArrivalsData = async (url) => {
     })
 }
 
+// -------------------------------------------------------
+// Function to import Belfast Harbour Cruise Schedule from PDF
+// Returns { imported, modDate, rowCount } directly (no polling)
+// -------------------------------------------------------
+export const importBelfastScheduleHandler = async () => {
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+
+  return await axios
+    .post("http://localhost:4000/api/cruise/importBelfastSchedule", {}, config)
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error("importBelfastScheduleHandler error:", err?.message || err)
+      throw err
+    })
+}
+
+// -------------------------------------------------------
+// Function to fetch Belfast Harbour Cruise Schedule data
+// -------------------------------------------------------
+export const getBelfastScheduleData = async () => {
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+
+  return await axios
+    .get("http://localhost:4000/api/cruise/getBelfastSchedule", config)
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error("getBelfastScheduleData error:", err?.message || err)
+      throw err
+    })
+}
+
 export { getPortArrivalsData as default }

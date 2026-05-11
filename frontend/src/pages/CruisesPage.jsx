@@ -6,6 +6,8 @@ import {
   getPortArrivalsData,
   loadCruiseShipArrivalsDataHandler,
   pollImportStatus,
+  importBelfastScheduleHandler,
+  getBelfastScheduleData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import { getLiveVesselPositions } from "../functionHandlers/getLiveVesselPositions"
 import "../styles/cruises.scss"
@@ -18,7 +20,9 @@ const CruisesPage = () => {
   const [vesselPositions, setVesselPositions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [fetchStatus, setFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
-  const [jobProgress, setJobProgress] = useState(null)   // raw status object from backend
+  const [jobProgress, setJobProgress] = useState(null) // raw status object from backend
+  const [belfastFetchStatus, setBelfastFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
+  const [lastBelfastImportDate, setLastBelfastImportDate] = useState(null)
   const pollingCancelRef = useRef(null)
 
   // Cancel any in-flight polling when the component unmounts
@@ -54,6 +58,25 @@ const CruisesPage = () => {
     }
   }, [portArrivals])
 
+  // This routine gets Belfast Harbour schedule data and extracts the last import date
+  useEffect(() => {
+    getBelfastScheduleData()
+      .then((returnedData) => {
+        if (returnedData.data && returnedData.data.length > 0) {
+          // Find the most recent pdfmoddate
+          const maxModDate = returnedData.data.reduce((max, row) => {
+            if (!row.pdfmoddate) return max
+            const date = new Date(row.pdfmoddate)
+            return !max || date > max ? date : max
+          }, null)
+          setLastBelfastImportDate(maxModDate)
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching Belfast schedule:", err)
+      })
+  }, [])
+
   const handleFetchData = async () => {
     setFetchStatus("loading")
     setJobProgress(null)
@@ -71,6 +94,20 @@ const CruisesPage = () => {
     }
   }
 
+  const handleBelfastFetch = async () => {
+    setBelfastFetchStatus("loading")
+    try {
+      const result = await importBelfastScheduleHandler()
+      if (result.modDate) {
+        setLastBelfastImportDate(new Date(result.modDate))
+      }
+      setBelfastFetchStatus("complete")
+    } catch (err) {
+      console.error(err)
+      setBelfastFetchStatus("error")
+    }
+  }
+
   const lastPositionDate = (() => {
     const raw = vesselPositions.find((v) => v?.timestamp)?.timestamp
     if (!raw || raw === "Not Known") return null
@@ -85,6 +122,9 @@ const CruisesPage = () => {
         jobProgress={jobProgress}
         lastPositionDate={lastPositionDate}
         onFetch={handleFetchData}
+        belfastFetchStatus={belfastFetchStatus}
+        lastBelfastImportDate={lastBelfastImportDate}
+        onBelfastFetch={handleBelfastFetch}
       />
       <div className="cruisescontainer">
         <div className="cruisestablecontainer">
