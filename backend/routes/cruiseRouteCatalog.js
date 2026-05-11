@@ -14,6 +14,10 @@ import {
   importPortArrivalsAndVessels,
   getImportStatus,
 } from "../cruiseScrapingRoutines.js"
+import {
+  importBelfastSchedule,
+  getBelfastSchedule,
+} from "../controllers/belfastScheduleController.js"
 
 var cruiseRouter = express.Router()
 
@@ -44,7 +48,7 @@ cruiseRouter.post("/createVesselsTable", createVesselsTable)
 // POST all Port Arrivals & Vessels data to the database
 cruiseRouter.post(
   "/importPortArrivalsAndVesselsData",
-  importPortArrivalsAndVessels
+  importPortArrivalsAndVessels,
 )
 
 // POST a vessel to the database
@@ -55,5 +59,14 @@ cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
 
 // GET all vessel positions
 cruiseRouter.get("/vesselPositions", getVesselPosition)
+
+// ---------------------------------------------------
+// Belfast Harbour Cruise Schedule Routes
+// ---------------------------------------------------
+// POST trigger import of Belfast Harbour cruise schedule PDF
+cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
+
+// GET Belfast Harbour cruise schedule data
+cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
 
 export default cruiseRouter
