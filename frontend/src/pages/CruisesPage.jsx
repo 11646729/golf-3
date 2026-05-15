@@ -63,10 +63,10 @@ const CruisesPage = () => {
     getBelfastScheduleData()
       .then((returnedData) => {
         if (returnedData.data && returnedData.data.length > 0) {
-          // Find the most recent pdfmoddate
+          // Find the most recent pdfmodifieddate
           const maxModDate = returnedData.data.reduce((max, row) => {
-            if (!row.pdfmoddate) return max
-            const date = new Date(row.pdfmoddate)
+            if (!row.pdfmodifieddate) return max
+            const date = new Date(row.pdfmodifieddate)
             return !max || date > max ? date : max
           }, null)
           setLastBelfastImportDate(maxModDate)

@@ -43,27 +43,25 @@ import { PDFParse } from 'pdf-parse'
 
 ## Database table
 
-`pdfmoddate` is stored on every row, so `MAX(pdfmoddate)` serves as the last-import
+`pdfmodifieddate` is stored on every row, so `MAX(pdfmodifieddate)` serves as the last-import
 marker — no separate tracking table is needed.
 
 ```sql
 CREATE TABLE IF NOT EXISTS belfastharbour_cruise_schedule (
   id               SERIAL PRIMARY KEY,
-  arrivaldate      DATE         NOT NULL,
-  departuredate    DATE         NOT NULL,
-  eta              TIME         NOT NULL,
-  etd              TIME         NOT NULL,
+  eta              TIMESTAMPTZ  NOT NULL,
+  etd              TIMESTAMPTZ  NOT NULL,
   cruiseline       TEXT         NOT NULL,
   vesselname       TEXT         NOT NULL,
   vessellengthmetre INTEGER,
   berth            TEXT,
   visitors         INTEGER,
-  pdfmoddate       TIMESTAMPTZ,
+  pdfmodifieddate       TIMESTAMPTZ,
   importedat       TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_bhcs_arrivaldate
-  ON belfastharbour_cruise_schedule(arrivaldate);
+CREATE INDEX IF NOT EXISTS idx_bhcs_eta
+  ON belfastharbour_cruise_schedule(eta);
 ```
 
 ## Relationship to existing cruise data
@@ -209,14 +207,14 @@ const prepareBelfastScheduleTable = async () => {
       id                SERIAL PRIMARY KEY,
       arrivaldate       DATE         NOT NULL,
       departuredate     DATE         NOT NULL,
-      eta               TIME         NOT NULL,
-      etd               TIME         NOT NULL,
+      eta               TIMESTAMPTZ  NOT NULL,
+      etd               TIMESTAMPTZ  NOT NULL,
       cruiseline        TEXT         NOT NULL,
       vesselname        TEXT         NOT NULL,
       vessellengthmetre INTEGER,
       berth             TEXT,
       visitors          INTEGER,
-      pdfmoddate        TIMESTAMPTZ,
+      pdfmodifieddate        TIMESTAMPTZ,
       importedat        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
     )
   `)
@@ -234,7 +232,7 @@ const saveArrivals = async (arrivals, pdfModDate) => {
   const sql = `
     INSERT INTO belfastharbour_cruise_schedule
       (arrivaldate, departuredate, eta, etd, cruiseline, vesselname,
-       vessellengthmetre, berth, visitors, pdfmoddate)
+       vessellengthmetre, berth, visitors, pdfmodifieddate)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
   for (const row of arrivals) {
@@ -250,11 +248,11 @@ const saveArrivals = async (arrivals, pdfModDate) => {
 // -------------------------------------------------------
 // Retrieve the ModDate of the last successful import.
 // Returns a Date or null if the table is empty.
-// No separate tracking table needed — pdfmoddate is stored on every row.
+// No separate tracking table needed — pdfmodifieddate is stored on every row.
 // -------------------------------------------------------
 export const getLastPdfModDate = async () => {
   const row = await getDb().get(
-    `SELECT MAX(pdfmoddate) AS lastmod FROM belfastharbour_cruise_schedule`
+    `SELECT MAX(pdfmodifieddate) AS lastmod FROM belfastharbour_cruise_schedule`
   )
   return row?.lastmod ? new Date(row.lastmod) : null
 }

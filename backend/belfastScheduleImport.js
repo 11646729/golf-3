@@ -103,10 +103,8 @@ const parseScheduleText = (text) => {
     if (rest.length < 5) continue
 
     arrivals.push({
-      arrivaldate,
-      departuredate,
-      eta,
-      etd,
+      eta: `${arrivaldate}T${eta}:00`,
+      etd: `${departuredate}T${etd}:00`,
       cruiseline: rest[0],
       vesselname: rest[1],
       vessellengthmetre: parseInt(rest[2]) || null,
@@ -129,26 +127,24 @@ const getDb = () => {
 }
 
 const prepareBelfastScheduleTable = async () => {
+  await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
-    CREATE TABLE IF NOT EXISTS belfastharbour_cruise_schedule (
+    CREATE TABLE belfastharbour_cruise_schedule (
       id                SERIAL PRIMARY KEY,
-      arrivaldate       DATE         NOT NULL,
-      departuredate     DATE         NOT NULL,
-      eta               TIME         NOT NULL,
-      etd               TIME         NOT NULL,
+      eta               TIMESTAMPTZ  NOT NULL,
+      etd               TIMESTAMPTZ  NOT NULL,
       cruiseline        TEXT         NOT NULL,
       vesselname        TEXT         NOT NULL,
       vessellengthmetre INTEGER,
       berth             TEXT,
       visitors          INTEGER,
-      pdfmoddate        TIMESTAMPTZ,
+      pdfmodifieddate        TIMESTAMPTZ,
       importedat        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
     )
   `)
   await getDb().run(
-    `CREATE INDEX IF NOT EXISTS idx_bhcs_arrivaldate ON belfastharbour_cruise_schedule(arrivaldate)`,
+    `CREATE INDEX idx_bhcs_eta ON belfastharbour_cruise_schedule(eta)`,
   )
-  await getDb().run("TRUNCATE belfastharbour_cruise_schedule")
   console.log("belfastharbour_cruise_schedule table ready")
 }
 
@@ -158,14 +154,12 @@ const prepareBelfastScheduleTable = async () => {
 const saveArrivals = async (arrivals, pdfModDate) => {
   const sql = `
     INSERT INTO belfastharbour_cruise_schedule
-      (arrivaldate, departuredate, eta, etd, cruiseline, vesselname,
-       vessellengthmetre, berth, visitors, pdfmoddate)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (eta, etd, cruiseline, vesselname,
+       vessellengthmetre, berth, visitors, pdfmodifieddate)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `
   for (const row of arrivals) {
     await getDb().run(sql, [
-      row.arrivaldate,
-      row.departuredate,
       row.eta,
       row.etd,
       row.cruiseline,
@@ -182,13 +176,18 @@ const saveArrivals = async (arrivals, pdfModDate) => {
 // -------------------------------------------------------
 // Retrieve the ModDate of the last successful import.
 // Returns a Date or null if the table is empty.
-// No separate tracking table needed — pdfmoddate is stored on every row.
+// No separate tracking table needed — pdfmodifieddate is stored on every row.
 // -------------------------------------------------------
 export const getLastPdfModDate = async () => {
-  const row = await getDb().get(
-    `SELECT MAX(pdfmoddate) AS lastmod FROM belfastharbour_cruise_schedule`,
-  )
-  return row?.lastmod ? new Date(row.lastmod) : null
+  try {
+    const row = await getDb().get(
+      `SELECT MAX(pdfmodifieddate) AS lastmod FROM belfastharbour_cruise_schedule`,
+    )
+    return row?.lastmod ? new Date(row.lastmod) : null
+  } catch (err) {
+    if (err.message?.includes("does not exist")) return null
+    throw err
+  }
 }
 
 // -------------------------------------------------------
