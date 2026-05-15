@@ -94,17 +94,17 @@ const CruisesImportButton = ({
       >
         <Button
           variant="contained"
-          disabled={belfastFetchStatus === "loading"}
+          disabled={belfastFetchStatus === "loading" || belfastFetchStatus === "complete"}
           onClick={onBelfastFetch}
           sx={{
             textTransform: "capitalize",
             minWidth: 200,
-            backgroundColor: buttonBg[belfastFetchStatus],
+            backgroundColor: belfastFetchStatus === "complete" ? "#000000" : buttonBg[belfastFetchStatus],
             color: "white",
             "&:hover": {
-              backgroundColor: buttonBg[belfastFetchStatus] ?? undefined,
+              backgroundColor: belfastFetchStatus === "complete" ? "#000000" : (buttonBg[belfastFetchStatus] ?? undefined),
             },
-            "&.Mui-disabled": { color: "white" },
+            "&.Mui-disabled": { color: "#9e9e9e", backgroundColor: "#000000" },
           }}
         >
           {belfastFetchStatus === "idle"
