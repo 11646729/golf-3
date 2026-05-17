@@ -94,23 +94,32 @@ const CruisesImportButton = ({
       >
         <Button
           variant="contained"
-          disabled={belfastFetchStatus === "loading" || belfastFetchStatus === "complete"}
+          disabled={
+            belfastFetchStatus === "loading" ||
+            belfastFetchStatus === "complete"
+          }
           onClick={onBelfastFetch}
           sx={{
             textTransform: "capitalize",
             minWidth: 200,
-            backgroundColor: belfastFetchStatus === "complete" ? "#000000" : buttonBg[belfastFetchStatus],
+            backgroundColor:
+              belfastFetchStatus === "complete"
+                ? "#000000"
+                : buttonBg[belfastFetchStatus],
             color: "white",
             "&:hover": {
-              backgroundColor: belfastFetchStatus === "complete" ? "#000000" : (buttonBg[belfastFetchStatus] ?? undefined),
+              backgroundColor:
+                belfastFetchStatus === "complete"
+                  ? "#000000"
+                  : (buttonBg[belfastFetchStatus] ?? undefined),
             },
             "&.Mui-disabled": { color: "#9e9e9e", backgroundColor: "#000000" },
           }}
         >
           {belfastFetchStatus === "idle"
-            ? "Belfast Schedule"
+            ? "Update Database"
             : belfastFetchStatus === "loading"
-              ? "Importing…"
+              ? "Importing Data…"
               : belfastFetchStatus === "complete"
                 ? "Import Complete"
                 : "Import Failed – Retry"}
