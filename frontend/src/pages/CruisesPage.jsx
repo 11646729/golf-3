@@ -1,11 +1,9 @@
-import { useState, useEffect/*, useRef*/ } from "react"
+import { useState, useEffect /*, useRef*/ } from "react"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import CruisesImportButton from "../components/CruisesImportButton"
 import {
   getPortArrivalsData,
-  // loadCruiseShipArrivalsDataHandler,
-  // pollImportStatus,
   importBelfastScheduleHandler,
   getBelfastScheduleData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
@@ -19,14 +17,8 @@ const CruisesPage = () => {
   const [portArrivals, setPortArrivals] = useState([])
   const [vesselPositions, setVesselPositions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  // const [fetchStatus, setFetchStatus] = useState("idle")
-  // const [jobProgress, setJobProgress] = useState(null)
   const [belfastFetchStatus, setBelfastFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
   const [lastBelfastImportDate, setLastBelfastImportDate] = useState(null)
-  // const pollingCancelRef = useRef(null)
-
-  // Cancel any in-flight polling when the component unmounts
-  // useEffect(() => () => pollingCancelRef.current?.(), [])
 
   // This routine gets Port Arrivals data
   useEffect(() => {
@@ -77,21 +69,6 @@ const CruisesPage = () => {
       })
   }, [])
 
-  // const handleFetchData = async () => {
-  //   setFetchStatus("loading")
-  //   setJobProgress(null)
-  //   try {
-  //     await loadCruiseShipArrivalsDataHandler()
-  //     const { promise, cancel } = pollImportStatus(setJobProgress)
-  //     pollingCancelRef.current = cancel
-  //     await promise
-  //     setFetchStatus("complete")
-  //   } catch (err) {
-  //     console.error(err)
-  //     setFetchStatus("error")
-  //   }
-  // }
-
   const handleBelfastFetch = async () => {
     setBelfastFetchStatus("loading")
     try {
@@ -106,20 +83,9 @@ const CruisesPage = () => {
     }
   }
 
-  // const lastPositionDate = (() => {
-  //   const raw = vesselPositions.find((v) => v?.timestamp)?.timestamp
-  //   if (!raw || raw === "Not Known") return null
-  //   const d = new Date(raw)
-  //   return isNaN(d.getTime()) ? null : d
-  // })()
-
   return (
     <div>
       <CruisesImportButton
-        // fetchStatus={fetchStatus}
-        // jobProgress={jobProgress}
-        // lastPositionDate={lastPositionDate}
-        // onFetch={handleFetchData}
         belfastFetchStatus={belfastFetchStatus}
         lastBelfastImportDate={lastBelfastImportDate}
         onBelfastFetch={handleBelfastFetch}
