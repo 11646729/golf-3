@@ -57,7 +57,7 @@ export const importPortArrivalsAndVessels = async (_req, res) => {
 
     // Secondly get all the Vessel Arrivals per Month
     importStatus = { ...importStatus, phase: "scraping_arrivals" }
-    const vesselUrls = await getAndSavePortArrivals(scheduledPeriods, port, portName)
+    const vesselUrls = await getAndSavePortArrivals(scheduledPeriods, portName)
 
     // Now remove duplicates and store Urls in DeduplicatedVesselUrlArray array
     const DeduplicatedVesselUrlArray = Array.from(new Set(vesselUrls))

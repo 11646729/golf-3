@@ -61,28 +61,42 @@ const CruisesTable = (props) => {
 
   const [modifiedPortArrivals, setModifiedPortArrivals] = useState([])
 
+  const MONTHS = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ]
+
+  const WEEKDAYS = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+  ]
+
   useEffect(() => {
     portArrivals.forEach((element) => {
-      // if (element.vesseletatime == "00:00") {
-      //   console.log(element.vesseletatime)
-      // }
-
-      if (element.vesseletatime == "11:59") {
-        element.vesseletatime = "Not Known"
-
-        var date = new Date(element.vesseleta)
-        date.setHours(date.getHours() - 11)
-        date.setMinutes(date.getMinutes() - 59)
-        element.vesseleta = date.toISOString()
+      const etaDate = new Date(element.vesseleta)
+      if (etaDate.getUTCHours() === 11 && etaDate.getUTCMinutes() === 59) {
+        element.etadisplaytime = "Not Known"
+        etaDate.setUTCHours(0, 0, 0, 0)
+        element.vesseleta = etaDate.toISOString()
+      } else {
+        element.etadisplaytime =
+          String(etaDate.getUTCHours()).padStart(2, "0") +
+          ":" +
+          String(etaDate.getUTCMinutes()).padStart(2, "0")
       }
 
-      if (element.vesseletdtime == "11:59") {
-        element.vesseletdtime = "Not Known"
+      element.arrivaldatedisplay = `${MONTHS[etaDate.getUTCMonth()]} ${etaDate.getUTCDate()} ${etaDate.getUTCFullYear()}`
+      element.weekdaydisplay = WEEKDAYS[etaDate.getUTCDay()]
 
-        var date = new Date(element.vesseletd)
-        date.setHours(date.getHours() - 11)
-        date.setMinutes(date.getMinutes() - 59)
-        element.vesseletd = date.toISOString()
+      const etdDate = new Date(element.vesseletd)
+      if (etdDate.getUTCHours() === 11 && etdDate.getUTCMinutes() === 59) {
+        element.etddisplaytime = "Not Known"
+        etdDate.setUTCHours(0, 0, 0, 0)
+        element.vesseletd = etdDate.toISOString()
+      } else {
+        element.etddisplaytime =
+          String(etdDate.getUTCHours()).padStart(2, "0") +
+          ":" +
+          String(etdDate.getUTCMinutes()).padStart(2, "0")
       }
     })
 
@@ -155,17 +169,17 @@ const CruisesTable = (props) => {
                   >
                     <TableCell className="cruisestabledatacell">
                       <div className="cruisescellcenter">
-                        {modifiedPortArrivals.weekday}
+                        {modifiedPortArrivals.weekdaydisplay}
                       </div>
                       <div className="cruisescellcenter">
-                        {modifiedPortArrivals.arrivaldate}
+                        {modifiedPortArrivals.arrivaldatedisplay}
                       </div>
                     </TableCell>
                     <TableCell
                       align="center"
                       className="cruisestabledatacellcenter"
                     >
-                      {modifiedPortArrivals.vesseletatime}
+                      {modifiedPortArrivals.etadisplaytime}
                     </TableCell>
                     <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
@@ -190,7 +204,7 @@ const CruisesTable = (props) => {
                       align="center"
                       className="cruisestabledatacellcenter"
                     >
-                      {modifiedPortArrivals.vesseletdtime}
+                      {modifiedPortArrivals.etddisplaytime}
                     </TableCell>
                     <TableCell
                       align="center"

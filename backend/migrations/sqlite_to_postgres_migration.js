@@ -89,24 +89,20 @@ const postgresSchemas = {
     );
   `,
 
+  cruiselinelogos: `
+    CREATE TABLE IF NOT EXISTS cruiselinelogos (
+      cruiselinelogoid SERIAL PRIMARY KEY,
+      logourl TEXT UNIQUE NOT NULL
+    );
+  `,
+
   portarrivals: `
     CREATE TABLE IF NOT EXISTS portarrivals (
       portarrivalid SERIAL PRIMARY KEY,
-      databaseversion INTEGER,
-      sentencecaseport TEXT NOT NULL,
-      portname TEXT NOT NULL,
-      portunlocode TEXT NOT NULL,
-      portcoordinatelng REAL CHECK (portcoordinatelng >= -180 AND portcoordinatelng <= 180),
-      portcoordinatelat REAL CHECK (portcoordinatelat >= -90 AND portcoordinatelat <= 90),
-      cruiseline TEXT,
-      cruiselinelogo TEXT,
+      cruiselinelogoid INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
       vesselshortcruisename TEXT,
-      arrivaldate TEXT,
-      weekday TEXT,
       vesseleta TEXT,
-      vesseletatime TEXT,
       vesseletd TEXT,
-      vesseletdtime TEXT,
       vesselnameurl TEXT
     );
   `,

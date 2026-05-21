@@ -42,13 +42,31 @@ export const createPortArrivalsTable = async (req, res) => {
       )
     }
 
-    // Create the table
+    // Ensure cruiselinelogos exists before portarrivals (FK dependency)
+    await createCruiseLineLogosTableStructure()
     await createPortArrivalsTableStructure()
 
     res.status(200).send("Port arrivals table prepared successfully")
   } catch (error) {
     console.error("Error preparing port arrivals table:", error)
     res.status(500).send("Error preparing port arrivals table")
+  }
+}
+
+// -------------------------------------------------------
+// Create cruiselinelogos Table in the database
+// -------------------------------------------------------
+const createCruiseLineLogosTableStructure = async () => {
+  try {
+    await getDb().run(`
+      CREATE TABLE IF NOT EXISTS cruiselinelogos (
+        cruiselinelogoid SERIAL PRIMARY KEY,
+        logourl TEXT UNIQUE NOT NULL
+      )
+    `)
+    console.log("cruiselinelogos table ready")
+  } catch (error) {
+    console.error("Error in createCruiseLineLogosTableStructure: ", error.message)
   }
 }
 
@@ -60,21 +78,10 @@ const createPortArrivalsTableStructure = async () => {
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY,
-        databaseversion TEXT NOT NULL,
-        sentencecaseport TEXT NOT NULL,
-        portname TEXT NOT NULL,
-        portunlocode TEXT NOT NULL,
-        portcoordinatelng REAL CHECK( portcoordinatelng >= -180 AND portcoordinatelng <= 180 ),
-        portcoordinatelat REAL CHECK( portcoordinatelat >= -90 AND portcoordinatelat <= 90 ),
-        cruiseline TEXT,
-        cruiselinelogo TEXT,
+        cruiselinelogoid INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
         vesselshortcruisename TEXT,
-        arrivaldate TEXT,
-        weekday TEXT,
         vesseleta TEXT,
-        vesseletatime TEXT,
         vesseletd TEXT,
-        vesseletdtime TEXT,
         vesselnameurl TEXT
       )
     `)
@@ -87,6 +94,22 @@ const createPortArrivalsTableStructure = async () => {
   } catch (error) {
     console.error("Error in createPortArrivalsTableStructure: ", error.message)
   }
+}
+
+// -------------------------------------------------------
+// Look up a cruise line logo by URL, inserting it if new
+// -------------------------------------------------------
+const getOrCreateCruiseLineLogoId = async (logoUrl) => {
+  if (!logoUrl) return null
+  await getDb().run(
+    "INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING",
+    [logoUrl],
+  )
+  const row = await getDb().get(
+    "SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?",
+    [logoUrl],
+  )
+  return row.cruiselinelogoid
 }
 
 // -------------------------------------------------------
@@ -103,20 +126,10 @@ export const getPortArrivals = async (req, res, next) => {
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
     const sql =
-      "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
+      "SELECT p.*, l.logourl AS cruiselinelogo, v.vesselurl FROM portarrivals p LEFT JOIN cruiselinelogos l ON p.cruiselinelogoid = l.cruiselinelogoid LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
     const results = await getDb().all(sql, params)
-
-    // Code here to convert 23:59 to Not Known
-    results.forEach((result) => {
-      if (result.vesseletatime === "23:59") {
-        result.vesseletatime = "Not Known"
-      }
-      if (result.vesseletdtime === "23:59") {
-        result.vesseletdtime = "Not Known"
-      }
-    })
 
     res.json({
       message: "success",
@@ -145,11 +158,13 @@ export const savePortArrival = async (req, res) => {
     )
     console.log(`Current port arrivals count: ${countResult.count}`)
 
-    // Use placeholder syntax that works with both databases
-    const sql1 =
-      "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    const cruiselinelogoid = await getOrCreateCruiseLineLogoId(newPortArrival[0])
+    const arrival = [cruiselinelogoid, ...newPortArrival.slice(1)]
 
-    await getDb().run(sql1, newPortArrival)
+    const sql1 =
+      "INSERT INTO portarrivals (cruiselinelogoid, vesselshortcruisename, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+
+    await getDb().run(sql1, arrival)
     res.json({ message: "Port arrival saved successfully" })
   } catch (error) {
     console.error("Error in savePortArrival: ", error)
@@ -165,7 +180,7 @@ const savePortArrivalInternal = async (newPortArrival) => {
     if (!newPortArrival) return
 
     const sql1 =
-      "INSERT INTO portarrivals (databaseversion, sentencecaseport, portname, portunlocode, portcoordinatelng, portcoordinatelat, cruiseline, cruiselinelogo, vesselshortcruisename, arrivaldate, weekday, vesseleta, vesseletatime, vesseletd, vesseletdtime, vesselnameurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO portarrivals (cruiselinelogoid, vesselshortcruisename, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
 
     await getDb().run(sql1, newPortArrival)
   } catch (error) {
@@ -177,22 +192,14 @@ const savePortArrivalInternal = async (newPortArrival) => {
 // Fetch All Port Arrivals Details
 // Path: Local function called by importPortArrivalsAndVessels
 // -------------------------------------------------------
-export const getAndSavePortArrivals = async (
-  scheduledPeriods,
-  port,
-  portName,
-) => {
+export const getAndSavePortArrivals = async (scheduledPeriods, portName) => {
   let allVesselArrivals = []
   let periodVesselArrivals = []
 
   let loop = 0
   do {
     const period = String(scheduledPeriods[loop].monthYearString)
-    periodVesselArrivals = await getSingleMonthPortArrival(
-      period,
-      port,
-      portName,
-    )
+    periodVesselArrivals = await getSingleMonthPortArrival(period, portName)
 
     let j = 0
     do {
@@ -210,7 +217,7 @@ export const getAndSavePortArrivals = async (
 // Fetch a Single Port Arrival
 // Path: Local function called by getAndSavePortArrivals
 // -----------------------------------------------------
-export const getSingleMonthPortArrival = async (period, port, portName) => {
+export const getSingleMonthPortArrival = async (period, portName) => {
   let arrivalUrl =
     process.env.CRUISE_MAPPER_URL + portName + "?month=" + period + "#schedule"
 
@@ -254,31 +261,6 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
     await page.close()
   }
 
-  const weekdayArray = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ]
-
-  // Port Name Associated values
-  const port_name = portName
-  const portLat = port + "_PORT_LATITUDE"
-  const portLng = port + "_PORT_LONGITUDE"
-  const portUnLocode = port + "_PORT_UN_LOCODE"
-
-  const sentence_case_port = port
-    .split(" ")
-    .map((w) => w[0].toUpperCase() + w.substr(1).toLowerCase())
-    .join(" ")
-
-  const port_un_locode = process.env[portUnLocode]
-  const portcoordinateslat = process.env[portLat]
-  const portcoordinateslng = process.env[portLng]
-
   let vesselUrls = []
 
   for (const item of rows) {
@@ -288,7 +270,6 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
       vessel_eta_time: raw_eta,
       vessel_etd_time: raw_etd,
       cruise_line_logo_url,
-      raw_cruise_line,
       vessel_name_url,
     } = item
 
@@ -300,9 +281,6 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
     let a = new Date(vessel_eta)
     vessel_eta = a.toISOString()
 
-    // Expected Weekday of Arrival
-    let weekday = weekdayArray[a.getDay()]
-
     // -------------------------------------------------------
     // Expected Time of Departure
     let vessel_etd_time = raw_etd || "11:59"
@@ -310,9 +288,6 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
     let vessel_etd = Date.parse(arrivalDate + " " + vessel_etd_time + " GMT")
     vessel_etd = new Date(vessel_etd).toISOString()
     // -------------------------------------------------------
-
-    // Name of Cruise Line
-    const cruise_line = raw_cruise_line.substr(0, raw_cruise_line.length - 20)
 
     // Url of Vessel Web Page
     if (
@@ -324,22 +299,13 @@ export const getSingleMonthPortArrival = async (period, port, portName) => {
       console.log("Error, vessel_name_url is not a string")
     }
 
+    const cruiselinelogoid = await getOrCreateCruiseLineLogoId(cruise_line_logo_url)
+
     const newPortArrival = [
-      process.env.DATABASE_VERSION,
-      sentence_case_port,
-      port_name,
-      port_un_locode,
-      portcoordinateslng,
-      portcoordinateslat,
-      cruise_line,
-      cruise_line_logo_url,
+      cruiselinelogoid,
       vessel_short_cruise_name,
-      arrivalDate,
-      weekday,
       vessel_eta,
-      vessel_eta_time,
       vessel_etd,
-      vessel_etd_time,
       vessel_name_url,
     ]
 
