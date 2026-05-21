@@ -100,7 +100,7 @@ const postgresSchemas = {
     CREATE TABLE IF NOT EXISTS portarrivals (
       portarrivalid SERIAL PRIMARY KEY,
       cruiselinelogoid INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
-      vesselshortcruisename TEXT,
+      vesselname TEXT,
       vesseleta TEXT,
       vesseletd TEXT,
       vesselnameurl TEXT

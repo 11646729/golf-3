@@ -61,9 +61,13 @@ const createCruiseLineLogosTableStructure = async () => {
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS cruiselinelogos (
         cruiselinelogoid SERIAL PRIMARY KEY,
-        logourl TEXT UNIQUE NOT NULL
+        logourl TEXT UNIQUE NOT NULL,
+        cruiseline TEXT UNIQUE
       )
     `)
+    await getDb().run(
+      `ALTER TABLE cruiselinelogos ADD COLUMN IF NOT EXISTS cruiseline TEXT UNIQUE`,
+    )
     console.log("cruiselinelogos table ready")
   } catch (error) {
     console.error("Error in createCruiseLineLogosTableStructure: ", error.message)
@@ -79,7 +83,7 @@ const createPortArrivalsTableStructure = async () => {
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY,
         cruiselinelogoid INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
-        vesselshortcruisename TEXT,
+        vesselname TEXT,
         vesseleta TEXT,
         vesseletd TEXT,
         vesselnameurl TEXT
@@ -162,7 +166,7 @@ export const savePortArrival = async (req, res) => {
     const arrival = [cruiselinelogoid, ...newPortArrival.slice(1)]
 
     const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogoid, vesselshortcruisename, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+      "INSERT INTO portarrivals (cruiselinelogoid, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
 
     await getDb().run(sql1, arrival)
     res.json({ message: "Port arrival saved successfully" })
@@ -180,7 +184,7 @@ const savePortArrivalInternal = async (newPortArrival) => {
     if (!newPortArrival) return
 
     const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogoid, vesselshortcruisename, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+      "INSERT INTO portarrivals (cruiselinelogoid, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
 
     await getDb().run(sql1, newPortArrival)
   } catch (error) {

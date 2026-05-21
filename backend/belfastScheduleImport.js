@@ -1,5 +1,6 @@
 import { PDFParse } from "pdf-parse"
 import { DatabaseAdapter } from "./databaseUtilities.js"
+import { getBrowser } from "./puppeteerBrowser.js"
 
 const CRUISE_SCHEDULE_PAGE =
   "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
@@ -103,8 +104,8 @@ const parseScheduleText = (text) => {
     if (rest.length < 5) continue
 
     arrivals.push({
-      eta: `${arrivaldate}T${eta}:00`,
-      etd: `${departuredate}T${etd}:00`,
+      vesseleta: `${arrivaldate}T${eta}:00`,
+      vesseletd: `${departuredate}T${etd}:00`,
       cruiseline: rest[0],
       vesselname: rest[1],
       vessellengthmetre: parseInt(rest[2]) || null,
@@ -117,8 +118,7 @@ const parseScheduleText = (text) => {
 }
 
 // -------------------------------------------------------
-// Create the table (if it does not exist) and truncate it
-// ready for a fresh import.
+// Database
 // -------------------------------------------------------
 let db = null
 const getDb = () => {
@@ -126,24 +126,154 @@ const getDb = () => {
   return db
 }
 
+// -------------------------------------------------------
+// Ensure cruiselinelogos exists with the cruiseline column.
+// Safe to call on an existing table — ADD COLUMN IF NOT EXISTS is a no-op.
+// -------------------------------------------------------
+const prepareCruiseLineLogosTable = async () => {
+  await getDb().run(`
+    CREATE TABLE IF NOT EXISTS cruiselinelogos (
+      cruiselinelogoid SERIAL PRIMARY KEY,
+      logourl TEXT UNIQUE NOT NULL,
+      cruiseline TEXT UNIQUE
+    )
+  `)
+  await getDb().run(
+    `ALTER TABLE cruiselinelogos ADD COLUMN IF NOT EXISTS cruiseline TEXT UNIQUE`,
+  )
+}
+
+// -------------------------------------------------------
+// Normalize a cruise line name for fuzzy matching:
+// lowercase, collapse non-alphanumeric runs to single spaces.
+// -------------------------------------------------------
+const normalizeName = (name) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+// -------------------------------------------------------
+// Scrape the CruiseMapper Belfast schedule for the current
+// month and the next two months, returning a Map of
+// normalized cruise line name → { name, logoUrl }.
+// -------------------------------------------------------
+const scrapeLogoMapFromCruiseMapper = async () => {
+  const logoMap = new Map()
+  const portUrl = process.env.BELFAST_PORT_URL
+  const baseUrl = process.env.CRUISE_MAPPER_URL
+  if (!portUrl || !baseUrl) return logoMap
+
+  const browser = await getBrowser()
+  const page = await browser.newPage()
+  const now = new Date()
+
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1)
+    const month = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`
+    const url = `${baseUrl}${portUrl}?month=${month}#schedule`
+    try {
+      await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 })
+      const rows = await page.evaluate(() =>
+        Array.from(document.querySelectorAll(".portItemSchedule tr"))
+          .slice(1)
+          .map((tr) => {
+            const img = tr.querySelector("img")
+            return {
+              name: img?.getAttribute("title")?.trim() ?? "",
+              logoUrl: img?.getAttribute("src") ?? "",
+            }
+          })
+          .filter((r) => r.name && r.logoUrl),
+      )
+      for (const { name, logoUrl } of rows) {
+        const key = normalizeName(name)
+        if (!logoMap.has(key)) logoMap.set(key, { name, logoUrl })
+      }
+    } catch (err) {
+      console.warn(`Failed to scrape CruiseMapper for month ${month}:`, err.message)
+    }
+  }
+
+  await page.close()
+  console.log(`Built CruiseMapper logo map: ${logoMap.size} cruise lines`)
+  return logoMap
+}
+
+// -------------------------------------------------------
+// Resolve a cruise line name to a cruiselinelogoid.
+// Checks cruiselinelogos by name first; if not found,
+// looks up the logo URL from the CruiseMapper logoMap
+// (exact normalized match, then partial), inserts it,
+// and returns the new ID.
+// -------------------------------------------------------
+const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
+  if (!cruiseline) return null
+
+  // 1. Already recorded by name
+  const existing = await getDb().get(
+    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE LOWER(cruiseline) = LOWER(?)`,
+    [cruiseline],
+  )
+  if (existing) return existing.cruiselinelogoid
+
+  // 2. Find in logoMap — exact normalized match first, then partial
+  const key = normalizeName(cruiseline)
+  let match = logoMap.get(key)
+  if (!match) {
+    for (const [k, v] of logoMap) {
+      if (k.includes(key) || key.includes(k)) {
+        match = v
+        break
+      }
+    }
+  }
+
+  if (!match) {
+    console.warn(`No CruiseMapper logo found for: ${cruiseline}`)
+    return null
+  }
+
+  // 3. Upsert — if logourl already exists, set cruiseline only if it was NULL
+  await getDb().run(
+    `INSERT INTO cruiselinelogos (logourl, cruiseline)
+     VALUES (?, ?)
+     ON CONFLICT (logourl) DO UPDATE
+       SET cruiseline = COALESCE(cruiselinelogos.cruiseline, EXCLUDED.cruiseline)`,
+    [match.logoUrl, cruiseline],
+  )
+  const row = await getDb().get(
+    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?`,
+    [match.logoUrl],
+  )
+  return row?.cruiselinelogoid ?? null
+}
+
+// -------------------------------------------------------
+// Create the table (if it does not exist) and truncate it
+// ready for a fresh import.
+// -------------------------------------------------------
 const prepareBelfastScheduleTable = async () => {
+  await prepareCruiseLineLogosTable()
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
     CREATE TABLE belfastharbour_cruise_schedule (
-      id                SERIAL PRIMARY KEY,
-      eta               TIMESTAMPTZ  NOT NULL,
-      etd               TIMESTAMPTZ  NOT NULL,
+      portarrivalid     SERIAL PRIMARY KEY,
+      cruiselinelogoid  INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
+      vesseleta         TIMESTAMPTZ  NOT NULL,
+      vesseletd         TIMESTAMPTZ  NOT NULL,
       cruiseline        TEXT         NOT NULL,
       vesselname        TEXT         NOT NULL,
       vessellengthmetre INTEGER,
       berth             TEXT,
       visitors          INTEGER,
-      pdfmodifieddate        TIMESTAMPTZ,
+      pdfmodifieddate   TIMESTAMPTZ,
       importedat        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
     )
   `)
   await getDb().run(
-    `CREATE INDEX idx_bhcs_eta ON belfastharbour_cruise_schedule(eta)`,
+    `CREATE INDEX idx_bhcs_eta ON belfastharbour_cruise_schedule(vesseleta)`,
   )
   console.log("belfastharbour_cruise_schedule table ready")
 }
@@ -154,14 +284,15 @@ const prepareBelfastScheduleTable = async () => {
 const saveArrivals = async (arrivals, pdfModDate) => {
   const sql = `
     INSERT INTO belfastharbour_cruise_schedule
-      (eta, etd, cruiseline, vesselname,
+      (cruiselinelogoid, vesseleta, vesseletd, cruiseline, vesselname,
        vessellengthmetre, berth, visitors, pdfmodifieddate)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
   for (const row of arrivals) {
     await getDb().run(sql, [
-      row.eta,
-      row.etd,
+      row.cruiselinelogoid ?? null,
+      row.vesseleta,
+      row.vesseletd,
       row.cruiseline,
       row.vesselname,
       row.vessellengthmetre,
@@ -218,6 +349,12 @@ export const importBelfastScheduleFromPdf = async () => {
   console.log(`Parsed ${arrivals.length} arrival rows`)
 
   await prepareBelfastScheduleTable()
+
+  const logoMap = await scrapeLogoMapFromCruiseMapper()
+  for (const row of arrivals) {
+    row.cruiselinelogoid = await getOrCreateCruiseLineLogoId(row.cruiseline, logoMap)
+  }
+
   await saveArrivals(arrivals, modDate)
 
   return { imported: true, modDate, rowCount: arrivals.length }

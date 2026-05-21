@@ -176,7 +176,7 @@ const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
                 <Typography gutterBottom variant="h6" component="h3">
                   {vesselDetails.find(
                     (d) => d.vesselnameurl === selectedPosition.vesselUrl,
-                  )?.vesselshortcruisename ??
+                  )?.vesselname ??
                     selectedPosition.vesselName ??
                     "Vessel"}
                 </Typography>

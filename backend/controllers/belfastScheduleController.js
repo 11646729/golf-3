@@ -19,13 +19,24 @@ export const importBelfastSchedule = async (_req, res) => {
 
 export const getBelfastSchedule = async (req, res) => {
   try {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const threeMonthsFromNow = new Date()
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
+
     const rows = await getDb().all(
-      `SELECT * FROM belfastharbour_cruise_schedule
-       WHERE eta >= NOW()
-       ORDER BY eta`,
+      `SELECT b.*, l.logourl AS cruiselinelogo
+       FROM belfastharbour_cruise_schedule b
+       LEFT JOIN cruiselinelogos l ON b.cruiselinelogoid = l.cruiselinelogoid
+       WHERE b.vesseleta >= ? AND b.vesseleta < ?
+       ORDER BY b.vesseleta`,
+      [yesterday.toISOString(), threeMonthsFromNow.toISOString()],
     )
     res.json({ message: "success", data: rows })
   } catch (err) {
+    if (err.message?.includes("does not exist")) {
+      return res.json({ message: "success", data: [] })
+    }
     console.error("getBelfastSchedule error:", err.message)
     res.status(400).json({ error: err.message })
   }

@@ -195,7 +195,7 @@ const CruisesTable = (props) => {
                               handleOpen(modifiedPortArrivals.vesselurl)
                             }
                           >
-                            {modifiedPortArrivals.vesselshortcruisename}
+                            {modifiedPortArrivals.vesselname}
                           </Link>
                         </div>
                       </div>
