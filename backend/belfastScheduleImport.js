@@ -126,22 +126,6 @@ const getDb = () => {
   return db
 }
 
-// -------------------------------------------------------
-// Ensure cruiselinelogos exists with the cruiseline column.
-// Safe to call on an existing table — ADD COLUMN IF NOT EXISTS is a no-op.
-// -------------------------------------------------------
-const prepareCruiseLineLogosTable = async () => {
-  await getDb().run(`
-    CREATE TABLE IF NOT EXISTS cruiselinelogos (
-      cruiselinelogoid SERIAL PRIMARY KEY,
-      logourl TEXT UNIQUE NOT NULL,
-      cruiseline TEXT UNIQUE
-    )
-  `)
-  await getDb().run(
-    `ALTER TABLE cruiselinelogos ADD COLUMN IF NOT EXISTS cruiseline TEXT UNIQUE`,
-  )
-}
 
 // -------------------------------------------------------
 // Normalize a cruise line name for fuzzy matching:
@@ -154,46 +138,46 @@ const normalizeName = (name) =>
     .replace(/\s+/g, " ")
     .trim()
 
+// Belfast Harbour PDF uses abbreviations that differ from CruiseMapper full names.
+const CRUISE_LINE_ALIASES = new Map([
+  ["ncl", "norwegian cruise line"],
+  ["hal", "holland america"],
+  ["focl", "fred olsen cruise lines"],
+])
+
 // -------------------------------------------------------
-// Scrape the CruiseMapper Belfast schedule for the current
-// month and the next two months, returning a Map of
-// normalized cruise line name → { name, logoUrl }.
+// Scrape the CruiseMapper cruise lines directory and return
+// a Map of normalized cruise line name → { name, logoUrl }.
+// Each img has title="[Name] cruise line" so we strip the
+// trailing " cruise line" suffix before normalizing.
 // -------------------------------------------------------
 const scrapeLogoMapFromCruiseMapper = async () => {
   const logoMap = new Map()
-  const portUrl = process.env.BELFAST_PORT_URL
-  const baseUrl = process.env.CRUISE_MAPPER_URL
-  if (!portUrl || !baseUrl) return logoMap
-
   const browser = await getBrowser()
   const page = await browser.newPage()
-  const now = new Date()
 
-  for (let i = 0; i < 3; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + i, 1)
-    const month = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`
-    const url = `${baseUrl}${portUrl}?month=${month}#schedule`
-    try {
-      await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 })
-      const rows = await page.evaluate(() =>
-        Array.from(document.querySelectorAll(".portItemSchedule tr"))
-          .slice(1)
-          .map((tr) => {
-            const img = tr.querySelector("img")
-            return {
-              name: img?.getAttribute("title")?.trim() ?? "",
-              logoUrl: img?.getAttribute("src") ?? "",
-            }
-          })
-          .filter((r) => r.name && r.logoUrl),
-      )
-      for (const { name, logoUrl } of rows) {
-        const key = normalizeName(name)
-        if (!logoMap.has(key)) logoMap.set(key, { name, logoUrl })
-      }
-    } catch (err) {
-      console.warn(`Failed to scrape CruiseMapper for month ${month}:`, err.message)
+  try {
+    await page.goto("https://www.cruisemapper.com/cruise-lines/", {
+      waitUntil: "networkidle2",
+      timeout: 30000,
+    })
+
+    const entries = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("img[title]"))
+        .map((img) => ({
+          title: img.getAttribute("title")?.trim() ?? "",
+          logoUrl: img.getAttribute("src") ?? "",
+        }))
+        .filter((e) => e.title && e.logoUrl),
+    )
+
+    for (const { title, logoUrl } of entries) {
+      const name = title.replace(/\s+cruise line$/i, "").trim()
+      const key = normalizeName(name)
+      if (!logoMap.has(key)) logoMap.set(key, { name, logoUrl })
     }
+  } catch (err) {
+    console.warn("Failed to scrape CruiseMapper cruise lines directory:", err.message)
   }
 
   await page.close()
@@ -203,23 +187,15 @@ const scrapeLogoMapFromCruiseMapper = async () => {
 
 // -------------------------------------------------------
 // Resolve a cruise line name to a cruiselinelogoid.
-// Checks cruiselinelogos by name first; if not found,
-// looks up the logo URL from the CruiseMapper logoMap
-// (exact normalized match, then partial), inserts it,
-// and returns the new ID.
+// Looks up the logo URL from the CruiseMapper logoMap
+// (exact normalized match, then partial), inserts the
+// logourl into cruiselinelogos if new, and returns the ID.
 // -------------------------------------------------------
 const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
   if (!cruiseline) return null
 
-  // 1. Already recorded by name
-  const existing = await getDb().get(
-    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE LOWER(cruiseline) = LOWER(?)`,
-    [cruiseline],
-  )
-  if (existing) return existing.cruiselinelogoid
-
-  // 2. Find in logoMap — exact normalized match first, then partial
-  const key = normalizeName(cruiseline)
+  // Resolve known abbreviations before matching
+  const key = CRUISE_LINE_ALIASES.get(normalizeName(cruiseline)) ?? normalizeName(cruiseline)
   let match = logoMap.get(key)
   if (!match) {
     for (const [k, v] of logoMap) {
@@ -235,13 +211,9 @@ const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
     return null
   }
 
-  // 3. Upsert — if logourl already exists, set cruiseline only if it was NULL
   await getDb().run(
-    `INSERT INTO cruiselinelogos (logourl, cruiseline)
-     VALUES (?, ?)
-     ON CONFLICT (logourl) DO UPDATE
-       SET cruiseline = COALESCE(cruiselinelogos.cruiseline, EXCLUDED.cruiseline)`,
-    [match.logoUrl, cruiseline],
+    `INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING`,
+    [match.logoUrl],
   )
   const row = await getDb().get(
     `SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?`,
@@ -251,11 +223,35 @@ const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
 }
 
 // -------------------------------------------------------
+// Update cruiselinelogoid for any rows in
+// belfastharbour_cruise_schedule that don't have one yet.
+// Called when the PDF hasn't changed but logos are missing.
+// -------------------------------------------------------
+const updateExistingLogos = async () => {
+  const rows = await getDb().all(
+    `SELECT DISTINCT cruiseline FROM belfastharbour_cruise_schedule WHERE cruiselinelogoid IS NULL`,
+  )
+  if (rows.length === 0) return
+
+  console.log(`Updating logos for ${rows.length} unlinked cruise lines`)
+  const logoMap = await scrapeLogoMapFromCruiseMapper()
+
+  for (const { cruiseline } of rows) {
+    const logoId = await getOrCreateCruiseLineLogoId(cruiseline, logoMap)
+    if (logoId) {
+      await getDb().run(
+        `UPDATE belfastharbour_cruise_schedule SET cruiselinelogoid = ? WHERE cruiseline = ? AND cruiselinelogoid IS NULL`,
+        [logoId, cruiseline],
+      )
+    }
+  }
+}
+
+// -------------------------------------------------------
 // Create the table (if it does not exist) and truncate it
 // ready for a fresh import.
 // -------------------------------------------------------
 const prepareBelfastScheduleTable = async () => {
-  await prepareCruiseLineLogosTable()
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
     CREATE TABLE belfastharbour_cruise_schedule (
@@ -340,7 +336,8 @@ export const importBelfastScheduleFromPdf = async () => {
 
   const lastKnownModDate = await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
-    console.log("Schedule unchanged — skipping import")
+    console.log("Schedule unchanged — checking for missing logos")
+    await updateExistingLogos()
     return { imported: false, modDate, rowCount: 0 }
   }
 
