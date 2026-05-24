@@ -186,10 +186,26 @@ const scrapeLogoMapFromCruiseMapper = async () => {
 }
 
 // -------------------------------------------------------
-// Resolve a cruise line name to a cruiselinelogoid.
-// Looks up the logo URL from the CruiseMapper logoMap
-// (exact normalized match, then partial), inserts the
-// logourl into cruiselinelogos if new, and returns the ID.
+// Insert a logo URL into cruiselinelogos (if new) and
+// return its cruiselinelogoid.
+// -------------------------------------------------------
+const upsertLogoUrl = async (logoUrl) => {
+  await getDb().run(
+    `INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING`,
+    [logoUrl],
+  )
+  const row = await getDb().get(
+    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?`,
+    [logoUrl],
+  )
+  return row?.cruiselinelogoid ?? null
+}
+
+// -------------------------------------------------------
+// Resolve a cruise line name to a cruiselinelogoid via the
+// directory logoMap (exact normalized match, then partial).
+// Returns null if not found — caller should fall back to
+// vessel search.
 // -------------------------------------------------------
 const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
   if (!cruiseline) return null
@@ -206,26 +222,52 @@ const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
     }
   }
 
-  if (!match) {
-    console.warn(`No CruiseMapper logo found for: ${cruiseline}`)
+  if (!match) return null
+  return upsertLogoUrl(match.logoUrl)
+}
+
+// -------------------------------------------------------
+// Search CruiseMapper ships by vessel name and return the
+// logo URL for the operating cruise line.
+// The cruise line link on the results page follows the
+// pattern /cruise-lines/Name-ID, so the ID gives us the
+// icon URL directly with no second request needed.
+// -------------------------------------------------------
+const lookupLogoViaVesselSearch = async (page, vesselname) => {
+  try {
+    const query = encodeURIComponent(vesselname)
+    await page.goto(`https://www.cruisemapper.com/ships/?name=${query}`, {
+      waitUntil: "networkidle2",
+      timeout: 30000,
+    })
+    const href = await page.evaluate(() => {
+      // The page has a cruise line filter dropdown at the top whose links
+      // would be matched first — skip it by finding the first cruise line
+      // link that appears after the first ship result link in document order.
+      const shipLink = document.querySelector('a[href*="/ships/"]')
+      if (!shipLink) return null
+      const cruiseLineLink = Array.from(
+        document.querySelectorAll('a[href*="/cruise-lines/"]'),
+      ).find(
+        (a) => shipLink.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING,
+      )
+      return cruiseLineLink?.getAttribute("href") ?? null
+    })
+    if (!href) return null
+    const idMatch = href.match(/-(\d+)$/)
+    if (!idMatch) return null
+    return `https://www.cruisemapper.com/images/lines/icons/${idMatch[1]}-60w.png`
+  } catch (err) {
+    console.warn(`Vessel search failed for "${vesselname}":`, err.message)
     return null
   }
-
-  await getDb().run(
-    `INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING`,
-    [match.logoUrl],
-  )
-  const row = await getDb().get(
-    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?`,
-    [match.logoUrl],
-  )
-  return row?.cruiselinelogoid ?? null
 }
 
 // -------------------------------------------------------
 // Update cruiselinelogoid for any rows in
 // belfastharbour_cruise_schedule that don't have one yet.
-// Called when the PDF hasn't changed but logos are missing.
+// First tries the CruiseMapper directory; falls back to
+// searching by vessel name for unmatched cruise lines.
 // -------------------------------------------------------
 const updateExistingLogos = async () => {
   const rows = await getDb().all(
@@ -236,8 +278,23 @@ const updateExistingLogos = async () => {
   console.log(`Updating logos for ${rows.length} unlinked cruise lines`)
   const logoMap = await scrapeLogoMapFromCruiseMapper()
 
+  const browser = await getBrowser()
+  const searchPage = await browser.newPage()
+
   for (const { cruiseline } of rows) {
-    const logoId = await getOrCreateCruiseLineLogoId(cruiseline, logoMap)
+    let logoId = await getOrCreateCruiseLineLogoId(cruiseline, logoMap)
+
+    if (!logoId) {
+      const vessel = await getDb().get(
+        `SELECT vesselname FROM belfastharbour_cruise_schedule WHERE cruiseline = ? LIMIT 1`,
+        [cruiseline],
+      )
+      if (vessel) {
+        const logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
+        if (logoUrl) logoId = await upsertLogoUrl(logoUrl)
+      }
+    }
+
     if (logoId) {
       await getDb().run(
         `UPDATE belfastharbour_cruise_schedule SET cruiselinelogoid = ? WHERE cruiseline = ? AND cruiselinelogoid IS NULL`,
@@ -245,6 +302,8 @@ const updateExistingLogos = async () => {
       )
     }
   }
+
+  await searchPage.close()
 }
 
 // -------------------------------------------------------
@@ -348,10 +407,27 @@ export const importBelfastScheduleFromPdf = async () => {
   await prepareBelfastScheduleTable()
 
   const logoMap = await scrapeLogoMapFromCruiseMapper()
+
+  const browser = await getBrowser()
+  const searchPage = await browser.newPage()
+  const searchCache = new Map()
+
   for (const row of arrivals) {
     row.cruiselinelogoid = await getOrCreateCruiseLineLogoId(row.cruiseline, logoMap)
+
+    if (!row.cruiselinelogoid) {
+      if (searchCache.has(row.cruiseline)) {
+        row.cruiselinelogoid = searchCache.get(row.cruiseline)
+      } else {
+        const logoUrl = await lookupLogoViaVesselSearch(searchPage, row.vesselname)
+        const logoId = logoUrl ? await upsertLogoUrl(logoUrl) : null
+        searchCache.set(row.cruiseline, logoId)
+        row.cruiselinelogoid = logoId
+      }
+    }
   }
 
+  await searchPage.close()
   await saveArrivals(arrivals, modDate)
 
   return { imported: true, modDate, rowCount: arrivals.length }

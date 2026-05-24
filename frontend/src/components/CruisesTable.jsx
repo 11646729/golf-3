@@ -183,11 +183,13 @@ const CruisesTable = (props) => {
                     </TableCell>
                     <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
-                        <img
-                          className="cruisesshiplogo"
-                          src={modifiedPortArrivals.cruiselinelogo}
-                          alt="Cruise Line Logo"
-                        />
+                        {modifiedPortArrivals.cruiselinelogo && (
+                          <img
+                            className="cruisesshiplogo"
+                            src={modifiedPortArrivals.cruiselinelogo}
+                            alt="Cruise Line Logo"
+                          />
+                        )}
                         <div className="cruisesshipname">
                           <Link
                             component="button"
