@@ -42,35 +42,12 @@ export const createPortArrivalsTable = async (req, res) => {
       )
     }
 
-    // Ensure cruiselinelogos exists before portarrivals (FK dependency)
-    await createCruiseLineLogosTableStructure()
     await createPortArrivalsTableStructure()
 
     res.status(200).send("Port arrivals table prepared successfully")
   } catch (error) {
     console.error("Error preparing port arrivals table:", error)
     res.status(500).send("Error preparing port arrivals table")
-  }
-}
-
-// -------------------------------------------------------
-// Create cruiselinelogos Table in the database
-// -------------------------------------------------------
-const createCruiseLineLogosTableStructure = async () => {
-  try {
-    await getDb().run(`
-      CREATE TABLE IF NOT EXISTS cruiselinelogos (
-        cruiselinelogoid SERIAL PRIMARY KEY,
-        logourl TEXT UNIQUE NOT NULL,
-        cruiseline TEXT UNIQUE
-      )
-    `)
-    await getDb().run(
-      `ALTER TABLE cruiselinelogos ADD COLUMN IF NOT EXISTS cruiseline TEXT UNIQUE`,
-    )
-    console.log("cruiselinelogos table ready")
-  } catch (error) {
-    console.error("Error in createCruiseLineLogosTableStructure: ", error.message)
   }
 }
 
@@ -82,7 +59,7 @@ const createPortArrivalsTableStructure = async () => {
     await getDb().run(`
       CREATE TABLE IF NOT EXISTS portarrivals (
         portarrivalid SERIAL PRIMARY KEY,
-        cruiselinelogoid INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
+        cruiselinelogo TEXT,
         vesselname TEXT,
         vesseleta TEXT,
         vesseletd TEXT,
@@ -101,22 +78,6 @@ const createPortArrivalsTableStructure = async () => {
 }
 
 // -------------------------------------------------------
-// Look up a cruise line logo by URL, inserting it if new
-// -------------------------------------------------------
-const getOrCreateCruiseLineLogoId = async (logoUrl) => {
-  if (!logoUrl) return null
-  await getDb().run(
-    "INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING",
-    [logoUrl],
-  )
-  const row = await getDb().get(
-    "SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?",
-    [logoUrl],
-  )
-  return row.cruiselinelogoid
-}
-
-// -------------------------------------------------------
 // Get all Port Arrivals from database
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
@@ -130,7 +91,7 @@ export const getPortArrivals = async (req, res, next) => {
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
     const sql =
-      "SELECT p.*, l.logourl AS cruiselinelogo, v.vesselurl FROM portarrivals p LEFT JOIN cruiselinelogos l ON p.cruiselinelogoid = l.cruiselinelogoid LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
+      "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
 
     const results = await getDb().all(sql, params)
@@ -162,13 +123,10 @@ export const savePortArrival = async (req, res) => {
     )
     console.log(`Current port arrivals count: ${countResult.count}`)
 
-    const cruiselinelogoid = await getOrCreateCruiseLineLogoId(newPortArrival[0])
-    const arrival = [cruiselinelogoid, ...newPortArrival.slice(1)]
-
     const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogoid, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+      "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
 
-    await getDb().run(sql1, arrival)
+    await getDb().run(sql1, newPortArrival)
     res.json({ message: "Port arrival saved successfully" })
   } catch (error) {
     console.error("Error in savePortArrival: ", error)
@@ -184,7 +142,7 @@ const savePortArrivalInternal = async (newPortArrival) => {
     if (!newPortArrival) return
 
     const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogoid, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+      "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
 
     await getDb().run(sql1, newPortArrival)
   } catch (error) {
@@ -197,23 +155,11 @@ const savePortArrivalInternal = async (newPortArrival) => {
 // Path: Local function called by importPortArrivalsAndVessels
 // -------------------------------------------------------
 export const getAndSavePortArrivals = async (scheduledPeriods, portName) => {
-  let allVesselArrivals = []
-  let periodVesselArrivals = []
-
-  let loop = 0
-  do {
-    const period = String(scheduledPeriods[loop].monthYearString)
-    periodVesselArrivals = await getSingleMonthPortArrival(period, portName)
-
-    let j = 0
-    do {
-      allVesselArrivals.push(periodVesselArrivals[j])
-      j++
-    } while (j < periodVesselArrivals.length)
-
-    loop++
-  } while (loop < scheduledPeriods.length)
-
+  const allVesselArrivals = []
+  for (const { monthYearString } of scheduledPeriods) {
+    const arrivals = await getSingleMonthPortArrival(String(monthYearString), portName)
+    allVesselArrivals.push(...arrivals)
+  }
   return allVesselArrivals
 }
 
@@ -303,10 +249,8 @@ export const getSingleMonthPortArrival = async (period, portName) => {
       console.log("Error, vessel_name_url is not a string")
     }
 
-    const cruiselinelogoid = await getOrCreateCruiseLineLogoId(cruise_line_logo_url)
-
     const newPortArrival = [
-      cruiselinelogoid,
+      cruise_line_logo_url,
       vessel_short_cruise_name,
       vessel_eta,
       vessel_etd,

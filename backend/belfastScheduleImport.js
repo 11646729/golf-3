@@ -186,31 +186,14 @@ const scrapeLogoMapFromCruiseMapper = async () => {
 }
 
 // -------------------------------------------------------
-// Insert a logo URL into cruiselinelogos (if new) and
-// return its cruiselinelogoid.
-// -------------------------------------------------------
-const upsertLogoUrl = async (logoUrl) => {
-  await getDb().run(
-    `INSERT INTO cruiselinelogos (logourl) VALUES (?) ON CONFLICT (logourl) DO NOTHING`,
-    [logoUrl],
-  )
-  const row = await getDb().get(
-    `SELECT cruiselinelogoid FROM cruiselinelogos WHERE logourl = ?`,
-    [logoUrl],
-  )
-  return row?.cruiselinelogoid ?? null
-}
-
-// -------------------------------------------------------
-// Resolve a cruise line name to a cruiselinelogoid via the
+// Resolve a cruise line name to a logo URL via the
 // directory logoMap (exact normalized match, then partial).
 // Returns null if not found — caller should fall back to
 // vessel search.
 // -------------------------------------------------------
-const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
+const resolveCruiseLineLogoUrl = (cruiseline, logoMap) => {
   if (!cruiseline) return null
 
-  // Resolve known abbreviations before matching
   const key = CRUISE_LINE_ALIASES.get(normalizeName(cruiseline)) ?? normalizeName(cruiseline)
   let match = logoMap.get(key)
   if (!match) {
@@ -222,8 +205,7 @@ const getOrCreateCruiseLineLogoId = async (cruiseline, logoMap) => {
     }
   }
 
-  if (!match) return null
-  return upsertLogoUrl(match.logoUrl)
+  return match?.logoUrl ?? null
 }
 
 // -------------------------------------------------------
@@ -264,14 +246,14 @@ const lookupLogoViaVesselSearch = async (page, vesselname) => {
 }
 
 // -------------------------------------------------------
-// Update cruiselinelogoid for any rows in
+// Update cruiselinelogo for any rows in
 // belfastharbour_cruise_schedule that don't have one yet.
 // First tries the CruiseMapper directory; falls back to
 // searching by vessel name for unmatched cruise lines.
 // -------------------------------------------------------
 const updateExistingLogos = async () => {
   const rows = await getDb().all(
-    `SELECT DISTINCT cruiseline FROM belfastharbour_cruise_schedule WHERE cruiselinelogoid IS NULL`,
+    `SELECT DISTINCT cruiseline FROM belfastharbour_cruise_schedule WHERE cruiselinelogo IS NULL`,
   )
   if (rows.length === 0) return
 
@@ -282,23 +264,22 @@ const updateExistingLogos = async () => {
   const searchPage = await browser.newPage()
 
   for (const { cruiseline } of rows) {
-    let logoId = await getOrCreateCruiseLineLogoId(cruiseline, logoMap)
+    let logoUrl = resolveCruiseLineLogoUrl(cruiseline, logoMap)
 
-    if (!logoId) {
+    if (!logoUrl) {
       const vessel = await getDb().get(
         `SELECT vesselname FROM belfastharbour_cruise_schedule WHERE cruiseline = ? LIMIT 1`,
         [cruiseline],
       )
       if (vessel) {
-        const logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
-        if (logoUrl) logoId = await upsertLogoUrl(logoUrl)
+        logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
       }
     }
 
-    if (logoId) {
+    if (logoUrl) {
       await getDb().run(
-        `UPDATE belfastharbour_cruise_schedule SET cruiselinelogoid = ? WHERE cruiseline = ? AND cruiselinelogoid IS NULL`,
-        [logoId, cruiseline],
+        `UPDATE belfastharbour_cruise_schedule SET cruiselinelogo = ? WHERE cruiseline = ? AND cruiselinelogo IS NULL`,
+        [logoUrl, cruiseline],
       )
     }
   }
@@ -315,7 +296,7 @@ const prepareBelfastScheduleTable = async () => {
   await getDb().run(`
     CREATE TABLE belfastharbour_cruise_schedule (
       portarrivalid     SERIAL PRIMARY KEY,
-      cruiselinelogoid  INTEGER REFERENCES cruiselinelogos(cruiselinelogoid),
+      cruiselinelogo    TEXT,
       vesseleta         TIMESTAMPTZ  NOT NULL,
       vesseletd         TIMESTAMPTZ  NOT NULL,
       cruiseline        TEXT         NOT NULL,
@@ -339,13 +320,13 @@ const prepareBelfastScheduleTable = async () => {
 const saveArrivals = async (arrivals, pdfModDate) => {
   const sql = `
     INSERT INTO belfastharbour_cruise_schedule
-      (cruiselinelogoid, vesseleta, vesseletd, cruiseline, vesselname,
+      (cruiselinelogo, vesseleta, vesseletd, cruiseline, vesselname,
        vessellengthmetre, berth, visitors, pdfmodifieddate)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
   for (const row of arrivals) {
     await getDb().run(sql, [
-      row.cruiselinelogoid ?? null,
+      row.cruiselinelogo ?? null,
       row.vesseleta,
       row.vesseletd,
       row.cruiseline,
@@ -413,16 +394,15 @@ export const importBelfastScheduleFromPdf = async () => {
   const searchCache = new Map()
 
   for (const row of arrivals) {
-    row.cruiselinelogoid = await getOrCreateCruiseLineLogoId(row.cruiseline, logoMap)
+    row.cruiselinelogo = resolveCruiseLineLogoUrl(row.cruiseline, logoMap)
 
-    if (!row.cruiselinelogoid) {
+    if (!row.cruiselinelogo) {
       if (searchCache.has(row.cruiseline)) {
-        row.cruiselinelogoid = searchCache.get(row.cruiseline)
+        row.cruiselinelogo = searchCache.get(row.cruiseline)
       } else {
         const logoUrl = await lookupLogoViaVesselSearch(searchPage, row.vesselname)
-        const logoId = logoUrl ? await upsertLogoUrl(logoUrl) : null
-        searchCache.set(row.cruiseline, logoId)
-        row.cruiselinelogoid = logoId
+        searchCache.set(row.cruiseline, logoUrl)
+        row.cruiselinelogo = logoUrl
       }
     }
   }
