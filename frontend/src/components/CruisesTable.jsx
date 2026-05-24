@@ -183,10 +183,11 @@ const CruisesTable = (props) => {
                     </TableCell>
                     <TableCell className="cruisestabledatacellcenter">
                       <div className="cruisesship">
-                        {modifiedPortArrivals.cruiselinelogo && (
+                        {(modifiedPortArrivals.locallogopath || modifiedPortArrivals.cruiselinelogo) && (
                           <img
                             className="cruisesshiplogo"
-                            src={modifiedPortArrivals.cruiselinelogo}
+                            src={modifiedPortArrivals.locallogopath ?? modifiedPortArrivals.cruiselinelogo}
+                            onError={(e) => { e.target.style.display = "none" }}
                             alt="Cruise Line Logo"
                           />
                         )}

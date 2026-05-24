@@ -1,5 +1,6 @@
 import { importBelfastScheduleFromPdf } from "../belfastScheduleImport.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
+import { ensureLogoCached } from "../cruiseLineLogoCache.js"
 
 let db = null
 const getDb = () => {
@@ -32,6 +33,16 @@ export const getBelfastSchedule = async (req, res) => {
        ORDER BY b.vesseleta`,
       [yesterday.toISOString(), threeMonthsFromNow.toISOString()],
     )
+
+    // Cache each unique logo locally; attach locallogopath to each row
+    const logoCache = new Map()
+    for (const row of rows) {
+      if (row.cruiselinelogo && !logoCache.has(row.cruiselinelogo)) {
+        logoCache.set(row.cruiselinelogo, await ensureLogoCached(row.cruiselinelogo))
+      }
+      row.locallogopath = logoCache.get(row.cruiselinelogo) ?? null
+    }
+
     res.json({ message: "success", data: rows })
   } catch (err) {
     if (err.message?.includes("does not exist")) {
