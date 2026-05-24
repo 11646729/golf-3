@@ -18,7 +18,7 @@ import {
 } from "@mui/material"
 import Title from "./Title"
 import "../styles/transportroutes.scss"
-import { Polyline } from "../../polyline"
+import { Polyline } from "../functionHandlers/polyline"
 
 const TransportRoutesMapTitle = "Transport Map in Ireland"
 
