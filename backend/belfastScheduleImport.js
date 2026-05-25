@@ -374,7 +374,17 @@ export const importBelfastScheduleFromPdf = async () => {
   const modDate = parsePdfDate(infoResult.info?.ModDate)
   console.log("PDF ModDate:", modDate)
 
-  const lastKnownModDate = await getLastPdfModDate()
+  // Migrate old schema (cruiselinelogoid FK column) to new schema (cruiselinelogo TEXT)
+  const oldSchemaCol = await getDb().get(
+    `SELECT 1 FROM information_schema.columns
+     WHERE table_name = 'belfastharbour_cruise_schedule' AND column_name = 'cruiselinelogoid'`,
+  )
+  if (oldSchemaCol) {
+    console.log("Migrating belfastharbour_cruise_schedule to new schema — will reimport")
+    await prepareBelfastScheduleTable()
+  }
+
+  let lastKnownModDate = oldSchemaCol ? null : await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
     console.log("Schedule unchanged — checking for missing logos")
     await updateExistingLogos()
