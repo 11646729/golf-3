@@ -1,14 +1,14 @@
-import { DatabaseAdapter } from "../databaseUtilities.js"
+// import { DatabaseAdapter } from "../databaseUtilities.js"
 import { getBrowser } from "../puppeteerBrowser.js"
 
-// Database adapter for PostgreSQL - created lazily
-let db = null
-const getDb = () => {
-  if (!db) {
-    db = new DatabaseAdapter()
-  }
-  return db
-}
+// // Database adapter for PostgreSQL - created lazily
+// let db = null
+// const getDb = () => {
+//   if (!db) {
+//     db = new DatabaseAdapter()
+//   }
+//   return db
+// }
 
 // -------------------------------------------------------
 // Catalogue Home page
@@ -21,134 +21,134 @@ export var index = async (req, res) => {
 // -------------------------------------------------------
 // Prepare empty portarrivals Table ready to import data
 // -------------------------------------------------------
-export const createPortArrivalsTable = async (req, res) => {
-  try {
-    // Check if portarrivals table exists using PostgreSQL system tables
-    const tableExists = await getDb().get(
-      `SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name = 'portarrivals'
-      )`,
-    )
-
-    if (tableExists.exists) {
-      // If exists then delete the table and recreate
-      console.log("portarrivals table exists - dropping and recreating")
-      await getDb().run("DROP TABLE IF EXISTS portarrivals")
-    } else {
-      console.log(
-        "portarrivals table does not exist - creating the empty table",
-      )
-    }
-
-    await createPortArrivalsTableStructure()
-
-    res.status(200).send("Port arrivals table prepared successfully")
-  } catch (error) {
-    console.error("Error preparing port arrivals table:", error)
-    res.status(500).send("Error preparing port arrivals table")
-  }
-}
+// export const createPortArrivalsTable = async (req, res) => {
+//   try {
+//     // Check if portarrivals table exists using PostgreSQL system tables
+//     const tableExists = await getDb().get(
+//       `SELECT EXISTS (
+//         SELECT FROM information_schema.tables
+//         WHERE table_schema = 'public'
+//         AND table_name = 'portarrivals'
+//       )`,
+//     )
+//
+//     if (tableExists.exists) {
+//       // If exists then delete the table and recreate
+//       console.log("portarrivals table exists - dropping and recreating")
+//       await getDb().run("DROP TABLE IF EXISTS portarrivals")
+//     } else {
+//       console.log(
+//         "portarrivals table does not exist - creating the empty table",
+//       )
+//     }
+//
+//     await createPortArrivalsTableStructure()
+//
+//     res.status(200).send("Port arrivals table prepared successfully")
+//   } catch (error) {
+//     console.error("Error preparing port arrivals table:", error)
+//     res.status(500).send("Error preparing port arrivals table")
+//   }
+// }
 
 // -------------------------------------------------------
 // Create portarrivals Table in the database
 // -------------------------------------------------------
-const createPortArrivalsTableStructure = async () => {
-  try {
-    await getDb().run(`
-      CREATE TABLE IF NOT EXISTS portarrivals (
-        portarrivalid SERIAL PRIMARY KEY,
-        cruiselinelogo TEXT,
-        vesselname TEXT,
-        vesseleta TEXT,
-        vesseletd TEXT,
-        vesselnameurl TEXT
-      )
-    `)
-
-    await getDb().run(
-      `CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`,
-    )
-
-    console.log("Empty portarrivals table created")
-  } catch (error) {
-    console.error("Error in createPortArrivalsTableStructure: ", error.message)
-  }
-}
+// const createPortArrivalsTableStructure = async () => {
+//   try {
+//     await getDb().run(`
+//       CREATE TABLE IF NOT EXISTS portarrivals (
+//         portarrivalid SERIAL PRIMARY KEY,
+//         cruiselinelogo TEXT,
+//         vesselname TEXT,
+//         vesseleta TEXT,
+//         vesseletd TEXT,
+//         vesselnameurl TEXT
+//       )
+//     `)
+//
+//     await getDb().run(
+//       `CREATE INDEX IF NOT EXISTS idx_portarrivals_vesseleta ON portarrivals(vesseleta)`,
+//     )
+//
+//     console.log("Empty portarrivals table created")
+//   } catch (error) {
+//     console.error("Error in createPortArrivalsTableStructure: ", error.message)
+//   }
+// }
 
 // -------------------------------------------------------
 // Get all Port Arrivals from database
 // Path: localhost:4000/api/cruise/allPortArrivals
 // -------------------------------------------------------
-export const getPortArrivals = async (req, res, next) => {
-  try {
-    const db = getDb()
-    // Use ISO date strings for better compatibility across databases
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-    const threeMonthsFromNow = new Date()
-    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
-
-    const sql =
-      "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
-    let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
-
-    const results = await getDb().all(sql, params)
-
-    res.json({
-      message: "success",
-      data: results,
-    })
-  } catch (error) {
-    console.error("Error getting port arrivals:", error)
-    res.status(400).json({ error: error.message })
-  }
-}
+// export const getPortArrivals = async (req, res, next) => {
+//   try {
+//     const db = getDb()
+//     // Use ISO date strings for better compatibility across databases
+//     const yesterday = new Date()
+//     yesterday.setDate(yesterday.getDate() - 1)
+//     const threeMonthsFromNow = new Date()
+//     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
+//
+//     const sql =
+//       "SELECT p.*, v.vesselurl FROM portarrivals p LEFT JOIN vessels v ON p.vesselnameurl = v.vesselnameurl WHERE p.vesseleta >= ? AND p.vesseleta < ?"
+//     let params = [yesterday.toISOString(), threeMonthsFromNow.toISOString()]
+//
+//     const results = await getDb().all(sql, params)
+//
+//     res.json({
+//       message: "success",
+//       data: results,
+//     })
+//   } catch (error) {
+//     console.error("Error getting port arrivals:", error)
+//     res.status(400).json({ error: error.message })
+//   }
+// }
 
 // -------------------------------------------------------
 // Save Port Arrival details to PostgreSQL database
 // -------------------------------------------------------
-export const savePortArrival = async (req, res) => {
-  try {
-    const newPortArrival = req.body
-
-    if (!newPortArrival) {
-      return res.status(400).json({ error: "No port arrival data provided" })
-    }
-
-    // Count the records in the database
-    const countResult = await getDb().get(
-      "SELECT COUNT(portarrivalid) AS count FROM portarrivals",
-    )
-    console.log(`Current port arrivals count: ${countResult.count}`)
-
-    const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
-
-    await getDb().run(sql1, newPortArrival)
-    res.json({ message: "Port arrival saved successfully" })
-  } catch (error) {
-    console.error("Error in savePortArrival: ", error)
-    res.status(500).json({ error: error.message })
-  }
-}
+// export const savePortArrival = async (req, res) => {
+//   try {
+//     const newPortArrival = req.body
+//
+//     if (!newPortArrival) {
+//       return res.status(400).json({ error: "No port arrival data provided" })
+//     }
+//
+//     // Count the records in the database
+//     const countResult = await getDb().get(
+//       "SELECT COUNT(portarrivalid) AS count FROM portarrivals",
+//     )
+//     console.log(`Current port arrivals count: ${countResult.count}`)
+//
+//     const sql1 =
+//       "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+//
+//     await getDb().run(sql1, newPortArrival)
+//     res.json({ message: "Port arrival saved successfully" })
+//   } catch (error) {
+//     console.error("Error in savePortArrival: ", error)
+//     res.status(500).json({ error: error.message })
+//   }
+// }
 
 // -------------------------------------------------------
 // Internal function to save port arrival (for use within controller)
 // -------------------------------------------------------
-const savePortArrivalInternal = async (newPortArrival) => {
-  try {
-    if (!newPortArrival) return
-
-    const sql1 =
-      "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
-
-    await getDb().run(sql1, newPortArrival)
-  } catch (error) {
-    console.error("Error in savePortArrivalInternal: ", error)
-  }
-}
+// const savePortArrivalInternal = async (newPortArrival) => {
+//   try {
+//     if (!newPortArrival) return
+//
+//     const sql1 =
+//       "INSERT INTO portarrivals (cruiselinelogo, vesselname, vesseleta, vesseletd, vesselnameurl) VALUES (?, ?, ?, ?, ?)"
+//
+//     await getDb().run(sql1, newPortArrival)
+//   } catch (error) {
+//     console.error("Error in savePortArrivalInternal: ", error)
+//   }
+// }
 
 // -------------------------------------------------------
 // Fetch All Port Arrivals Details
@@ -249,20 +249,20 @@ export const getSingleMonthPortArrival = async (period, portName) => {
       console.log("Error, vessel_name_url is not a string")
     }
 
-    const newPortArrival = [
-      cruise_line_logo_url,
-      vessel_short_cruise_name,
-      vessel_eta,
-      vessel_etd,
-      vessel_name_url,
-    ]
+    // const newPortArrival = [
+    //   cruise_line_logo_url,
+    //   vessel_short_cruise_name,
+    //   vessel_eta,
+    //   vessel_etd,
+    //   vessel_name_url,
+    // ]
 
-    // Now save in PostgreSQL database
-    await savePortArrivalInternal(newPortArrival)
+    // // Now save in PostgreSQL database
+    // await savePortArrivalInternal(newPortArrival)
   }
 
   // Return array of vessel Urls
   return vesselUrls
 }
 
-export default savePortArrival
+// export default savePortArrival
