@@ -13,7 +13,7 @@
     "rebuild-native": "npm run rebuild-native --workspace=backend"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^10.0.3"
   },
   "overrides": {
     "ip-address": ">=10.2.0",
