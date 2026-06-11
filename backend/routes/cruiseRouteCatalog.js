@@ -12,14 +12,11 @@ import {
 var cruiseRouter = express.Router()
 
 // ---------------------------------------------------
-// Cruise Routes
+// Belfast Harbour Cruise Schedule Routes
 // ---------------------------------------------------
 // GET catalogue home page
 cruiseRouter.get("/", index)
 
-// ---------------------------------------------------
-// Belfast Harbour Cruise Schedule Routes
-// ---------------------------------------------------
 // POST trigger import of Belfast Harbour cruise schedule PDF
 cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 

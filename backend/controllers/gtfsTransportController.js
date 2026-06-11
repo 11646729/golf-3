@@ -128,7 +128,6 @@ export var updateRealtimeGtfsToPostgreSQL = async () => {
 
   try {
     // TODO: Implement PostgreSQL-based GTFS realtime update
-    // The gtfs library's updateGtfsRealtime uses SQLite and has been removed
     console.log("GTFS realtime update - PostgreSQL implementation needed")
 
     // Log successful realtime update to PostgreSQL

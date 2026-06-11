@@ -37,7 +37,7 @@ export const createRTCalendarTable = async (req, res) => {
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'rtcalendar'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -85,7 +85,7 @@ const deleteRTCalendarEvents = async () => {
   try {
     // Count the records in the database
     const countResult = await getDb().get(
-      "SELECT COUNT(eventid) AS count FROM rtcalendar"
+      "SELECT COUNT(eventid) AS count FROM rtcalendar",
     )
 
     if (countResult && countResult.count > 0) {
@@ -93,7 +93,7 @@ const deleteRTCalendarEvents = async () => {
       await getDb().run("DELETE FROM rtcalendar")
       console.log("All rtcalendar data deleted")
 
-      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      // Reset the sequence
       await getDb().run("ALTER SEQUENCE rtcalendar_eventid_seq RESTART WITH 1")
       console.log("RTCalendar ID sequence reset to 1")
     } else {
@@ -114,7 +114,7 @@ export const importRTCalendarEventsFromFile = async (req, res) => {
     // Fetch all the RTCalendar events
     const data = await fs.promises.readFile(
       process.env.RAW_RTCALENDAR_DATA_FILEPATH,
-      "utf8"
+      "utf8",
     )
 
     // Save the data in the rtcalendar Table in the PostgreSQL database
@@ -189,7 +189,7 @@ const insertEvent = (event) => {
     credentials.client_email,
     null,
     credentials.private_key,
-    scope
+    scope,
   )
 
   try {
@@ -255,7 +255,7 @@ const deleteEvent = async (eventId) => {
     credentials.client_email,
     null,
     credentials.private_key,
-    scope
+    scope,
   )
 
   try {
@@ -305,7 +305,7 @@ export const getGoogleCalendarEvents = async () => {
     credentials.client_email,
     null,
     credentials.private_key,
-    scope
+    scope,
   )
 
   const calendarId = process.env.CALENDAR_ID
@@ -331,7 +331,7 @@ export const getGoogleCalendarEvents = async () => {
 export const emitCalendarEventsData = (
   socket,
   calendarEvents,
-  stillLoading
+  stillLoading,
 ) => {
   // Guard clauses
   if (socket == null) return
@@ -359,7 +359,7 @@ const getCalendarList = async () => {
     credentials.client_email,
     null,
     credentials.private_key,
-    scope
+    scope,
   )
 
   try {

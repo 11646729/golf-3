@@ -29,7 +29,7 @@ export const createTemperaturesTable = async (req, res) => {
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'temperatures'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -86,7 +86,7 @@ const deleteTemperatures = async () => {
   try {
     // Count the records in the database
     const countResult = await getDb().get(
-      "SELECT COUNT(temperatureid) AS count FROM temperatures"
+      "SELECT COUNT(temperatureid) AS count FROM temperatures",
     )
 
     if (countResult && countResult.count > 0) {
@@ -94,9 +94,9 @@ const deleteTemperatures = async () => {
       await getDb().run("DELETE FROM temperatures")
       console.log("All temperatures data deleted")
 
-      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      // Reset the sequence
       await getDb().run(
-        "ALTER SEQUENCE temperatures_temperatureid_seq RESTART WITH 1"
+        "ALTER SEQUENCE temperatures_temperatureid_seq RESTART WITH 1",
       )
       console.log("Temperature ID sequence reset to 1")
     } else {
@@ -198,7 +198,7 @@ const unixToUtc = (timestamp) => {
 export const emitTemperatureData = (
   socket,
   temperatureReadings,
-  stillLoading
+  stillLoading,
 ) => {
   // Guard clauses
   if (socket == null) return

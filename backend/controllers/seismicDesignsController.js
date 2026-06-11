@@ -29,7 +29,7 @@ export const createSeismicDesignsTable = async (req, res) => {
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'seismicdesigns'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -77,7 +77,7 @@ const deleteSeismicDesigns = async () => {
   try {
     // Count the records in the database
     const countResult = await getDb().get(
-      "SELECT COUNT(seismicdesignid) AS count FROM seismicdesigns"
+      "SELECT COUNT(seismicdesignid) AS count FROM seismicdesigns",
     )
 
     if (countResult && countResult.count > 0) {
@@ -85,9 +85,9 @@ const deleteSeismicDesigns = async () => {
       await getDb().run("DELETE FROM seismicdesigns")
       console.log("All seismicdesigns data deleted")
 
-      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      // Reset the sequence
       await getDb().run(
-        "ALTER SEQUENCE seismicdesigns_seismicdesignid_seq RESTART WITH 1"
+        "ALTER SEQUENCE seismicdesigns_seismicdesignid_seq RESTART WITH 1",
       )
       console.log("Seismic Designs ID sequence reset to 1")
     } else {
@@ -123,7 +123,7 @@ export const importSeismicDesignsData = (req, res) => {
         // Save the data in the seismicdesigns Table in the PostgreSQL database
         const courses = JSON.parse(data)
         populateSeismicDesigns(courses)
-      }
+      },
     )
   } catch (err) {
     console.error("Error in importSeismicDesignsData: ", err.message)

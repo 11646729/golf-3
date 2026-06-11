@@ -26,7 +26,7 @@ export const createRTNewsTable = async (req, res) => {
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'rtnews'
-      )`
+      )`,
     )
 
     if (tableExists.exists) {
@@ -91,7 +91,7 @@ const deleteRTNewsItems = async () => {
   try {
     // Count the records in the database
     const countResult = await db.get(
-      "SELECT COUNT(itemid) AS count FROM rtnews"
+      "SELECT COUNT(itemid) AS count FROM rtnews",
     )
 
     if (countResult && countResult.count > 0) {
@@ -99,7 +99,7 @@ const deleteRTNewsItems = async () => {
       await db.run("DELETE FROM rtnews")
       console.log("All rtnews data deleted")
 
-      // Reset the sequence (PostgreSQL equivalent of sqlite_sequence)
+      // Reset the sequence
       await db.run("ALTER SEQUENCE rtnews_itemid_seq RESTART WITH 1")
       console.log("RTNews ID sequence reset to 1")
     } else {
@@ -120,7 +120,7 @@ export const importRTNewsItemsFromFile = async (req, res) => {
     // Fetch all the RTNews events
     const data = await fs.promises.readFile(
       process.env.RAW_RTNEWS_DATA_FILEPATH,
-      "utf8"
+      "utf8",
     )
 
     // Save the data in the rtnews Table in the PostgreSQL database
@@ -221,7 +221,7 @@ export const getNewsHeadlinesItems = async (liveNewsTopHeadlinesUrl) => {
 export const emitNewsHeadlinesData = (
   socket,
   newsHeadlinesData,
-  stillLoading
+  stillLoading,
 ) => {
   // Guard clauses
   if (socket == null) return
