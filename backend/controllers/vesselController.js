@@ -12,6 +12,20 @@ const getDb = () => {
 }
 
 // -------------------------------------------------------
+// In-memory job status — reset on each import run
+// -------------------------------------------------------
+let importStatus = {
+  status: "idle", // "idle" | "running" | "complete" | "error"
+  phase: null, // "fetching_schedule" | "scraping_arrivals" | "scraping_vessels" | "done"
+  arrivalsAdded: 0,
+  totalVessels: 0,
+  vesselsScraped: 0,
+  error: null,
+}
+
+export const getImportStatus = () => ({ ...importStatus })
+
+// -------------------------------------------------------
 // Prepare empty vessels Table ready to import data
 // -------------------------------------------------------
 export const createVesselsTable = async (req, res) => {
@@ -239,9 +253,13 @@ const scrapeImoAndMmsiFromMyShipTracking = async (vessel_name) => {
       return type === "passenger ship" || type === "passengers ship"
     })
 
-    console.log(`MyShipTracking — "${vessel_name}": ${rows.length} row(s) returned, ${passengerRows.length} Passenger Ship vessel(s):`)
+    console.log(
+      `MyShipTracking — "${vessel_name}": ${rows.length} row(s) returned, ${passengerRows.length} Passenger Ship vessel(s):`,
+    )
     passengerRows.forEach((r, i) =>
-      console.log(`  Vessel ${i + 1}: AIS type="${r.aisType}", IMO=${r.imo}, MMSI=${r.mmsi}, href="${r.href}"`),
+      console.log(
+        `  Vessel ${i + 1}: AIS type="${r.aisType}", IMO=${r.imo}, MMSI=${r.mmsi}, href="${r.href}"`,
+      ),
     )
 
     // Use the first unique row whose AIS type is "Passenger"

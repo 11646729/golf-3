@@ -10,20 +10,6 @@ import {
 dotenv.config({ quiet: true })
 
 // -------------------------------------------------------
-// In-memory job status — reset on each import run
-// -------------------------------------------------------
-let importStatus = {
-  status: "idle", // "idle" | "running" | "complete" | "error"
-  phase: null,    // "fetching_schedule" | "scraping_arrivals" | "scraping_vessels" | "done"
-  arrivalsAdded: 0,
-  totalVessels: 0,
-  vesselsScraped: 0,
-  error: null,
-}
-
-export const getImportStatus = () => ({ ...importStatus })
-
-// -------------------------------------------------------
 // Import Port Arrivals & Vessel Details
 // -------------------------------------------------------
 export const importPortArrivalsAndVessels = async (_req, res) => {
@@ -50,7 +36,9 @@ export const importPortArrivalsAndVessels = async (_req, res) => {
     const scheduledPeriods = await getScheduleMonths(portName)
 
     if (scheduledPeriods.length === 0) {
-      console.log("CruiseMapper currently has no ship schedule for Selected Port")
+      console.log(
+        "CruiseMapper currently has no ship schedule for Selected Port",
+      )
       importStatus = { ...importStatus, status: "complete", phase: "done" }
       return
     }
@@ -77,7 +65,9 @@ export const importPortArrivalsAndVessels = async (_req, res) => {
 
       let scrapedVessel = null
       try {
-        scrapedVessel = await scrapeVesselDetails(DeduplicatedVesselUrlArray[loop])
+        scrapedVessel = await scrapeVesselDetails(
+          DeduplicatedVesselUrlArray[loop],
+        )
       } catch (err) {
         console.error(
           "scrapeVesselDetails failed for ",
@@ -113,8 +103,15 @@ export const importPortArrivalsAndVessels = async (_req, res) => {
     console.log(vesselUrls.length + " Port Arrivals added")
     console.log(DeduplicatedVesselUrlArray.length + " Vessels added")
   } catch (err) {
-    console.error("importPortArrivalsAndVessels background process failed:", err?.message || err)
-    importStatus = { ...importStatus, status: "error", error: err?.message || "Unknown error" }
+    console.error(
+      "importPortArrivalsAndVessels background process failed:",
+      err?.message || err,
+    )
+    importStatus = {
+      ...importStatus,
+      status: "error",
+      error: err?.message || "Unknown error",
+    }
   }
 }
 

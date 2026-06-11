@@ -1,20 +1,10 @@
 import express from "express"
 import {
-  index,
-  // createPortArrivalsTable,
-  // getPortArrivals,
-  // savePortArrival,
-} from "../controllers/portArrivalsController.js"
-import {
-  createVesselsTable,
   getVesselPosition,
-  // saveVesselDetails,
+  getImportStatus,
 } from "../controllers/vesselController.js"
 import {
-  importPortArrivalsAndVessels,
-  getImportStatus,
-} from "../cruiseScrapingRoutines.js"
-import {
+  index,
   importBelfastSchedule,
   getBelfastSchedule,
 } from "../controllers/belfastScheduleController.js"
@@ -28,39 +18,6 @@ var cruiseRouter = express.Router()
 cruiseRouter.get("/", index)
 
 // ---------------------------------------------------
-// PortArrivals Routes
-// ---------------------------------------------------
-// // Prepare the Port Arrivals table in the database
-// cruiseRouter.post("/createPortArrivalsTable", createPortArrivalsTable)
-
-// // POST a Port Arrival to the database
-// cruiseRouter.post("/portArrivals", savePortArrival)
-
-// // GET all Port Arrivals from the database
-// cruiseRouter.get("/getPortArrivals", getPortArrivals)
-
-// ---------------------------------------------------
-// Vessel Routes
-// ---------------------------------------------------
-// Prepare the vessels table in the database
-cruiseRouter.post("/createVesselsTable", createVesselsTable)
-
-// POST all Port Arrivals & Vessels data to the database
-cruiseRouter.post(
-  "/importPortArrivalsAndVesselsData",
-  importPortArrivalsAndVessels,
-)
-
-// POST a vessel to the database
-// cruiseRouter.post("/vesselDetails", saveVesselDetails)
-
-// GET current import job status (for frontend polling)
-cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
-
-// GET all vessel positions
-cruiseRouter.get("/vesselPositions", getVesselPosition)
-
-// ---------------------------------------------------
 // Belfast Harbour Cruise Schedule Routes
 // ---------------------------------------------------
 // POST trigger import of Belfast Harbour cruise schedule PDF
@@ -68,5 +25,14 @@ cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 
 // GET Belfast Harbour cruise schedule data
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
+
+// ---------------------------------------------------
+// Vessel Routes
+// ---------------------------------------------------
+// GET current import job status (for frontend polling)
+cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
+
+// GET all vessel positions
+cruiseRouter.get("/vesselPositions", getVesselPosition)
 
 export default cruiseRouter

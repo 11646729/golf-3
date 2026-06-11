@@ -8,6 +8,14 @@ const getDb = () => {
   return db
 }
 
+// -------------------------------------------------------
+// Catalogue Home page
+// Path: localhost:4000/api/cruise/
+// -------------------------------------------------------
+export var index = async (req, res) => {
+  res.status(200).send({ response: "Port Arrivals Catalog home page" })
+}
+
 export const importBelfastSchedule = async (_req, res) => {
   try {
     const result = await importBelfastScheduleFromPdf()
@@ -36,7 +44,10 @@ export const getBelfastSchedule = async (req, res) => {
     const logoCache = new Map()
     for (const row of rows) {
       if (row.cruiselinelogo && !logoCache.has(row.cruiselinelogo)) {
-        logoCache.set(row.cruiselinelogo, await ensureLogoCached(row.cruiselinelogo))
+        logoCache.set(
+          row.cruiselinelogo,
+          await ensureLogoCached(row.cruiselinelogo),
+        )
       }
       row.locallogopath = logoCache.get(row.cruiselinelogo) ?? null
     }

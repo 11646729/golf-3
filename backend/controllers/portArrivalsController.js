@@ -11,14 +11,6 @@ import { getBrowser } from "../puppeteerBrowser.js"
 // }
 
 // -------------------------------------------------------
-// Catalogue Home page
-// Path: localhost:4000/api/cruise/
-// -------------------------------------------------------
-export var index = async (req, res) => {
-  res.status(200).send({ response: "Port Arrivals Catalog home page" })
-}
-
-// -------------------------------------------------------
 // Prepare empty portarrivals Table ready to import data
 // -------------------------------------------------------
 // export const createPortArrivalsTable = async (req, res) => {
@@ -157,7 +149,10 @@ export var index = async (req, res) => {
 export const getAndSavePortArrivals = async (scheduledPeriods, portName) => {
   const allVesselArrivals = []
   for (const { monthYearString } of scheduledPeriods) {
-    const arrivals = await getSingleMonthPortArrival(String(monthYearString), portName)
+    const arrivals = await getSingleMonthPortArrival(
+      String(monthYearString),
+      portName,
+    )
     allVesselArrivals.push(...arrivals)
   }
   return allVesselArrivals
