@@ -1,13 +1,13 @@
 import express from "express"
 import {
-  getVesselPosition,
-  getImportStatus,
-} from "../controllers/vesselController.js"
-import {
   index,
   importBelfastSchedule,
   getBelfastSchedule,
 } from "../controllers/belfastScheduleController.js"
+import {
+  getVesselPosition,
+  getImportStatus,
+} from "../controllers/vesselController.js"
 
 var cruiseRouter = express.Router()
 
@@ -29,10 +29,10 @@ cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
 // ---------------------------------------------------
 // Vessel Routes
 // ---------------------------------------------------
-// GET current import job status (for frontend polling)
-cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
-
 // GET all vessel positions
 cruiseRouter.get("/vesselPositions", getVesselPosition)
+
+// GET current import job status (for frontend polling)
+cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
 
 export default cruiseRouter
