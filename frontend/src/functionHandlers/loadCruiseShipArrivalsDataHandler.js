@@ -155,7 +155,7 @@ export const importBelfastScheduleHandler = async () => {
 }
 
 // -------------------------------------------------------
-// Polls GET /api/cruise/belfastImportStatus every 2 seconds until the job
+// Polls GET /api/cruise/getBelfastImportStatus every 2 seconds until the job
 // reaches "complete" or "error". Returns { promise, cancel }.
 // onUpdate(statusObject) is called on every successful poll response.
 // -------------------------------------------------------
@@ -168,7 +168,7 @@ export const pollBelfastImportStatus = (onUpdate) => {
       if (cancelled) return
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/cruise/belfastImportStatus",
+          "http://localhost:4000/api/cruise/getBelfastImportStatus",
           { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS },
         )
         const data = response.data

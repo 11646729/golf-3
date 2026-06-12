@@ -22,7 +22,9 @@ cruiseRouter.get("/", index)
 cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 
 // GET current Belfast import job status (for frontend polling)
-cruiseRouter.get("/belfastImportStatus", (_req, res) => res.json(getBelfastImportStatus()))
+cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
+  res.json(getBelfastImportStatus()),
+)
 
 // GET Belfast Harbour cruise schedule data
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
