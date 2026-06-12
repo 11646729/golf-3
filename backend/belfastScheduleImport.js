@@ -11,9 +11,16 @@ const CRUISE_SCHEDULE_PAGE =
 // in the path and the filename contains the schedule year.
 // -------------------------------------------------------
 const discoverPdfUrl = async () => {
-  const response = await fetch(CRUISE_SCHEDULE_PAGE)
+  let response
+  try {
+    response = await fetch(CRUISE_SCHEDULE_PAGE)
+  } catch (err) {
+    throw new Error(`Cannot reach Belfast Harbour website: ${err.message}`)
+  }
   if (!response.ok)
-    throw new Error(`Failed to fetch schedule page: ${response.statusText}`)
+    throw new Error(
+      `Belfast Harbour website returned an error (${response.status} ${response.statusText}). Please try again later.`,
+    )
 
   const html = await response.text()
   const match = html.match(

@@ -18,6 +18,7 @@ const STATUS_BG = {
 
 const CruisesImportButton = ({
   belfastFetchStatus,
+  belfastErrorMessage,
   lastBelfastImportDate,
   onBelfastFetch,
 }) => {
@@ -54,6 +55,11 @@ const CruisesImportButton = ({
         )}
       </Box>
       <Box sx={{ mx: 2.5, mb: 1.5 }}>
+        {belfastFetchStatus === "error" && belfastErrorMessage && (
+          <Typography variant="caption" sx={{ display: "block", color: "#e65100", mb: 0.5 }}>
+            {belfastErrorMessage}
+          </Typography>
+        )}
         {lastBelfastFormatted && (
           <Typography variant="caption" sx={{ display: "block" }}>
             Belfast Harbour schedule last imported: {lastBelfastFormatted}

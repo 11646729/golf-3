@@ -3,6 +3,7 @@ import {
   index,
   importBelfastSchedule,
   getBelfastSchedule,
+  getBelfastImportStatus,
 } from "../controllers/belfastScheduleController.js"
 import {
   getVesselPosition,
@@ -19,6 +20,9 @@ cruiseRouter.get("/", index)
 
 // POST trigger import of Belfast Harbour cruise schedule PDF
 cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
+
+// GET current Belfast import job status (for frontend polling)
+cruiseRouter.get("/belfastImportStatus", (_req, res) => res.json(getBelfastImportStatus()))
 
 // GET Belfast Harbour cruise schedule data
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)

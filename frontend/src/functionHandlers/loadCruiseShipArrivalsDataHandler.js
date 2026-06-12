@@ -139,8 +139,8 @@ export const getPortArrivalsData = async (url) => {
 }
 
 // -------------------------------------------------------
-// Function to import Belfast Harbour Cruise Schedule from PDF
-// Returns { imported, modDate, rowCount } directly (no polling)
+// Function to trigger Belfast Harbour Cruise Schedule import.
+// Responds immediately with 202; use pollBelfastImportStatus to wait for completion.
 // -------------------------------------------------------
 export const importBelfastScheduleHandler = async () => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
@@ -152,6 +152,48 @@ export const importBelfastScheduleHandler = async () => {
       console.error("importBelfastScheduleHandler error:", err?.message || err)
       throw err
     })
+}
+
+// -------------------------------------------------------
+// Polls GET /api/cruise/belfastImportStatus every 2 seconds until the job
+// reaches "complete" or "error". Returns { promise, cancel }.
+// onUpdate(statusObject) is called on every successful poll response.
+// -------------------------------------------------------
+export const pollBelfastImportStatus = (onUpdate) => {
+  let cancelled = false
+  let timeoutId = null
+
+  const promise = new Promise((resolve, reject) => {
+    const poll = async () => {
+      if (cancelled) return
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/cruise/belfastImportStatus",
+          { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS },
+        )
+        const data = response.data
+        if (!cancelled) onUpdate(data)
+
+        if (data.status === "complete") {
+          resolve(data)
+        } else if (data.status === "error") {
+          reject(new Error(data.error || "Import failed"))
+        } else {
+          if (!cancelled) timeoutId = setTimeout(poll, 2000)
+        }
+      } catch (err) {
+        if (!cancelled) reject(err)
+      }
+    }
+    poll()
+  })
+
+  const cancel = () => {
+    cancelled = true
+    if (timeoutId) clearTimeout(timeoutId)
+  }
+
+  return { promise, cancel }
 }
 
 // -------------------------------------------------------

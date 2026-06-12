@@ -4,6 +4,7 @@ import CruisesMap from "../components/CruisesMap"
 import CruisesImportButton from "../components/CruisesImportButton"
 import {
   importBelfastScheduleHandler,
+  pollBelfastImportStatus,
   getBelfastScheduleData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import "../styles/cruises.scss"
@@ -15,6 +16,7 @@ const CruisesPage = () => {
   const [portArrivals, setPortArrivals] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [belfastFetchStatus, setBelfastFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
+  const [belfastErrorMessage, setBelfastErrorMessage] = useState(null)
   const [lastBelfastImportDate, setLastBelfastImportDate] = useState(null)
 
   const loadScheduleData = () => {
@@ -45,8 +47,11 @@ const CruisesPage = () => {
 
   const handleBelfastFetch = async () => {
     setBelfastFetchStatus("loading")
+    setBelfastErrorMessage(null)
     try {
-      const result = await importBelfastScheduleHandler()
+      await importBelfastScheduleHandler()
+      const { promise } = pollBelfastImportStatus(() => {})
+      const result = await promise
       if (result.modDate) {
         setLastBelfastImportDate(new Date(result.modDate))
       }
@@ -54,6 +59,7 @@ const CruisesPage = () => {
       loadScheduleData()
     } catch (err) {
       console.error(err)
+      setBelfastErrorMessage(err.message || "Import failed")
       setBelfastFetchStatus("error")
     }
   }
@@ -62,6 +68,7 @@ const CruisesPage = () => {
     <div>
       <CruisesImportButton
         belfastFetchStatus={belfastFetchStatus}
+        belfastErrorMessage={belfastErrorMessage}
         lastBelfastImportDate={lastBelfastImportDate}
         onBelfastFetch={handleBelfastFetch}
       />

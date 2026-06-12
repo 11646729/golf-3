@@ -8,6 +8,15 @@ const getDb = () => {
   return db
 }
 
+let belfastImportStatus = {
+  status: "idle", // "idle" | "running" | "complete" | "error"
+  modDate: null,
+  rowCount: 0,
+  error: null,
+}
+
+export const getBelfastImportStatus = () => ({ ...belfastImportStatus })
+
 // -------------------------------------------------------
 // Catalogue Home page
 // Path: localhost:4000/api/cruise/
@@ -17,12 +26,24 @@ export var index = async (req, res) => {
 }
 
 export const importBelfastSchedule = async (_req, res) => {
+  if (belfastImportStatus.status === "running") {
+    return res.status(409).json({ error: "Import already in progress" })
+  }
+
+  belfastImportStatus = { status: "running", modDate: null, rowCount: 0, error: null }
+  res.status(202).json({ message: "Import started in background" })
+
   try {
     const result = await importBelfastScheduleFromPdf()
-    res.json(result)
+    belfastImportStatus = {
+      status: "complete",
+      modDate: result.modDate?.toISOString() ?? null,
+      rowCount: result.rowCount,
+      error: null,
+    }
   } catch (err) {
     console.error("importBelfastSchedule error:", err.message)
-    res.status(500).json({ error: err.message })
+    belfastImportStatus = { status: "error", modDate: null, rowCount: 0, error: err.message }
   }
 }
 
