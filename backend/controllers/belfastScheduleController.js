@@ -15,6 +15,9 @@ let belfastImportStatus = {
   error: null,
 }
 
+// -------------------------------------------------------
+// Function to fetch Belfast Harbour Cruise Schedule importation status
+// -------------------------------------------------------
 export const getBelfastImportStatus = () => ({ ...belfastImportStatus })
 
 // -------------------------------------------------------
@@ -25,12 +28,20 @@ export var index = async (req, res) => {
   res.status(200).send({ response: "Port Arrivals Catalog home page" })
 }
 
+// -------------------------------------------------------
+// Function to import Belfast Harbour Cruise Schedule data
+// -------------------------------------------------------
 export const importBelfastSchedule = async (_req, res) => {
   if (belfastImportStatus.status === "running") {
     return res.status(409).json({ error: "Import already in progress" })
   }
 
-  belfastImportStatus = { status: "running", modDate: null, rowCount: 0, error: null }
+  belfastImportStatus = {
+    status: "running",
+    modDate: null,
+    rowCount: 0,
+    error: null,
+  }
   res.status(202).json({ message: "Import started in background" })
 
   try {
@@ -43,10 +54,18 @@ export const importBelfastSchedule = async (_req, res) => {
     }
   } catch (err) {
     console.error("importBelfastSchedule error:", err.message)
-    belfastImportStatus = { status: "error", modDate: null, rowCount: 0, error: err.message }
+    belfastImportStatus = {
+      status: "error",
+      modDate: null,
+      rowCount: 0,
+      error: err.message,
+    }
   }
 }
 
+// -------------------------------------------------------
+// Function to get Belfast Harbour Cruise Schedule data
+// -------------------------------------------------------
 export const getBelfastSchedule = async (req, res) => {
   try {
     const yesterday = new Date()
