@@ -1,5 +1,5 @@
 import { useState, memo, useEffect } from "react"
-import PropTypes, { element } from "prop-types"
+import PropTypes from "prop-types"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -8,24 +8,14 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
-import Link from "@mui/material/Link"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Modal from "@mui/material/Modal"
+// import Link from "@mui/material/Link"   // unused — ship name is plain text until vesselurl available
+// import Box from "@mui/material/Box"     // unused — modal removed
+// import Button from "@mui/material/Button" // unused — modal removed
+// import Modal from "@mui/material/Modal"   // unused — modal removed
 import Title from "./Title"
 import "../styles/cruisestable.scss"
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-}
+// const style = { ... } // modal style — removed with modal
 
 const CruisesTableTitle = "Cruise Ships Arriving in the next 3 Months"
 
@@ -44,12 +34,8 @@ const columns = [
     minWidth: 10,
     align: "center",
   },
-  {
-    id: "itinerary",
-    label: "Itinerary",
-    minWidth: 10,
-    align: "center",
-  },
+  // { id: "itinerary", label: "Itinerary", minWidth: 10, align: "center" },
+  // TODO: restore Itinerary column once vesselurl is stored in belfastharbour_cruise_schedule
 ]
 
 const CruisesTable = (props) => {
@@ -105,8 +91,9 @@ const CruisesTable = (props) => {
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [open, setOpen] = useState(false)
-  const [selectedImage, setSelectedImage] = useState(null)
+  // const [open, setOpen] = useState(false)
+  // const [selectedImage, setSelectedImage] = useState(null)
+  // TODO: restore modal/handleOpen when vesselurl is available in belfastharbour_cruise_schedule
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -115,16 +102,6 @@ const CruisesTable = (props) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
-  }
-
-  const handleOpen = (imageUrl) => {
-    setSelectedImage(imageUrl)
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-    setSelectedImage(null)
   }
 
   return (
@@ -192,14 +169,8 @@ const CruisesTable = (props) => {
                           />
                         )}
                         <div className="cruisesshipname">
-                          <Link
-                            component="button"
-                            onClick={() =>
-                              handleOpen(modifiedPortArrivals.vesselurl)
-                            }
-                          >
-                            {modifiedPortArrivals.vesselname}
-                          </Link>
+                          {/* vesselurl not in belfastharbour_cruise_schedule — plain text until available */}
+                          {modifiedPortArrivals.vesselname}
                         </div>
                       </div>
                     </TableCell>
@@ -209,38 +180,21 @@ const CruisesTable = (props) => {
                     >
                       {modifiedPortArrivals.etddisplaytime}
                     </TableCell>
-                    <TableCell
-                      align="center"
-                      className="cruisestabledatacellcenter"
-                    >
-                      <button
-                        className="cruisesbutton"
-                        onClick={() =>
-                          handleOpen(modifiedPortArrivals.vesselurl)
-                        }
-                      >
-                        Show
-                      </button>
-                    </TableCell>
+                    {/* Itinerary column removed — vesselurl not in Belfast schedule data */}
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
 
+          {/* Modal commented out — depends on vesselurl which is not in Belfast schedule
           <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
               {selectedImage && (
-                <img
-                  src={selectedImage}
-                  alt="Selected"
-                  style={{ width: "100%" }}
-                />
+                <img src={selectedImage} alt="Selected" style={{ width: "100%" }} />
               )}
-              <Button onClick={handleClose} style={{ marginTop: "10px" }}>
-                Close
-              </Button>
+              <Button onClick={handleClose} style={{ marginTop: "10px" }}>Close</Button>
             </Box>
-          </Modal>
+          </Modal> */}
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[10]}

@@ -14,7 +14,10 @@ import "../styles/cruises.scss"
 // -------------------------------------------------------
 const CruisesPage = () => {
   const [portArrivals, setPortArrivals] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true) // unused — CruisesMap does not consume isLoading
+  const [vesselPositions, setVesselPositions] = useState([])
+  // TODO: after loadScheduleData resolves, fetch GET /api/cruise/vesselPositions
+  //       with matched vesselnameurl values from portArrivals, then call setVesselPositions(data)
   const [belfastFetchStatus, setBelfastFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
   const [belfastErrorMessage, setBelfastErrorMessage] = useState(null)
   const [lastBelfastImportDate, setLastBelfastImportDate] = useState(null)
@@ -24,7 +27,7 @@ const CruisesPage = () => {
       .then((returnedData) => {
         const data = returnedData.data ?? []
         setPortArrivals(data)
-        setIsLoading(false)
+        // setIsLoading(false)
 
         if (data.length > 0) {
           const maxModDate = data.reduce((max, row) => {
@@ -37,7 +40,7 @@ const CruisesPage = () => {
       })
       .catch((err) => {
         console.log(err)
-        setIsLoading(false)
+        // setIsLoading(false)
       })
   }
 
@@ -78,8 +81,7 @@ const CruisesPage = () => {
         </div>
         <div className="cruisesmapcontainer">
           <CruisesMap
-            isLoading={isLoading}
-            vesselPositions={[]}
+            vesselPositions={vesselPositions}
             vesselDetails={portArrivals}
           />
         </div>

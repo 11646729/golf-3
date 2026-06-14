@@ -114,6 +114,7 @@ const getSelectedPosition = (positions, markerId) =>
     ? positions.find((position) => position._markerId === markerId)
     : null
 
+// isLoading prop removed — map renders immediately with whatever positions are available
 const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
   const validPositions = useMemo(
     () => normaliseVesselPositions(vesselPositions),
