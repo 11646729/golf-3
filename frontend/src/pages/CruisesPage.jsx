@@ -14,7 +14,6 @@ import "../styles/cruises.scss"
 // -------------------------------------------------------
 const CruisesPage = () => {
   const [portArrivals, setPortArrivals] = useState([])
-  // const [isLoading, setIsLoading] = useState(true) // unused — CruisesMap does not consume isLoading
   const [vesselPositions, setVesselPositions] = useState([])
   // TODO: after loadScheduleData resolves, fetch GET /api/cruise/vesselPositions
   //       with matched vesselnameurl values from portArrivals, then call setVesselPositions(data)
@@ -27,7 +26,6 @@ const CruisesPage = () => {
       .then((returnedData) => {
         const data = returnedData.data ?? []
         setPortArrivals(data)
-        // setIsLoading(false)
 
         if (data.length > 0) {
           const maxModDate = data.reduce((max, row) => {
@@ -40,7 +38,6 @@ const CruisesPage = () => {
       })
       .catch((err) => {
         console.log(err)
-        // setIsLoading(false)
       })
   }
 

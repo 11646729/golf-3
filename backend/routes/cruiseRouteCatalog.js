@@ -5,10 +5,9 @@ import {
   getBelfastSchedule,
   getBelfastImportStatus,
 } from "../controllers/belfastScheduleController.js"
-import {
-  getVesselPosition,
-  getImportStatus,
-} from "../controllers/vesselController.js"
+import {} from // getVesselPosition,
+// getImportStatus,
+"../controllers/vesselController.js"
 
 var cruiseRouter = express.Router()
 
@@ -28,14 +27,5 @@ cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
 
 // GET Belfast Harbour cruise schedule data
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
-
-// ---------------------------------------------------
-// Vessel Routes
-// ---------------------------------------------------
-// GET all vessel positions
-cruiseRouter.get("/vesselPositions", getVesselPosition)
-
-// GET current import job status (for frontend polling)
-cruiseRouter.get("/importStatus", (_req, res) => res.json(getImportStatus()))
 
 export default cruiseRouter
