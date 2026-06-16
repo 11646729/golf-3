@@ -67,6 +67,5 @@
     "baseline-browser-mapping": "^2.9.19",
     "esbuild": "0.28.1",
     "vite": "^8.0.16"
-    "vite": "^7.3.5"
   }
 }
