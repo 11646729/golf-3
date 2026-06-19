@@ -5,9 +5,6 @@ import {
   getBelfastSchedule,
   getBelfastImportStatus,
 } from "../controllers/belfastScheduleController.js"
-import {} from // getVesselPosition,
-// getImportStatus,
-"../controllers/vesselController.js"
 
 var cruiseRouter = express.Router()
 
