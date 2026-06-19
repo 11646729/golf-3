@@ -38,7 +38,8 @@ const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
     }
 
     for (const href of shipHrefs) {
-      await page.goto(`${CRUISEMAPPER_BASE}${href}`, {
+      const vesselUrl = href.startsWith("http") ? href : `${CRUISEMAPPER_BASE}${href}`
+      await page.goto(vesselUrl, {
         waitUntil: "networkidle2",
         timeout: 30000,
       })
@@ -72,7 +73,7 @@ const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
       }
 
       console.log(
-        `[CruiseMapper] Length mismatch for "${vesselname}" at ${href}: expected ${vessellengthmetre}m, got ${scrapedLength}m — trying next result`,
+        `[CruiseMapper] Length mismatch for "${vesselname}" at ${vesselUrl}: expected ${vessellengthmetre}m, got ${scrapedLength}m — trying next result`,
       )
     }
 
