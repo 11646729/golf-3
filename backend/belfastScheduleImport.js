@@ -309,6 +309,7 @@ const prepareBelfastScheduleTable = async () => {
       cruiseline        TEXT         NOT NULL,
       vesselname        TEXT         NOT NULL,
       vessellengthmetre INTEGER,
+      mmsi              INTEGER      NOT NULL DEFAULT 0,
       berth             TEXT,
       visitors          INTEGER,
       pdfmodifieddate   TIMESTAMPTZ,

@@ -2,6 +2,7 @@ import { importBelfastScheduleFromPdf } from "../belfastScheduleImport.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { ensureLogoCached } from "../cruiseLineLogoCache.js"
 import { loadVesselList } from "../vesselList.js"
+import { fetchAndSaveVesselMMSIs } from "../cruisemapperScraper.js"
 
 let db = null
 const getDb = () => {
@@ -53,7 +54,8 @@ export const importBelfastSchedule = async (_req, res) => {
       rowCount: result.rowCount,
       error: null,
     }
-    await loadVesselList()
+    const vessels = await loadVesselList()
+    await fetchAndSaveVesselMMSIs(vessels)
   } catch (err) {
     console.error("importBelfastSchedule error:", err.message)
     belfastImportStatus = {
