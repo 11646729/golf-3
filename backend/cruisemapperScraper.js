@@ -115,8 +115,37 @@ export const fetchAndSaveVesselMMSIs = async (vessels) => {
     const { vesselname, vessellengthmetre } = debugVessels[0]
 
     await page.goto(CRUISEMAPPER_BASE, { waitUntil: "networkidle2", timeout: 30000 })
-    await page.$eval('input[name="q"]', (el) => (el.value = ""))
-    await page.type('input[name="q"]', vesselname)
+
+    // Log all inputs on the page to find the correct search selector
+    const inputs = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("input")).map((el) => ({
+        id: el.id,
+        name: el.name,
+        type: el.type,
+        placeholder: el.placeholder,
+        className: el.className,
+      })),
+    )
+    console.log("[CruiseMapper] Inputs found on page:", JSON.stringify(inputs, null, 2))
+
+    // Find the search input — try common selectors in order
+    const searchSelector = await page.evaluate(() => {
+      const candidates = [
+        'input[name="q"]',
+        'input[type="search"]',
+        'input[type="text"]',
+        'input[placeholder]',
+      ]
+      for (const sel of candidates) {
+        if (document.querySelector(sel)) return sel
+      }
+      return null
+    })
+    console.log("[CruiseMapper] Using search selector:", searchSelector)
+    if (!searchSelector) throw new Error("Could not find a search input on the CruiseMapper page")
+
+    await page.$eval(searchSelector, (el) => (el.value = ""))
+    await page.type(searchSelector, vesselname)
 
     // Step 3: wait for autocomplete dropdown — then halt
     await page.waitForSelector(".ttMenu", { timeout: 10000 })
