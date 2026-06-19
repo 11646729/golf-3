@@ -7,7 +7,7 @@ import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
 import { createDatabaseAdapter } from "./databaseUtilities.js"
 import { createVehiclePositionsTable } from "./controllers/rtGtfsController.js"
-import { startAISStream } from "./aisStreamService.js"
+// import { startAISStream } from "./aisStreamService.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
@@ -96,7 +96,7 @@ createDatabaseAdapter()
         console.log("Server running on port: " + port)
       }
     })
-    startAISStream()
+    // startAISStream()
   })
   .catch((err) => {
     console.error("Failed to connect to database:", err.message)
