@@ -1,3 +1,4 @@
+import puppeteer from "puppeteer"
 import { getBrowser } from "./puppeteerBrowser.js"
 import { DatabaseAdapter } from "./databaseUtilities.js"
 
@@ -103,26 +104,32 @@ const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
 export const fetchAndSaveVesselMMSIs = async (vessels) => {
   if (!vessels || vessels.length === 0) return
 
-  console.log(`[CruiseMapper] Fetching MMSIs for ${vessels.length} vessel(s)`)
+  // DEBUG: process only the first vessel with a visible browser to inspect the dropdown
+  const debugVessels = vessels.slice(0, 1)
+  console.log(`[CruiseMapper] DEBUG — processing first vessel only: "${debugVessels[0].vesselname}"`)
 
-  const browser = await getBrowser()
-  const page = await browser.newPage()
+  const debugBrowser = await puppeteer.launch({ headless: false })
+  const page = await debugBrowser.newPage()
 
   try {
-    for (const { vesselname, vessellengthmetre } of vessels) {
-      const mmsi = await scrapeMMSIForVessel(
-        page,
-        vesselname,
-        vessellengthmetre,
-      )
-      await getDb().run(
-        `UPDATE belfastharbour_cruise_schedule SET mmsi = ? WHERE vesselname = ?`,
-        [mmsi, vesselname],
-      )
-    }
-  } finally {
-    await page.close()
-  }
+    const { vesselname, vessellengthmetre } = debugVessels[0]
 
-  console.log("[CruiseMapper] MMSI fetch complete")
+    await page.goto(CRUISEMAPPER_BASE, { waitUntil: "networkidle2", timeout: 30000 })
+    await page.$eval('input[name="q"]', (el) => (el.value = ""))
+    await page.type('input[name="q"]', vesselname)
+
+    // Step 3: wait for autocomplete dropdown — then halt
+    await page.waitForSelector(".ttMenu", { timeout: 10000 })
+    console.log(`[CruiseMapper] Dropdown appeared for "${vesselname}" — halting to inspect`)
+
+    // Capture the current page HTML and open it in a new tab for inspection
+    const html = await page.content()
+    const inspectTab = await debugBrowser.newPage()
+    await inspectTab.setContent(html, { waitUntil: "domcontentloaded" })
+
+    // Keep the browser open for 60 seconds so the user can inspect both tabs
+    await new Promise((resolve) => setTimeout(resolve, 60_000))
+  } finally {
+    await debugBrowser.close()
+  }
 }
