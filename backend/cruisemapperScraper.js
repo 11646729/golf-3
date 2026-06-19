@@ -24,12 +24,20 @@ const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
     )
 
     // Collect unique ship detail page links (format: /ships/name-12345)
-    const shipHrefs = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('a[href*="/ships/"]'))
-        .map((a) => a.getAttribute("href"))
-        .filter((href) => href && /\/ships\/[\w-]+-\d+$/.test(href))
-        .filter((href, i, arr) => arr.indexOf(href) === i)
-        .slice(0, 3),
+    // Filter by words from the vessel name to skip featured ships shown on the page
+    const nameWords = vesselname.toLowerCase().split(/\s+/).filter((w) => w.length > 1)
+    const shipHrefs = await page.evaluate(
+      (words) =>
+        Array.from(document.querySelectorAll('a[href*="/ships/"]'))
+          .map((a) => a.getAttribute("href"))
+          .filter((href) => {
+            if (!href || !/\/ships\/[\w-]+-\d+$/.test(href)) return false
+            const lowerHref = href.toLowerCase()
+            return words.some((w) => lowerHref.includes(w))
+          })
+          .filter((href, i, arr) => arr.indexOf(href) === i)
+          .slice(0, 3),
+      nameWords,
     )
 
     if (shipHrefs.length === 0) {
