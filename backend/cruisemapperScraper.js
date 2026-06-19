@@ -9,7 +9,6 @@ const getDb = () => {
 
 const CRUISEMAPPER_BASE = "https://www.cruisemapper.com"
 const LENGTH_TOLERANCE_M = 10
-const MAX_RESULTS_TO_CHECK = 3
 
 const parseLength = (str) => {
   const m = str.match(/\d+/)
@@ -18,35 +17,38 @@ const parseLength = (str) => {
 
 const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
   try {
-    await page.goto(
-      `${CRUISEMAPPER_BASE}/ships/?name=${encodeURIComponent(vesselname)}`,
-      { waitUntil: "networkidle2", timeout: 30000 },
-    )
+    // Use the CruiseMapper live search box which shows an autocomplete dropdown
+    // with results grouped under a "Cruise Ships" heading
+    await page.goto(CRUISEMAPPER_BASE, { waitUntil: "networkidle2", timeout: 30000 })
 
-    // Collect unique ship detail page links (format: /ships/name-12345)
-    // Filter by words from the vessel name to skip featured ships shown on the page
-    const nameWords = vesselname.toLowerCase().split(/\s+/).filter((w) => w.length > 1)
-    const shipHrefs = await page.evaluate(
-      (words) =>
-        Array.from(document.querySelectorAll('a[href*="/ships/"]'))
-          .map((a) => a.getAttribute("href"))
-          .filter((href) => {
-            if (!href || !/\/ships\/[\w-]+-\d+$/.test(href)) return false
-            const lowerHref = href.toLowerCase()
-            return words.some((w) => lowerHref.includes(w))
-          })
-          .filter((href, i, arr) => arr.indexOf(href) === i)
-          .slice(0, 3),
-      nameWords,
-    )
+    // Clear any previous search text then type the vessel name
+    await page.$eval('input[name="q"]', (el) => (el.value = ""))
+    await page.type('input[name="q"]', vesselname)
 
-    if (shipHrefs.length === 0) {
-      console.log(`[CruiseMapper] No results for "${vesselname}"`)
+    // Wait for the autocomplete dropdown to appear
+    await page.waitForSelector(".ttMenu", { timeout: 10000 })
+
+    // Find links inside the "Cruise Ships" section of the dropdown
+    const shipUrls = await page.evaluate(() => {
+      const sections = Array.from(document.querySelectorAll(".ttMenu .ttDataset"))
+      const cruiseSection = sections.find((s) =>
+        s.querySelector(".ttHeading")?.textContent?.trim() === "Cruise Ships",
+      )
+      if (!cruiseSection) return []
+      return Array.from(cruiseSection.querySelectorAll("a[href]"))
+        .map((a) => a.href)
+        .filter(Boolean)
+        .slice(0, 3)
+    })
+
+    if (shipUrls.length === 0) {
+      console.log(`[CruiseMapper] No "Cruise Ships" results for "${vesselname}"`)
       return 0
     }
 
-    for (const href of shipHrefs) {
-      const vesselUrl = href.startsWith("http") ? href : `${CRUISEMAPPER_BASE}${href}`
+    console.log(`[CruiseMapper] Search results for "${vesselname}":`, shipUrls)
+
+    for (const vesselUrl of shipUrls) {
       await page.goto(vesselUrl, {
         waitUntil: "networkidle2",
         timeout: 30000,
@@ -85,10 +87,15 @@ const scrapeMMSIForVessel = async (page, vesselname, vessellengthmetre) => {
       )
     }
 
-    console.log(`[CruiseMapper] No length-matching result found for "${vesselname}"`)
+    console.log(
+      `[CruiseMapper] No length-matching result found for "${vesselname}"`,
+    )
     return 0
   } catch (err) {
-    console.warn(`[CruiseMapper] Scrape failed for "${vesselname}":`, err.message)
+    console.warn(
+      `[CruiseMapper] Scrape failed for "${vesselname}":`,
+      err.message,
+    )
     return 0
   }
 }
@@ -103,7 +110,11 @@ export const fetchAndSaveVesselMMSIs = async (vessels) => {
 
   try {
     for (const { vesselname, vessellengthmetre } of vessels) {
-      const mmsi = await scrapeMMSIForVessel(page, vesselname, vessellengthmetre)
+      const mmsi = await scrapeMMSIForVessel(
+        page,
+        vesselname,
+        vessellengthmetre,
+      )
       await getDb().run(
         `UPDATE belfastharbour_cruise_schedule SET mmsi = ? WHERE vesselname = ?`,
         [mmsi, vesselname],
