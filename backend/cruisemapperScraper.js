@@ -58,8 +58,12 @@ const getNextPageHref = (page) =>
 
 const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
   try {
+    // Normalise Unicode quotes to ASCII apostrophe so VesselFinder search works
+    // e.g. "L’AUSTRAL" (right single quote) → "L'AUSTRAL"
+    const searchName = vesselname.replace(/[‘’‚‛]/g, "'")
+
     // Pass 1: collect all passenger/cruise candidates across all result pages
-    let pageUrl = `${VF_BASE}/vessels?name=${encodeURIComponent(vesselname)}`
+    let pageUrl = `${VF_BASE}/vessels?name=${encodeURIComponent(searchName)}`
     const allPassengerCandidates = []
     const allFallbackCandidates  = []
 
