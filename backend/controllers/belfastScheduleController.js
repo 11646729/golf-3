@@ -78,9 +78,13 @@ export const getBelfastSchedule = async (req, res) => {
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3)
 
     const rows = await getDb().all(
-      `SELECT * FROM belfastharbour_cruise_schedule
-       WHERE vesseleta >= ? AND vesseleta < ?
-       ORDER BY vesseleta`,
+      `SELECT s.portarrivalid, s.cruiselinelogo, s.vesseleta, s.vesseletd,
+              s.cruiseline, s.berth, s.visitors, s.pdfmodifieddate, s.importedat,
+              v.vesselname, v.vessellengthmetre, v.mmsi, v.imo
+       FROM belfastharbour_cruise_schedule s
+       JOIN vessels v ON v.vesselid = s.vesselid
+       WHERE s.vesseleta >= ? AND s.vesseleta < ?
+       ORDER BY s.vesseleta`,
       [yesterday.toISOString(), threeMonthsFromNow.toISOString()],
     )
 

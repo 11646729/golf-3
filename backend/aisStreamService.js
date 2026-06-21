@@ -16,10 +16,8 @@ export async function startAISStream() {
   const connect = async () => {
     let mmsiList = []
     try {
-      const rows = await db.all(
-        "SELECT vesselmmsinumber FROM vessels WHERE vesselmmsinumber IS NOT NULL",
-      )
-      mmsiList = rows.map((r) => String(r.vesselmmsinumber))
+      const rows = await db.all(`SELECT mmsi FROM vessels WHERE mmsi != 0`)
+      mmsiList = rows.map((r) => String(r.mmsi))
       console.log(`[AIS] Loaded ${mmsiList.length} vessel MMSI number(s) from database`)
     } catch (err) {
       console.error("[AIS] Failed to load MMSIs from database:", err.message)
@@ -58,19 +56,29 @@ export async function startAISStream() {
 
       if (msg.MessageType === "PositionReport") {
         const { MMSI, latitude, longitude, time_utc } = msg.MetaData
+        const report = msg.Message?.PositionReport ?? {}
+        const sog       = report.Sog               ?? null
+        const cog       = report.Cog               ?? null
+        const heading   = report.TrueHeading        ?? null
+        const navstatus = report.NavigationalStatus?.toString() ?? null
+
         try {
           const result = await db.run(
-            `UPDATE vessels
-               SET currentpositionlat = ?,
-                   currentpositionlng = ?,
-                   currentpositiontime = ?
-             WHERE vesselmmsinumber = ?`,
-            [latitude, longitude, time_utc, MMSI],
+            `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, sog, cog, heading, navstatus)
+             SELECT vesselid, ?, ?, ?, ?, ?, ?, ?
+             FROM vessels WHERE mmsi = ?
+             ON CONFLICT (vesselid) DO UPDATE SET
+               recordedat = EXCLUDED.recordedat,
+               latitude   = EXCLUDED.latitude,
+               longitude  = EXCLUDED.longitude,
+               sog        = EXCLUDED.sog,
+               cog        = EXCLUDED.cog,
+               heading    = EXCLUDED.heading,
+               navstatus  = EXCLUDED.navstatus`,
+            [time_utc, latitude, longitude, sog, cog, heading, navstatus, MMSI],
           )
           if (result.changes > 0) {
-            console.log(
-              `[AIS] Position updated — MMSI ${MMSI}: lat ${latitude}, lng ${longitude}`,
-            )
+            console.log(`[AIS] Position updated — MMSI ${MMSI}: lat ${latitude}, lng ${longitude}`)
           }
         } catch (err) {
           console.error(`[AIS] DB update failed for MMSI ${MMSI}:`, err.message)

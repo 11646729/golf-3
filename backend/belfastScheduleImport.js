@@ -275,12 +275,16 @@ const updateExistingLogos = async () => {
 
     if (!logoUrl) {
       const vessel = await getDb().get(
-        `SELECT vesselname FROM belfastharbour_cruise_schedule WHERE cruiseline = ? LIMIT 1`,
+        `SELECT v.vesselname
+         FROM belfastharbour_cruise_schedule s
+         JOIN vessels v ON v.vesselid = s.vesselid
+         WHERE s.cruiseline = ? LIMIT 1`,
         [cruiseline],
       )
       if (vessel) {
         logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
       }
+
     }
 
     if (logoUrl) {
@@ -295,56 +299,84 @@ const updateExistingLogos = async () => {
 }
 
 // -------------------------------------------------------
-// Create the table (if it does not exist) and truncate it
-// ready for a fresh import.
+// Create supporting tables (vessels, vesselpositions) if they
+// don't exist, then drop and recreate the schedule table.
+// vessels and vesselpositions are never dropped — they persist
+// across imports so MMSI/IMO data and AIS positions are kept.
 // -------------------------------------------------------
 const prepareBelfastScheduleTable = async () => {
+  await getDb().run(`
+    CREATE TABLE IF NOT EXISTS vessels (
+      vesselid          SERIAL PRIMARY KEY,
+      vesselname        TEXT    NOT NULL UNIQUE,
+      vessellengthmetre INTEGER,
+      mmsi              INTEGER NOT NULL DEFAULT 0,
+      imo               INTEGER NOT NULL DEFAULT 0
+    )
+  `)
+
+  await getDb().run(`
+    CREATE TABLE IF NOT EXISTS vesselpositions (
+      vesselid   INTEGER PRIMARY KEY REFERENCES vessels(vesselid),
+      recordedat TIMESTAMPTZ      NOT NULL,
+      latitude   DOUBLE PRECISION,
+      longitude  DOUBLE PRECISION,
+      sog        NUMERIC(5,1),
+      cog        NUMERIC(5,1),
+      heading    INTEGER,
+      navstatus  TEXT
+    )
+  `)
+
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
     CREATE TABLE belfastharbour_cruise_schedule (
-      portarrivalid     SERIAL PRIMARY KEY,
-      cruiselinelogo    TEXT,
-      vesseleta         TIMESTAMPTZ  NOT NULL,
-      vesseletd         TIMESTAMPTZ  NOT NULL,
-      cruiseline        TEXT         NOT NULL,
-      vesselname        TEXT         NOT NULL,
-      vessellengthmetre INTEGER,
-      mmsi              INTEGER      NOT NULL DEFAULT 0,
-      imo               INTEGER      NOT NULL DEFAULT 0,
-      berth             TEXT,
-      visitors          INTEGER,
-      pdfmodifieddate   TIMESTAMPTZ,
-      importedat        TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+      portarrivalid   SERIAL PRIMARY KEY,
+      vesselid        INTEGER     NOT NULL REFERENCES vessels(vesselid),
+      cruiselinelogo  TEXT,
+      vesseleta       TIMESTAMPTZ NOT NULL,
+      vesseletd       TIMESTAMPTZ NOT NULL,
+      cruiseline      TEXT        NOT NULL,
+      berth           TEXT,
+      visitors        INTEGER,
+      pdfmodifieddate TIMESTAMPTZ,
+      importedat      TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `)
-  await getDb().run(
-    `CREATE INDEX idx_bhcs_eta ON belfastharbour_cruise_schedule(vesseleta)`,
-  )
-  console.log("belfastharbour_cruise_schedule table ready")
+  await getDb().run(`CREATE INDEX idx_bhcs_eta      ON belfastharbour_cruise_schedule(vesseleta)`)
+  await getDb().run(`CREATE INDEX idx_bhcs_vesselid ON belfastharbour_cruise_schedule(vesselid)`)
+  console.log("Tables ready for import")
 }
 
 // -------------------------------------------------------
-// Insert parsed rows into the table.
+// Insert parsed rows into vessels (upsert) and schedule table.
+// Upserting vessels preserves existing MMSI/IMO across imports.
 // -------------------------------------------------------
 const saveArrivals = async (arrivals, pdfModDate) => {
-  const sql = `
-    INSERT INTO belfastharbour_cruise_schedule
-      (cruiselinelogo, vesseleta, vesseletd, cruiseline, vesselname,
-       vessellengthmetre, berth, visitors, pdfmodifieddate)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `
   for (const row of arrivals) {
-    await getDb().run(sql, [
-      row.cruiselinelogo ?? null,
-      row.vesseleta,
-      row.vesseletd,
-      row.cruiseline,
-      row.vesselname,
-      row.vessellengthmetre,
-      row.berth,
-      row.visitors,
-      pdfModDate?.toISOString() ?? null,
-    ])
+    const vessel = await getDb().get(
+      `INSERT INTO vessels (vesselname, vessellengthmetre)
+       VALUES (?, ?)
+       ON CONFLICT (vesselname) DO UPDATE SET vessellengthmetre = EXCLUDED.vessellengthmetre
+       RETURNING vesselid`,
+      [row.vesselname, row.vessellengthmetre],
+    )
+
+    await getDb().run(
+      `INSERT INTO belfastharbour_cruise_schedule
+         (vesselid, cruiselinelogo, vesseleta, vesseletd, cruiseline, berth, visitors, pdfmodifieddate)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        vessel.vesselid,
+        row.cruiselinelogo ?? null,
+        row.vesseleta,
+        row.vesseletd,
+        row.cruiseline,
+        row.berth,
+        row.visitors,
+        pdfModDate?.toISOString() ?? null,
+      ],
+    )
   }
   console.log(`${arrivals.length} rows saved to belfastharbour_cruise_schedule`)
 }
@@ -383,17 +415,24 @@ export const importBelfastScheduleFromPdf = async () => {
   const modDate = parsePdfDate(infoResult.info?.ModDate)
   console.log("PDF ModDate:", modDate)
 
-  // Migrate old schema (cruiselinelogoid FK column) to new schema (cruiselinelogo TEXT)
-  const oldSchemaCol = await getDb().get(
-    `SELECT 1 FROM information_schema.columns
-     WHERE table_name = 'belfastharbour_cruise_schedule' AND column_name = 'cruiselinelogoid'`,
-  )
-  if (oldSchemaCol) {
-    console.log("Migrating belfastharbour_cruise_schedule to new schema — will reimport")
+  // If the vessels table doesn't exist yet, or the schedule table uses the old
+  // schema (no vesselid FK column), rebuild tables and force a fresh import.
+  const needsMigration = await getDb().get(
+    `SELECT 1 FROM information_schema.tables
+     WHERE table_schema = 'public' AND table_name = 'vessels'
+     HAVING COUNT(*) = 0`,
+  ).then((r) => !r).catch(() => true)
+    || await getDb().get(
+      `SELECT 1 FROM information_schema.columns
+       WHERE table_name = 'belfastharbour_cruise_schedule' AND column_name = 'vesselid'`,
+    ).then((r) => !r).catch(() => true)
+
+  if (needsMigration) {
+    console.log("Migrating to vessels/schedule schema — will reimport")
     await prepareBelfastScheduleTable()
   }
 
-  let lastKnownModDate = oldSchemaCol ? null : await getLastPdfModDate()
+  let lastKnownModDate = needsMigration ? null : await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
     console.log("Schedule unchanged — checking for missing logos")
     await updateExistingLogos()

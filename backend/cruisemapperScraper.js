@@ -19,15 +19,6 @@ const parseSearchLength = (str) => {
   return m ? parseFloat(m[1]) : null
 }
 
-const ensureImoColumn = async () => {
-  try {
-    await getDb().run(
-      `ALTER TABLE belfastharbour_cruise_schedule ADD COLUMN IF NOT EXISTS imo INTEGER NOT NULL DEFAULT 0`,
-    )
-  } catch (_) {
-    // column already exists — ignore
-  }
-}
 
 const isTender    = (c) => c.cells.some((cell) => cell.toLowerCase().includes("tender"))
 const isPassenger = (c) =>
@@ -158,8 +149,6 @@ export const fetchAndSaveVesselMMSIs = async (vessels) => {
 
   console.log(`[VF] Fetching IMO/MMSI for ${vessels.length} vessel(s)`)
 
-  await ensureImoColumn()
-
   const browser = await getBrowser()
   const page = await browser.newPage()
   await page.setUserAgent(
@@ -170,7 +159,7 @@ export const fetchAndSaveVesselMMSIs = async (vessels) => {
     for (const { vesselname, vessellengthmetre } of vessels) {
       const { mmsi, imo } = await scrapeVesselData(page, vesselname, vessellengthmetre)
       await getDb().run(
-        `UPDATE belfastharbour_cruise_schedule SET mmsi = ?, imo = ? WHERE vesselname = ?`,
+        `UPDATE vessels SET mmsi = ?, imo = ? WHERE vesselname = ?`,
         [mmsi, imo, vesselname],
       )
       await sleep(POLITENESS_MS)
