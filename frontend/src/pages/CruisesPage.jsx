@@ -15,8 +15,6 @@ import "../styles/cruises.scss"
 const CruisesPage = () => {
   const [portArrivals, setPortArrivals] = useState([])
   const [vesselPositions, setVesselPositions] = useState([])
-  // TODO: after loadScheduleData resolves, fetch GET /api/cruise/vesselPositions
-  //       with matched vesselnameurl values from portArrivals, then call setVesselPositions(data)
   const [belfastFetchStatus, setBelfastFetchStatus] = useState("idle") // "idle" | "loading" | "complete" | "error"
   const [belfastErrorMessage, setBelfastErrorMessage] = useState(null)
   const [lastBelfastImportDate, setLastBelfastImportDate] = useState(null)
