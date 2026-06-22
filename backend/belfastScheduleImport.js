@@ -1,6 +1,7 @@
 import { PDFParse } from "pdf-parse"
 import { DatabaseAdapter } from "./databaseUtilities.js"
 import { getBrowser } from "./puppeteerBrowser.js"
+import { fetchAndSaveVesselMMSIs } from "./cruisemapperScraper.js"
 
 const CRUISE_SCHEDULE_PAGE =
   "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
@@ -133,6 +134,23 @@ const getDb = () => {
   return db
 }
 
+
+// -------------------------------------------------------
+// Look up MMSI/IMO on VesselFinder for any vessel with upcoming
+// arrivals that is still missing either value.
+// -------------------------------------------------------
+const fetchMissingMMSIs = async () => {
+  const vessels = await getDb().all(
+    `SELECT vesselname, vessellengthmetre
+     FROM vessels
+     WHERE mmsi = 0 OR imo = 0
+     ORDER BY vesselname`,
+  )
+  if (vessels.length > 0) {
+    console.log(`[MMSI] ${vessels.length} vessel(s) need MMSI/IMO lookup`)
+    await fetchAndSaveVesselMMSIs(vessels)
+  }
+}
 
 // -------------------------------------------------------
 // Normalize a cruise line name for fuzzy matching:
@@ -434,8 +452,9 @@ export const importBelfastScheduleFromPdf = async () => {
 
   let lastKnownModDate = needsMigration ? null : await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
-    console.log("Schedule unchanged — checking for missing logos")
+    console.log("Schedule unchanged — checking for missing logos and MMSI/IMO")
     await updateExistingLogos()
+    await fetchMissingMMSIs()
     return { imported: false, modDate, rowCount: 0 }
   }
 
@@ -467,6 +486,7 @@ export const importBelfastScheduleFromPdf = async () => {
 
   await searchPage.close()
   await saveArrivals(arrivals, modDate)
+  await fetchMissingMMSIs()
 
   return { imported: true, modDate, rowCount: arrivals.length }
 }
