@@ -317,6 +317,37 @@ const updateExistingLogos = async () => {
 }
 
 // -------------------------------------------------------
+// Upgrade vesselpositions in-place if it was created with the
+// old NUMERIC/INTEGER types or is missing the geom column.
+// Safe to run on every startup — each step is idempotent.
+// -------------------------------------------------------
+const migrateVesselPositions = async () => {
+  const cols = await getDb().all(
+    `SELECT column_name, data_type
+     FROM information_schema.columns
+     WHERE table_name = 'vesselpositions'`,
+  )
+  const colMap = Object.fromEntries(cols.map((c) => [c.column_name, c.data_type]))
+
+  if (colMap.sog === "numeric") {
+    await getDb().run(`ALTER TABLE vesselpositions
+      ALTER COLUMN sog     TYPE DOUBLE PRECISION,
+      ALTER COLUMN cog     TYPE DOUBLE PRECISION`)
+  }
+  if (colMap.heading === "integer") {
+    await getDb().run(`ALTER TABLE vesselpositions
+      ALTER COLUMN heading TYPE DOUBLE PRECISION`)
+  }
+  if (!colMap.geom) {
+    await getDb().run(`ALTER TABLE vesselpositions ADD COLUMN geom geometry(Point, 4326)`)
+    await getDb().run(`
+      UPDATE vesselpositions
+      SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)
+      WHERE latitude IS NOT NULL AND longitude IS NOT NULL`)
+  }
+}
+
+// -------------------------------------------------------
 // Create supporting tables (vessels, vesselpositions) if they
 // don't exist, then drop and recreate the schedule table.
 // vessels and vesselpositions are never dropped — they persist
@@ -339,12 +370,17 @@ const prepareBelfastScheduleTable = async () => {
       recordedat TIMESTAMPTZ      NOT NULL,
       latitude   DOUBLE PRECISION,
       longitude  DOUBLE PRECISION,
-      sog        NUMERIC(5,1),
-      cog        NUMERIC(5,1),
-      heading    INTEGER,
-      navstatus  TEXT
+      sog        DOUBLE PRECISION,
+      cog        DOUBLE PRECISION,
+      heading    DOUBLE PRECISION,
+      navstatus  TEXT,
+      geom       geometry(Point, 4326)
     )
   `)
+  await getDb().run(`
+    CREATE INDEX IF NOT EXISTS idx_vesselpositions_geom ON vesselpositions USING GIST(geom)
+  `)
+  await migrateVesselPositions()
 
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`

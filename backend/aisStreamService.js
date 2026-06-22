@@ -64,8 +64,8 @@ export async function startAISStream() {
 
         try {
           const result = await db.run(
-            `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, sog, cog, heading, navstatus)
-             SELECT vesselid, ?, ?, ?, ?, ?, ?, ?
+            `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, sog, cog, heading, navstatus, geom)
+             SELECT vesselid, ?, ?, ?, ?, ?, ?, ?, ST_SetSRID(ST_MakePoint(?, ?), 4326)
              FROM vessels WHERE mmsi = ?
              ON CONFLICT (vesselid) DO UPDATE SET
                recordedat = EXCLUDED.recordedat,
@@ -74,8 +74,9 @@ export async function startAISStream() {
                sog        = EXCLUDED.sog,
                cog        = EXCLUDED.cog,
                heading    = EXCLUDED.heading,
-               navstatus  = EXCLUDED.navstatus`,
-            [time_utc, latitude, longitude, sog, cog, heading, navstatus, MMSI],
+               navstatus  = EXCLUDED.navstatus,
+               geom       = EXCLUDED.geom`,
+            [time_utc, latitude, longitude, sog, cog, heading, navstatus, longitude, latitude, MMSI],
           )
           if (result.changes > 0) {
             console.log(`[AIS] Position updated — MMSI ${MMSI}: lat ${latitude}, lng ${longitude}`)
