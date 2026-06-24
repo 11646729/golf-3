@@ -134,7 +134,6 @@ const getDb = () => {
   return db
 }
 
-
 // -------------------------------------------------------
 // Look up MMSI/IMO on VesselFinder for any vessel with upcoming
 // arrivals that is still missing either value.
@@ -202,7 +201,10 @@ const scrapeLogoMapFromCruiseMapper = async () => {
       if (!logoMap.has(key)) logoMap.set(key, { name, logoUrl })
     }
   } catch (err) {
-    console.warn("Failed to scrape CruiseMapper cruise lines directory:", err.message)
+    console.warn(
+      "Failed to scrape CruiseMapper cruise lines directory:",
+      err.message,
+    )
   }
 
   await page.close()
@@ -219,7 +221,9 @@ const scrapeLogoMapFromCruiseMapper = async () => {
 const resolveCruiseLineLogoUrl = (cruiseline, logoMap) => {
   if (!cruiseline) return null
 
-  const key = CRUISE_LINE_ALIASES.get(normalizeName(cruiseline)) ?? normalizeName(cruiseline)
+  const key =
+    CRUISE_LINE_ALIASES.get(normalizeName(cruiseline)) ??
+    normalizeName(cruiseline)
   let match = logoMap.get(key)
   if (!match) {
     for (const [k, v] of logoMap) {
@@ -256,7 +260,9 @@ const lookupLogoViaVesselSearch = async (page, vesselname) => {
       const cruiseLineLink = Array.from(
         document.querySelectorAll('a[href*="/cruise-lines/"]'),
       ).find(
-        (a) => shipLink.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING,
+        (a) =>
+          shipLink.compareDocumentPosition(a) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
       )
       return cruiseLineLink?.getAttribute("href") ?? null
     })
@@ -302,7 +308,6 @@ const updateExistingLogos = async () => {
       if (vessel) {
         logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
       }
-
     }
 
     if (logoUrl) {
@@ -314,37 +319,6 @@ const updateExistingLogos = async () => {
   }
 
   await searchPage.close()
-}
-
-// -------------------------------------------------------
-// Upgrade vesselpositions in-place if it was created with the
-// old NUMERIC/INTEGER types or is missing the geom column.
-// Safe to run on every startup — each step is idempotent.
-// -------------------------------------------------------
-const migrateVesselPositions = async () => {
-  const cols = await getDb().all(
-    `SELECT column_name, data_type
-     FROM information_schema.columns
-     WHERE table_name = 'vesselpositions'`,
-  )
-  const colMap = Object.fromEntries(cols.map((c) => [c.column_name, c.data_type]))
-
-  if (colMap.sog === "numeric") {
-    await getDb().run(`ALTER TABLE vesselpositions
-      ALTER COLUMN sog     TYPE DOUBLE PRECISION,
-      ALTER COLUMN cog     TYPE DOUBLE PRECISION`)
-  }
-  if (colMap.heading === "integer") {
-    await getDb().run(`ALTER TABLE vesselpositions
-      ALTER COLUMN heading TYPE DOUBLE PRECISION`)
-  }
-  if (!colMap.geom) {
-    await getDb().run(`ALTER TABLE vesselpositions ADD COLUMN geom geometry(Point, 4326)`)
-    await getDb().run(`
-      UPDATE vesselpositions
-      SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)
-      WHERE latitude IS NOT NULL AND longitude IS NOT NULL`)
-  }
 }
 
 // -------------------------------------------------------
@@ -380,7 +354,6 @@ const prepareBelfastScheduleTable = async () => {
   await getDb().run(`
     CREATE INDEX IF NOT EXISTS idx_vesselpositions_geom ON vesselpositions USING GIST(geom)
   `)
-  await migrateVesselPositions()
 
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
@@ -397,8 +370,12 @@ const prepareBelfastScheduleTable = async () => {
       importedat      TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `)
-  await getDb().run(`CREATE INDEX idx_bhcs_eta      ON belfastharbour_cruise_schedule(vesseleta)`)
-  await getDb().run(`CREATE INDEX idx_bhcs_vesselid ON belfastharbour_cruise_schedule(vesselid)`)
+  await getDb().run(
+    `CREATE INDEX idx_bhcs_eta      ON belfastharbour_cruise_schedule(vesseleta)`,
+  )
+  await getDb().run(
+    `CREATE INDEX idx_bhcs_vesselid ON belfastharbour_cruise_schedule(vesselid)`,
+  )
   console.log("Tables ready for import")
 }
 
@@ -469,28 +446,12 @@ export const importBelfastScheduleFromPdf = async () => {
   const modDate = parsePdfDate(infoResult.info?.ModDate)
   console.log("PDF ModDate:", modDate)
 
-  // If the vessels table doesn't exist yet, or the schedule table uses the old
-  // schema (no vesselid FK column), rebuild tables and force a fresh import.
-  const needsMigration = await getDb().get(
-    `SELECT 1 FROM information_schema.tables
-     WHERE table_schema = 'public' AND table_name = 'vessels'
-     HAVING COUNT(*) = 0`,
-  ).then((r) => !r).catch(() => true)
-    || await getDb().get(
-      `SELECT 1 FROM information_schema.columns
-       WHERE table_name = 'belfastharbour_cruise_schedule' AND column_name = 'vesselid'`,
-    ).then((r) => !r).catch(() => true)
-
-  if (needsMigration) {
-    console.log("Migrating to vessels/schedule schema — will reimport")
-    await prepareBelfastScheduleTable()
-  }
-
-  let lastKnownModDate = needsMigration ? null : await getLastPdfModDate()
+  const lastKnownModDate = await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
     console.log("Schedule unchanged — checking for missing logos and MMSI/IMO")
     await updateExistingLogos()
     await fetchMissingMMSIs()
+    console.log("Import complete — schedule unchanged")
     return { imported: false, modDate, rowCount: 0 }
   }
 
@@ -513,7 +474,10 @@ export const importBelfastScheduleFromPdf = async () => {
       if (searchCache.has(row.cruiseline)) {
         row.cruiselinelogo = searchCache.get(row.cruiseline)
       } else {
-        const logoUrl = await lookupLogoViaVesselSearch(searchPage, row.vesselname)
+        const logoUrl = await lookupLogoViaVesselSearch(
+          searchPage,
+          row.vesselname,
+        )
         searchCache.set(row.cruiseline, logoUrl)
         row.cruiselinelogo = logoUrl
       }
@@ -523,6 +487,7 @@ export const importBelfastScheduleFromPdf = async () => {
   await searchPage.close()
   await saveArrivals(arrivals, modDate)
   await fetchMissingMMSIs()
+  console.log("Import complete —", arrivals.length, "arrivals saved")
 
   return { imported: true, modDate, rowCount: arrivals.length }
 }
