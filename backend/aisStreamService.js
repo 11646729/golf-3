@@ -9,6 +9,21 @@ const RECONNECT_DELAY_MAX_MS = 30_000
 // Format: [[minLat, minLng], [maxLat, maxLng]]
 const BELFAST_REGION_BOX = [[51.0, -10.0], [56.0, 1.0]]
 
+let geoFilterEnabled = true
+let activeWs = null
+
+export function getGeoFilter() {
+  return geoFilterEnabled
+}
+
+export function setGeoFilter(enabled) {
+  geoFilterEnabled = enabled
+  console.log(`[AIS] Geographic filter ${enabled ? "enabled" : "disabled"} — reconnecting`)
+  if (activeWs && activeWs.readyState === WebSocket.OPEN) {
+    activeWs.close()
+  }
+}
+
 export async function startAISStream() {
   const db = new DatabaseAdapter()
   let reconnectDelay = RECONNECT_DELAY_INITIAL_MS
@@ -32,17 +47,19 @@ export async function startAISStream() {
     }
 
     const ws = new WebSocket(AIS_STREAM_URL)
+    activeWs = ws
 
     ws.on("open", () => {
-      console.log("[AIS] Connected to aisstream.io")
+      console.log(`[AIS] Connected to aisstream.io (geo filter: ${geoFilterEnabled ? "on" : "off"})`)
       reconnectDelay = RECONNECT_DELAY_INITIAL_MS
-      ws.send(
-        JSON.stringify({
-          APIKey: process.env.AISSTREAM_API_KEY,
-          BoundingBoxes: [BELFAST_REGION_BOX],
-          FiltersShipMMSI: mmsiList,
-        }),
-      )
+      const subscribeMsg = {
+        APIKey: process.env.AISSTREAM_API_KEY,
+        FiltersShipMMSI: mmsiList,
+      }
+      if (geoFilterEnabled) {
+        subscribeMsg.BoundingBoxes = [BELFAST_REGION_BOX]
+      }
+      ws.send(JSON.stringify(subscribeMsg))
     })
 
     ws.on("message", async (data) => {

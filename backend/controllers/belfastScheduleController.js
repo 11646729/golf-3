@@ -1,6 +1,7 @@
 import { importBelfastScheduleFromPdf } from "../belfastScheduleImport.js"
 import { DatabaseAdapter } from "../databaseUtilities.js"
 import { ensureLogoCached } from "../cruiseLineLogoCache.js"
+import { getGeoFilter, setGeoFilter } from "../aisStreamService.js"
 
 let db = null
 const getDb = () => {
@@ -26,6 +27,22 @@ export const getBelfastImportStatus = () => ({ ...belfastImportStatus })
 // -------------------------------------------------------
 export var index = async (req, res) => {
   res.status(200).send({ response: "Port Arrivals Catalog home page" })
+}
+
+// -------------------------------------------------------
+// AIS geographic filter toggle
+// -------------------------------------------------------
+export const getAisGeoFilter = (_req, res) => {
+  res.json({ geoFilterEnabled: getGeoFilter() })
+}
+
+export const setAisGeoFilter = (req, res) => {
+  const { enabled } = req.body
+  if (typeof enabled !== "boolean") {
+    return res.status(400).json({ error: "enabled must be a boolean" })
+  }
+  setGeoFilter(enabled)
+  res.json({ geoFilterEnabled: enabled })
 }
 
 // -------------------------------------------------------

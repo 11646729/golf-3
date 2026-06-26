@@ -13,6 +13,8 @@ import CardMedia from "@mui/material/CardMedia"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import Link from "@mui/material/Link"
+import Checkbox from "@mui/material/Checkbox"
+import FormControlLabel from "@mui/material/FormControlLabel"
 import Title from "./Title"
 import "../styles/cruisesmap.scss"
 
@@ -122,6 +124,21 @@ const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
   )
 
   const [selectedId, setSelectedId] = useState(null)
+  const [geoFilterEnabled, setGeoFilterEnabled] = useState(true)
+
+  const handleGeoFilterChange = async (e) => {
+    const enabled = e.target.checked
+    setGeoFilterEnabled(enabled)
+    try {
+      await fetch("http://localhost:4000/api/cruise/geoFilter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled }),
+      })
+    } catch (err) {
+      console.error("Failed to update geo filter:", err)
+    }
+  }
 
   const selectedPosition = useMemo(
     () => getSelectedPosition(validPositions, selectedId),
@@ -135,6 +152,16 @@ const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <div className="cruisesmaptitlecontainer">
         <Title>{CruiseMapTitle}</Title>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={geoFilterEnabled}
+              onChange={handleGeoFilterChange}
+              size="small"
+            />
+          }
+          label="Irish Sea region only"
+        />
       </div>
       {/* <div className="cruisesmapcontainer"> */}
       <Map

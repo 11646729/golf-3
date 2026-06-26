@@ -4,6 +4,8 @@ import {
   importBelfastSchedule,
   getBelfastSchedule,
   getBelfastImportStatus,
+  getAisGeoFilter,
+  setAisGeoFilter,
 } from "../controllers/belfastScheduleController.js"
 
 var cruiseRouter = express.Router()
@@ -24,5 +26,9 @@ cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
 
 // GET Belfast Harbour cruise schedule data
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
+
+// GET / POST AIS geographic filter state
+cruiseRouter.get("/geoFilter", getAisGeoFilter)
+cruiseRouter.post("/geoFilter", setAisGeoFilter)
 
 export default cruiseRouter
