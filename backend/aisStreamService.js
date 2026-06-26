@@ -24,8 +24,16 @@ export function setGeoFilter(enabled) {
   }
 }
 
-export async function startAISStream() {
+export async function startAISStream(io) {
   const db = new DatabaseAdapter()
+
+  try {
+    await db.run(`DELETE FROM vesselpositions`)
+    console.log("[AIS] Cleared stale vessel positions from previous session")
+  } catch (err) {
+    console.error("[AIS] Failed to clear vessel positions on startup:", err.message)
+  }
+
   let reconnectDelay = RECONNECT_DELAY_INITIAL_MS
 
   const connect = async () => {
@@ -73,6 +81,9 @@ export async function startAISStream() {
 
       if (msg.MessageType === "PositionReport") {
         const { MMSI, latitude, longitude, time_utc } = msg.MetaData
+        // aisstream.io sends Go time format: "2026-06-26 08:17:15.110794876 +0000 UTC"
+        // Strip the trailing " UTC" so PostgreSQL can parse it as timestamptz
+        const recordedat = time_utc ? new Date(time_utc.replace(" UTC", "")).toISOString() : new Date().toISOString()
         const report = msg.Message?.PositionReport ?? {}
         const sog       = report.Sog               ?? null
         const cog       = report.Cog               ?? null
@@ -93,10 +104,22 @@ export async function startAISStream() {
                heading    = EXCLUDED.heading,
                navstatus  = EXCLUDED.navstatus,
                geom       = EXCLUDED.geom`,
-            [time_utc, latitude, longitude, sog, cog, heading, navstatus, longitude, latitude, MMSI],
+            [recordedat, latitude, longitude, sog, cog, heading, navstatus, longitude, latitude, MMSI],
           )
           if (result.changes > 0) {
             console.log(`[AIS] Position updated — MMSI ${MMSI}: lat ${latitude}, lng ${longitude}`)
+            const vessel = await db.get(`SELECT vesselname FROM vessels WHERE mmsi = ?`, [MMSI])
+            io.emit("vesselPositionUpdated", {
+              mmsi: MMSI,
+              vesselname: vessel?.vesselname ?? null,
+              lat: latitude,
+              lng: longitude,
+              sog,
+              cog,
+              heading,
+              navstatus,
+              recordedat,
+            })
           }
         } catch (err) {
           console.error(`[AIS] DB update failed for MMSI ${MMSI}:`, err.message)

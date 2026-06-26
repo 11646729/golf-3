@@ -8,6 +8,7 @@ const getDb = () => {
 }
 
 const VF_BASE = "https://www.vesselfinder.com"
+const CM_BASE = "https://www.cruisemapper.com"
 const LENGTH_TOLERANCE_M = 10
 const POLITENESS_MS = 2000
 
@@ -141,6 +142,131 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
   } catch (err) {
     console.warn(`[VF] Scrape failed for "${vesselname}":`, err.message)
     return { mmsi: 0, imo: 0 }
+  }
+}
+
+// -------------------------------------------------------
+// CruiseMapper position scraping
+// -------------------------------------------------------
+// CruiseMapper embeds position data in every vessel detail page inside
+// a `var options = { ... "shipCurrentPositionMap": { "lat": N, "lon": N, ... } ... }`
+// script block.  The full ship list is returned as JSON when /ships loads,
+// so we intercept that response to resolve vessel name → URL, then navigate
+// to the vessel page and pull the coordinates out of the inline script.
+
+const extractShipCurrentPositionMap = async (page) => {
+  return page.evaluate(() => {
+    for (const s of document.querySelectorAll("script:not([src])")) {
+      const m = s.textContent.match(/"shipCurrentPositionMap"\s*:\s*(\{[^}]+\})/)
+      if (m) {
+        try { return JSON.parse(m[1]) } catch { return null }
+      }
+    }
+    return null
+  })
+}
+
+const scrapePositionFromCruiseMapper = async (page, vesselname) => {
+  console.log(`[CM] Searching for "${vesselname}" on CruiseMapper`)
+
+  // The /ships page auto-loads a full ship-list JSON (/ship/search.json).
+  // Intercept it to find the vessel URL without having to interact with JS UI.
+  let vesselUrl = null
+
+  const onResponse = async (response) => {
+    if (!response.url().includes("ship/search.json")) return
+    try {
+      const body = await response.text()
+      if (!body) return
+      const list = JSON.parse(body)
+      const lc = vesselname.toLowerCase()
+      const match = list.find((s) => s.name?.toLowerCase().includes(lc))
+      if (match) vesselUrl = match.url
+    } catch { /* ignore parse errors */ }
+  }
+
+  page.on("response", onResponse)
+  await page.goto(`${CM_BASE}/ships`, { waitUntil: "networkidle2", timeout: 30000 })
+  page.off("response", onResponse)
+
+  if (!vesselUrl) {
+    console.log(`[CM] "${vesselname}" not found in CruiseMapper ship list`)
+    return null
+  }
+
+  console.log(`[CM] Found vessel page: ${vesselUrl}`)
+  await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
+
+  const posData = await extractShipCurrentPositionMap(page)
+
+  if (!posData || posData.lat == null || posData.lon == null) {
+    console.log(`[CM] No position data found for "${vesselname}"`)
+    return null
+  }
+
+  const lat = parseFloat(posData.lat)
+  const lng = parseFloat(posData.lon)   // CruiseMapper uses "lon"
+  const heading = posData.rotation != null ? parseFloat(posData.rotation) : null
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    console.log(`[CM] Invalid coordinates for "${vesselname}": ${posData.lat}, ${posData.lon}`)
+    return null
+  }
+
+  console.log(`[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`)
+  return { lat, lng, heading }
+}
+
+// Scrape current position for a named vessel from CruiseMapper and save it to the
+// vesselpositions table. Emits vesselPositionUpdated via Socket.IO when successful.
+export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
+  const browser = await getBrowser()
+  const page = await browser.newPage()
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  )
+
+  try {
+    const coords = await scrapePositionFromCruiseMapper(page, vesselname)
+    if (!coords) return { success: false, reason: "Position not found on CruiseMapper" }
+
+    const { lat, lng, heading } = coords
+    const recordedat = new Date().toISOString()
+
+    const result = await getDb().run(
+      `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, heading, geom)
+       SELECT vesselid, ?, ?, ?, ?, ST_SetSRID(ST_MakePoint(?, ?), 4326)
+       FROM vessels WHERE UPPER(vesselname) = UPPER(?)
+       ON CONFLICT (vesselid) DO UPDATE SET
+         recordedat = EXCLUDED.recordedat,
+         latitude   = EXCLUDED.latitude,
+         longitude  = EXCLUDED.longitude,
+         heading    = EXCLUDED.heading,
+         geom       = EXCLUDED.geom`,
+      [recordedat, lat, lng, heading, lng, lat, vesselname],
+    )
+
+    if (result.changes > 0 && io) {
+      const vessel = await getDb().get(
+        `SELECT mmsi FROM vessels WHERE UPPER(vesselname) = UPPER(?)`,
+        [vesselname],
+      )
+      io.emit("vesselPositionUpdated", {
+        mmsi: vessel?.mmsi ?? null,
+        vesselname,
+        lat,
+        lng,
+        sog: null,
+        cog: null,
+        heading,
+        navstatus: null,
+        recordedat,
+      })
+    }
+
+    return { success: true, lat, lng }
+  } finally {
+    await page.close()
   }
 }
 

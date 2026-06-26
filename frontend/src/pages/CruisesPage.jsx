@@ -1,4 +1,5 @@
-import { useState, useEffect /*, useRef*/ } from "react"
+import { useState, useEffect, useCallback } from "react"
+import socketIOClient from "socket.io-client"
 import CruisesTable from "../components/CruisesTable"
 import CruisesMap from "../components/CruisesMap"
 import CruisesImportButton from "../components/CruisesImportButton"
@@ -6,8 +7,11 @@ import {
   importBelfastScheduleHandler,
   pollBelfastImportStatus,
   getBelfastScheduleData,
+  getVesselPositionsData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
 import "../styles/cruises.scss"
+
+const POSITION_POLL_INTERVAL_MS = 30_000
 
 // -------------------------------------------------------
 // React Controller component
@@ -39,8 +43,39 @@ const CruisesPage = () => {
       })
   }
 
+  const loadVesselPositions = useCallback(() => {
+    getVesselPositionsData()
+      .then((returnedData) => setVesselPositions(returnedData.data ?? []))
+      .catch((err) => console.error("Vessel positions fetch failed:", err))
+  }, [])
+
   useEffect(() => {
     loadScheduleData()
+  }, [])
+
+  useEffect(() => {
+    loadVesselPositions()
+    const interval = setInterval(loadVesselPositions, POSITION_POLL_INTERVAL_MS)
+    return () => clearInterval(interval)
+  }, [loadVesselPositions])
+
+  useEffect(() => {
+    const socket = socketIOClient(import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL, {
+      autoConnect: false,
+    })
+    socket.connect()
+
+    socket.on("vesselPositionUpdated", (position) => {
+      setVesselPositions((prev) => {
+        const idx = prev.findIndex((p) => Number(p.mmsi) === Number(position.mmsi))
+        if (idx === -1) return [...prev, position]
+        const next = [...prev]
+        next[idx] = position
+        return next
+      })
+    })
+
+    return () => socket.disconnect()
   }, [])
 
   const handleBelfastFetch = async () => {
@@ -72,7 +107,10 @@ const CruisesPage = () => {
       />
       <div className="cruisescontainer">
         <div className="cruisestablecontainer">
-          <CruisesTable portArrivals={portArrivals} />
+          <CruisesTable
+            portArrivals={portArrivals}
+            vesselPositions={vesselPositions}
+          />
         </div>
         <div className="cruisesmapcontainer">
           <CruisesMap

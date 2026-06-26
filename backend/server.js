@@ -7,7 +7,7 @@ import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
 import { createDatabaseAdapter } from "./databaseUtilities.js"
 import { createVehiclePositionsTable } from "./controllers/rtGtfsController.js"
-// import { startAISStream } from "./aisStreamService.js"
+import { startAISStream } from "./aisStreamService.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
@@ -79,6 +79,9 @@ const io = new Server(httpServer, {
   },
 })
 
+// Make io available to controllers via req.app.get("io")
+app.set("io", io)
+
 // -----------------------------------------------------
 // Enable Realtime data sending system
 enableRealtimeData(io) // Socket.io system
@@ -96,7 +99,7 @@ createDatabaseAdapter()
         console.log("Server running on port: " + port)
       }
     })
-    // startAISStream()
+    startAISStream(io)
   })
   .catch((err) => {
     console.error("Failed to connect to database:", err.message)

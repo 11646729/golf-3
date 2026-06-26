@@ -76,4 +76,19 @@ export const getBelfastScheduleData = async () => {
     })
 }
 
+// -------------------------------------------------------
+// Function to fetch current AIS vessel positions
+// -------------------------------------------------------
+export const getVesselPositionsData = async () => {
+  const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
+
+  return await axios
+    .get("http://localhost:4000/api/cruise/vesselPositions", config)
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error("getVesselPositionsData error:", err?.message || err)
+      throw err
+    })
+}
+
 // export { getPortArrivalsData as default }
