@@ -14,7 +14,6 @@ import TransportRoutesPage from "../pages/TransportRoutesPage"
 import SeismicArrayDesignPage from "../pages/SeismicArrayDesignPage"
 import Seismic3DRadialDisplayPage from "../pages/Seismic3DRadialDisplayPage"
 import RealTimeHomePage from "../pages/RealTimePage"
-import GamePage from "../pages/GamePage"
 
 import "../styles/global.scss"
 
@@ -79,10 +78,6 @@ const router = createBrowserRouter([
       {
         path: "/seismic3dradialdisplaypage",
         element: <Seismic3DRadialDisplayPage />,
-      },
-      {
-        path: "/gamepage",
-        element: <GamePage />,
       },
       {
         path: "*",

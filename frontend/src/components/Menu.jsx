@@ -110,18 +110,6 @@ const menu = [
     ],
   },
   {
-    id: 9,
-    title: "Games",
-    listItems: [
-      {
-        id: 1,
-        title: "Space Invaders",
-        url: "/gamepage",
-        icon: "/static/images/home.svg",
-      },
-    ],
-  },
-  {
     id: 8,
     title: "Maintenance",
     listItems: [
