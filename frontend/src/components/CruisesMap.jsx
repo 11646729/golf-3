@@ -202,10 +202,10 @@ const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
               )}
               <CardContent>
                 <Typography gutterBottom variant="h6" component="h3">
-                  {vesselDetails.find(
-                    (d) => d.vesselnameurl === selectedPosition.vesselUrl,
-                  )?.vesselname ??
-                    selectedPosition.vesselName ??
+                  {selectedPosition.vesselname ??
+                    vesselDetails.find(
+                      (d) => Number(d.mmsi) === Number(selectedPosition.mmsi),
+                    )?.vesselname ??
                     "Vessel"}
                 </Typography>
                 {selectedPosition.timestamp ? (
