@@ -338,6 +338,10 @@ const prepareBelfastScheduleTable = async () => {
     )
   `)
 
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS yearofbuild INTEGER`)
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS speed TEXT`)
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS lastrefurbishment TEXT`)
+
   await getDb().run(`
     CREATE TABLE IF NOT EXISTS vesselpositions (
       vesselid   INTEGER PRIMARY KEY REFERENCES vessels(vesselid),
@@ -410,6 +414,16 @@ const saveArrivals = async (arrivals, pdfModDate) => {
     )
   }
   console.log(`${arrivals.length} rows saved to belfastharbour_cruise_schedule`)
+}
+
+// -------------------------------------------------------
+// Ensure the vessels table has the spec columns added in v1.1.
+// Safe to call on every startup — uses IF NOT EXISTS.
+// -------------------------------------------------------
+export const ensureVesselsSchema = async () => {
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS yearofbuild INTEGER`)
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS speed TEXT`)
+  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS lastrefurbishment TEXT`)
 }
 
 // -------------------------------------------------------

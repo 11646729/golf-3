@@ -136,7 +136,8 @@ export const getBelfastSchedule = async (req, res) => {
     const rows = await getDb().all(
       `SELECT s.portarrivalid, s.cruiselinelogo, s.vesseleta, s.vesseletd,
               s.cruiseline, s.berth, s.visitors, s.pdfmodifieddate, s.importedat,
-              v.vesselname, v.vessellengthmetre, v.mmsi, v.imo
+              v.vesselname, v.vessellengthmetre, v.mmsi, v.imo,
+              v.yearofbuild, v.speed, v.lastrefurbishment
        FROM belfastharbour_cruise_schedule s
        JOIN vessels v ON v.vesselid = s.vesselid
        WHERE s.vesseleta >= ? AND s.vesseleta < ?
@@ -158,7 +159,7 @@ export const getBelfastSchedule = async (req, res) => {
 
     res.json({ message: "success", data: rows })
   } catch (err) {
-    if (err.message?.includes("does not exist")) {
+    if (err.message?.includes('relation "belfastharbour_cruise_schedule" does not exist')) {
       return res.json({ message: "success", data: [] })
     }
     console.error("getBelfastSchedule error:", err.message)

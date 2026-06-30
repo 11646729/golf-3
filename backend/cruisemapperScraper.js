@@ -154,6 +154,28 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
 // so we intercept that response to resolve vessel name → URL, then navigate
 // to the vessel page and pull the coordinates out of the inline script.
 
+const extractVesselSpecs = async (page) => {
+  const raw = await page.evaluate(() => {
+    const result = {}
+    const targets = ["Year of build", "Speed", "Last Refurbishment"]
+    document.querySelectorAll("td, th").forEach((cell) => {
+      const label = cell.textContent.trim()
+      const match = targets.find((t) => label.toLowerCase() === t.toLowerCase())
+      if (!match) return
+      const next = cell.nextElementSibling
+      if (next) result[match] = next.textContent.trim()
+    })
+    return result
+  })
+
+  const yearRaw = raw["Year of build"]
+  return {
+    yearofbuild: yearRaw ? (parseInt(yearRaw) || null) : null,
+    speed: raw["Speed"] || null,
+    lastrefurbishment: raw["Last Refurbishment"] || null,
+  }
+}
+
 const extractShipCurrentPositionMap = async (page) => {
   return page.evaluate(() => {
     for (const s of document.querySelectorAll("script:not([src])")) {
@@ -197,7 +219,10 @@ const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   console.log(`[CM] Found vessel page: ${vesselUrl}`)
   await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
 
-  const posData = await extractShipCurrentPositionMap(page)
+  const [posData, specs] = await Promise.all([
+    extractShipCurrentPositionMap(page),
+    extractVesselSpecs(page),
+  ])
 
   if (!posData || posData.lat == null || posData.lon == null) {
     console.log(`[CM] No position data found for "${vesselname}"`)
@@ -214,7 +239,8 @@ const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   }
 
   console.log(`[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`)
-  return { lat, lng, heading }
+  console.log(`[CM] "${vesselname}" specs: year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`)
+  return { lat, lng, heading, specs }
 }
 
 // Scrape current position for a named vessel from CruiseMapper and save it to the
@@ -230,8 +256,19 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
     const coords = await scrapePositionFromCruiseMapper(page, vesselname)
     if (!coords) return { success: false, reason: "Position not found on CruiseMapper" }
 
-    const { lat, lng, heading } = coords
+    const { lat, lng, heading, specs } = coords
     const recordedat = new Date().toISOString()
+
+    if (specs.yearofbuild != null || specs.speed != null || specs.lastrefurbishment != null) {
+      await getDb().run(
+        `UPDATE vessels
+         SET yearofbuild = COALESCE(?, yearofbuild),
+             speed = COALESCE(?, speed),
+             lastrefurbishment = COALESCE(?, lastrefurbishment)
+         WHERE UPPER(vesselname) = UPPER(?)`,
+        [specs.yearofbuild, specs.speed, specs.lastrefurbishment, vesselname],
+      )
+    }
 
     const result = await getDb().run(
       `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, heading, geom)

@@ -19,6 +19,8 @@ export default defineConfig({
   server: {
     // this ensures that the browser opens upon server start
     open: true,
+    // use Safari instead of the OS default picker
+    browser: "safari",
     // this sets a default port to 3000
     port: 3000,
   },
