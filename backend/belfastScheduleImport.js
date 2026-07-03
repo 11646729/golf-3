@@ -1,7 +1,7 @@
 import { PDFParse } from "pdf-parse"
 import { DatabaseAdapter } from "./databaseUtilities.js"
 import { getBrowser } from "./puppeteerBrowser.js"
-import { fetchAndSaveVesselMMSIs } from "./cruisemapperScraper.js"
+import { fetchAndSaveVesselMMSIs, fetchAndSaveVesselSpecs } from "./cruisemapperScraper.js"
 
 const CRUISE_SCHEDULE_PAGE =
   "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
@@ -148,6 +148,24 @@ const fetchMissingMMSIs = async () => {
   if (vessels.length > 0) {
     console.log(`[MMSI] ${vessels.length} vessel(s) need MMSI/IMO lookup`)
     await fetchAndSaveVesselMMSIs(vessels)
+  }
+}
+
+// -------------------------------------------------------
+// Scrape build year / speed / last-refurbishment specs from CruiseMapper for
+// any vessel still missing them. Gated on speed/yearofbuild (always present on
+// CruiseMapper) so vessels with no listed refurbishment aren't re-scraped every run.
+// -------------------------------------------------------
+const fetchMissingSpecs = async () => {
+  const vessels = await getDb().all(
+    `SELECT vesselname
+     FROM vessels
+     WHERE speed IS NULL OR yearofbuild IS NULL
+     ORDER BY vesselname`,
+  )
+  if (vessels.length > 0) {
+    console.log(`[CM] ${vessels.length} vessel(s) need specs lookup`)
+    await fetchAndSaveVesselSpecs(vessels)
   }
 }
 
@@ -465,6 +483,7 @@ export const importBelfastScheduleFromPdf = async () => {
     console.log("Schedule unchanged — checking for missing logos and MMSI/IMO")
     await updateExistingLogos()
     await fetchMissingMMSIs()
+    await fetchMissingSpecs()
     console.log("Import complete — schedule unchanged")
     return { imported: false, modDate, rowCount: 0 }
   }
@@ -501,6 +520,7 @@ export const importBelfastScheduleFromPdf = async () => {
   await searchPage.close()
   await saveArrivals(arrivals, modDate)
   await fetchMissingMMSIs()
+  await fetchMissingSpecs()
   console.log("Import complete —", arrivals.length, "arrivals saved")
 
   return { imported: true, modDate, rowCount: arrivals.length }

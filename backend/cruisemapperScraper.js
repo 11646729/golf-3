@@ -188,22 +188,19 @@ const extractShipCurrentPositionMap = async (page) => {
   })
 }
 
-const scrapePositionFromCruiseMapper = async (page, vesselname) => {
-  console.log(`[CM] Searching for "${vesselname}" on CruiseMapper`)
-
-  // The /ships page auto-loads a full ship-list JSON (/ship/search.json).
-  // Intercept it to find the vessel URL without having to interact with JS UI.
-  let vesselUrl = null
+// Load CruiseMapper's full ship-list JSON (/ship/search.json), which the /ships
+// page auto-loads, by intercepting that response. Returns the parsed array (or
+// []). Fetch this ONCE and reuse it: a second navigation to /ships serves the
+// JSON from cache and never fires the response event, so per-vessel navigation
+// would silently find nothing for every vessel after the first.
+const fetchShipList = async (page) => {
+  let list = []
 
   const onResponse = async (response) => {
     if (!response.url().includes("ship/search.json")) return
     try {
       const body = await response.text()
-      if (!body) return
-      const list = JSON.parse(body)
-      const lc = vesselname.toLowerCase()
-      const match = list.find((s) => s.name?.toLowerCase().includes(lc))
-      if (match) vesselUrl = match.url
+      if (body) list = JSON.parse(body)
     } catch { /* ignore parse errors */ }
   }
 
@@ -211,6 +208,35 @@ const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   await page.goto(`${CM_BASE}/ships`, { waitUntil: "networkidle2", timeout: 30000 })
   page.off("response", onResponse)
 
+  return list
+}
+
+// Collapse a name to lowercase alphanumerics so punctuation, spacing and case
+// differences don't block a match ("Azamara Quest" ≈ "AZAMARA QUEST").
+const normalizeName = (name) => (name || "").toLowerCase().replace(/[^a-z0-9]+/g, "")
+
+// Find a vessel's detail-page URL in a fetched ship list. Prefers an exact
+// normalized match, then falls back to a CruiseMapper name that *contains* the
+// target (handles operator prefixes, e.g. "Fred Olsen Balmoral" for "BALMORAL"),
+// choosing the shortest such name as the most specific candidate.
+const findVesselUrl = (list, vesselname) => {
+  const target = normalizeName(vesselname)
+  if (!target) return null
+
+  const exact = list.find((s) => normalizeName(s.name) === target)
+  if (exact) return exact.url
+
+  const contains = list
+    .filter((s) => normalizeName(s.name).includes(target))
+    .sort((a, b) => normalizeName(a.name).length - normalizeName(b.name).length)
+  return contains[0]?.url ?? null
+}
+
+const scrapePositionFromCruiseMapper = async (page, vesselname) => {
+  console.log(`[CM] Searching for "${vesselname}" on CruiseMapper`)
+
+  const shipList = await fetchShipList(page)
+  const vesselUrl = findVesselUrl(shipList, vesselname)
   if (!vesselUrl) {
     console.log(`[CM] "${vesselname}" not found in CruiseMapper ship list`)
     return null
@@ -259,16 +285,7 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
     const { lat, lng, heading, specs } = coords
     const recordedat = new Date().toISOString()
 
-    if (specs.yearofbuild != null || specs.speed != null || specs.lastrefurbishment != null) {
-      await getDb().run(
-        `UPDATE vessels
-         SET yearofbuild = COALESCE(?, yearofbuild),
-             speed = COALESCE(?, speed),
-             lastrefurbishment = COALESCE(?, lastrefurbishment)
-         WHERE UPPER(vesselname) = UPPER(?)`,
-        [specs.yearofbuild, specs.speed, specs.lastrefurbishment, vesselname],
-      )
-    }
+    await saveVesselSpecs(vesselname, specs)
 
     const result = await getDb().run(
       `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, heading, geom)
@@ -305,6 +322,68 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
   } finally {
     await page.close()
   }
+}
+
+// Persist scraped specs to the vessels table. COALESCE keeps existing values
+// when a field scrapes as null, so a partial scrape never wipes good data.
+// Returns the number of rows updated.
+const saveVesselSpecs = async (vesselname, specs) => {
+  if (specs.yearofbuild == null && specs.speed == null && specs.lastrefurbishment == null) {
+    return 0
+  }
+  const { changes } = await getDb().run(
+    `UPDATE vessels
+     SET yearofbuild = COALESCE(?, yearofbuild),
+         speed = COALESCE(?, speed),
+         lastrefurbishment = COALESCE(?, lastrefurbishment)
+     WHERE UPPER(vesselname) = UPPER(?)`,
+    [specs.yearofbuild, specs.speed, specs.lastrefurbishment, vesselname],
+  )
+  return changes
+}
+
+// Scrape build year / speed / last-refurbishment for the given vessels from
+// CruiseMapper and save them to the vessels table. Independent of position data,
+// so specs are saved even when a vessel has no current position on CruiseMapper.
+export const fetchAndSaveVesselSpecs = async (vessels) => {
+  if (!vessels || vessels.length === 0) return
+
+  console.log(`[CM] Fetching specs for ${vessels.length} vessel(s)`)
+
+  const browser = await getBrowser()
+  const page = await browser.newPage()
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  )
+
+  try {
+    // Fetch the ship list once — a repeat /ships navigation is served from cache
+    // and never re-fires the search.json response we depend on.
+    const shipList = await fetchShipList(page)
+
+    for (const { vesselname } of vessels) {
+      try {
+        const vesselUrl = findVesselUrl(shipList, vesselname)
+        if (!vesselUrl) {
+          console.log(`[CM] "${vesselname}" not found in CruiseMapper ship list`)
+          continue
+        }
+        await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
+        const specs = await extractVesselSpecs(page)
+        const changes = await saveVesselSpecs(vesselname, specs)
+        console.log(
+          `[CM] "${vesselname}" specs saved (${changes} row): year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`,
+        )
+      } catch (err) {
+        console.error(`[CM] specs scrape failed for "${vesselname}":`, err?.message || err)
+      }
+      await sleep(POLITENESS_MS)
+    }
+  } finally {
+    await page.close()
+  }
+
+  console.log("[CM] Specs fetch complete")
 }
 
 export const fetchAndSaveVesselMMSIs = async (vessels) => {
