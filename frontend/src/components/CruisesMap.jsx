@@ -118,9 +118,20 @@ const getSelectedPosition = (positions, markerId) =>
 
 // isLoading prop removed — map renders immediately with whatever positions are available
 const CruisesMap = ({ vesselPositions = [], vesselDetails = [] }) => {
+  // Only show vessels that appear in the arrivals table (due within the next
+  // 3 months). vesselDetails is the same port-arrivals list the CruisesTable
+  // renders, so matching on mmsi keeps the map and table in sync.
+  const arrivingMmsis = useMemo(
+    () => new Set(vesselDetails.map((d) => Number(d.mmsi))),
+    [vesselDetails],
+  )
+
   const validPositions = useMemo(
-    () => normaliseVesselPositions(vesselPositions),
-    [vesselPositions],
+    () =>
+      normaliseVesselPositions(vesselPositions).filter((position) =>
+        arrivingMmsis.has(Number(position.mmsi)),
+      ),
+    [vesselPositions, arrivingMmsis],
   )
 
   const [selectedId, setSelectedId] = useState(null)
