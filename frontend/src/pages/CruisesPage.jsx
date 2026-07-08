@@ -60,14 +60,19 @@ const CruisesPage = () => {
   }, [loadVesselPositions])
 
   useEffect(() => {
-    const socket = socketIOClient(import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL, {
-      autoConnect: false,
-    })
+    const socket = socketIOClient(
+      import.meta.env.VITE_EXPRESS_SERVER_ENDPOINT_URL,
+      {
+        autoConnect: false,
+      },
+    )
     socket.connect()
 
     socket.on("vesselPositionUpdated", (position) => {
       setVesselPositions((prev) => {
-        const idx = prev.findIndex((p) => Number(p.mmsi) === Number(position.mmsi))
+        const idx = prev.findIndex(
+          (p) => Number(p.mmsi) === Number(position.mmsi),
+        )
         if (idx === -1) return [...prev, position]
         const next = [...prev]
         next[idx] = position
@@ -114,8 +119,8 @@ const CruisesPage = () => {
         </div>
         <div className="cruisesmapcontainer">
           <CruisesMap
+            portArrivals={portArrivals}
             vesselPositions={vesselPositions}
-            vesselDetails={portArrivals}
           />
         </div>
       </div>
