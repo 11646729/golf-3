@@ -90,5 +90,3 @@ export const getVesselPositionsData = async () => {
       throw err
     })
 }
-
-// export { getPortArrivalsData as default }
