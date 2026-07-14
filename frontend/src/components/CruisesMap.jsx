@@ -135,19 +135,42 @@ const CruisesMap = ({ portArrivals = [], vesselPositions = [] }) => {
   )
 
   const [selectedId, setSelectedId] = useState(null)
-  const [geoFilterEnabled, setGeoFilterEnabled] = useState(true)
+  const [geoFilterEnabled, setGeoFilterEnabled] = useState(false)
+
+  // The server owns the geo filter state; mirror it here so the checkbox
+  // reflects reality rather than a duplicated default.
+  useEffect(() => {
+    let cancelled = false
+    const loadGeoFilter = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/cruise/geoFilter")
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const { geoFilterEnabled: enabled } = await res.json()
+        if (!cancelled) setGeoFilterEnabled(Boolean(enabled))
+      } catch (err) {
+        console.error("Failed to load geo filter:", err)
+      }
+    }
+    loadGeoFilter()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const handleGeoFilterChange = async (e) => {
     const enabled = e.target.checked
+    const previous = geoFilterEnabled
     setGeoFilterEnabled(enabled)
     try {
-      await fetch("http://localhost:4000/api/cruise/geoFilter", {
+      const res = await fetch("http://localhost:4000/api/cruise/geoFilter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ enabled }),
       })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
     } catch (err) {
       console.error("Failed to update geo filter:", err)
+      setGeoFilterEnabled(previous)
     }
   }
 
