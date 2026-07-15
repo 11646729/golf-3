@@ -9,7 +9,7 @@ const RECONNECT_DELAY_MAX_MS = 30_000
 // Format: [[minLat, minLng], [maxLat, maxLng]]
 const BELFAST_REGION_BOX = [[51.0, -10.0], [56.0, 1.0]]
 
-let geoFilterEnabled = true
+let geoFilterEnabled = false
 let activeWs = null
 
 export function getGeoFilter() {
