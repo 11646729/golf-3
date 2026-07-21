@@ -43,14 +43,22 @@ const CruisesPage = () => {
       })
   }
 
+  // -------------------------------------------------------
+  // This is a React useEffect hook that runs once when the
+  // component first mounts. It calls loadScheduleData(),
+  // which fetches the Belfast cruise schedule / port arrivals data
+  // from the server (via getBelfastScheduleData()),
+  // populates the portArrivals state, and computes the most
+  // recent PDF modification date to set lastBelfastImportDate.
+  // -------------------------------------------------------
+  useEffect(() => {
+    loadScheduleData()
+  }, [])
+
   const loadVesselPositions = useCallback(() => {
     getVesselPositionsData()
       .then((returnedData) => setVesselPositions(returnedData.data ?? []))
       .catch((err) => console.error("Vessel positions fetch failed:", err))
-  }, [])
-
-  useEffect(() => {
-    loadScheduleData()
   }, [])
 
   useEffect(() => {
