@@ -7,7 +7,7 @@ import { Server } from "socket.io"
 import { enableRealtimeData } from "./enableRealtimeData.js"
 import { createDatabaseAdapter } from "./databaseUtilities.js"
 import { createVehiclePositionsTable } from "./controllers/rtGtfsController.js"
-import { ensureVesselsSchema } from "./belfastScheduleImport.js"
+import { ensureCruiseSchema } from "./belfastScheduleImport.js"
 import { startAISStream } from "./aisStreamService.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
@@ -92,7 +92,7 @@ enableRealtimeData(io) // Socket.io system
 // Connect to DB eagerly before accepting requests, then start server
 createDatabaseAdapter()
   .then(() => createVehiclePositionsTable())
-  .then(() => ensureVesselsSchema())
+  .then(() => ensureCruiseSchema())
   .then(() => {
     httpServer.listen(port, (err) => {
       if (err) {

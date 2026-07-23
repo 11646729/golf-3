@@ -295,14 +295,13 @@ const lookupLogoViaVesselSearch = async (page, vesselname) => {
 }
 
 // -------------------------------------------------------
-// Update cruiselinelogo for any rows in
-// belfastharbour_cruise_schedule that don't have one yet.
-// First tries the CruiseMapper directory; falls back to
-// searching by vessel name for unmatched cruise lines.
+// Fill in logo for any cruiselineinfo row that doesn't have one yet.
+// First tries the CruiseMapper directory; falls back to searching
+// CruiseMapper by the name of a vessel operated by that cruise line.
 // -------------------------------------------------------
-const updateExistingLogos = async () => {
+const updateMissingCruiseLineLogos = async () => {
   const rows = await getDb().all(
-    `SELECT DISTINCT cruiseline FROM belfastharbour_cruise_schedule WHERE cruiselinelogo IS NULL`,
+    `SELECT cruiselineid, name FROM cruiselineinfo WHERE logo IS NULL ORDER BY name`,
   )
   if (rows.length === 0) return
 
@@ -312,16 +311,16 @@ const updateExistingLogos = async () => {
   const browser = await getBrowser()
   const searchPage = await browser.newPage()
 
-  for (const { cruiseline } of rows) {
-    let logoUrl = resolveCruiseLineLogoUrl(cruiseline, logoMap)
+  for (const { cruiselineid, name } of rows) {
+    let logoUrl = resolveCruiseLineLogoUrl(name, logoMap)
 
     if (!logoUrl) {
       const vessel = await getDb().get(
         `SELECT v.vesselname
          FROM belfastharbour_cruise_schedule s
          JOIN vessels v ON v.vesselid = s.vesselid
-         WHERE s.cruiseline = ? LIMIT 1`,
-        [cruiseline],
+         WHERE s.cruiselineid = ? LIMIT 1`,
+        [cruiselineid],
       )
       if (vessel) {
         logoUrl = await lookupLogoViaVesselSearch(searchPage, vessel.vesselname)
@@ -330,8 +329,8 @@ const updateExistingLogos = async () => {
 
     if (logoUrl) {
       await getDb().run(
-        `UPDATE belfastharbour_cruise_schedule SET cruiselinelogo = ? WHERE cruiseline = ? AND cruiselinelogo IS NULL`,
-        [logoUrl, cruiseline],
+        `UPDATE cruiselineinfo SET logo = ? WHERE cruiselineid = ?`,
+        [logoUrl, cruiselineid],
       )
     }
   }
@@ -340,12 +339,52 @@ const updateExistingLogos = async () => {
 }
 
 // -------------------------------------------------------
-// Create supporting tables (vessels, vesselpositions) if they
-// don't exist, then drop and recreate the schedule table.
-// vessels and vesselpositions are never dropped — they persist
-// across imports so MMSI/IMO data and AIS positions are kept.
+// Earlier versions stored the cruise line name and logo directly on
+// belfastharbour_cruise_schedule. Copy any such values into cruiselineinfo
+// so logos already scraped survive the move to the new schema.
+// No-op once the legacy columns are gone.
 // -------------------------------------------------------
-const prepareBelfastScheduleTable = async () => {
+const migrateLegacyCruiseLineColumns = async () => {
+  const legacy = await getDb().get(
+    `SELECT 1 AS present
+     FROM information_schema.columns
+     WHERE table_schema = current_schema()
+       AND table_name = 'belfastharbour_cruise_schedule'
+       AND column_name = 'cruiseline'`,
+  )
+  if (!legacy) return
+
+  await getDb().run(`
+    INSERT INTO cruiselineinfo (name, logo)
+    SELECT cruiseline, MAX(cruiselinelogo)
+    FROM belfastharbour_cruise_schedule
+    GROUP BY cruiseline
+    ON CONFLICT (name) DO UPDATE SET logo = COALESCE(cruiselineinfo.logo, EXCLUDED.logo)
+  `)
+
+  // The legacy-shaped table has no cruiselineid, so every read of it would now
+  // fail. Its contents are rebuilt from the PDF on the next import — and it is
+  // already dropped and recreated on every import — so drop it here and let the
+  // schedule read return an empty list until that import runs.
+  await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
+  console.log("Migrated legacy cruise line columns into cruiselineinfo")
+}
+
+// -------------------------------------------------------
+// Create the supporting tables (cruiselineinfo, vessels, vesselpositions) and
+// bring them up to the current column set. These tables are never dropped —
+// they persist across imports so logos, MMSI/IMO data and AIS positions are
+// kept. Safe to call on every startup and before every import.
+// -------------------------------------------------------
+export const ensureCruiseSchema = async () => {
+  await getDb().run(`
+    CREATE TABLE IF NOT EXISTS cruiselineinfo (
+      cruiselineid SERIAL PRIMARY KEY,
+      name         TEXT NOT NULL UNIQUE,
+      logo         TEXT
+    )
+  `)
+
   await getDb().run(`
     CREATE TABLE IF NOT EXISTS vessels (
       vesselid          SERIAL PRIMARY KEY,
@@ -377,15 +416,24 @@ const prepareBelfastScheduleTable = async () => {
     CREATE INDEX IF NOT EXISTS idx_vesselpositions_geom ON vesselpositions USING GIST(geom)
   `)
 
+  await migrateLegacyCruiseLineColumns()
+}
+
+// -------------------------------------------------------
+// Ensure the supporting tables exist, then drop and recreate
+// the schedule table.
+// -------------------------------------------------------
+const prepareBelfastScheduleTable = async () => {
+  await ensureCruiseSchema()
+
   await getDb().run(`DROP TABLE IF EXISTS belfastharbour_cruise_schedule`)
   await getDb().run(`
     CREATE TABLE belfastharbour_cruise_schedule (
       portarrivalid   SERIAL PRIMARY KEY,
       vesselid        INTEGER     NOT NULL REFERENCES vessels(vesselid),
-      cruiselinelogo  TEXT,
+      cruiselineid    INTEGER     NOT NULL REFERENCES cruiselineinfo(cruiselineid),
       vesseleta       TIMESTAMPTZ NOT NULL,
       vesseletd       TIMESTAMPTZ NOT NULL,
-      cruiseline      TEXT        NOT NULL,
       berth           TEXT,
       visitors        INTEGER,
       pdfmodifieddate TIMESTAMPTZ,
@@ -393,17 +441,22 @@ const prepareBelfastScheduleTable = async () => {
     )
   `)
   await getDb().run(
-    `CREATE INDEX idx_bhcs_eta      ON belfastharbour_cruise_schedule(vesseleta)`,
+    `CREATE INDEX idx_bhcs_eta          ON belfastharbour_cruise_schedule(vesseleta)`,
   )
   await getDb().run(
-    `CREATE INDEX idx_bhcs_vesselid ON belfastharbour_cruise_schedule(vesselid)`,
+    `CREATE INDEX idx_bhcs_vesselid     ON belfastharbour_cruise_schedule(vesselid)`,
+  )
+  await getDb().run(
+    `CREATE INDEX idx_bhcs_cruiselineid ON belfastharbour_cruise_schedule(cruiselineid)`,
   )
   console.log("Tables ready for import")
 }
 
 // -------------------------------------------------------
-// Insert parsed rows into vessels (upsert) and schedule table.
-// Upserting vessels preserves existing MMSI/IMO across imports.
+// Insert parsed rows into cruiselineinfo (upsert), vessels (upsert) and the
+// schedule table. Upserting preserves existing logos and MMSI/IMO across
+// imports. The no-op DO UPDATE is what makes RETURNING yield the existing id
+// when the row is already there.
 // -------------------------------------------------------
 const saveArrivals = async (arrivals, pdfModDate) => {
   for (const row of arrivals) {
@@ -415,16 +468,23 @@ const saveArrivals = async (arrivals, pdfModDate) => {
       [row.vesselname, row.vessellengthmetre],
     )
 
+    const cruiseLine = await getDb().get(
+      `INSERT INTO cruiselineinfo (name)
+       VALUES (?)
+       ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+       RETURNING cruiselineid`,
+      [row.cruiseline],
+    )
+
     await getDb().run(
       `INSERT INTO belfastharbour_cruise_schedule
-         (vesselid, cruiselinelogo, vesseleta, vesseletd, cruiseline, berth, visitors, pdfmodifieddate)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (vesselid, cruiselineid, vesseleta, vesseletd, berth, visitors, pdfmodifieddate)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         vessel.vesselid,
-        row.cruiselinelogo ?? null,
+        cruiseLine.cruiselineid,
         row.vesseleta,
         row.vesseletd,
-        row.cruiseline,
         row.berth,
         row.visitors,
         pdfModDate?.toISOString() ?? null,
@@ -432,16 +492,6 @@ const saveArrivals = async (arrivals, pdfModDate) => {
     )
   }
   console.log(`${arrivals.length} rows saved to belfastharbour_cruise_schedule`)
-}
-
-// -------------------------------------------------------
-// Ensure the vessels table has the spec columns added in v1.1.
-// Safe to call on every startup — uses IF NOT EXISTS.
-// -------------------------------------------------------
-export const ensureVesselsSchema = async () => {
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS yearofbuild INTEGER`)
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS speed TEXT`)
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS lastrefurbishment TEXT`)
 }
 
 // -------------------------------------------------------
@@ -481,7 +531,7 @@ export const importBelfastScheduleFromPdf = async () => {
   const lastKnownModDate = await getLastPdfModDate()
   if (lastKnownModDate && modDate <= lastKnownModDate) {
     console.log("Schedule unchanged — checking for missing logos and MMSI/IMO")
-    await updateExistingLogos()
+    await updateMissingCruiseLineLogos()
     await fetchMissingMMSIs()
     await fetchMissingSpecs()
     console.log("Import complete — schedule unchanged")
@@ -494,31 +544,10 @@ export const importBelfastScheduleFromPdf = async () => {
 
   await prepareBelfastScheduleTable()
 
-  const logoMap = await scrapeLogoMapFromCruiseMapper()
-
-  const browser = await getBrowser()
-  const searchPage = await browser.newPage()
-  const searchCache = new Map()
-
-  for (const row of arrivals) {
-    row.cruiselinelogo = resolveCruiseLineLogoUrl(row.cruiseline, logoMap)
-
-    if (!row.cruiselinelogo) {
-      if (searchCache.has(row.cruiseline)) {
-        row.cruiselinelogo = searchCache.get(row.cruiseline)
-      } else {
-        const logoUrl = await lookupLogoViaVesselSearch(
-          searchPage,
-          row.vesselname,
-        )
-        searchCache.set(row.cruiseline, logoUrl)
-        row.cruiselinelogo = logoUrl
-      }
-    }
-  }
-
-  await searchPage.close()
+  // Saving first gives updateMissingCruiseLineLogos schedule rows to fall back
+  // on when a cruise line has to be looked up by one of its vessel names.
   await saveArrivals(arrivals, modDate)
+  await updateMissingCruiseLineLogos()
   await fetchMissingMMSIs()
   await fetchMissingSpecs()
   console.log("Import complete —", arrivals.length, "arrivals saved")
