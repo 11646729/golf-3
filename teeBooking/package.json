@@ -15,7 +15,8 @@
     "protobufjs": "8.4.0",
     "ws": "8.21.0",
     "picomatch": ">=2.3.2",
-    "ip-address": ">=10.2.0"
+    "ip-address": ">=10.2.0",
+    "js-yaml": "4.3.0"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
