@@ -21,13 +21,13 @@ cruiseRouter.get("/", index)
 // POST trigger import of Belfast Harbour cruise schedule PDF
 cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 
+// GET Belfast Harbour cruise schedule data
+cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
+
 // GET current Belfast import job status (for frontend polling)
 cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
   res.json(getBelfastImportStatus()),
 )
-
-// GET Belfast Harbour cruise schedule data
-cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
 
 // GET current AIS vessel positions
 cruiseRouter.get("/vesselPositions", getVesselPositions)
