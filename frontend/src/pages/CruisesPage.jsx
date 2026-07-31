@@ -5,7 +5,7 @@ import CruisesMap from "../components/CruisesMap"
 import CruisesImportButton from "../components/CruisesImportButton"
 import {
   importBelfastScheduleHandler,
-  pollBelfastImportStatus,
+  getBelfastImportStatus,
   getBelfastScheduleData,
   getVesselPositionsData,
 } from "../functionHandlers/loadCruiseShipArrivalsDataHandler"
@@ -94,7 +94,7 @@ const CruisesPage = () => {
   // -------------------------------------------------------
   // This is a function that imports the Belfast vessel schedule if the import button is clicked.
   // It sets the belfastFetchStatus to "loading", calls importBelfastScheduleHandler(),
-  // and then polls the import status using pollBelfastImportStatus(). If the import is successful,
+  // and then polls the import status using getBelfastImportStatus(). If the import is successful,
   // it updates the lastBelfastImportDate and sets the belfastFetchStatus to "complete".
   // If there is an error, it sets the belfastErrorMessage and belfastFetchStatus to "error".
   // -------------------------------------------------------
@@ -103,7 +103,7 @@ const CruisesPage = () => {
     setBelfastErrorMessage(null)
     try {
       await importBelfastScheduleHandler()
-      const { promise } = pollBelfastImportStatus(() => {})
+      const { promise } = getBelfastImportStatus(() => {})
       const result = await promise
       if (result.modDate) {
         setLastBelfastImportDate(new Date(result.modDate))

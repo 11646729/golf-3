@@ -8,7 +8,7 @@ const DEFAULT_HEADERS = { "Content-Type": "application/json" }
 // reaches "complete" or "error". Returns { promise, cancel }.
 // onUpdate(statusObject) is called on every successful poll response.
 // -------------------------------------------------------
-export const pollBelfastImportStatus = (onUpdate) => {
+export const getBelfastImportStatus = (onUpdate) => {
   let cancelled = false
   let timeoutId = null
 
@@ -47,7 +47,7 @@ export const pollBelfastImportStatus = (onUpdate) => {
 
 // -------------------------------------------------------
 // Function to trigger Belfast Harbour Cruise Schedule import.
-// Responds immediately with 202; use pollBelfastImportStatus to wait for completion.
+// Responds immediately with 202; use importBelfastSchedule to wait for completion.
 // -------------------------------------------------------
 export const importBelfastScheduleHandler = async () => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
