@@ -91,6 +91,13 @@ const CruisesPage = () => {
     return () => socket.disconnect()
   }, [])
 
+  // -------------------------------------------------------
+  // This is a function that imports the Belfast vessel schedule if the import button is clicked.
+  // It sets the belfastFetchStatus to "loading", calls importBelfastScheduleHandler(),
+  // and then polls the import status using pollBelfastImportStatus(). If the import is successful,
+  // it updates the lastBelfastImportDate and sets the belfastFetchStatus to "complete".
+  // If there is an error, it sets the belfastErrorMessage and belfastFetchStatus to "error".
+  // -------------------------------------------------------
   const handleBelfastFetch = async () => {
     setBelfastFetchStatus("loading")
     setBelfastErrorMessage(null)
