@@ -67,28 +67,6 @@ export const setAisGeoFilter = (req, res) => {
 }
 
 // -------------------------------------------------------
-// POST /api/cruise/scrapePosition  { vesselname }
-// Scrapes current vessel position from CruiseMapper and saves it
-// -------------------------------------------------------
-export const scrapeVesselPosition = async (req, res) => {
-  const { vesselname } = req.body
-  if (!vesselname || typeof vesselname !== "string") {
-    return res.status(400).json({ error: "vesselname is required" })
-  }
-
-  // io is attached to res.app by server.js
-  const io = req.app.get("io")
-  try {
-    const result = await fetchAndSaveVesselPositionFromWeb(vesselname.trim(), io)
-    if (!result.success) return res.status(404).json({ error: result.reason })
-    res.json({ lat: result.lat, lng: result.lng })
-  } catch (err) {
-    console.error("scrapeVesselPosition error:", err.message)
-    res.status(500).json({ error: err.message })
-  }
-}
-
-// -------------------------------------------------------
 // Function to import Belfast Harbour Cruise Schedule data
 // -------------------------------------------------------
 export const importBelfastSchedule = async (_req, res) => {
@@ -161,7 +139,11 @@ export const getBelfastSchedule = async (req, res) => {
 
     res.json({ message: "success", data: rows })
   } catch (err) {
-    if (err.message?.includes('relation "belfastharbour_cruise_schedule" does not exist')) {
+    if (
+      err.message?.includes(
+        'relation "belfastharbour_cruise_schedule" does not exist',
+      )
+    ) {
       return res.json({ message: "success", data: [] })
     }
     console.error("getBelfastSchedule error:", err.message)

@@ -7,7 +7,6 @@ import {
   getVesselPositions,
   getAisGeoFilter,
   setAisGeoFilter,
-  scrapeVesselPosition,
 } from "../controllers/belfastScheduleController.js"
 
 var cruiseRouter = express.Router()
@@ -47,10 +46,5 @@ cruiseRouter.get("/vesselPositions", getVesselPositions)
 // ---------------------------------------------------
 cruiseRouter.get("/geoFilter", getAisGeoFilter)
 cruiseRouter.post("/geoFilter", setAisGeoFilter)
-
-// ---------------------------------------------------
-// POST scrape current vessel position from CruiseMapper  { vesselname }
-// ---------------------------------------------------
-cruiseRouter.post("/scrapePosition", scrapeVesselPosition)
 
 export default cruiseRouter
