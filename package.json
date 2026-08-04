@@ -16,7 +16,7 @@
     "concurrently": "^10.0.4"
   },
   "overrides": {
-    "ip-address": ">=10.2.0",
+    "ip-address": ">=10.4.0",
     "ws": "8.21.0",
     "protobufjs": "8.6.6",
     "tmp": "0.2.7",
