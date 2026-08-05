@@ -20,6 +20,13 @@ var cruiseRouter = express.Router()
 cruiseRouter.get("/", index)
 
 // ---------------------------------------------------
+// GET current Belfast import job status (for frontend polling)
+// ---------------------------------------------------
+cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
+  res.json(getBelfastImportStatus()),
+)
+
+// ---------------------------------------------------
 // POST trigger import of Belfast Harbour cruise schedule PDF
 // ---------------------------------------------------
 cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
@@ -30,16 +37,9 @@ cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
 
 // ---------------------------------------------------
-// GET current Belfast import job status (for frontend polling)
-// ---------------------------------------------------
-cruiseRouter.get("/getBelfastImportStatus", (_req, res) =>
-  res.json(getBelfastImportStatus()),
-)
-
-// ---------------------------------------------------
 // GET current AIS vessel positions
 // ---------------------------------------------------
-cruiseRouter.get("/vesselPositions", getVesselPositions)
+cruiseRouter.get("/getVesselPositions", getVesselPositions)
 
 // ---------------------------------------------------
 // GET / POST AIS geographic filter state: Called from CruiseMap

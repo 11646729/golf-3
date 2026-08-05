@@ -83,7 +83,7 @@ export const getVesselPositionsData = async () => {
   const config = { timeout: DEFAULT_TIMEOUT, headers: DEFAULT_HEADERS }
 
   return await axios
-    .get("http://localhost:4000/api/cruise/vesselPositions", config)
+    .get("http://localhost:4000/api/cruise/getVesselPositions", config)
     .then((response) => response.data)
     .catch((err) => {
       console.error("getVesselPositionsData error:", err?.message || err)
