@@ -50,6 +50,10 @@ const CruisesPage = () => {
   // from the server (via getBelfastScheduleData()),
   // populates the portArrivals state, and computes the most
   // recent PDF modification date to set lastBelfastImportDate.
+  // Then it calls loadVesselPositions() to fetch the current vessel positions,
+  // and sets up a polling interval to refresh the vessel positions every 30 seconds.
+  // Finally, it sets up a WebSocket connection to listen for real-time updates
+  // to vessel positions, and updates the vesselPositions state accordingly.
   // -------------------------------------------------------
   useEffect(() => {
     loadScheduleData()
