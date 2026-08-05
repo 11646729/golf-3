@@ -18,52 +18,11 @@ let belfastImportStatus = {
 }
 
 // -------------------------------------------------------
-// Function to fetch Belfast Harbour Cruise Schedule importation status
-// -------------------------------------------------------
-export const getBelfastImportStatus = () => ({ ...belfastImportStatus })
-
-// -------------------------------------------------------
 // Catalogue Home page
 // Path: localhost:4000/api/cruise/
 // -------------------------------------------------------
 export var index = async (req, res) => {
   res.status(200).send({ response: "Port Arrivals Catalog home page" })
-}
-
-// -------------------------------------------------------
-// GET current vessel positions from vesselpositions table
-// -------------------------------------------------------
-export const getVesselPositions = async (_req, res) => {
-  try {
-    const rows = await getDb().all(
-      `SELECT v.mmsi, v.vesselname,
-              vp.latitude AS lat, vp.longitude AS lng,
-              vp.recordedat, vp.sog, vp.cog, vp.heading, vp.navstatus
-       FROM vesselpositions vp
-       JOIN vessels v ON v.vesselid = vp.vesselid
-       WHERE v.mmsi != 0 AND vp.latitude IS NOT NULL AND vp.longitude IS NOT NULL`,
-    )
-    res.json({ data: rows })
-  } catch (err) {
-    console.error("getVesselPositions error:", err.message)
-    res.status(400).json({ error: err.message })
-  }
-}
-
-// -------------------------------------------------------
-// AIS geographic filter toggle
-// -------------------------------------------------------
-export const getAisGeoFilter = (_req, res) => {
-  res.json({ geoFilterEnabled: getGeoFilter() })
-}
-
-export const setAisGeoFilter = (req, res) => {
-  const { enabled } = req.body
-  if (typeof enabled !== "boolean") {
-    return res.status(400).json({ error: "enabled must be a boolean" })
-  }
-  setGeoFilter(enabled)
-  res.json({ geoFilterEnabled: enabled })
 }
 
 // -------------------------------------------------------
@@ -149,4 +108,45 @@ export const getBelfastSchedule = async (req, res) => {
     console.error("getBelfastSchedule error:", err.message)
     res.status(400).json({ error: err.message })
   }
+}
+
+// -------------------------------------------------------
+// Function to fetch Belfast Harbour Cruise Schedule importation status
+// -------------------------------------------------------
+export const getBelfastImportStatus = () => ({ ...belfastImportStatus })
+
+// -------------------------------------------------------
+// GET current vessel positions from vesselpositions table
+// -------------------------------------------------------
+export const getVesselPositions = async (_req, res) => {
+  try {
+    const rows = await getDb().all(
+      `SELECT v.mmsi, v.vesselname,
+              vp.latitude AS lat, vp.longitude AS lng,
+              vp.recordedat, vp.sog, vp.cog, vp.heading, vp.navstatus
+       FROM vesselpositions vp
+       JOIN vessels v ON v.vesselid = vp.vesselid
+       WHERE v.mmsi != 0 AND vp.latitude IS NOT NULL AND vp.longitude IS NOT NULL`,
+    )
+    res.json({ data: rows })
+  } catch (err) {
+    console.error("getVesselPositions error:", err.message)
+    res.status(400).json({ error: err.message })
+  }
+}
+
+// -------------------------------------------------------
+// AIS geographic filter toggle
+// -------------------------------------------------------
+export const getAisGeoFilter = (_req, res) => {
+  res.json({ geoFilterEnabled: getGeoFilter() })
+}
+
+export const setAisGeoFilter = (req, res) => {
+  const { enabled } = req.body
+  if (typeof enabled !== "boolean") {
+    return res.status(400).json({ error: "enabled must be a boolean" })
+  }
+  setGeoFilter(enabled)
+  res.json({ geoFilterEnabled: enabled })
 }
