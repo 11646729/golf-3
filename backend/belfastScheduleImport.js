@@ -1,7 +1,10 @@
 import { PDFParse } from "pdf-parse"
 import { DatabaseAdapter } from "./databaseUtilities.js"
 import { getBrowser } from "./puppeteerBrowser.js"
-import { fetchAndSaveVesselMMSIs, fetchAndSaveVesselSpecs } from "./cruisemapperScraper.js"
+import {
+  fetchAndSaveVesselMMSIs,
+  fetchAndSaveVesselSpecs,
+} from "./cruisemapperScraper.js"
 
 const CRUISE_SCHEDULE_PAGE =
   "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
@@ -391,13 +394,12 @@ export const ensureCruiseSchema = async () => {
       vesselname        TEXT    NOT NULL UNIQUE,
       vessellengthmetre INTEGER,
       mmsi              INTEGER NOT NULL DEFAULT 0,
-      imo               INTEGER NOT NULL DEFAULT 0
+      imo               INTEGER NOT NULL DEFAULT 0,
+      yearofbuild       INTEGER NOT NULL DEFAULT 0,
+      speed             TEXT NOT NULL DEFAULT '',
+      lastrefurbishment TEXT DEFAULT ''
     )
   `)
-
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS yearofbuild INTEGER`)
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS speed TEXT`)
-  await getDb().run(`ALTER TABLE vessels ADD COLUMN IF NOT EXISTS lastrefurbishment TEXT`)
 
   await getDb().run(`
     CREATE TABLE IF NOT EXISTS vesselpositions (
