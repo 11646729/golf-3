@@ -68,7 +68,11 @@ const DrawTopAxis = (props) => {
     const x = rect.left + j * ScaleHorizontal
     const y1 = rect.top
 
-    let AxisValue = (parseFloat(MaxWaveNumber) - j * 0.02).toFixed(2)
+    // The axis spans the whole diameter of the plot, so the Wavenumber
+    // falls to zero at the centre & then climbs back to its Maximum
+    let AxisValue = Math.abs(
+      parseFloat(MaxWaveNumber) - j * parseFloat(WaveNumberInterval) * 2
+    ).toFixed(2)
 
     labels.push(
       <Text

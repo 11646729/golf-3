@@ -9,9 +9,13 @@ export const computeScreenEdgeRect = () => {
       parseInt(import.meta.env.VITE_GEOPHONEARRAY_DRAWERSIZEADJUSTMENT) -
       parseInt(import.meta.env.VITE_GEOPHONEARRAY_SIZEADJUSTMENT),
     left: 0,
+    // The chart sits to the right of the fixed width Menu, so that has to
+    // come off the width as well - otherwise the Stage is drawn wider than
+    // the space it has & the Legend ends up off the side of the screen
     right:
       window.innerWidth -
-      parseInt(import.meta.env.VITE_GEOPHONEARRAY_SIZEADJUSTMENT),
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_SIZEADJUSTMENT) -
+      parseInt(import.meta.env.VITE_GEOPHONEARRAY_MENUWIDTHADJUSTMENT),
   }
 }
 
@@ -217,6 +221,8 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
   // if (tempGraphPlotHeight <= tempGraphPlotWidth) {
 
   if (screenOrientation === "Landscape") {
+    // The Legend is taken off the available width as well, otherwise the
+    // plot is centred on the whole width & pushes the Legend off the chart
     const spaceBeforeTitles = Math.round(
       (insideMarginsRect.right -
         insideMarginsRect.left -
@@ -224,6 +230,7 @@ export const computeGraphPlotAreaRect = (insideMarginsRect) => {
         getRightTitleWidth() -
         getLeftAxisWidth() -
         getRightAxisWidth() -
+        getLegendWidth() -
         tempGraphPlotHeight) /
         2
     )

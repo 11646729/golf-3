@@ -35,7 +35,8 @@ const DrawLegendTitle = (props) => {
       <Text
         fontSize={16}
         text={legendTitle}
-        stroke="grey"
+        stroke="white"
+        fill="white"
         strokeWidth={0.5}
         x={rect.left}
         y={

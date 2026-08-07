@@ -14,6 +14,7 @@ import DrawLeftAxis from "../components/DrawLeftAxis"
 import DrawRightAxis from "../components/DrawRightAxis"
 import DrawLegendTitle from "../components/DrawLegendTitle"
 import DrawRadialLinesAndCircles from "../components/DrawRadialLinesAndCircles"
+import DrawRadialHeatmap from "../components/DrawRadialHeatmap"
 // import SeismicDesignDrawer from "../components/SeismicDesignDrawer"
 
 import {
@@ -60,25 +61,31 @@ const Seismic3DRadialDisplay = () => {
   )
 
   useEffect(() => {
+    // Each rectangle is worked out from the new size of the one before it.
+    // Reading them back out of state instead would use the sizes from before
+    // the resize, which leaves the heatmap & its grid out of step
     const checkSize = () => {
-      setScreenRect(computeScreenEdgeRect())
-      setInsideMarginsRect(computeInsideMarginsRect(screenEdgeRect))
-      setGraphPlotAreaRect(computeGraphPlotAreaRect(insideMarginsRect))
-      setInsidePlotTitleRect(
-        computeInsidePlotTitlesRect(insideMarginsRect, graphPlotAreaRect)
-      )
-      setTopTitleRect(computeTopTitlesRect(graphPlotAreaRect))
-      setBottomTitleRect(computeBottomTitlesRect(graphPlotAreaRect))
-      setLeftTitleRect(computeLeftTitlesRect(graphPlotAreaRect))
-      setRightTitleRect(computeRightTitlesRect(graphPlotAreaRect))
+      const newScreenEdgeRect = computeScreenEdgeRect()
+      const newInsideMarginsRect = computeInsideMarginsRect(newScreenEdgeRect)
+      const newGraphPlotAreaRect = computeGraphPlotAreaRect(newInsideMarginsRect)
+      const newRightTitleRect = computeRightTitlesRect(newGraphPlotAreaRect)
+
+      setScreenRect(newScreenEdgeRect)
+      setInsideMarginsRect(newInsideMarginsRect)
+      setGraphPlotAreaRect(newGraphPlotAreaRect)
+      setInsidePlotTitleRect(computeInsidePlotTitlesRect(newInsideMarginsRect))
+      setTopTitleRect(computeTopTitlesRect(newGraphPlotAreaRect))
+      setBottomTitleRect(computeBottomTitlesRect(newGraphPlotAreaRect))
+      setLeftTitleRect(computeLeftTitlesRect(newGraphPlotAreaRect))
+      setRightTitleRect(newRightTitleRect)
       setLegendAreaRect(
-        computeLegendAreaRect(insideMarginsRect, rightTitleRect)
+        computeLegendAreaRect(newInsideMarginsRect, newRightTitleRect)
       )
     }
 
     window.addEventListener("resize", checkSize)
     return () => window.removeEventListener("resize", checkSize)
-  }, [screenEdgeRect, insideMarginsRect, graphPlotAreaRect, rightTitleRect])
+  }, [])
 
   // TODO
   // Check DrawRadialLinesAndCircles exact position for Labels
@@ -105,6 +112,13 @@ const Seismic3DRadialDisplay = () => {
             boundaryDraw={
               import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWGRAPHAREABOUNDARY
             }
+          />
+          {/* The heatmap is drawn first so that the axes, the radial
+              lines & circles and the Legend all sit on top of it */}
+          <DrawRadialHeatmap
+            rect={graphPlotAreaRect}
+            heatmapDraw={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALDRAWHEATMAP}
+            greyScale={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALGREYSCALE}
           />
           <DrawTopTitle
             rect={topTitleRect}

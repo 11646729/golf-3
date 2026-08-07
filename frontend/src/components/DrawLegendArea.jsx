@@ -24,7 +24,8 @@ const DrawLegendArea = (props) => {
       <Text
         fontSize={16}
         text={legendText}
-        stroke="grey"
+        stroke="white"
+        fill="white"
         strokeWidth={0.5}
         x={rect.left + 10}
         y={rect.top}

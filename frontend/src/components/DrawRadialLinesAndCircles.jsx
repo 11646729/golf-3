@@ -38,7 +38,8 @@ const DrawRadialLinesAndCircles = (props) => {
         x={rect.left + mcentrex}
         y={rect.top + mcentrey}
         radius={circleRadius}
-        stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+        listening={false}
+        stroke={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALGRIDLINECOLOR}
         strokeWidth={parseInt(
           import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
         )}
@@ -63,7 +64,8 @@ const DrawRadialLinesAndCircles = (props) => {
         <Line
           key={i}
           points={[x1, y1, x2, y2]}
-          stroke={import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINECOLOR}
+          listening={false}
+          stroke={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALGRIDLINECOLOR}
           strokeWidth={parseInt(
             import.meta.env.VITE_GEOPHONEARRAY_CHARTOUTLINEWIDTH
           )}
@@ -99,8 +101,9 @@ const DrawRadialLinesAndCircles = (props) => {
           <Text
             key={k}
             fontSize={8}
+            listening={false}
             text={labelValue}
-            stroke="grey"
+            stroke={import.meta.env.VITE_GEOPHONEARRAY_M3DRADIALGRIDLINECOLOR}
             strokeWidth={0.5}
             x={rect.left + mcentrex + dOffx}
             y={rect.top + mcentrey + dOffy}
