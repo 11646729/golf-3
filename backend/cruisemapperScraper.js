@@ -20,8 +20,8 @@ const parseSearchLength = (str) => {
   return m ? parseFloat(m[1]) : null
 }
 
-
-const isTender    = (c) => c.cells.some((cell) => cell.toLowerCase().includes("tender"))
+const isTender = (c) =>
+  c.cells.some((cell) => cell.toLowerCase().includes("tender"))
 const isPassenger = (c) =>
   c.cells.some(
     (cell) =>
@@ -44,8 +44,9 @@ const getCandidatesFromPage = (page) =>
   )
 
 const getNextPageHref = (page) =>
-  page.evaluate(() =>
-    document.querySelector("a.pagination-next")?.getAttribute("href") ?? null,
+  page.evaluate(
+    () =>
+      document.querySelector("a.pagination-next")?.getAttribute("href") ?? null,
   )
 
 const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
@@ -57,12 +58,12 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
     // Pass 1: collect all passenger/cruise candidates across all result pages
     let pageUrl = `${VF_BASE}/vessels?name=${encodeURIComponent(searchName)}`
     const allPassengerCandidates = []
-    const allFallbackCandidates  = []
+    const allFallbackCandidates = []
 
     while (pageUrl) {
       await page.goto(pageUrl, { waitUntil: "networkidle2", timeout: 30000 })
       const allOnPage = await getCandidatesFromPage(page)
-      const nextHref  = await getNextPageHref(page)
+      const nextHref = await getNextPageHref(page)
 
       allOnPage.forEach((c) => {
         if (isTender(c)) return
@@ -78,7 +79,9 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
     // If there is only ONE passenger/cruise ship across all results, trust it
     // even if VesselFinder's length data is wrong (data quality issue).
     const lengthMatch = (c) => {
-      const searchLength = parseSearchLength(c.cells.find((x) => /^\d+\s*\/\s*\d+/.test(x)))
+      const searchLength = parseSearchLength(
+        c.cells.find((x) => /^\d+\s*\/\s*\d+/.test(x)),
+      )
       return (
         vessellengthmetre === null ||
         searchLength === null ||
@@ -87,14 +90,16 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
     }
 
     const passengersInTolerance = allPassengerCandidates.filter(lengthMatch)
-    const fallbacksInTolerance  = allFallbackCandidates.filter(lengthMatch)
+    const fallbacksInTolerance = allFallbackCandidates.filter(lengthMatch)
 
     // If no length-matching passenger ship, check whether only one plausibly-sized
     // passenger ship exists across all results (ignoring tiny vessels < 50m that
     // share the "Passenger ship" AIS type). VesselFinder length data is sometimes
     // wrong, so a single unambiguous result is trusted even outside tolerance.
     const plausiblePassengers = allPassengerCandidates.filter((c) => {
-      const len = parseSearchLength(c.cells.find((x) => /^\d+\s*\/\s*\d+/.test(x)))
+      const len = parseSearchLength(
+        c.cells.find((x) => /^\d+\s*\/\s*\d+/.test(x)),
+      )
       return len === null || len >= 50
     })
     const singlePassengerFallback =
@@ -114,7 +119,10 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
     }
 
     for (const candidate of orderedCandidates) {
-      await page.goto(candidate.href, { waitUntil: "networkidle2", timeout: 30000 })
+      await page.goto(candidate.href, {
+        waitUntil: "networkidle2",
+        timeout: 30000,
+      })
 
       const imoMmsi = await page.evaluate(() => {
         const rows = Array.from(document.querySelectorAll("tr"))
@@ -130,7 +138,7 @@ const scrapeVesselData = async (page, vesselname, vessellengthmetre) => {
       if (!imoMmsi) continue
 
       const [imoStr, mmsiStr] = imoMmsi.split(" / ")
-      const imo  = parseInt(imoStr)  || 0
+      const imo = parseInt(imoStr) || 0
       const mmsi = parseInt(mmsiStr) || 0
 
       console.log(`[VF] "${vesselname}" → IMO ${imo}, MMSI ${mmsi}`)
@@ -170,7 +178,7 @@ const extractVesselSpecs = async (page) => {
 
   const yearRaw = raw["Year of build"]
   return {
-    yearofbuild: yearRaw ? (parseInt(yearRaw) || null) : null,
+    yearofbuild: yearRaw ? parseInt(yearRaw) || null : null,
     speed: raw["Speed"] || null,
     lastrefurbishment: raw["Last Refurbishment"] || null,
   }
@@ -179,9 +187,15 @@ const extractVesselSpecs = async (page) => {
 const extractShipCurrentPositionMap = async (page) => {
   return page.evaluate(() => {
     for (const s of document.querySelectorAll("script:not([src])")) {
-      const m = s.textContent.match(/"shipCurrentPositionMap"\s*:\s*(\{[^}]+\})/)
+      const m = s.textContent.match(
+        /"shipCurrentPositionMap"\s*:\s*(\{[^}]+\})/,
+      )
       if (m) {
-        try { return JSON.parse(m[1]) } catch { return null }
+        try {
+          return JSON.parse(m[1])
+        } catch {
+          return null
+        }
       }
     }
     return null
@@ -201,11 +215,16 @@ const fetchShipList = async (page) => {
     try {
       const body = await response.text()
       if (body) list = JSON.parse(body)
-    } catch { /* ignore parse errors */ }
+    } catch {
+      /* ignore parse errors */
+    }
   }
 
   page.on("response", onResponse)
-  await page.goto(`${CM_BASE}/ships`, { waitUntil: "networkidle2", timeout: 30000 })
+  await page.goto(`${CM_BASE}/ships`, {
+    waitUntil: "networkidle2",
+    timeout: 30000,
+  })
   page.off("response", onResponse)
 
   return list
@@ -213,7 +232,8 @@ const fetchShipList = async (page) => {
 
 // Collapse a name to lowercase alphanumerics so punctuation, spacing and case
 // differences don't block a match ("Azamara Quest" ≈ "AZAMARA QUEST").
-const normalizeName = (name) => (name || "").toLowerCase().replace(/[^a-z0-9]+/g, "")
+const normalizeName = (name) =>
+  (name || "").toLowerCase().replace(/[^a-z0-9]+/g, "")
 
 // Find a vessel's detail-page URL in a fetched ship list. Prefers an exact
 // normalized match, then falls back to a CruiseMapper name that *contains* the
@@ -256,16 +276,22 @@ const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   }
 
   const lat = parseFloat(posData.lat)
-  const lng = parseFloat(posData.lon)   // CruiseMapper uses "lon"
+  const lng = parseFloat(posData.lon) // CruiseMapper uses "lon"
   const heading = posData.rotation != null ? parseFloat(posData.rotation) : null
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-    console.log(`[CM] Invalid coordinates for "${vesselname}": ${posData.lat}, ${posData.lon}`)
+    console.log(
+      `[CM] Invalid coordinates for "${vesselname}": ${posData.lat}, ${posData.lon}`,
+    )
     return null
   }
 
-  console.log(`[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`)
-  console.log(`[CM] "${vesselname}" specs: year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`)
+  console.log(
+    `[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`,
+  )
+  console.log(
+    `[CM] "${vesselname}" specs: year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`,
+  )
   return { lat, lng, heading, specs }
 }
 
@@ -280,7 +306,8 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
 
   try {
     const coords = await scrapePositionFromCruiseMapper(page, vesselname)
-    if (!coords) return { success: false, reason: "Position not found on CruiseMapper" }
+    if (!coords)
+      return { success: false, reason: "Position not found on CruiseMapper" }
 
     const { lat, lng, heading, specs } = coords
     const recordedat = new Date().toISOString()
@@ -328,7 +355,11 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
 // when a field scrapes as null, so a partial scrape never wipes good data.
 // Returns the number of rows updated.
 const saveVesselSpecs = async (vesselname, specs) => {
-  if (specs.yearofbuild == null && specs.speed == null && specs.lastrefurbishment == null) {
+  if (
+    specs.yearofbuild == null &&
+    specs.speed == null &&
+    specs.lastrefurbishment == null
+  ) {
     return 0
   }
   const { changes } = await getDb().run(
@@ -365,17 +396,25 @@ export const fetchAndSaveVesselSpecs = async (vessels) => {
       try {
         const vesselUrl = findVesselUrl(shipList, vesselname)
         if (!vesselUrl) {
-          console.log(`[CM] "${vesselname}" not found in CruiseMapper ship list`)
+          console.log(
+            `[CM] "${vesselname}" not found in CruiseMapper ship list`,
+          )
           continue
         }
-        await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
+        await page.goto(vesselUrl, {
+          waitUntil: "networkidle2",
+          timeout: 30000,
+        })
         const specs = await extractVesselSpecs(page)
         const changes = await saveVesselSpecs(vesselname, specs)
         console.log(
           `[CM] "${vesselname}" specs saved (${changes} row): year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`,
         )
       } catch (err) {
-        console.error(`[CM] specs scrape failed for "${vesselname}":`, err?.message || err)
+        console.error(
+          `[CM] specs scrape failed for "${vesselname}":`,
+          err?.message || err,
+        )
       }
       await sleep(POLITENESS_MS)
     }
@@ -399,7 +438,11 @@ export const fetchAndSaveVesselMMSIs = async (vessels) => {
 
   try {
     for (const { vesselname, vessellengthmetre } of vessels) {
-      const { mmsi, imo } = await scrapeVesselData(page, vesselname, vessellengthmetre)
+      const { mmsi, imo } = await scrapeVesselData(
+        page,
+        vesselname,
+        vessellengthmetre,
+      )
       await getDb().run(
         `UPDATE vessels SET mmsi = ?, imo = ? WHERE vesselname = ?`,
         [mmsi, imo, vesselname],

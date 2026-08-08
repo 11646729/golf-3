@@ -142,6 +142,7 @@ const getDb = () => {
 // arrivals that is still missing either value.
 // -------------------------------------------------------
 const fetchMissingMMSIs = async () => {
+  console.log("[MMSI] Starting MMSI/IMO fetch")
   const vessels = await getDb().all(
     `SELECT vesselname, vessellengthmetre
      FROM vessels
@@ -160,6 +161,7 @@ const fetchMissingMMSIs = async () => {
 // CruiseMapper) so vessels with no listed refurbishment aren't re-scraped every run.
 // -------------------------------------------------------
 const fetchMissingSpecs = async () => {
+  console.log("[CM] Starting CruiseMapper specs fetch")
   const vessels = await getDb().all(
     `SELECT vesselname
      FROM vessels
@@ -303,6 +305,7 @@ const lookupLogoViaVesselSearch = async (page, vesselname) => {
 // CruiseMapper by the name of a vessel operated by that cruise line.
 // -------------------------------------------------------
 const updateMissingCruiseLineLogos = async () => {
+  console.log("[LOGO] Starting cruise line logo update")
   const rows = await getDb().all(
     `SELECT cruiselineid, name FROM cruiselineinfo WHERE logo IS NULL ORDER BY name`,
   )
