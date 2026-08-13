@@ -8,7 +8,9 @@ import { enableRealtimeData } from "./enableRealtimeData.js"
 import { createDatabaseAdapter } from "./databaseUtilities.js"
 import { createVehiclePositionsTable } from "./controllers/rtGtfsController.js"
 import { ensureCruiseSchema } from "./belfastScheduleImport.js"
-import { startAISStream } from "./aisStreamService.js"
+// AIS stream disabled — vessel positions now come from the CruiseMapper scrape below
+// import { startAISStream } from "./aisStreamService.js"
+import { startCruisePositionRefresh } from "./cruisePositionService.js"
 // import { setupRabbitMQAndEmitMessages } from "./setupRabbitMQAndEmitMessages.js"
 
 // Routers use Controllers as per Express Tutorial
@@ -101,7 +103,8 @@ createDatabaseAdapter()
         console.log("Server running on port: " + port)
       }
     })
-    startAISStream(io)
+    // startAISStream(io)
+    startCruisePositionRefresh(io)
   })
   .catch((err) => {
     console.error("Failed to connect to database:", err.message)

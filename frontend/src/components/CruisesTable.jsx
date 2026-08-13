@@ -30,6 +30,10 @@ const columns = [
   { id: "departure", label: "Departure Time", minWidth: 10, align: "center" },
 ]
 
+// Positions are matched by vessel name rather than MMSI: the CruiseMapper scrape
+// that supplies them carries no MMSI.
+const vesselKey = (vesselname) => (vesselname ?? "").trim().toUpperCase()
+
 const Led = ({ active }) => (
   <div
     style={{
@@ -78,8 +82,8 @@ const CruisesTable = ({ portArrivals = [], vesselPositions = [] }) => {
     [portArrivals],
   )
 
-  const trackedMmsis = useMemo(
-    () => new Set(vesselPositions.map((p) => Number(p.mmsi))),
+  const trackedVessels = useMemo(
+    () => new Set(vesselPositions.map((p) => vesselKey(p.vesselname))),
     [vesselPositions],
   )
 
@@ -120,7 +124,7 @@ const CruisesTable = ({ portArrivals = [], vesselPositions = [] }) => {
                 .map((row) => (
                   <TableRow className="cruisestablerow" key={row.portarrivalid}>
                     <TableCell align="center" className="cruisestabledatacellcenter">
-                      <Led active={trackedMmsis.has(Number(row.mmsi))} />
+                      <Led active={trackedVessels.has(vesselKey(row.vesselname))} />
                     </TableCell>
                     <TableCell className="cruisestabledatacell">
                       <div className="cruisescellcenter">{row.weekdaydisplay}</div>

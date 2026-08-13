@@ -126,12 +126,37 @@ export const getVesselPositions = async (_req, res) => {
               vp.recordedat, vp.sog, vp.cog, vp.heading, vp.navstatus
        FROM vesselpositions vp
        JOIN vessels v ON v.vesselid = vp.vesselid
-       WHERE v.mmsi != 0 AND vp.latitude IS NOT NULL AND vp.longitude IS NOT NULL`,
+       WHERE vp.latitude IS NOT NULL AND vp.longitude IS NOT NULL`,
     )
     res.json({ data: rows })
   } catch (err) {
     console.error("getVesselPositions error:", err.message)
     res.status(400).json({ error: err.message })
+  }
+}
+
+// -------------------------------------------------------
+// POST scrape one vessel's position from CruiseMapper
+// Path: localhost:4000/api/cruise/refreshVesselPosition
+// -------------------------------------------------------
+export const refreshVesselPosition = async (req, res) => {
+  const { vesselname } = req.body
+  if (typeof vesselname !== "string" || !vesselname.trim()) {
+    return res.status(400).json({ error: "vesselname is required" })
+  }
+
+  // The scrape makes two Puppeteer navigations and can take ~60s, so ack now;
+  // the result reaches the client via the vesselPositionUpdated socket event.
+  res.status(202).json({ message: "Position scrape started" })
+
+  try {
+    const result = await fetchAndSaveVesselPositionFromWeb(
+      vesselname,
+      req.app.get("io"),
+    )
+    if (!result.success) console.warn(`[CM] ${vesselname}: ${result.reason}`)
+  } catch (err) {
+    console.error("refreshVesselPosition error:", err.message)
   }
 }
 

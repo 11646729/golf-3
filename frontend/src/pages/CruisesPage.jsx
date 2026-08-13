@@ -13,6 +13,8 @@ import "../styles/cruises.scss"
 
 const POSITION_POLL_INTERVAL_MS = 30_000
 
+const vesselKey = (vesselname) => (vesselname ?? "").trim().toUpperCase()
+
 // -------------------------------------------------------
 // React Controller component
 // -------------------------------------------------------
@@ -82,8 +84,10 @@ const CruisesPage = () => {
 
     socket.on("vesselPositionUpdated", (position) => {
       setVesselPositions((prev) => {
+        // Keyed by vessel name — CruiseMapper positions have no MMSI, so every
+        // vessel still awaiting its lookup would collide on mmsi = 0.
         const idx = prev.findIndex(
-          (p) => Number(p.mmsi) === Number(position.mmsi),
+          (p) => vesselKey(p.vesselname) === vesselKey(position.vesselname),
         )
         if (idx === -1) return [...prev, position]
         const next = [...prev]

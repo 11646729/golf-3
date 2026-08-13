@@ -5,6 +5,7 @@ import {
   getBelfastSchedule,
   getBelfastImportStatus,
   getVesselPositions,
+  refreshVesselPosition,
   getAisGeoFilter,
   setAisGeoFilter,
 } from "../controllers/belfastScheduleController.js"
@@ -37,9 +38,14 @@ cruiseRouter.post("/importBelfastSchedule", importBelfastSchedule)
 cruiseRouter.get("/getBelfastSchedule", getBelfastSchedule)
 
 // ---------------------------------------------------
-// GET current AIS vessel positions
+// GET current vessel positions
 // ---------------------------------------------------
 cruiseRouter.get("/getVesselPositions", getVesselPositions)
+
+// ---------------------------------------------------
+// POST scrape one vessel's current position from CruiseMapper
+// ---------------------------------------------------
+cruiseRouter.post("/refreshVesselPosition", refreshVesselPosition)
 
 // ---------------------------------------------------
 // GET / POST AIS geographic filter state: Called from CruiseMap

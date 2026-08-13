@@ -221,6 +221,10 @@ const fetchShipList = async (page) => {
   }
 
   page.on("response", onResponse)
+  // The browser is a process-wide singleton, so its HTTP cache is shared by
+  // every page. Without this, a /ships navigation in a later call is served
+  // from cache, the response event never fires and the list comes back empty.
+  await page.setCacheEnabled(false)
   await page.goto(`${CM_BASE}/ships`, {
     waitUntil: "networkidle2",
     timeout: 30000,
@@ -252,6 +256,39 @@ const findVesselUrl = (list, vesselname) => {
   return contains[0]?.url ?? null
 }
 
+// Navigate to an already-resolved CruiseMapper vessel page and pull both the
+// position and the specs off it in one visit. Returns { position, specs }, where
+// position is null when the page carries no usable coordinates.
+const scrapeVesselPage = async (page, vesselname, vesselUrl) => {
+  await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
+
+  const [posData, specs] = await Promise.all([
+    extractShipCurrentPositionMap(page),
+    extractVesselSpecs(page),
+  ])
+
+  if (!posData || posData.lat == null || posData.lon == null) {
+    console.log(`[CM] No position data found for "${vesselname}"`)
+    return { position: null, specs }
+  }
+
+  const lat = parseFloat(posData.lat)
+  const lng = parseFloat(posData.lon) // CruiseMapper uses "lon"
+  const heading = posData.rotation != null ? parseFloat(posData.rotation) : null
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    console.log(
+      `[CM] Invalid coordinates for "${vesselname}": ${posData.lat}, ${posData.lon}`,
+    )
+    return { position: null, specs }
+  }
+
+  console.log(
+    `[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`,
+  )
+  return { position: { lat, lng, heading }, specs }
+}
+
 const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   console.log(`[CM] Searching for "${vesselname}" on CruiseMapper`)
 
@@ -263,40 +300,63 @@ const scrapePositionFromCruiseMapper = async (page, vesselname) => {
   }
 
   console.log(`[CM] Found vessel page: ${vesselUrl}`)
-  await page.goto(vesselUrl, { waitUntil: "networkidle2", timeout: 30000 })
+  const { position, specs } = await scrapeVesselPage(page, vesselname, vesselUrl)
+  return position ? { ...position, specs } : null
+}
 
-  const [posData, specs] = await Promise.all([
-    extractShipCurrentPositionMap(page),
-    extractVesselSpecs(page),
-  ])
+// Upsert one scraped position into vesselpositions and broadcast it. Scraped
+// positions carry no sog/cog/navstatus, so those columns are cleared rather than
+// left holding values from whatever wrote the row previously.
+// Returns the number of rows written (0 = vessel name not in the vessels table).
+const saveVesselPosition = async (vesselname, { lat, lng, heading }, io) => {
+  const recordedat = new Date().toISOString()
 
-  if (!posData || posData.lat == null || posData.lon == null) {
-    console.log(`[CM] No position data found for "${vesselname}"`)
-    return null
+  const { changes } = await getDb().run(
+    `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, sog, cog, heading, navstatus, geom)
+     SELECT vesselid, ?, ?, ?, NULL, NULL, ?, NULL, ST_SetSRID(ST_MakePoint(?, ?), 4326)
+     FROM vessels WHERE UPPER(vesselname) = UPPER(?)
+     ON CONFLICT (vesselid) DO UPDATE SET
+       recordedat = EXCLUDED.recordedat,
+       latitude   = EXCLUDED.latitude,
+       longitude  = EXCLUDED.longitude,
+       sog        = EXCLUDED.sog,
+       cog        = EXCLUDED.cog,
+       heading    = EXCLUDED.heading,
+       navstatus  = EXCLUDED.navstatus,
+       geom       = EXCLUDED.geom`,
+    [recordedat, lat, lng, heading, lng, lat, vesselname],
+  )
+
+  if (changes === 0) {
+    console.warn(`[CM] "${vesselname}" is not in the vessels table — not saved`)
+    return 0
   }
 
-  const lat = parseFloat(posData.lat)
-  const lng = parseFloat(posData.lon) // CruiseMapper uses "lon"
-  const heading = posData.rotation != null ? parseFloat(posData.rotation) : null
-
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-    console.log(
-      `[CM] Invalid coordinates for "${vesselname}": ${posData.lat}, ${posData.lon}`,
+  if (io) {
+    const vessel = await getDb().get(
+      `SELECT mmsi FROM vessels WHERE UPPER(vesselname) = UPPER(?)`,
+      [vesselname],
     )
-    return null
+    io.emit("vesselPositionUpdated", {
+      mmsi: vessel?.mmsi ?? null,
+      vesselname,
+      lat,
+      lng,
+      sog: null,
+      cog: null,
+      heading,
+      navstatus: null,
+      recordedat,
+    })
   }
 
-  console.log(
-    `[CM] "${vesselname}" position: lat ${lat}, lng ${lng}, heading ${heading}`,
-  )
-  console.log(
-    `[CM] "${vesselname}" specs: year=${specs.yearofbuild}, speed=${specs.speed}, refurb=${specs.lastrefurbishment}`,
-  )
-  return { lat, lng, heading, specs }
+  return changes
 }
 
 // Scrape current position for a named vessel from CruiseMapper and save it to the
 // vesselpositions table. Emits vesselPositionUpdated via Socket.IO when successful.
+// For more than one vessel use fetchAndSaveVesselPositions, which resolves the
+// ship list once instead of per vessel.
 export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
   const browser = await getBrowser()
   const page = await browser.newPage()
@@ -310,45 +370,82 @@ export const fetchAndSaveVesselPositionFromWeb = async (vesselname, io) => {
       return { success: false, reason: "Position not found on CruiseMapper" }
 
     const { lat, lng, heading, specs } = coords
-    const recordedat = new Date().toISOString()
-
     await saveVesselSpecs(vesselname, specs)
+    const changes = await saveVesselPosition(vesselname, { lat, lng, heading }, io)
 
-    const result = await getDb().run(
-      `INSERT INTO vesselpositions (vesselid, recordedat, latitude, longitude, heading, geom)
-       SELECT vesselid, ?, ?, ?, ?, ST_SetSRID(ST_MakePoint(?, ?), 4326)
-       FROM vessels WHERE UPPER(vesselname) = UPPER(?)
-       ON CONFLICT (vesselid) DO UPDATE SET
-         recordedat = EXCLUDED.recordedat,
-         latitude   = EXCLUDED.latitude,
-         longitude  = EXCLUDED.longitude,
-         heading    = EXCLUDED.heading,
-         geom       = EXCLUDED.geom`,
-      [recordedat, lat, lng, heading, lng, lat, vesselname],
-    )
-
-    if (result.changes > 0 && io) {
-      const vessel = await getDb().get(
-        `SELECT mmsi FROM vessels WHERE UPPER(vesselname) = UPPER(?)`,
-        [vesselname],
-      )
-      io.emit("vesselPositionUpdated", {
-        mmsi: vessel?.mmsi ?? null,
-        vesselname,
-        lat,
-        lng,
-        sog: null,
-        cog: null,
-        heading,
-        navstatus: null,
-        recordedat,
-      })
+    if (changes === 0) {
+      return { success: false, reason: "Vessel not in database" }
     }
 
     return { success: true, lat, lng }
   } finally {
     await page.close()
   }
+}
+
+// Scrape and save current positions for a list of vessels. This is the routine
+// that keeps vesselpositions current now that the AIS stream is disabled; it
+// replaces the per-vessel path for bulk work because the ship list is fetched
+// once and reused for every lookup.
+export const fetchAndSaveVesselPositions = async (vessels, io) => {
+  if (!vessels || vessels.length === 0) return { updated: 0, failed: 0 }
+
+  console.log(`[CM] Fetching positions for ${vessels.length} vessel(s)`)
+
+  const browser = await getBrowser()
+  const page = await browser.newPage()
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  )
+
+  let updated = 0
+  let failed = 0
+
+  try {
+    const shipList = await fetchShipList(page)
+
+    for (const { vesselname } of vessels) {
+      try {
+        const vesselUrl = findVesselUrl(shipList, vesselname)
+        if (!vesselUrl) {
+          console.log(
+            `[CM] "${vesselname}" not found in CruiseMapper ship list`,
+          )
+          failed += 1
+          continue
+        }
+
+        const { position, specs } = await scrapeVesselPage(
+          page,
+          vesselname,
+          vesselUrl,
+        )
+        // Specs are saved even with no position, matching fetchAndSaveVesselSpecs.
+        await saveVesselSpecs(vesselname, specs)
+
+        if (!position) {
+          failed += 1
+          continue
+        }
+
+        const changes = await saveVesselPosition(vesselname, position, io)
+        if (changes > 0) updated += 1
+        else failed += 1
+      } catch (err) {
+        console.error(
+          `[CM] position scrape failed for "${vesselname}":`,
+          err?.message || err,
+        )
+        failed += 1
+      }
+      await sleep(POLITENESS_MS)
+    }
+  } finally {
+    await page.close()
+  }
+
+  console.log(`[CM] Position fetch complete — ${updated} updated, ${failed} failed`)
+  return { updated, failed }
 }
 
 // Persist scraped specs to the vessels table. COALESCE keeps existing values

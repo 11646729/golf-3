@@ -43,6 +43,11 @@ const parseCoordinate = (value) => {
   return Number.isFinite(num) ? num : null
 }
 
+// Positions are keyed by vessel name, not MMSI: CruiseMapper (the position
+// source) never supplies an MMSI, so a vessel awaiting its VesselFinder lookup
+// still has mmsi = 0 and would otherwise be unmatchable.
+const vesselKey = (vesselname) => (vesselname ?? "").trim().toUpperCase()
+
 const CustomCircle = ({
   color = "#78a32e",
   size = 15,
@@ -74,12 +79,7 @@ const normaliseVesselPositions = (positions = []) =>
         ...vessel,
         lat,
         lng,
-        _markerId:
-          vessel?.index ??
-          vessel?.mmsi ??
-          vessel?.imo ??
-          vessel?.vesselId ??
-          `vessel-${index}`,
+        _markerId: vesselKey(vessel?.vesselname) || `vessel-${index}`,
       })
     }
 
@@ -120,18 +120,18 @@ const getSelectedPosition = (positions, markerId) =>
 const CruisesMap = ({ portArrivals = [], vesselPositions = [] }) => {
   // Only show vessels that appear in the arrivals table (due within the next
   // 3 months). portArrivals is the same port-arrivals list the CruisesTable
-  // renders, so matching on mmsi keeps the map and table in sync.
-  const arrivingMmsis = useMemo(
-    () => new Set(portArrivals.map((d) => Number(d.mmsi))),
+  // renders, so matching on vessel name keeps the map and table in sync.
+  const arrivingVessels = useMemo(
+    () => new Set(portArrivals.map((d) => vesselKey(d.vesselname))),
     [portArrivals],
   )
 
   const validPositions = useMemo(
     () =>
       normaliseVesselPositions(vesselPositions).filter((position) =>
-        arrivingMmsis.has(Number(position.mmsi)),
+        arrivingVessels.has(vesselKey(position.vesselname)),
       ),
-    [vesselPositions, arrivingMmsis],
+    [vesselPositions, arrivingVessels],
   )
 
   const [selectedId, setSelectedId] = useState(null)
@@ -238,7 +238,9 @@ const CruisesMap = ({ portArrivals = [], vesselPositions = [] }) => {
                 <Typography gutterBottom variant="h6" component="h3">
                   {selectedPosition.vesselname ??
                     portArrivals.find(
-                      (d) => Number(d.mmsi) === Number(selectedPosition.mmsi),
+                      (d) =>
+                        vesselKey(d.vesselname) ===
+                        vesselKey(selectedPosition.vesselname),
                     )?.vesselname ??
                     "Vessel"}
                 </Typography>
