@@ -4,7 +4,9 @@ import { getBrowser } from "./puppeteerBrowser.js"
 import {
   fetchAndSaveVesselMMSIs,
   fetchAndSaveVesselSpecs,
+  fetchAndSaveVesselPositions,
 } from "./cruisemapperScraper.js"
+import { getVesselsToTrack } from "./cruisePositionService.js"
 
 const CRUISE_SCHEDULE_PAGE =
   "https://www.belfast-harbour.co.uk/port/cruise-schedule/"
@@ -171,6 +173,21 @@ const fetchMissingSpecs = async () => {
   if (vessels.length > 0) {
     console.log(`[CM] ${vessels.length} vessel(s) need specs lookup`)
     await fetchAndSaveVesselSpecs(vessels)
+  }
+}
+
+// -------------------------------------------------------
+// Scrape current positions for every vessel with an upcoming arrival, so the
+// map has positions straight after an import instead of waiting for the next
+// cruisePositionService tick. No io here — the import runs outside the socket
+// context, so the map picks the positions up on its next fetch.
+// -------------------------------------------------------
+const fetchVesselPositions = async () => {
+  console.log("[CM] Starting CruiseMapper position fetch")
+  const vessels = await getVesselsToTrack()
+  if (vessels.length > 0) {
+    console.log(`[CM] ${vessels.length} vessel(s) need a position update`)
+    await fetchAndSaveVesselPositions(vessels)
   }
 }
 
@@ -539,6 +556,7 @@ export const importBelfastScheduleFromPdf = async () => {
     await updateMissingCruiseLineLogos()
     await fetchMissingMMSIs()
     await fetchMissingSpecs()
+    await fetchVesselPositions()
     console.log("Import complete — schedule unchanged")
     return { imported: false, modDate, rowCount: 0 }
   }
@@ -555,6 +573,7 @@ export const importBelfastScheduleFromPdf = async () => {
   await updateMissingCruiseLineLogos()
   await fetchMissingMMSIs()
   await fetchMissingSpecs()
+  await fetchVesselPositions()
   console.log("Import complete —", arrivals.length, "arrivals saved")
 
   return { imported: true, modDate, rowCount: arrivals.length }

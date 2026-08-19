@@ -19,7 +19,7 @@ let refreshing = false
 
 // Only vessels with an arrival in the window the schedule and map cover
 // (yesterday → three months out), so we never scrape ships nothing can display.
-const getVesselsToTrack = async () => {
+export const getVesselsToTrack = async () => {
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
   const threeMonthsFromNow = new Date()
