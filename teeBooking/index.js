@@ -13,7 +13,6 @@ import { prepareToRunAtASpecificTime } from "./prepareTimeForBooking.js"
       headless: false,
       args: ["--start-maximized"],
       defaultViewport: null,
-      ignoreHTTPSErrors: true,
     })
 
     // Requested Tee Booking Parameters
