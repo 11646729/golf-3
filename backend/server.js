@@ -23,6 +23,8 @@ import gtfsTransportRouter from "./routes/gtfsTransportRouteCatalog.js"
 import seismicDesignsRouter from "./routes/seismicDesignsRouteCatalog.js"
 import crimesRouter from "./routes/crimesRouteCatalog.js"
 
+// TEST COMMENT
+
 const port = process.env.EXPRESS_SERVER_PORT || 4000
 
 const app = express()
