@@ -34,6 +34,68 @@
         "name": "Ava Golf Course",
         "courseDescription": "",
         "units": "yards",
+        "whsParameters": {
+          "mensWhite18": {
+            "courseRating": 67.4,
+            "slopeRating": 118
+          },
+          "mensGreen18": {
+            "courseRating": 66.3,
+            "slopeRating": 115
+          },
+          "mensRed18": {
+            "courseRating": 64.8,
+            "slopeRating": 111
+          },
+          "womensGreen18": {
+            "courseRating": 72.4,
+            "slopeRating": 125
+          },
+          "womensRed18": {
+            "courseRating": 69.8,
+            "slopeRating": 120
+          },
+          "mensWhiteFront9": {
+            "courseRating": 34.3,
+            "slopeRating": 124
+          },
+          "mensGreenFront9": {
+            "courseRating": 33.7,
+            "slopeRating": 119
+          },
+          "mensRedFront9": {
+            "courseRating": 33.1,
+            "slopeRating": 117
+          },
+          "mensWhiteBack9": {
+            "courseRating": 33.1,
+            "slopeRating": 112
+          },
+          "mensGreenBack9": {
+            "courseRating": 32.6,
+            "slopeRating": 110
+          },
+          "mensRedBack9": {
+            "courseRating": 31.7,
+            "slopeRating": 104
+          },
+          "womensGreenFront9": {
+            "courseRating": 37,
+            "slopeRating": 130
+          },
+          "womensRedFront9": {
+            "courseRating": 35.9,
+            "slopeRating": 126
+          },
+          "womensGreenBack9": {
+            "courseRating": 35.4,
+            "slopeRating": 120
+          },
+          "womensRedBack9": {
+            "courseRating": 33.9,
+            "slopeRating": 114
+          }
+        },
         "type": "FeatureCollection",
         "crs": {
           "type": "name",
