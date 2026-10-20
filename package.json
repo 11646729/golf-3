@@ -40,5 +40,13 @@
   "dependencies": {
     "basic-ftp": "^6.2.1",
     "qs": "^6.16.0"
+  },
+  "allowScripts": {
+    "better-sqlite3": true,
+    "puppeteer": true,
+    "esbuild": true,
+    "@parcel/watcher": true,
+    "fsevents": true,
+    "core-js": false
   }
 }

@@ -7,6 +7,7 @@
   "scripts": {
     "start": "DOTENV_CONFIG_QUIET=true node server.js || true",
     "dev": "DOTENV_CONFIG_QUIET=true nodemon server.js",
+    "rebuild-native": "npm rebuild better-sqlite3",
     "migrate:vessels": "node migrations/add_vessel_columns.js",
     "migrate:vehicle-positions": "node migrations/create_vehicle_positions_table.js",
     "test": "node objecttest.js",
