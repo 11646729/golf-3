@@ -21,7 +21,7 @@
     "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
     "moment": "^2.31.0",
-    "puppeteer": "^25.8.0"
+    "puppeteer": "^25.16.0"
   },
   "allowScripts": {
     "puppeteer": true
